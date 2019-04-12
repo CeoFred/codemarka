@@ -6,7 +6,8 @@ exports.success = function success(res,message){
 }
 exports.created = function created(res, message) {
   return res.status(201).json({
-    "meta": message
+    "meta": message,
+    "status":"success"
   })
 }
 exports.exists = function exists(res, message) {

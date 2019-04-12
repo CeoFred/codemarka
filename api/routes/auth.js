@@ -96,23 +96,22 @@ User.find({ email: req.body.email })
 })
 });
 
-router.post('/signup', [body('email')
-            .isEmail()
-            .normalizeEmail(),
-            sanitizeBody(['firstname','lastname','phonenumber','email']).trim(),
+router.post('/signup', [check('email')
+            .exists().withMessage('Email is required'),
+            check('password').exists().withMessage('Password is required'),
+             check('passwordConfirmation', 'passwordConfirmation field must have the same value as the password field')
+                 .exists()
+                 .custom((value, {
+                     req
+                 }) => value === req.body.password),
+            check('accountType').exists().withMessage('accountType is required to proceed'),
+            sanitizeBody(['accountType','email','password']).trim(),
         ], (req, res, next) => {
-    const {email,firstname,lastname,password,phonenumber} = req.body;
-   const params = req.body;
-    let faults = [];
-   for (const key in params) {
-   const element = params[key];
-    if(element.length <= 0){
-        faults.push(key)
-    }
-   }
-   if(faults.length > 0){
-   success(res, `you left the following fields empty ${faults}`)
-   }
+    const {
+        email,
+        accountType,
+        password
+    } = req.body;
 
     User.find({email:req.body.email}).exec()
     .then(user => {
@@ -131,9 +130,7 @@ router.post('/signup', [body('email')
         _id: new mongoose.Types.ObjectId(),
         email: email,
         password: hash,
-        phonenumber,
-        firstname,
-        lastname
+        accountType
                 });
                 user.save()
                 .then(result => {

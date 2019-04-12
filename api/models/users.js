@@ -9,21 +9,23 @@ const userSchema =  mongoose.Schema({
         unique: true,
         match:/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/},
     password : {type: String, required: true},
-    phonenumber:{
-        type: Number,
-        required: true,
-        unique:true
-    },
     firstname:{
         type: String,
-        required:true
+        required:false
     },
     lastname:{
         type: String,
-        required: true
+        required: false
     },
-    deviceID:{
-        type: mongoose.Schema.Types.ObjectId
+    accountType:{
+        type: Number,
+        required:true
+    },
+    // created_at:{
+    //     required: true
+    // },
+    updated_at: {
+        required: false
     }
 });
 

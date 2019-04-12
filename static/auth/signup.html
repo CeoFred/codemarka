@@ -26,35 +26,37 @@
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 <!--===============================================================================================-->
+<link rel="stylesheet" href="css/iziToast.min.css">
 </head>
 <body>
 
 
-	<div class="container-login100" style="background-image: url('images/bg-01.jpg');">
+	<div class="container-login100"
+		style="background-image: url('images/Teacher-with-students-using-tablets-Feature-Image.jpg');">
 		<div class="wrap-login100 p-l-55 p-r-55 p-t-80 p-b-30">
 			<form class="login100-form validate-form">
 				<span class="login100-form-title p-b-37">
-				Join
+				Join colab today..
 				</span>
 
 				<div class="wrap-input100 validate-input m-b-20" data-validate="Enter username or email">
-					<input class="input100" type="text" name="username" placeholder="username or email">
+					<input class="input100" id="e_m" type="text" name="username" placeholder="username or email">
 					<span class="focus-input100"></span>
 				</div>
 
 				<div class="wrap-input100 p1 validate-input m-b-25" data-validate = "Enter password">
-					<input class="input100" type="password" name="pass" placeholder="password">
+					<input class="input100" type="password" id="p_w" name="pass" placeholder="password">
 					<span class="focus-input100"></span>
 				</div>
 
 					<div class="wrap-input100 p2 validate-input-2 m-b-25" data-validate="password mismatch">
-						<input class="input100" type="password" name="pass" placeholder="confirm password">
+						<input class="input100" type="password" name="pass" placeholder="confirm password" id="p_wc">
 								<span class="focus-input100"></span>
 								</div>
 
 													<div class="wrap-input100 p2 validate-input-2 m-b-25" data-validate="password mismatch">
-													<select class="input100" name="acctype" id="">
-														<option style="color:#000;background-color:#fff" value="null">-- Account Type --</option>
+													<select class="acctype input100" name="acctype" id="a_t">
+														<option style="color:#000;background-color:#fff" value=null>-- Account Type --</option>
 														<option value="individual">Individual</option>
 														<option value="community">Community</option>
 													</select>
@@ -62,9 +64,9 @@
 													</div>
 
 
-								<div class="container-login100-form-btn">
-					<button class="login100-form-btn">
-						Join
+								<div class="container-login100-form-btn" id="su_btn_cont">
+					<button class="login100-form-btn" id="su_btn" type="button">
+						GO
 					</button>
 				</div>
 
@@ -115,6 +117,7 @@
 	<script src="vendor/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
 	<script src="js/main.js"></script>
+	<script src="js/iziToast.min.js"></script>
 
 </body>
 </html>
