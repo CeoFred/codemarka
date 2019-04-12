@@ -1,5 +1,3 @@
-import { setTimeout } from "timers";
-
 (function ($) {
     "use strict";
 
@@ -59,13 +57,17 @@ $('#a_t').on('change', function () {
                 check=false;
             }
         }
+        const submit_BTN = $('#su_btn');
+
         if(check == false){
             iziToast.warning({
                 title: 'Caution',
                 message: 'You forgot important data',
             });
+
+            submit_BTN.html('Try again..');
+
         }else{
-  const submit_BTN = $('#su_btn');
   submit_BTN
       .html(`<div class='gooey'>
 							<span class='dot'></span>
