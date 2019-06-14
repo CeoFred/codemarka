@@ -1,0 +1,23 @@
+
+//notification
+export const SHOW_NOTIFICATION = 'SHOW_NOTIFICATION'
+
+// Auth
+export const LOGIN_UPDATE = 'LOGIN_UPDATE';
+export const LOGIN_ERROR = 'LOGIN_ERROR';
+export const LOGIN_ERRORS = 'LOGIN_ERRORS';
+export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
+
+
+// Register
+export const REGISTER_UPDATE = 'REGISTER_UPDATE';
+export const REGISTER_ERROR = 'REGISTER_ERROR';
+export const REGISTER_ERRORS = 'REGISTER_ERRORS';
+
+// Loaders
+export const LOGIN_LOADING = 'LOGIN_LOADING';
+export const REGISTER_LOADING = 'REGISTER_LOADING';
+
+
+//modal
+export const TOGGLE_CREATE_APP_MODAL = 'TOGGLE_CREATE_APP_MODAL';
