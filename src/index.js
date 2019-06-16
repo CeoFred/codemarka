@@ -1,8 +1,16 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+require.config({
+    packages: [{
+      name: "codemirror",
+      location: "src/cm/codemirror",
+      main: "lib/codemirror"
+    }]
+  });
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

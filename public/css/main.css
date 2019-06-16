@@ -340,6 +340,20 @@ option {
   padding: 0 20px 0 23px;
 }
 
+.message {
+  border:'1px solid black';
+  border-left-color: #fa4251;
+  border-left-width: 3px;
+  font-size: 25px;
+}
+
+.s-message {
+  font-size:15px;
+  color:rgb(99, 109, 153);
+  font-weight: bold;
+  border:'2px solid black';
+  border-left-color: #fa4251;
+}
 
 /*------------------------------------------------------------------
 [ Focus Input ]*/
