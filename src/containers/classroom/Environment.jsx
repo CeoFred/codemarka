@@ -1,14 +1,21 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Chat from './Chat.jsx'
 
- class Environment extends Component {
-    render() {
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
+ function Environment() {
+    
         return (
-            <div>
-                <Chat />
-            </div>
+            <React.Fragment>
+                  <CssBaseline />
+                   <Container fixed>
+        <Chat />
+            
+      </Container>
+            </React.Fragment>
         )
-    }
+    
 }
 
 export default Environment;

@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const port = 3000
 const mongoose = require('mongoose');
+var compression = require('compression')
 
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -21,11 +22,12 @@ const Cat = mongoose.model('Cat', { name: String });
 const kitty = new Cat({ name: 'Zildjian' });
 kitty.save().then(() => console.log('meow'));
 
-app.use(methodOverride('_method'));
+app.use(methodOverride());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 app.use(logger('dev'));
+app.use(compression())
 
 app.get('/', (req, res) => res.send('Hello World!'))
 
