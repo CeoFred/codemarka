@@ -1,59 +1,50 @@
-#!/usr/bin/env node
-var WebSocketServer = require('websocket').server;
-var http = require('http');
+const express = require('express')
+const app = express()
+const port = 3000
+const mongoose = require('mongoose');
 
-var server = http.createServer(function(request, response) {
-    console.log((new Date()) + ' Received request for ' + request.url);
-    response.writeHead(200);
-    response.end('Helo world');
-});
-server.listen(8080, function() {
-    console.log((new Date()) + ' Server is listening on port 8080');
-    
-});
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
 
-let wsServer;
-
-wsServer = new WebSocketServer({
-    httpServer: server,
-    // You should not use autoAcceptConnections for production
-    // applications, as it defeats all standard cross-origin protection
-    // facilities built into the protocol and the browser.  You should
-    // *always* verify the connection's origin and decide whether or not
-    // to accept it.
-    autoAcceptConnections: true
+mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true});
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  // we're connected!
+  console.log('Connected to mongodo')
 });
 
-function originIsAllowed(origin) {
-  // put logic here to detect whether the specified origin is allowed.
-  return true;
-}
+const Cat = mongoose.model('Cat', { name: String });
 
-wsServer.on('request', function(request) {
-    
-    if (!originIsAllowed(request.origin)) {
-      // Make sure we only accept requests from an allowed origin
-      request.reject();
-      console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.');
-      return;
-    }
-    
-    var connection = request.accept('echo-protocol', request.origin);
+const kitty = new Cat({ name: 'Zildjian' });
+kitty.save().then(() => console.log('meow'));
 
-    console.log((new Date()) + ' Connection accepted.');
-    
-    connection.on('message', function(message) {
-        if (message.type === 'utf8') {
-            console.log('Received Message: ' + message.utf8Data);
-            connection.sendUTF(message.utf8Data);
-        }
-        else if (message.type === 'binary') {
-            console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
-            connection.sendBytes(message.binaryData);
-        }
-    });
+app.use(methodOverride('_method'));
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname + '/public'));
+app.use(logger('dev'));
 
-    connection.on('close', function(reasonCode, description) {
-        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
-    });
-});
+app.get('/', (req, res) => res.send('Hello World!'))
+
+app.put('/user', function (req, res) {
+    res.send('Got a PUT request at /user')
+})
+
+  app.delete('/user', function (req, res) {
+    res.send('Got a DELETE request at /user')
+  })
+  app.use(express.static('public'))
+//   app.use('/static', express.static(path.join(__dirname, 'public')))
+app.use(function (req, res, next) {
+    res.status(404).send("Sorry can't find that!")
+  })
+
+  app.use(function (err, req, res, next) {
+    console.error(err.stack)
+    res.status(500).send('Something broke!')
+  })
+
+  app.listen(port, () => console.log(`Example app listening on port ${port}!`))
