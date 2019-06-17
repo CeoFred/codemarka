@@ -1,9 +1,14 @@
 const webSocketsServerPort = 8000;
 const webSocketServer = require('websocket').server;
 const http = require('http');
+
 // Spinning the http server and the websocket server.
 const server = http.createServer();
-server.listen(webSocketsServerPort);
+
+server.listen(webSocketsServerPort,() => {
+    console.log('Listening on port' + webSocketsServerPort)
+});
+
 const wsServer = new webSocketServer({
     httpServer: server
 });
@@ -23,10 +28,6 @@ var classMessage = [
 let userActivities = [];
 
 let users = []
-
-var typesDef = {
-    USER_EVENT: 'userevent'
-}
 
 wsServer.on('request', function (request) {
 

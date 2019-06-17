@@ -7,7 +7,8 @@ import {
     
 } from './Types'
 
-import axios from 'axios';
+import * as helper from '../../utility/shared'
+// import axios from 'axios';
 
 export const loginUpdate = (payload) => {
 
@@ -35,44 +36,6 @@ export const authenticateUserOnCore = (data) => {
             type: LOGIN_LOADING,
             payload: true
         });
-        axios.post('auth/login', data)
-            .then(res => {
-                
-                dispatch({
-                    type: LOGIN_LOADING,
-                    payload: false
-                });
-                dispatch({
-                    type: LOGIN_USER_SUCCESS,
-                    payload: res.data
-                });
-
-                console.log(res);
-            })
-            .catch(err => {
-                dispatch({
-                    type: LOGIN_LOADING,
-                    payload: false
-                });
-                if(err.response){
-                    if(err.response.status == 422){
-                        dispatch({
-                            type: LOGIN_ERRORS,
-                            payload: err.response.data.errors
-                        });
-                    }
-    
-                    if(err.response.status == 403){
-                        dispatch({
-                            type: LOGIN_ERROR,
-                            payload: 'Incorrect username or password'
-                        });
-                    }
-                }
-                
-                
-                
-            })
       
     }
 };
@@ -87,45 +50,41 @@ export const registerUserOnCore = (data) => {
             type: REGISTER_LOADING,
             payload: true
         });
-        axios.post('auth/signup', data)
-            .then(res => {
+        helper.fetch('http://localhost:8000/auth/signup','POST',data)
+                .then(data => {console.log(data)
                 
-                dispatch({
-                    type: REGISTER_LOADING,
-                    payload: false
-                });
-
-                dispatch({
-                    type: LOGIN_USER_SUCCESS,
-                    payload: res.data
-                });
-
-                console.log(res);
-            })
-            .catch(err => {
-                dispatch({
-                    type: REGISTER_LOADING,
-                    payload: false
-                });
-
-                if(err.response.status == 422){
                     dispatch({
-                        type: REGISTER_ERRORS,
-                        payload: err.response.data.errors
+                        type: REGISTER_LOADING,
+                        payload: false
                     });
-                }
-
-                if(err.response.status == 401){
+    
                     dispatch({
-                        type: REGISTER_ERROR,
-                        payload: err.response.data.message
+                        type: LOGIN_USER_SUCCESS,
+                        payload: data.data
                     });
-                }
-                
-                
-            })
-      
-    }
+
+                })
+                .catch(err =>  {
+                    dispatch({
+                        type: REGISTER_LOADING,
+                        payload: false
+                    });
+    
+                    if(err.response.status === 422){
+                        dispatch({
+                            type: REGISTER_ERRORS,
+                            payload: err.response.data.errors
+                        });
+                    }
+    
+                    if(err.response.status === 401){
+                        dispatch({
+                            type: REGISTER_ERROR,
+                            payload: err.response.data.message
+                        });
+                    }
+                    console.error(err)})    
+            }
 };
 
 const clearLoginErrors = (dispatch) => {
