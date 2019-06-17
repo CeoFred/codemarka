@@ -1,4 +1,5 @@
 export const fetch  = (url='',method='GET',data={}) => {
+    
 return fetch(url,{
     method:method,
     mode:'cors',
@@ -11,4 +12,11 @@ return fetch(url,{
     body:JSON.stringify(data)
 }).then(response => response.json())
 
+}
+
+export const updateObject = (oldObject, UpdatedProperties) => {
+    return {
+        ...oldObject,
+        ...UpdatedProperties
+    }
 }

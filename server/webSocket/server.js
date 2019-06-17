@@ -23,7 +23,6 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(logger('dev'));
 app.use(compression())
-var ws  = require('./exp')
 
 mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true});
 var db = mongoose.connection;
@@ -36,20 +35,25 @@ db.once('open', function() {
 
 app.get('/', (req, res) => {
 
-  res.send('hello world')
+  res.send('I just wonder what you are looking for')
 
 })
 
-app.put('/user', function (req, res) {
-    res.send('Got a PUT request at /user')
+app.post('/auth/user/signup', function (req, res) {
+   let respo =  {
+        data:{
+            idToken:987654567890,
+            localId:'7duyv2t35y465vbn872',
+            expiresIn:2345675
+        }
+    }
+    res.status(201).json(JSON.stringify(respo))
 })
 
 app.delete('/user', function (req, res) {
     res.send('Got a DELETE request at /user')
 })
 
-app.use(express.static('public'))
-//   app.use('/static', express.static(path.join(__dirname, 'public')))
 app.use(function (req, res, next) {
     res.status(404).send("Sorry can't find that!")
   })

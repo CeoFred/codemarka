@@ -1,10 +1,9 @@
 import React from 'react'
 import { UnControlled as CodeMirror } from "react-codemirror2";
-import "./editor.css";
+// import "./editor.css";
 
 require("codemirror/mode/xml/xml");
 require("codemirror/mode/javascript/javascript");
-
 
 
 export default function Editor(props) {

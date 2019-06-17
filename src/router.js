@@ -20,7 +20,7 @@ class Router extends Component {
     
   componentDidMount(){
 
-    // this.props.onTryAutoSignup();
+    this.props.onTryAutoSignup();
      
   }
     render() {
@@ -57,7 +57,7 @@ const mapStateToProps = state => {
   
   const matchDispatchToProps = (dispatch) => {
     return {
-  onTryAutoSignup: () => dispatch(actions.loginUpdate())
+  onTryAutoSignup: () => dispatch(actions.authCheckState())
     };
   };
   

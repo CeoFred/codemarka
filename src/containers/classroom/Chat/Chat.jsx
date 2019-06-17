@@ -93,7 +93,7 @@ onEditorStateChange = (text) => {
   }));
  };
 
- componentWillMount() {
+ componentDidMount() {
    let url = new URLSearchParams(window.location.search)
    const classroom =  url.get('classroom')
    

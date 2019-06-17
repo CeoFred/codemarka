@@ -1,12 +1,16 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux'
+import {Link,withRouter,Redirect} from 'react-router-dom';
 
 import Input from "../../components/UI/Input.jsx";
 import Form from "../../components/Wrappers/Form.jsx";
 import Button from "../../components/UI/Button.jsx";
-
 import "../../components/styles/login.css";
 
-class Home extends Component {
+import Progress from '../../components/UI/progress';
+import * as actions from '../../redux/actions/index'
+
+class Login extends Component {
   state = {
     isSubmited: false,
     email: {
@@ -19,27 +23,37 @@ class Home extends Component {
     }
   };
 
+  componentDidMount = () => {
+    document.title  = 'Login :: colab.inc'
+  }
+
   /**
    * Button click controller
    */
   LoginAction = e => {
-    
-    // iziToast.show({
-    //   title:'great'
-    // })
-
     e.preventDefault();
-    console.log("Button was clicked");
+
+    if(this.props.isAutheticated){
+      return <Redirect to="/dashboard"/>
+    }
+
+    const  data = {
+      email:this.state.email.value,
+      password:this.state.password.value
+    }
+    this.props.loginUser(data)
+
     this.setState({ isSubmited: true }, () => {
       console.log(this.state);
     });
+
+
   };
 
   /**
    * Input change handlers
    */
   inputChangedHandler = (e, inputType) => {
-    e.preventDefault();
     let oldState = { ...this.state };
     let stateProp = oldState[inputType];
     stateProp.value = e.target.value;
@@ -53,6 +67,14 @@ class Home extends Component {
   };
 
   render() {
+
+    let buttonContent = '';
+
+    if(this.props.authStarted){
+      buttonContent =  <Progress/>
+    }else{
+      buttonContent = 'Go'
+    }
     return (
       <div data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
         <div className="container-login100 loginBg">
@@ -77,7 +99,7 @@ class Home extends Component {
 
               <div className="container-login100-form-btn">
                 <Button type="submit" submit={this.LoginAction}>
-                  Go
+                  {buttonContent}
                 </Button>
               </div>
 
@@ -100,7 +122,7 @@ class Home extends Component {
 
               <div className="text-center">
                 <a href="/auth/signup.html?utm_medium=l" className="txt2 hov1">
-                  Sign Up
+                  <Link to="/auth/signup">Sign Up</Link>
                 </a>
               </div>
             </Form>
@@ -111,4 +133,17 @@ class Home extends Component {
   }
 }
 
-export default Home;
+const mapStateToProps = state => {
+  return {
+    isAutheticated: state.auth.token !== null,
+    authStarted: state.auth.loading === true
+  }
+}
+
+const matchDispatchToProps = (dispatch) => {
+  return {
+loginUser: data => dispatch(actions.auth(data))
+  };
+};
+
+export default withRouter(connect(mapStateToProps,matchDispatchToProps)(Login));
