@@ -160,17 +160,14 @@ onEditorStateChange = (text) => {
       return <Message content={ele.message} self={this.state.user_id} from={ele.by} key={Math.random() * new Date().getTime()}/>
    })
     return (
-      <div className="input100">
-          <div className="p-l-55 p-r-55 p-t-55">
-          You: {this.state.user_id}
-          </div>
+      <div>
 
-        <div className="p-l-55 p-r-55 p-t-55">
+        <div className="p-l-10">
           {messages}
           </div>
 
         <div>
-          <div className="p-l-55 p-r-55">
+          <div className="">
             <Form title="">
               <Input
                 inputChanged={this.inputChangedHandler}

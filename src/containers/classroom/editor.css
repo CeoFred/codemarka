@@ -1,2 +1,2 @@
-@import 'codemirror/lib/codemirror.css';
-@import 'codemirror/theme/material.css';
+@import '../../components/styles/codemirror.css';
+@import '../../components/styles/codemirror/theme/material.css';

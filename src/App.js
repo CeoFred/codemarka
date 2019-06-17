@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Home from './containers/Home.jsx';
 import  Environment  from './containers/classroom/Environment.jsx'
 import { BrowserRouter , Route, Switch,Redirect } from "react-router-dom";
+// import 'typeface-roboto';
 class App extends Component{
 
     componentDidMount = () => {

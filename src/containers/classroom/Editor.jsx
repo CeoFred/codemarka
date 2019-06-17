@@ -8,16 +8,16 @@ export default class Editor extends Component {
     render() {
         return (
             <div>
-               <CodeMirror
-  value='<h1>I ♥ react-codemirror2</h1>'
-  options={{
-    mode: 'xml',
-    theme: 'material',
-    lineNumbers: true
-  }}
+               {/* <CodeMirror value='<h1>I ♥ react-codemirror2</h1>'
+  // options={{
+  //   mode: 'xml',
+  //   theme: 'material',
+  //   lineNumbers: true
+  // }}
   onChange={(editor, data, value) => {
   }}
-/> 
+/>  */}
+Hi
             </div>
         )
     }
