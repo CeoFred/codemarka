@@ -36,7 +36,7 @@ router.get('/jwt',(req,res,next) => {
 
 })
 
-router.post('/login',
+router.post('/user/login',
     check('email').isEmail().withMessage('A valid email is required to signin')
 ,(req,res,next) => {
         // const errors = validationResult(req);
@@ -100,7 +100,7 @@ User.find({ email: req.body.email })
 })
 });
 
-router.post('/signup', [check('email')
+router.post('/user/signup', [check('email')
             .exists().withMessage('Email is required'),
             check('password').exists().withMessage('Password is required'),
              check('passwordConfirmation', 'passwordConfirmation field must have the same value as the password field')

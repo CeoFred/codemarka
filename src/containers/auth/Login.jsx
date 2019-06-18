@@ -6,7 +6,7 @@ import Input from "../../components/UI/Input.jsx";
 import Form from "../../components/Wrappers/Form.jsx";
 import Button from "../../components/UI/Button.jsx";
 import "../../components/styles/login.css";
-
+import Snackbar from '@material-ui/core/Snackbar';
 import Progress from '../../components/UI/progress';
 import * as actions from '../../redux/actions/index'
 
@@ -20,13 +20,14 @@ class Login extends Component {
     password: {
       value: "",
       touched: false
-    }
+    },
+    open:false,vertical:'bottom',horizontal:'left'
+
   };
 
   componentDidMount = () => {
     document.title  = 'Login :: colab.inc'
   }
-
   /**
    * Button click controller
    */
@@ -34,7 +35,7 @@ class Login extends Component {
     e.preventDefault();
 
     if(this.props.isAutheticated){
-      return <Redirect to="/dashboard"/>
+      return <Redirect to="/"/>
     }
 
     const  data = {
@@ -46,10 +47,21 @@ class Login extends Component {
     this.setState({ isSubmited: true }, () => {
       console.log(this.state);
     });
-
+    this.handleSnackBar()
+  
 
   };
 
+
+  handleSnackBar =  () => {
+
+    this.setState({open:true,vertical:'bottom',horizontal:'left'})
+  
+  }
+
+  handleClose = () => {
+    this.setState({...this.state,open:false})
+  }
   /**
    * Input change handlers
    */
@@ -121,11 +133,17 @@ class Login extends Component {
               </div>
 
               <div className="text-center">
-                <a href="/auth/signup.html?utm_medium=l" className="txt2 hov1">
-                  <Link to="/auth/signup">Sign Up</Link>
-                </a>
+                  <Link to="/auth/signup">New Account</Link>
               </div>
             </Form>
+            <Snackbar
+          open={this.state.open}
+          onClose={this.handleClose}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id">I love snacks</span>}
+        />
           </div>
         </div>
       </div>
