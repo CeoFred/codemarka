@@ -5,11 +5,8 @@ import "./Editor/editor.css";
 import { makeStyles, fade } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Nav from "./Nav.jsx";
-import { UnControlled as CodeMirror } from "react-codemirror2";
 import Editor from './Editor/Editor.jsx';
 
-require("codemirror/mode/xml/xml");
-require("codemirror/mode/javascript/javascript");
 
 const useStyles = makeStyles(theme => ({
 
@@ -39,14 +36,14 @@ function Environment() {
   }
   const classes = useStyles();
   return (
-    <React.Fragment className={classes.root}>
+    <React.Fragment>
       <Nav />
       <Grid container direction="row" className={classes.Environment}>
         <Grid item xs={12} md={3} className={classes.chat}>
           <Chat />
         </Grid>
         <Grid
-          container
+          item
           direction="column"
           xs={12}
           md={9}
@@ -61,17 +58,15 @@ function Environment() {
               change={(editor,data,value) =>handleEditorChange(editor,data,value)}
               />
             
-
           </Grid>
           <Grid item>
-            <CodeMirror
-              value="<h1>I ♥ react</h1>"
-              options={{
-                mode: "css",
+          <Editor value="<html></html>" options={{
+                mode: "html",
                 theme: "material",
                 lineNumbers: true
               }}
-              onChange={(editor, data, value) => {}} />
+              change={(editor,data,value) =>handleEditorChange(editor,data,value)}
+              />
           </Grid>
         </Grid>
       </Grid>

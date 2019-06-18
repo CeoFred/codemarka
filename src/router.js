@@ -1,14 +1,20 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {Route,Switch,withRouter,Redirect} from 'react-router-dom';
-import Login from './containers/auth/Login';
-import Environment from './containers/classroom/Environment.jsx'
 import * as actions from './redux/actions/index';
 import asyncComponent from './hoc/asyncComponent/asyncComponent';
 import Layout from './hoc/Layout/Layout.jsx'
+import TopProgress from './components/UI/TopProgress'
+
+import Logout from './containers/auth/Logout.jsx';
+
+const asyncRegister = asyncComponent(() => {
+  return import('./containers/auth/Register.jsx');
+});
+
 
 const asyncLogin = asyncComponent(() => {
-    return import('./containers/auth/Login');
+    return import('./containers/auth/Login.jsx');
   });
   
   const asyncClassroom = asyncComponent(() => {
@@ -25,20 +31,24 @@ class Router extends Component {
   }
     render() {
         let routes = (
-            <Switch>      
-      <Route path="/classroom" exact component={asyncClassroom}/>
+            <Switch>  
+      <Redirect exact from="/classroom" to="/login"/>
       <Route path="/login" exact component={asyncLogin}/>
-      <Redirect to="/"/>
+      <Route path="/logout" exact component={Logout}/>
+      <Route path="/register" exact component={asyncRegister}/>
+      <Route path="/" exact component={TopProgress}/>
             </Switch>
           );
       
           if(this.props.isAutheticated){
             routes = (
       <Switch>
+      <Route path="/classroom" exact component={asyncClassroom}/>
+      <Route path="/logout" exact component={Logout}/>
 
-    <Route path="/classroom" exact component={Environment}/>
-      <Route path="/login" exact component={Login}/>
-      <Redirect from="/" to="/login"/> 
+      <Redirect from="/login" to="/classroom"/> 
+      <Redirect from="/register" to="/classroom"/> 
+
       </Switch>
             )
           }

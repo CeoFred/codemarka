@@ -21,7 +21,11 @@ class Login extends Component {
       value: "",
       touched: false
     },
-    open:false,vertical:'bottom',horizontal:'left'
+    snackbar_open:false,vertical:'bottom',horizontal:'left',
+    snackbar:{
+      color:'#00d2b5',
+      content:''
+    }
 
   };
 
@@ -47,20 +51,38 @@ class Login extends Component {
     this.setState({ isSubmited: true }, () => {
       console.log(this.state);
     });
-    this.handleSnackBar()
   
-
+    // this.handleSnackBar()
   };
 
 
   handleSnackBar =  () => {
+    let oldState = {...this.state}
+    
+    if(this.props.errors !== null){
+      //has an error message
+      oldState['snackbar']['content'] = this.props.errors
+      oldState['snackbar']['color'] = '#dc3545'
+      oldState['snackbar_open'] = true
+      
+      console.log(oldState)
+      this.setState({oldState},() => {
+        console.log(this.state)
+      })
+    }else{
+      // success 
+      oldState['snackbar']['content'] = 'Great! Redirecting please wait'
+      oldState['snackbar_open'] = true
+      this.setState({oldState},() => {
+        console.log(this.state)
+      })
+    }
 
-    this.setState({open:true,vertical:'bottom',horizontal:'left'})
   
   }
 
   handleClose = () => {
-    this.setState({...this.state,open:false})
+    // this.setState({...this.state,open:false})
   }
   /**
    * Input change handlers
@@ -73,9 +95,7 @@ class Login extends Component {
     stateProp.touched = true;
 
     let newState = oldState;
-    this.setState(newState, () => {
-      console.table(this.state);
-    });
+    this.setState(newState);
   };
 
   render() {
@@ -87,6 +107,7 @@ class Login extends Component {
     }else{
       buttonContent = 'Go'
     }
+
     return (
       <div data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
         <div className="container-login100 loginBg">
@@ -133,16 +154,17 @@ class Login extends Component {
               </div>
 
               <div className="text-center">
-                  <Link to="/auth/signup">New Account</Link>
+                  <Link to="/register">New Account</Link>
               </div>
             </Form>
             <Snackbar
-          open={this.state.open}
+          open={this.state.snackbar_open}
           onClose={this.handleClose}
           ContentProps={{
             'aria-describedby': 'message-id',
           }}
-          message={<span id="message-id">I love snacks</span>}
+          variant='success'
+          message={<span id="message-id">{this.state.snackbar.content}</span>}
         />
           </div>
         </div>
@@ -154,7 +176,8 @@ class Login extends Component {
 const mapStateToProps = state => {
   return {
     isAutheticated: state.auth.token !== null,
-    authStarted: state.auth.loading === true
+    authStarted: state.auth.loading === true,
+    errors:state.auth.errorMessage
   }
 }
 

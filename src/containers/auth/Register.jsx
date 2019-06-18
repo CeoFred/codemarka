@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux'
-import {Link,withRouter,Redirect} from 'react-router-dom';
+import {Link,withRouter} from 'react-router-dom';
 
 import Input from "../../components/UI/Input.jsx";
 import Form from "../../components/Wrappers/Form.jsx";
 import Button from "../../components/UI/Button.jsx";
 import "../../components/styles/login.css";
-
 import * as actions from '../../redux/actions/index'
+import Progress from '../../components/UI/progress';
 
 class Home extends Component {
   state = {
@@ -23,24 +23,33 @@ class Home extends Component {
     accountTye:{
         value:'',
         touched:false
-    }
+    },
+    confirm_password:{
+      value:'',
+      touched:false,
+      valid:false
+    },
+    username:{
+      value:'',
+      touched:false,
+      valid:false
+    },
+    
   };
 
   /**
    * Button click controller
    */
-  LoginAction = e => {
+  registerAction = e => {
     e.preventDefault();
-
-    if(this.props.isAutheticated){
-      return <Redirect to="/dashboard"/>
-    }
 
     const  data = {
       email:this.state.email.value,
-      password:this.state.password.value
+      password:this.state.password.value,
+      username:this.state.username.value,
+      accountType:1
     }
-    this.props.loginUser(data)
+    this.props.registerUser(data)
 
     this.setState({ isSubmited: true }, () => {
       console.log(this.state);
@@ -60,17 +69,32 @@ class Home extends Component {
     stateProp.touched = true;
 
     let newState = oldState;
-    this.setState(newState, () => {
-      console.table(this.state);
-    });
-  };
-
+    this.setState({newState});
+  }
   render() {
+    
+    let buttonContent = '';
+
+    if(this.props.authStarted){
+      buttonContent =  <Progress/>
+    }else{
+      buttonContent = 'Create'
+    }
     return (
       <div data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
         <div className="container-login100 loginBg">
+
           <div className="wrap-login100 p-l-55 p-r-55 p-t-80 p-b-30">
-            <Form title="Explore Classrooms..">
+            <Form title="Sign up for free today and explore classrooms..">
+            <Input
+                inputChanged={e => this.inputChangedHandler(e, "username")}
+                value={this.state.username.value}
+                type="text"
+                name="username"
+                placeholder="username"
+                required
+              />
+
               <Input
                 inputChanged={e => this.inputChangedHandler(e, "email")}
                 value={this.state.email.value}
@@ -87,15 +111,24 @@ class Home extends Component {
                 placeholder="password"
                 required
               />
+              <Input
+                inputChanged={e => this.inputChangedHandler(e, "confirm_password")}
+                value={this.state.confirm_password.value}
+                type="password"
+                name="confirm_password"
+                placeholder="confirm password"
+                required
+              />
+              
 
               <div className="container-login100-form-btn">
-                <Button type="submit" submit={this.LoginAction}>
-                  Go
+                <Button type="submit" submit={this.registerAction}>
+                  {buttonContent}
                 </Button>
               </div>
 
               <div className="text-center p-t-57 p-b-20">
-                <span className="txt1">Or login with</span>
+                <span className="txt1">Or continue with</span>
               </div>
 
               <div className="flex-c p-b-112">
@@ -112,9 +145,7 @@ class Home extends Component {
               </div>
 
               <div className="text-center">
-                <a href="/auth/signup.html?utm_medium=l" className="txt2 hov1">
-                  <Link to="/auth/signup">Sign Up</Link>
-                </a>
+                  <Link to="/login">Already have an account?</Link>
               </div>
             </Form>
           </div>
@@ -132,7 +163,7 @@ const mapStateToProps = state => {
 
 const matchDispatchToProps = (dispatch) => {
   return {
-loginUser: (data) => dispatch(actions.loginUser(data))
+    registerUser: (data) => dispatch(actions.register(data))
   };
 };
 

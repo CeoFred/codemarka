@@ -39,11 +39,11 @@ router.get('/jwt',(req,res,next) => {
 router.post('/user/login',
     check('email').isEmail().withMessage('A valid email is required to signin')
 ,(req,res,next) => {
-        // const errors = validationResult(req);
-        // if (!errors.isEmpty()) {
-        //    return invalid(res,errors)
-        // }
-
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+           return invalid(res,errors)
+        }
+console.log(req.body)
 User.find({ email: req.body.email })
     .exec()
     .then(user => {
@@ -100,30 +100,23 @@ User.find({ email: req.body.email })
 })
 });
 
-router.post('/user/signup', [check('email')
-            .exists().withMessage('Email is required'),
-            check('password').exists().withMessage('Password is required'),
-             check('passwordConfirmation', 'passwordConfirmation field must have the same value as the password field')
-                 .exists()
-                 .custom((value, {
-                     req
-                 }) => value === req.body.password),
-            check('accountType').exists().withMessage('accountType is required to proceed'),
-            sanitizeBody(['accountType','email','password']).trim(),
-        ], (req, res, next) => {
+router.post('/user/signup',
+ [check('email').exists().withMessage('Email is required'),
+ check('password').exists().withMessage('Password is required')],
+   (req, res, next) => {
+
     const {
         email,
-        accountType,
         password,
-        username
+        username,
+        accountType
     } = req.body;
-
+    
     User.find({email:req.body.email}).exec()
     .then(user => {
         if(user.length >= 1){
             exists(res,'Email already exist')
         }else{
-
     bcrypt.hash(password,10,(err,hash) => {
         if(err){
             res.status(500).json({
@@ -140,15 +133,37 @@ router.post('/user/signup', [check('email')
                 });
 
          user.save()
-        .then(result => {
-     return  created(res,{message:"User successfully SignedUp",
-                                data: result
-                            });
+        .then(user => {
+
+
+
+            const token = jwt.sign({
+                data:{
+                email: user.email,
+                userId: user._id,
+                username:user.username
+                }
+        },
+         process.env.JWT_SECRET_KEY,
+         {
+             expiresIn:"7d",
+             mutatePayload:true
+         });
+     req.headers.authorization = 'Bearer '+ token;
+  return  created(res,{
+        message:"User successfully SignedUp",
+        token: token,
+        userId:user._id,
+        expires:7*(24*60*60*60),
+        username:user.username
+    })
+
+
 
                 })
                 .catch(err => {
                     res.status(500).header('Error:True').json({
-                        message:err
+                        messageMongo:err
                     });
                 })
             }

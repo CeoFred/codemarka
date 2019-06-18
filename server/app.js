@@ -3,25 +3,13 @@ var cors = require('cors');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const auth = require('./api/routes/auth')
-const playground = require('./api/routes/conversation')
+const auth = require('./app/routes/auth')
+const playground = require('./app/routes/conversation')
 var compression = require('compression')
 var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override');
 
 
-mongoose.connect('mongodb://localhost/colab',{
-    useNewUrlParser:true
-});
-
-const db = mongoose.connection;
-db.on('error',console.error.bind(console,'connection noticed an error:'));
-db.once('open',() =>{
-console.log('Connected to colab');
-});
-
-mongoose.Promise = global.Promise;
 
 app.use(cors());
 app.use(morgan('dev'));

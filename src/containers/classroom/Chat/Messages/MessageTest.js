@@ -6,9 +6,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import ImageIcon from '@material-ui/icons/Image';
-import WorkIcon from '@material-ui/icons/Work';
-import BeachAccessIcon from '@material-ui/icons/BeachAccess';
-import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,37 +15,37 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function InsetDividers() {
+export default function Message(props) {
   const classes = useStyles();
+  let who;
+  if(props.self ===  props.from){
+      who = 'You'
+  }else{
+      who = props.from
+  }
 
+ if(props.from === 'server'){
   return (
-    <List className={classes.root}>
-      <ListItem>
+      <div className="bo-cir s-message">
+      <small><b>::</b></small>
+      <br/>
+      {props.content}
+      </div>
+  )
+ }else { return (
+  // <List >
+      <ListItem className={classes.root}>
         <ListItemAvatar>
           <Avatar>
             <ImageIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary="Photos" secondary="Jan 9, 2014" />
+        <ListItemText primary={who} secondary={props.content} />
       </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem>
-        <ListItemAvatar>
-          <Avatar>
-            <WorkIcon />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primary="Work" secondary="Jan 7, 2014" />
-      </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem>
-        <ListItemAvatar>
-          <Avatar>
-            <BeachAccessIcon />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primary="Vacation" secondary="July 20, 2014" />
-      </ListItem>
-    </List>
-  );
+
+      // <Divider variant="inset" component="li" /> 
+    // </List>
+
+   )
+ }
 }

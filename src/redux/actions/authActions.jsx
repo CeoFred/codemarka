@@ -22,14 +22,18 @@ export const authFailed = (error) => {
         errorM: error
     }
 }
+
+
 export const auth = (data) => {
     
     return (dispatch) => {
 
         dispatch(authStart());
-        let url = 'http://localhost:8000/auth/user/signup';
+        let url = 'http://localhost:8000/auth/user/login';
         // let method = 'POST'
         var myHeaders = new Headers()
+        myHeaders.append('Content-Type','Application/json')
+
 let loginRequest = new Request(url,{
     method:'POST',
     cache:'default',
@@ -42,16 +46,62 @@ let loginRequest = new Request(url,{
             return res.json()
         
         }).then(res => {
-            console.log(JSON.parse(res))
-            res = JSON.parse(res)
-            let expirationDate = new Date(new Date().getTime() + res.data.expiresIn * 1000);
-            localStorage.setItem('token', res.data.idToken);
+            console.log(res)
+            let expirationDate = new Date(new Date().getTime() + res.meta.expires * 1000);
+            localStorage.setItem('token', res.meta.token);
             localStorage.setItem('expirationDate', expirationDate);
-            localStorage.setItem('userId',res.data.localId);
+            localStorage.setItem('userId',res.meta.userId);
             setTimeout(() => {
-                dispatch(authSuccess(res.data.localId,res.data.idToken));
+                dispatch(authSuccess(res.meta.useerId,res.meta.token));
                 // dispatch(checkAuthTimeout(res.data.expiresIn));          
             }, 2000);
+          
+        }).catch(err =>  {
+            setTimeout(() => {
+            dispatch(authFailed(err))
+            }, 2000);
+             console.error(err)
+        })
+        
+
+            }
+            
+};
+
+export const register = (data) => {
+    
+    return (dispatch) => {
+
+        dispatch(authStart());
+        let url = 'http://localhost:8000/auth/user/signup';
+        // let method = 'POST'
+        var myHeaders = new Headers()
+        myHeaders.append('Content-Type','Application/json')
+let loginRequest = new Request(url,{
+    method:'POST',
+    cache:'default',
+    headers:myHeaders,
+    body:JSON.stringify(data),
+    mode:'cors'
+
+})
+        fetch(loginRequest).then(res => {
+            return res.json()
+        
+        }).then(res => {
+            console.log(res)
+            if(res.status === 'success'){
+                let expirationDate = new Date(new Date().getTime() + res.meta.expires * 1000);
+                localStorage.setItem('token', res.meta.token);
+                localStorage.setItem('expirationDate', expirationDate);
+                localStorage.setItem('userId',res.meta.userId);
+
+            // setTimeout(() => {
+             dispatch(authSuccess(res.meta.userId,res.meta.token));
+            // dispatch(checkAuthTimeout(res.data.expiresIn));          
+                // }, 2000);
+              
+            }
           
         }).catch(err =>  {
             setTimeout(() => {

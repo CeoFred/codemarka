@@ -8,13 +8,14 @@ const useStyles = makeStyles({
   },
 });
 
-export default function LinearDeterminate() {
+export default function LinearDeterminate(props) {
   const classes = useStyles();
   const [completed, setCompleted] = React.useState(0);
 
   React.useEffect(() => {
     function progress() {
       setCompleted(oldCompleted => {
+
         if (oldCompleted === 100) {
           return 0;
         }
@@ -29,11 +30,17 @@ export default function LinearDeterminate() {
     };
   }, []);
 
-  return (
-    <div className={classes.root}>
-      <LinearProgress variant="determinate" value={completed} />
-      <br />
-      <LinearProgress color="secondary" variant="determinate" value={completed} />
-    </div>
-  );
+  if(props.mounted){
+    return (
+      <>
+      </>
+    )
+  }else{
+    return (
+      <div className={classes.root}>  
+        <LinearProgress color="secondary" variant="determinate" value={completed} />
+      </div>
+    );
+  }
+  
 }

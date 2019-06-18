@@ -4,7 +4,7 @@ import { w3cwebsocket as W3CWebSocket } from "websocket";
 import Input from "../../../components/UI/Input.jsx";
 import Form from "../../../components/Wrappers/Form.jsx";
 import Button from "../../../components/UI/Button.jsx";
-import Message from  './Messages/Message.jsx';
+import Message from  './Messages/MessageTest';
 import "../../../components/styles/login.css";
 
 
@@ -61,27 +61,6 @@ class Chat extends Component {
     this.setState(newState);
   };
 
-
-  /* When a user joins, I notify the
-server that a new user has joined to edit the document. */
-logInUser = () => {
-  const username = this.username.value;
-
-  if (username.trim()) {
-    const data = {
-      username
-    };
-    this.setState({
-      ...data
-    }, () => {
-      client.send(JSON.stringify({
-        ...data,
-        type: "userevent"
-      }));
-      
-    });
-  }
-}
 
 /* When content changes, we send the
 current content of the editor to the server. */
@@ -162,13 +141,7 @@ onEditorStateChange = (text) => {
     return (
       <div>
 
-        <div className="p-l-10">
           {messages}
-          </div>
-
-        <div>
-          <div className="">
-            <Form title="">
               <Input
                 inputChanged={this.inputChangedHandler}
                 value={this.state.user_message}
@@ -177,15 +150,11 @@ onEditorStateChange = (text) => {
                 placeholder="Send a message ..."
                 required
               />
-              {/* <div className="container-login100-form-btn"> */}
                 <Button type="buttton" submit={this.sendMessageAction}>
                   Send
                 </Button>
-              {/* </div> */}
-            </Form>
-          </div>
+            
         </div>
-      </div>
     );
   }
 }
