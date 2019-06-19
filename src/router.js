@@ -5,7 +5,7 @@ import * as actions from './redux/actions/index';
 import asyncComponent from './hoc/asyncComponent/asyncComponent';
 import Layout from './hoc/Layout/Layout.jsx'
 import TopProgress from './components/UI/TopProgress'
-
+import NewClassroom from './containers/classroom/NewClassroom'
 import Logout from './containers/auth/Logout.jsx';
 
 const asyncRegister = asyncComponent(() => {
@@ -45,7 +45,7 @@ class Router extends Component {
       <Switch>
       <Route path="/classroom" exact component={asyncClassroom}/>
       <Route path="/logout" exact component={Logout}/>
-
+      <Route path="/classroom/new" exact component={NewClassroom}/>
       <Redirect from="/login" to="/classroom"/> 
       <Redirect from="/register" to="/classroom"/> 
 

@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 import Input from "../../../components/UI/Input.jsx";
-import Form from "../../../components/Wrappers/Form.jsx";
 import Button from "../../../components/UI/Button.jsx";
 import Message from  './Messages/MessageTest';
 import "../../../components/styles/login.css";
-
 
 const client = new W3CWebSocket('ws://127.0.0.1:8000');
 
@@ -33,10 +31,10 @@ class Chat extends Component {
   sendMessageAction = e => {
     
     e.preventDefault();
-   const user_message = this.state.last_sent_message.value
-    this.setState({ has_sent_message: true,user_message }, () => {
-      //send message to the server
-      var data
+   const user_message = this.state.user_message
+   if((user_message.trim()).length <= 0) return
+
+   var data
       data  =  {
         message:this.state.last_sent_message,
         user_id:this.state.user_id,
@@ -44,9 +42,21 @@ class Chat extends Component {
         type:'classroom_message',
         classroom_id:this.state.classroom_id
       }
+
       client.send(JSON.stringify(data))
-      this.setState({user_message : ''})
+
+   
+   let oldState = {...this.state}
+   oldState['last_sent_message']['value'] = user_message
+   oldState['has_sent_message'] = false
+   oldState['user_message'] = ''
+   const newState  = oldState
+   
+    this.setState(newState, () => {
+      //send message to the server
+      console.log(this.state)
     });
+
   };
 
   /**
