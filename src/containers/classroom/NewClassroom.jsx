@@ -5,7 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import TextField from "@material-ui/core/TextField";
-import bgImg from "../../../src/media/images/bg-01.jpg";
+// import bgImg from "../../../src/media/images/bg-01.jpg";
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -18,6 +18,10 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
 
 // import Book from "@material-ui/icons/";
 import Select from '@material-ui/core/Select'
@@ -37,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     marginLeft: -200,
     top: "50%",
     marginTop: 80,
-    opacity: 0.9,
+    // opacity: 0.9,
   },
   textField: {
     // marginLeft:theme.spacing(1),
@@ -55,7 +59,10 @@ const useStyles = makeStyles(theme => ({
   button:{
       float:'right',
       marginTop:30
-  }
+  },
+  group: {
+    margin: theme.spacing(1, 0),
+  },
 }));
 
 export default function NewClassroom() {
@@ -63,7 +70,8 @@ export default function NewClassroom() {
   const [values, setValues] = React.useState({
     name: "",
     size: 50,
-    start_time: "",
+    date: "",
+    time:"",
     classTopic: "",
     owner: "",
     languages: [],
@@ -150,25 +158,11 @@ function handleClassCreatinon(e){
             
             {/* visibility */}
             <FormControl className={classes.formControl}>
-                <InputLabel htmlFor='visibility'>Class Visibility</InputLabel>
-              <Select 
-            value={values.visibility}
-            onChange={handleValueChange('visibility')}
-            inputProps={{
-                name:'visibity',
-                id:'visiibility'
-            }}
-            >
-            <MenuItem value=''><em>None</em></MenuItem>
 
-            <MenuItem value='public'>Public</MenuItem>
-            <MenuItem value='private'>Private</MenuItem>
-
-            </Select>
-
+            {/* <MuiPickersUtilsProvider> */}
 
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <Grid container className={classes.grid} justify="space-around">
+      <Grid container className={classes.grid}>
         <KeyboardDatePicker
           margin="normal"
           id="mui-pickers-date"
@@ -192,6 +186,31 @@ function handleClassCreatinon(e){
       </Grid>
     </MuiPickersUtilsProvider>
             </FormControl>
+            <FormControl component="fieldset" className={classes.formControl}>
+        <FormLabel component="legend">Visibility</FormLabel>
+        <RadioGroup
+          aria-label="visibility"
+          name="visibility"
+          className={classes.group}
+          value={values.visibility}
+          row
+          onChange={handleValueChange('visibility')}
+        >
+          <FormControlLabel
+            value="Private"
+            control={<Radio color="secondary" />}
+            label="public"
+            labelPlacement="start"
+          />
+          <FormControlLabel
+            value="Public"
+            control={<Radio color="primary" />}
+            label="private"
+            labelPlacement="start"
+          />
+          
+        </RadioGroup>
+      </FormControl>
           </Grid>
 
           <Button onClick={handleClassCreatinon} className={classes.button} variant="contained" color="primary">{values.buttonValue}</Button>

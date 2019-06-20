@@ -18,7 +18,7 @@ const asyncLogin = asyncComponent(() => {
   });
   
   const asyncClassroom = asyncComponent(() => {
-    return import('./containers/classroom/Environment.jsx');
+    return import('./containers/classroom/ENV2.jsx');
   })
 
 class Router extends Component {
