@@ -7,7 +7,7 @@ import Layout from './hoc/Layout/Layout.jsx'
 import TopProgress from './components/UI/TopProgress'
 import NewClassroom from './containers/classroom/NewClassroom'
 import Logout from './containers/auth/Logout.jsx';
-
+import FullWidthGrid from './hoc/Layout/Grid'
 const asyncRegister = asyncComponent(() => {
   return import('./containers/auth/Register.jsx');
 });
@@ -43,6 +43,7 @@ class Router extends Component {
           if(this.props.isAutheticated){
             routes = (
       <Switch>
+      <Route path="/" exact component={FullWidthGrid}/>
       <Route path="/classroom" exact component={asyncClassroom}/>
       <Route path="/logout" exact component={Logout}/>
       <Route path="/classroom/new" exact component={NewClassroom}/>
