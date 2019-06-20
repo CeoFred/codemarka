@@ -1,0 +1,55 @@
+.message{
+    border: none;
+    color:rgb(14, 13, 13);
+    font-size: 15px;
+    outline: none;
+    caret-color: cadetblue;
+    border: 1px solid rgb(214, 210, 210);
+    padding: 15px;
+    border-top-right-radius: 14px;
+    border-top-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+    border-bottom-left-radius: 14px;
+    margin-bottom: -20px
+    
+}
+button{
+    background-color:#264a45f2;
+    border:none;
+    padding: 15px;
+    border-radius:50%;
+    outline:none;
+    color:#fff;
+}
+
+textarea {
+    box-sizing: border-box;
+resize: none;
+overflow: auto;
+/* min-height: 10px; */
+max-height: 100px;
+font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+}
+.container{
+bottom:-100;
+/* position: fixed; */
+}
+/* width */
+::-webkit-scrollbar {
+width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+background: #f1f1f1; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+background: #555; 
+}

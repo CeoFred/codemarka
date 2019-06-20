@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import LiveHelp from '@material-ui/icons/LiveHelp';
 import Chat from '@material-ui/icons/Chat';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
-
+import Conversation from './Conversation'
 function TabContainer({ children, dir }) {
   return (
     <Typography component="div" dir={dir} style={{ padding: 8 * 3 }}>
@@ -27,11 +27,11 @@ TabContainer.propTypes = {
 const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    width: 500,
+    width: 350,
   },
 }));
 
-export default function FullWidthTabs() {
+export default function FullWidthTabs(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -54,9 +54,8 @@ export default function FullWidthTabs() {
           textColor="primary"
           variant="fullWidth"
         >
-          <Tab icon={<Chat />} label="chats" />
-          <Tab icon={<PersonPinIcon />}label="Members" />
-          <Tab icon={<LiveHelp/>} label="Item Three" />
+          <Tab icon={<Chat />}  />
+          <Tab icon={<PersonPinIcon />} />
         </Tabs>
       </AppBar>
       <SwipeableViews
@@ -64,9 +63,8 @@ export default function FullWidthTabs() {
         index={value}
         onChangeIndex={handleChangeIndex}
       >
-        <TabContainer dir={theme.direction}>Item One</TabContainer>
+        <TabContainer dir={theme.direction} style={{position: 'fixed',bottom:0}}><Conversation/></TabContainer>
         <TabContainer dir={theme.direction}>Item Two</TabContainer>
-        <TabContainer dir={theme.direction}>Item Three</TabContainer>
       </SwipeableViews>
     </div>
   );

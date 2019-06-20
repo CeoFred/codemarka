@@ -20,7 +20,6 @@ const asyncLogin = asyncComponent(() => {
   const asyncClassroom = asyncComponent(() => {
     return import('./containers/classroom/ENV2.jsx');
   })
-
 class Router extends Component {
 
     
@@ -32,7 +31,7 @@ class Router extends Component {
     render() {
         let routes = (
             <Switch>  
-      <Redirect exact from="/classroom" to="/login"/>
+      {/* <Redirect exact from="/classroom" to="/login"/> */}
       <Route path="/login" exact component={asyncLogin}/>
       <Route path="/logout" exact component={Logout}/>
       <Route path="/register" exact component={asyncRegister}/>
@@ -45,11 +44,11 @@ class Router extends Component {
             routes = (
       <Switch>
       <Route path="/" exact component={FullWidthGrid}/>
-      <Route path="/classroom" exact component={asyncClassroom}/>
-      <Route path="/logout" exact component={Logout}/>
       <Route path="/classroom/new" exact component={NewClassroom}/>
-      <Redirect from="/login" to="/classroom"/> 
-      <Redirect from="/register" to="/classroom"/> 
+      <Route path="/classroom/:id" exact component={asyncClassroom}/>      
+      <Route path="/logout" exact component={Logout}/>
+      <Redirect from="/login" exact to="/classroom"/> 
+      <Redirect from="/register" exact to="/classroom"/> 
 
       </Switch>
             )

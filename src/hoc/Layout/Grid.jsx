@@ -1,47 +1,108 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import PrimarySearchAppBar from "./PrimarySearchAppBar";
+import TestTab from "./TestTab";
+import Editor from "../../containers/classroom/Editor/Editor";
+import "../../containers/classroom/Editor/editor.css";
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
+    overflow: "hidden",
+    minHeight:'100vh'
+  }
 }));
 
 export default function FullWidthGrid() {
   const classes = useStyles();
-
+  const handleEditorChange = () => {};
   return (
-    <div className={classes.root}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Paper className={classes.paper}>xs=12</Paper>
+    <Box component="div" className={classes.root}>
+      {/* Top Navigation */}
+      <PrimarySearchAppBar />
+      {/* container */}
+      <Grid container>
+        {/* chat area */}
+        <Grid item md={3}>
+          <TestTab />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Paper className={classes.paper}>xs=12 sm=6</Paper>
+        {/* end chata area */}
+
+        {/* Text Editors */}
+        <Grid item md={9}>
+          {/* Text Editor container */}
+          <Grid
+            container
+            spacing={1}
+            direction="row"
+            justify="space-evenly"
+            alignItems="stretch"
+          >
+            {/* HTML Editor */}
+            <Grid item md={6}>
+              <Editor
+                value='<!DOCTYPE html>
+                <html lang="en">
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                  <title>Document</title>
+                </head>
+                <body>
+                </body>
+                </html>'
+                options={{
+                  mode: "htmlmixed",
+                  theme: "material",
+                  lineNumbers: true
+                }}
+                change={(editor, data, value) =>
+                  handleEditorChange(editor, data, value)
+                }
+              />
+            </Grid>
+            {/* End HTML Editor */}
+
+            {/* CSS Editor */}
+            <Grid item md={6}>
+              <Editor
+                value="css"
+                options={{
+                  mode: "css",
+                  theme: "material",
+                  lineNumbers: true
+                }}
+                change={(editor, data, value) =>
+                  handleEditorChange(editor, data, value)
+                }
+              />
+            </Grid>
+
+            {/* End CSS Editor */}
+
+            {/* Javascript Editor */}
+            <Grid item md={12}>
+              <Editor
+                value="js"
+                options={{
+                  mode: "javascript",
+                  theme: "material",
+                  lineNumbers: true
+                }}
+                change={(editor, data, value) =>
+                  handleEditorChange(editor, data, value)
+                }
+              />
+            </Grid>
+            {/* End Javascript Editor */}
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Paper className={classes.paper}>xs=12 sm=6</Paper>
-        </Grid>
-        <Grid item xs={6} sm={3}>
-          <Paper className={classes.paper}>xs=6 sm=3</Paper>
-        </Grid>
-        <Grid item xs={6} sm={3}>
-          <Paper className={classes.paper}>xs=6 sm=3</Paper>
-        </Grid>
-        <Grid item xs={6} sm={3}>
-          <Paper className={classes.paper}>xs=6 sm=3</Paper>
-        </Grid>
-        <Grid item xs={6} sm={3}>
-          <Paper className={classes.paper}>xs=6 sm=3</Paper>
-        </Grid>
+        {/* End TextEditor */}
       </Grid>
-    </div>
+      {/* End container */}
+    </Box>
   );
 }

@@ -10,7 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-// import AccountCircle from '@material-ui/icons/AccountCircle';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
@@ -77,7 +77,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Nav(props) {
+export default function PrimarySearchAppBar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -152,7 +152,7 @@ export default function Nav(props) {
           aria-haspopup="true"
           color="inherit"
         >
-          {/* <AccountCircle /> */}
+          <AccountCircle />
         </IconButton>
         <p>Profile</p>
       </MenuItem>
@@ -161,19 +161,18 @@ export default function Nav(props) {
 
   return (
     <div className={classes.grow}>
-      <AppBar position="fixed" className={props.appbarclass} style={{backgroundColor:"rgb(31, 40, 45)"}}>
+      <AppBar position="static">
         <Toolbar>
           <IconButton
             edge="start"
-            className={props.iconButton ? props.iconButton : classes.menuButton}
+            className={classes.menuButton}
             color="inherit"
             aria-label="Open drawer"
-            onClick={props.handleMenuIconClick}
           >
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-        {props.title}
+            Colab
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -208,7 +207,7 @@ export default function Nav(props) {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              {/* <AccountCircle /> */}
+              <AccountCircle />
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>

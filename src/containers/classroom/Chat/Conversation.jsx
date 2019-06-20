@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
+// import TextField from "@material-ui/core/TextField";
 
-import Input from "../../../components/UI/Input.jsx";
-import Button from "../../../components/UI/Button.jsx";
+// import Input from "../../../components/UI/Input.jsx";
+// import Button from "../../../components/UI/Button.jsx";
 import Message from  './Messages/MessageTest';
 import "../../../components/styles/login.css";
-
+import Fab from '@material-ui/core/Fab'
+import './Messages/Input.css'
 const client = new W3CWebSocket('ws://127.0.0.1:8000');
 
-class Chat extends Component {
+class Conversation extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -82,10 +84,13 @@ onEditorStateChange = (text) => {
   }));
  };
 
+
+
+
  componentDidMount() {
+
    let url = new URLSearchParams(window.location.search)
    const classroom =  url.get('classroom')
-   
    this.setState({classroom_id:classroom})
 
   client.onopen = () => {
@@ -111,7 +116,7 @@ onEditorStateChange = (text) => {
 
     if(messageType === 'allMessages'){
       this.setState({messages:contentArray},() => {
-        console.log(this.state)
+        // console.log(this.state)
       })
 
     }else if(messageType === 'new_classroom_message'){
@@ -152,21 +157,17 @@ onEditorStateChange = (text) => {
       <div>
 
           {messages}
-              <Input
-                inputChanged={this.inputChangedHandler}
-                value={this.state.user_message}
-                type="text"
-                name="message"
-                placeholder="Send a message ..."
-                required
-              />
-                <Button type="buttton" submit={this.sendMessageAction}>
-                  Send
-                </Button>
-            
+        <span className="container">
+        <textarea onChange={this.inputChangedHandler} className="message" style={{bottom:0}} placeholder="Type a message..." data-autoresize rows="1"></textarea>
+
+        <Fab color="primary" onClick={this.sendMessageAction}>
+        Go
+        </Fab>
+        
+        </span>
         </div>
     );
   }
 }
 
-export default Chat;
+export default Conversation;
