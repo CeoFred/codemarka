@@ -11,6 +11,13 @@ import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 import Button from '@material-ui/core/Button'
 import Progress from '../../components/UI/progress'
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+
 
 // import Book from "@material-ui/icons/";
 import Select from '@material-ui/core/Select'
@@ -158,6 +165,32 @@ function handleClassCreatinon(e){
             <MenuItem value='private'>Private</MenuItem>
 
             </Select>
+
+
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <Grid container className={classes.grid} justify="space-around">
+        <KeyboardDatePicker
+          margin="normal"
+          id="mui-pickers-date"
+          label="Date picker"
+          value={values.selectedDate}
+          onChange={handleValueChange('date')}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+        />
+        <KeyboardTimePicker
+          margin="normal"
+          id="mui-pickers-time"
+          label="Time picker"
+          value={values.selectedDate}
+          onChange={handleValueChange('time')}
+          KeyboardButtonProps={{
+            'aria-label': 'change time',
+          }}
+        />
+      </Grid>
+    </MuiPickersUtilsProvider>
             </FormControl>
           </Grid>
 
