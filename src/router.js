@@ -27,7 +27,7 @@ class Router extends Component {
   componentDidMount(){
 
     this.props.onTryAutoSignup();
-     
+    
   }
     render() {
         let routes = (
@@ -37,6 +37,7 @@ class Router extends Component {
       <Route path="/logout" exact component={Logout}/>
       <Route path="/register" exact component={asyncRegister}/>
       <Route path="/" exact component={TopProgress}/>
+
             </Switch>
           );
       
