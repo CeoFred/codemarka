@@ -4,11 +4,13 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const auth = require('./app/routes/auth')
-const playground = require('./app/routes/conversation')
+const classroom = require('./app/routes/classroom')
+const user = require('./app/routes/user')
 var compression = require('compression')
 var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override');
 
+const checkAuth = require('./app/middleware/check_Auth');
 
 
 app.use(cors());
@@ -19,7 +21,7 @@ app.use(compression())
 app.use(cookieParser());
 app.use(methodOverride());
 
-var whitelist = ['http://localhost:3000', 'http://localhost:3001']
+var whitelist = ['http://localhost:3000', 'http://localhost:3001','*']
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
@@ -30,9 +32,9 @@ var corsOptions = {
   }
 }
 
-app.use('/auth',cors(corsOptions),auth);
-app.use('/playground',playground);
-// app.use('/user',userRoutes);
+app.use('/auth',cors(),auth);
+app.use('/user',cors(),checkAuth,user);
+app.use('/classroom',cors(),checkAuth,classroom);
 // middleware for errors
 app.use((req,res,next) => {
 

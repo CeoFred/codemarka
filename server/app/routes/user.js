@@ -45,13 +45,14 @@ const upload = multer({
     fileSize: 1024 * 1024 * 5
 }});
 
-const Classroom = require('../models/classroom');
+const User = require('../models/users');
 
 //return all active classrooms in particular location
-router.get('/l/:location',(req,res) => {
-    const location = req.params.location
+router.get('/classrooms/all/',(req,res) => {
+    const user = req.decoded
+    res.send(user)
     // res.json({location})
-    Classroom.find({'location':location}).exec().then(data=>res.json({data})).catch(err=>res.status(404).json(err))
+    Classroom.find({'created_by':req.param}).exec().then(data=>res.json({data})).catch(err=>res.status(404).json(err))
 })
 
 //  create a new classroom
