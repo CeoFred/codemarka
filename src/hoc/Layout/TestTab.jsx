@@ -6,13 +6,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Chat from '@material-ui/icons/Chat';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
-import HelpIcon from '@material-ui/icons/Help';
 import Typography from '@material-ui/core/Typography';
 import TestMessages from './TestMessages'
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Fab from '@material-ui/core/Fab';
-import ArrowRightAltRounded from '@material-ui/icons/ArrowRightAltRounded'
 import TestParticipants from './TestParticipants'
 
 function TabContainer(props) {
@@ -44,7 +39,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function TestTab() {
+export default function TestTab(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -61,7 +56,7 @@ export default function TestTab() {
         
         </Tabs>
       </AppBar>
-      {value === 0 && <TestMessages/> }
+      {value === 0 && <TestMessages textInputValue={props.textInputValue} user_id={props.user_id} messageBtnClicked={props.sendMessage} messageChange={props.handleMessageChange} messages={props.messages}/> }
       {value === 1 && <TestParticipants/>}
     </div>
   );

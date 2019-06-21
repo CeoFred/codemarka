@@ -1,11 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import ImageIcon from '@material-ui/icons/Image';
+import Divider from '@material-ui/core/Divider'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -33,7 +33,7 @@ export default function Message(props) {
       </div>
   )
  }else { return (
-  // <List >
+  <React.Fragment>
       <ListItem className={classes.root}>
         <ListItemAvatar>
           <Avatar>
@@ -43,9 +43,8 @@ export default function Message(props) {
         <ListItemText primary={who} secondary={props.content} />
       </ListItem>
 
-      // <Divider variant="inset" component="li" /> 
-    // </List>
-
+      <Divider variant="inset" component="li" /> 
+    </React.Fragment>
    )
  }
 }

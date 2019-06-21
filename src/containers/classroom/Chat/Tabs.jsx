@@ -7,7 +7,6 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 
-import LiveHelp from '@material-ui/icons/LiveHelp';
 import Chat from '@material-ui/icons/Chat';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import Conversation from './Conversation'
