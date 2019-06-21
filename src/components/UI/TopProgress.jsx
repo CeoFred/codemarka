@@ -38,7 +38,7 @@ export default function LinearDeterminate(props) {
   }else{
     return (
       <div className={classes.root}>  
-        <LinearProgress color="secondary" variant="determinate" value={completed} />
+        <LinearProgress color="primary" variant="determinate" value={completed} />
       </div>
     );
   }

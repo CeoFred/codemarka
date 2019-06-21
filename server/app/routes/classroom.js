@@ -123,10 +123,33 @@ res.status(500).json({
 
 });
 
+//invite someone via mail to a class
+router.post('/invite/:classroomid',checkAuth,(req,res) => {
 
-router.post('/',checkAuth,upload.single('productImage') ,(req,res,next) => {
+})
 
-   console.log(req.file);
+//here we check if user is eligible to join a classroom
+router.get('/join/:classroomid',checkAuth,(req,res) => {
+
+})
+
+//set permissions
+router.post('/permissions/set/:classroomid',checkAuth,(req,res) => {
+
+})
+
+//ban user from classroom
+router.post('/users/:userid/ban/:classroomid',checkAuth,(req,res) => {
+
+})
+
+//update details about a class
+router.post('/update',checkAuth,(req,res,next) => {
+
+    upload.single('productImage')
+   
+    console.log(req.file);
+   
     let product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,

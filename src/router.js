@@ -1,15 +1,19 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {Route,Switch,withRouter,Redirect} from 'react-router-dom';
+import {Route,Switch,withRouter} from 'react-router-dom';
 import * as actions from './redux/actions/index';
 import asyncComponent from './hoc/asyncComponent/asyncComponent';
 import Layout from './hoc/Layout/Layout.jsx'
 import TopProgress from './components/UI/TopProgress'
 import NewClassroom from './containers/classroom/NewClassroom'
 import Logout from './containers/auth/Logout.jsx';
-import FullWidthGrid from './hoc/Layout/Grid'
+
 const asyncRegister = asyncComponent(() => {
   return import('./containers/auth/Register.jsx');
+});
+
+const asyncFullWidth = asyncComponent(() => {
+  return import('./hoc/Layout/Grid');
 });
 
 
@@ -33,7 +37,6 @@ class Router extends Component {
             <Switch>  
       {/* <Redirect exact from="/classroom" to="/login"/> */}
       <Route path="/login" exact component={asyncLogin}/>
-      <Route path="/logout" exact component={Logout}/>
       <Route path="/register" exact component={asyncRegister}/>
       <Route path="/" exact component={TopProgress}/>
 
@@ -43,12 +46,12 @@ class Router extends Component {
           if(this.props.isAutheticated){
             routes = (
       <Switch>
-      <Route path="/" exact component={FullWidthGrid}/>
+      <Route path="/" exact component={asyncFullWidth}/>
       <Route path="/classroom/new" exact component={NewClassroom}/>
       <Route path="/classroom/:id" exact component={asyncClassroom}/>      
       <Route path="/logout" exact component={Logout}/>
-      <Redirect from="/login" exact to="/classroom"/> 
-      <Redirect from="/register" exact to="/classroom"/> 
+      <Route path="/login" exact component={asyncLogin}/>
+      <Route path="/register" exact component={asyncRegister}/>
 
       </Switch>
             )
@@ -56,7 +59,7 @@ class Router extends Component {
 
         return (<Layout>
                 {routes}
-        </Layout>
+              </Layout>
         )
     }
 }

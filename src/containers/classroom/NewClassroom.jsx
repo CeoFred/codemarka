@@ -5,7 +5,6 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import TextField from "@material-ui/core/TextField";
-// import bgImg from "../../../src/media/images/bg-01.jpg";
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -22,9 +21,9 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
-
-// import Book from "@material-ui/icons/";
+import {useSelector,useDispatch} from 'react-redux'
 import Select from '@material-ui/core/Select'
+import * as actions from '../../redux/actions/'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -34,18 +33,14 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(4),
     color: theme.palette.text.secondary,
-    // height:400,
     width: 400,
     position: "absolute",
     left: "50%",
     marginLeft: -200,
     top: "50%",
     marginTop: 80,
-    // opacity: 0.9,
   },
   textField: {
-    // marginLeft:theme.spacing(1),
-    // marginRight:theme.spacing(2),
     width: "100%"
   },
   dense: {
@@ -65,7 +60,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function NewClassroom() {
+ function NewClassroom(props) {
   const classes = useStyles();
   const [values, setValues] = React.useState({
     name: "",
@@ -76,30 +71,33 @@ export default function NewClassroom() {
     owner: "",
     languages: [],
     visibility:'public',
-    buttonValue:'SETUP'
+    buttonValue:'SETUP',
+    description:'',
   });
+  
   const handleValueChange = name => event => {
     setValues({ ...values, [name]: event.target.value });
   };
+  const state = useSelector(state => state)
+  const dispatch = useDispatch()
+
   
 function handleClassCreatinon(e){
     e.preventDefault()
     console.log(values)
+    dispatch(actions.createNewClass(values))
     setValues({...values,buttonValue:<Progress/>})
+    console.log(state.classroom)
 }
+
+
   return (
     <div
-      className={classes.root}
-    //   style={{
-    //     height: "100vh",
-    //     background: `url(${bgImg})`,
-    //     backgroundSize: "100% 100%",
-    //     backgroundRepeat: "no-repeat"
-    //   }}
-    >
+      className={classes.root}>
       <Nav />
       {/* <Container fixed > */}
       <Paper className={classes.paper}>
+
         <form className={classes.container} autoComplete='off'>
           <h1>Create A new classroom</h1>
           <Grid container alignItems="flex-end">
@@ -130,9 +128,23 @@ function handleClassCreatinon(e){
                 placeholder="Topic"
                 // helperText='what should '
               />
+              
+              
             </FormControl>
 
+        <FormControl className={classes.formControl}>
+<TextField name="description"
+ className={clsx(classes.textField, classes.dense)}
+ onChange={handleValueChange("description")}
+    value={values.description}
+    placeholder="About this class..."
+  id="description"
+   rows={2}         
+   rowsMax={10}
+  multiline={true}
+/>
 
+          </FormControl>
             
             {/* size */}
             <FormControl className={classes.formControl}>
@@ -220,3 +232,6 @@ function handleClassCreatinon(e){
     </div>
   );
 }
+
+
+export default NewClassroom
