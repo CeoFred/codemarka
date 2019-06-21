@@ -34,7 +34,7 @@ var corsOptions = {
 
 app.use('/auth',cors(),auth);
 app.use('/user',cors(),checkAuth,user);
-app.use('/classroom',cors(),checkAuth,classroom);
+app.use('/classroom',cors(),classroom);
 // middleware for errors
 app.use((req,res,next) => {
 

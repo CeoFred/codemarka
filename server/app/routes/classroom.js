@@ -72,6 +72,13 @@ const  {autostart,name,size,topic,start_time,start_date,description,location,vis
 let invitationURL = Math.random() * 23;
    invitationURL =  `http://localhost:3000/classroom/${invitationURL}`
 
+
+   //get user id and compare with json decoded token sent
+let userid  =  req.decoded.data.userId
+
+if(userid !== created_by){
+    res.status(403).json({err:'User token sent does not match'})
+}
   let newclassroom =   new Classroom({
         _id: new mongoose.Types.ObjectId(),
         name,
