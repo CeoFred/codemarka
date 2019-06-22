@@ -1,13 +1,14 @@
-const env = process.env.NODE_ENV || 'development';
+
+const env = process.env.NODE_ENV;
 
 const config = {
   development: {
     server: {
-      port: process.env.PORT || 8000,
+      port: process.env.PORT || process.env.DB_PORT_DEVELOPMENT,
       hostname: process.env.HOSTNAME || 'localhost',
     },
     database: {
-      url: 'mongodb://localhost/colab',
+      url: process.env.DB_URL_DEVELOPMENT,
     },
   },
 
@@ -23,11 +24,11 @@ const config = {
 
   production: {
     server: {
-      port: process.env.PORT || 8000,
+      port: process.env.PORT || process.env.DB_PORT_PRODUCTION,
       hostname: process.env.HOSTNAME || 'localhost',
     },
     database: {
-      url: 'mongodb://mongo:27017/express-production',
+      url: process.env.DB_URL_PRODUCTION,
     },
   },
 };
