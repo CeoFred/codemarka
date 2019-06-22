@@ -8,7 +8,7 @@ const config = {
       hostname: process.env.HOSTNAME || 'localhost',
     },
     database: {
-      url: process.env.DB_URL_DEVELOPMENT,
+      url: process.env.MONGO_ATLAS_URL,
     },
   },
 
