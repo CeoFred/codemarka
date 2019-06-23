@@ -13,19 +13,24 @@ export const createNewClass = (data) => {
 
 return (dispatch) => {
         dispatch(createClassRoomInit)
+        console.log(data)
         let url = '/classroom/create'
         myHeader.append('Content-Type','Application/json')
         myHeader.append('Authorization',`Bearer ${data.token}`)
+        let realSize =   data.size.split(' ')
 
         let requestData  = {
             name:data.name,
-            created_by:data.user_id,
+            created_by:data.owner,
             visibility:data.visibility,
             description:data.description,
             location:data.location,
-            start_time:data.start_time,
-            end_time:data.end_time,
-            topic:data.topic
+            start_time:data.time,
+            start_date:data.date,
+            topic:data.topic,
+            autostart:false,
+            size:realSize[1],
+            token:data.token
         }
         
 let loginRequest = new Request(url,{
@@ -37,24 +42,20 @@ let loginRequest = new Request(url,{
 
 })
 fetch(loginRequest).then(res => {
+    
     return res.json()
 
 }).then(res => {
     console.log(res)
-    // let expirationDate = new Date(new Date().getTime() + res.meta.expires * 1000);
-    // localStorage.setItem('token', res.meta.token);
-    // localStorage.setItem('expirationDate', expirationDate);
-    // localStorage.setItem('userId',res.meta.userId);
-    // setTimeout(() => {
-    //     dispatch(classCreationSuccess(res.meta.useerId,res.meta.token));
-    //     // dispatch(checkAuthTimeout(res.data.expiresIn));          
-    // }, 2000);
-  
+    if(res.status === 'created'){
+        dispatch(classCreationSuccess(res.data))
+    }else{
+        dispatch(classCreationFailed(res.message))
+    }
 }).catch(err =>  {
-    // setTimeout(() => {
-    // dispatch(classCreationFailed(err))
-    // }, 2000);
      console.error(err)
+     dispatch(classCreationFailed(err))
+
 })
 
     }
@@ -62,13 +63,15 @@ fetch(loginRequest).then(res => {
 
 export const classCreationFailed = (error) => {
     return {
-        type:actionTypes.CLASS_CREATION_FAILED
+        type:actionTypes.CLASS_CREATION_FAILED,
+        payload:error
 
     }
 }
 
 export const classCreationSuccess = (details) => {
     return {
-        type:actionTypes.CLASS_CREATION_SUCCESS
+        type:actionTypes.CLASS_CREATION_SUCCESS,
+        payload:details
     }
 }

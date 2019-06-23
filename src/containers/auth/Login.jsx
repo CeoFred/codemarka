@@ -38,9 +38,7 @@ class Login extends Component {
   LoginAction = e => {
     e.preventDefault();
 
-    if(this.props.isAutheticated){
-      return <Redirect to="/"/>
-    }
+    
 
     const  data = {
       email:this.state.email.value,
@@ -107,6 +105,9 @@ class Login extends Component {
     }else{
       buttonContent = 'Go'
     }
+    if(this.props.isAutheticated){
+      return <Redirect to="/"/>
+    }else{
 
     return (
       <div data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
@@ -170,12 +171,13 @@ class Login extends Component {
         </div>
       </div>
     );
+        }
   }
 }
 
 const mapStateToProps = state => {
   return {
-    isAutheticated: state.auth.token !== null,
+    isAutheticated: state.auth.token,
     authStarted: state.auth.loading === true,
     errors:state.auth.errorMessage
   }
