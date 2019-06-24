@@ -55,9 +55,9 @@ const wsServer = new webSocketServer({
         if (message.type === 'utf8') {
   
             let dataFromClient = JSON.parse(message.utf8Data)
-  
+            console.log(dataFromClient)
             if (dataFromClient.type === 'classroom_message') {
-  
+
                 // push new activity
   
                 userActivities.push(`${dataFromClient.user_id} sent a new message`);

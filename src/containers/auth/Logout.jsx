@@ -8,14 +8,17 @@ import * as actions from '../../redux/actions/index'
 
     componentDidMount(){
         this.props.dispatchLogout()
-        console.log(this.props)
+      }
+
+    componentWillUnmount(){
+
     }
 
     render() {
 
         let content= 'Redirecting please wait ....'
-        if(this.props.isLoggedOut){
-            content = <Redirect to="/login"/>
+        if(this.props.token === null){
+          content = <Redirect to="/login"/>
         }
 
         return (
@@ -29,7 +32,7 @@ import * as actions from '../../redux/actions/index'
 
 const mapStateToProps = state => {
     return {
-      isLoggedOut: state.auth.token === null
+      token: state.auth.token
     }
   }
   

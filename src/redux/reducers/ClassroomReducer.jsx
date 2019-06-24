@@ -6,7 +6,8 @@ let INITIAL_STATE = {
     classroom_id:null,
     is_loaded:null,
     errors:null,
-    loading:false
+    loading:false,
+    classdetails:null
 }
 
 
@@ -19,13 +20,14 @@ const classroomCreationInit = (state,action) => {
 
 const classroomCreatedSuccess = (state,action) => {
     return helper.updateObject(state,{
-        loading:true
+        loading:false,
+       classdetails:action.payload
         });
 } 
 
 const classroomCreationFailed = (state,action) => {
     return helper.updateObject(state,{
-        errors:action.errors
+        errors:action.payload
         });
 } 
 

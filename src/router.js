@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {Route,Switch,withRouter} from 'react-router-dom';
+import {Route,Switch,withRouter,Redirect} from 'react-router-dom';
 import * as actions from './redux/actions/index';
 import asyncComponent from './hoc/asyncComponent/asyncComponent';
 import Layout from './hoc/Layout/Layout.jsx'
@@ -35,8 +35,9 @@ class Router extends Component {
     render() {
         let routes = (
             <Switch>  
-      {/* <Redirect exact from="/classroom" to="/login"/> */}
+      <Redirect exact from="/classroom" to="/login"/>
       <Route path="/login" exact component={asyncLogin}/>
+      <Route path="/logout" exact component={Logout}/>
       <Route path="/register" exact component={asyncRegister}/>
       <Route path="/" exact component={TopProgress}/>
 

@@ -121,25 +121,21 @@ export default function FullWidthGrid() {
     oldState["user_message"] = e.target.value;
     let newState = oldState;
     setColabState(newState);
-    console.log(newState);
   };
 
   /* When content changes, we send the
 current content of the editor to the server. */
-  const onEditorStateChange = (text, data, value,name) => {
-
-   const dataToServer = {
+  const onEditorStateChange = (text, content, value, name) => {
+    var data;
+    data = {
       time: new Date().getTime(),
       type: "editor_change",
       classroom_id: colabstate.classroom_id,
-      name:name,
-      value,
-      text,
-      data
+      name,
+      value
     };
 
-    client.send(JSON.stringify(dataToServer));
-
+    client.send(JSON.stringify(data));
   };
 
   return (
@@ -190,7 +186,7 @@ current content of the editor to the server. */
                   lineNumbers: true
                 }}
                 change={(editor, data, value) =>
-                  onEditorStateChange(editor, data, value,'HTML')
+                  onEditorStateChange(editor, data, value, "HTML")
                 }
               />
             </Grid>
@@ -199,14 +195,19 @@ current content of the editor to the server. */
             {/* CSS Editor */}
             <Grid item md={6}>
               <Editor
-                value="css"
+                value="* {
+                  padding:0;
+                  margin:0;
+                  display:block;
+                  position:relative;
+                }"
                 options={{
                   mode: "css",
                   theme: "material",
                   lineNumbers: true
                 }}
                 change={(editor, data, value) =>
-                  onEditorStateChange(editor, data, value,'CSS')
+                  onEditorStateChange(editor, data, value, "CSS")
                 }
               />
             </Grid>
@@ -216,14 +217,16 @@ current content of the editor to the server. */
             {/* Javascript Editor */}
             <Grid item md={12}>
               <Editor
-                value="js"
+                value="window.addEventListener('load',function(){
+                  //do stuffs here
+                })"
                 options={{
                   mode: "javascript",
                   theme: "material",
                   lineNumbers: true
                 }}
                 change={(editor, data, value) =>
-                  onEditorStateChange(editor, data, value,'JS')
+                  onEditorStateChange(editor, data, value, "JS")
                 }
               />
             </Grid>

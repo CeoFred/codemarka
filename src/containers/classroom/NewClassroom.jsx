@@ -61,33 +61,46 @@ const useStyles = makeStyles(theme => ({
 }));
 
  function NewClassroom(props) {
+  const state = useSelector(state => state)
+  const dispatch = useDispatch()
+
   const classes = useStyles();
   const [values, setValues] = React.useState({
     name: "",
     size: 50,
-    date: "",
-    time:"",
-    classTopic: "",
-    owner: "",
-    languages: [],
+    date: Date(),
+    time:Date(),
+    topic: "",
+    owner: state.auth.userId,
     visibility:'public',
     buttonValue:'SETUP',
     description:'',
+    token:state.auth.token,
+    location:''
   });
   
   const handleValueChange = name => event => {
+  
+    if(name === 'date' || name === 'time'){
+      setValues({...values,[name]:event})
+    }else{
     setValues({ ...values, [name]: event.target.value });
+
+    }
+  
   };
-  const state = useSelector(state => state)
-  const dispatch = useDispatch()
 
   
 function handleClassCreatinon(e){
+
     e.preventDefault()
     console.log(values)
     dispatch(actions.createNewClass(values))
     setValues({...values,buttonValue:<Progress/>})
     console.log(state.classroom)
+    setValues({...values,buttonValue:'SETUP'})
+
+
 }
 
 
@@ -120,8 +133,8 @@ function handleClassCreatinon(e){
                 id="topic"
                 label="Topic"
                 className={clsx(classes.textField, classes.dense)}
-                value={values.classTopic}
-                onChange={handleValueChange("classTopic")}
+                value={values.topic}
+                onChange={handleValueChange("topic")}
                 margin="dense"
                 type="text"
                 required
@@ -129,6 +142,18 @@ function handleClassCreatinon(e){
                 // helperText='what should '
               />
               
+              
+              <TextField
+                id="location"
+                label="location"
+                className={clsx(classes.textField, classes.dense)}
+                value={values.location}
+                onChange={handleValueChange("location")}
+                margin="dense"
+                type="text"
+                required
+                placeholder="location"
+              />
               
             </FormControl>
 
@@ -179,7 +204,7 @@ function handleClassCreatinon(e){
           margin="normal"
           id="mui-pickers-date"
           label="Date picker"
-          value={values.selectedDate}
+          value={values.date}
           onChange={handleValueChange('date')}
           KeyboardButtonProps={{
             'aria-label': 'change date',
@@ -189,7 +214,7 @@ function handleClassCreatinon(e){
           margin="normal"
           id="mui-pickers-time"
           label="Time picker"
-          value={values.selectedDate}
+          value={values.time}
           onChange={handleValueChange('time')}
           KeyboardButtonProps={{
             'aria-label': 'change time',
