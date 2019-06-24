@@ -24,6 +24,9 @@ import FormLabel from '@material-ui/core/FormLabel';
 import {useSelector,useDispatch} from 'react-redux'
 import Select from '@material-ui/core/Select'
 import * as actions from '../../redux/actions/'
+
+import {Redirect} from 'react-router-dom';
+
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -67,7 +70,7 @@ const useStyles = makeStyles(theme => ({
   const classes = useStyles();
   const [values, setValues] = React.useState({
     name: "",
-    size: 50,
+    size: "> 10",
     date: Date(),
     time:Date(),
     topic: "",
@@ -79,6 +82,9 @@ const useStyles = makeStyles(theme => ({
     location:''
   });
   
+  /**
+   * Handle input change
+   */
   const handleValueChange = name => event => {
   
     if(name === 'date' || name === 'time'){
@@ -89,25 +95,30 @@ const useStyles = makeStyles(theme => ({
     }
   
   };
-
+  var shouldRedirectOnSuccess = false
   
 function handleClassCreatinon(e){
 
     e.preventDefault()
-    console.log(values)
     dispatch(actions.createNewClass(values))
     setValues({...values,buttonValue:<Progress/>})
-    console.log(state.classroom)
-    setValues({...values,buttonValue:'SETUP'})
+   
+    if(state.classroom.errors){
+
+      setValues({...values,buttonValue:'SETUP'})
+  }
 
 
 }
-
+if(state.classroom.classdetails){
+  return (<Redirect to={`/classroom/preview/${state.classroom.classdetails._id}`}/>)
+}
 
   return (
     <div
       className={classes.root}>
       <Nav />
+      {shouldRedirectOnSuccess}
       {/* <Container fixed > */}
       <Paper className={classes.paper}>
 

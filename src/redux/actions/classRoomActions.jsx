@@ -13,10 +13,14 @@ export const createNewClass = (data) => {
 
 return (dispatch) => {
         dispatch(createClassRoomInit)
-        console.log(data)
         let url = '/classroom/create'
-        myHeader.append('Content-Type','Application/json')
+
+        if(!(myHeader.get('Authorization')) & myHeader.get('Content-Type') !== 'Application/json'){
         myHeader.append('Authorization',`Bearer ${data.token}`)
+        myHeader.append('Content-Type','Application/json')
+
+        }
+
         let realSize =   data.size.split(' ')
 
         let requestData  = {
@@ -49,8 +53,8 @@ fetch(loginRequest).then(res => {
     console.log(res)
     if(res.status === 'created'){
         dispatch(classCreationSuccess(res.data))
-    }else{
-        dispatch(classCreationFailed(res.message))
+    }else if(res.error && res.type === 'mongo'){
+        dispatch(classCreationFailed(res.error.errors))
     }
 }).catch(err =>  {
      console.error(err)
@@ -64,7 +68,7 @@ fetch(loginRequest).then(res => {
 export const classCreationFailed = (error) => {
     return {
         type:actionTypes.CLASS_CREATION_FAILED,
-        payload:error
+        errors:error
 
     }
 }

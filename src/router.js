@@ -49,7 +49,8 @@ class Router extends Component {
       <Switch>
       <Route path="/" exact component={asyncFullWidth}/>
       <Route path="/classroom/new" exact component={NewClassroom}/>
-      <Route path="/classroom/:id" exact component={asyncClassroom}/>      
+      <Route path="/classroom/:id" exact component={asyncClassroom}/>  
+      <Route path="/classroom/preview/:id" exact component={TopProgress}/>    
       <Route path="/logout" exact component={Logout}/>
       <Route path="/login" exact component={asyncLogin}/>
       <Route path="/register" exact component={asyncRegister}/>

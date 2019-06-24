@@ -191,12 +191,12 @@ export default function Nav(props) {
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="Show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
+              <Badge badgeContent={props.messages} color="secondary">
                 <MailIcon />
               </Badge>
             </IconButton>
             <IconButton aria-label="Show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
+              <Badge badgeContent={props.notifications} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>

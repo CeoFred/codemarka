@@ -14,7 +14,10 @@ let INITIAL_STATE = {
 
 const classroomCreationInit = (state,action) => {
     return helper.updateObject(state,{
-        loading:true
+        loading:true,
+        errors:null,
+        classdetails:null,
+        classroom_id:null
         });
 } 
 
@@ -27,7 +30,7 @@ const classroomCreatedSuccess = (state,action) => {
 
 const classroomCreationFailed = (state,action) => {
     return helper.updateObject(state,{
-        errors:action.payload
+            errors:action.errors
         });
 } 
 
