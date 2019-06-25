@@ -1,4 +1,6 @@
 const Classroom = require('../models/classroom');
+const Editor = require('../models/editors');
+
 const mongoose = require('mongoose');
 const multer = require('multer');
 const {validationResult,body} = require('express-validator/check');
@@ -37,7 +39,7 @@ const upload = multer({
 }});
 
 exports.createClassRoom =  (req,res,next) => {
-
+    var classroom_id
     const errors =  validationResult(req);
     if(!errors.isEmpty()){
         return res.status(403).json({errors:errors.array()})
@@ -74,11 +76,34 @@ if(userid !== created_by){
         invitationURL
 
     })
-
     newclassroom.save().then(data => {
         // create editors for class
         
+
+
         res.status(201).json({status:'created',data})
+
+        
+    new Editor({
+        _id:new mongoose.Types.ObjectId(),
+        classroom_id:data._id,
+        mode:'Javascript'
+    }).save().catch(err => res.status(504).json({err,type:'js editor creation failed'}))
+
+    new Editor({
+            
+        _id:new mongoose.Types.ObjectId(),
+        classroom_id:data._id,
+        mode:'css'
+    }).save().catch(err => res.status(504).json({err,type:'css editor creation failed'}))
+
+    new Editor({
+            
+        _id:new mongoose.Types.ObjectId(),
+        classroom_id:data._id,
+        mode:'html'
+    }).save().catch(err => res.status(504).json({err,type:'html editor creation failed'}))
+
     }).catch(err => res.status(501).json({error:err,type:'mongo'}))
 
 }
@@ -125,7 +150,7 @@ exports.endClassPermanently = (req,res)=>{
     })
 }
 
-exports.updateClassInformation = (req,res,next)=>{
+exports.updateClassInformation = (req,res)=>{
 
     const id = req.params.classroomID;
     const updateOps = {};

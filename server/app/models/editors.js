@@ -14,7 +14,11 @@ const editorSchema = Schema({
     },
     content:{
         type:String,
-        required:true
+    },
+    mode:{
+        type: String,
+        required:true,
+        default:'html'
     }
 });
 
