@@ -5,7 +5,6 @@ const config = require('./config');
 // Use native ES6 promises
 Mongoose.Promise = global.Promise;
 Mongoose.connect(config.database.url, { useNewUrlParser: true } );
-
 const db = Mongoose.connection;
 
 db.on('error', () => {
