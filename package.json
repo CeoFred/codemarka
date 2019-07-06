@@ -39,7 +39,7 @@
     "morgan": "^1.9.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently \"npm start \" \"cd server & nodemon index.js\"",
     "start:ezemmuo": "NODE_ENV=production concurrently \"npm start \" \"cd server & nodemon index.js\" ",
     "build": "react-scripts build",
     "test": "react-scripts test",
