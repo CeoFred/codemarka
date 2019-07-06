@@ -4,11 +4,11 @@ const env = process.env.NODE_ENV;
 const config = {
   development: {
     server: {
-      port: process.env.PORT || process.env.DB_PORT_DEVELOPMENT,
+      port: process.env.PORT || process.env.DB_PORT_PRODUCTION,
       hostname: process.env.HOSTNAME || 'localhost',
     },
     database: {
-      url: process.env.DB_URL_DEVELOPMENT,
+      url: process.env.DB_URL_PRODUCTION,
     },
   },
 
