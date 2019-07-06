@@ -12,7 +12,6 @@ http.listen(config.server.port,() => {
 });
 
 require('./app/socket')(http)
-
 db.on('connected', () => {
     app.emit('appStarted');
     console.log('Connected to mongodb')
