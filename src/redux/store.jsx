@@ -1,4 +1,4 @@
-import Authreducer from './reducers/AuthReducer'
+import Authreducer from './reducers/authReducer'
 import ClassroomReducer from './reducers/ClassroomReducer'
 
 import { createStore , applyMiddleware,compose,combineReducers} from 'redux';

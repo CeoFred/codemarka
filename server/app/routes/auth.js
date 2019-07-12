@@ -54,7 +54,6 @@ User.find({ email: req.body.email })
         });
     }else{
         bcrypt.compare(req.body.password, user[0].password, function(err, result) {
-            // res == true
             if(err){
                 return res.status(401).json({
                     message:"Failed with code x(2e2x)"
