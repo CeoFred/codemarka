@@ -40,7 +40,7 @@
   },
   "scripts": {
     "start": "concurrently \"react-scripts start \" \"cd server & nodemon index.js\"",
-    "start:ezemmuo": "NODE_ENV=production concurrently \"npm start \" \"cd server & nodemon index.js\" ",
+    "start:ezemmuo": "NODE_ENV=production && npm start" ,
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
