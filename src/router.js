@@ -12,8 +12,8 @@ const asyncRegister = asyncComponent(() => {
   return import('./containers/auth/Register.jsx');
 });
 
-const asyncFullWidth = asyncComponent(() => {
-  return import('./hoc/Layout/Grid');
+const asyncClassroom = asyncComponent(() => {
+  return import('./containers/classroom/Environment');
 });
 
 
@@ -21,9 +21,6 @@ const asyncLogin = asyncComponent(() => {
     return import('./containers/auth/Login.jsx');
   });
   
-  const asyncClassroom = asyncComponent(() => {
-    return import('./containers/classroom/ENV2.jsx');
-  })
 class Router extends Component {
 
     
@@ -47,13 +44,12 @@ class Router extends Component {
           if(this.props.isAutheticated){
             routes = (
       <Switch>
-      <Route path="/" exact component={asyncFullWidth}/>
       <Route path="/classroom/new" exact component={NewClassroom}/>
-      <Route path="/classroom/:id" exact component={asyncClassroom}/>      
-      <Route path="/logout" exact component={Logout}/>
-      <Route path="/login" exact component={asyncLogin}/>
+      <Route path="/" exact component={asyncClassroom}/>  
+      <Route path="/classroom/preview/:id" exact component={TopProgress}/>    
       <Route path="/register" exact component={asyncRegister}/>
-
+      <Route path="/login" exact component={asyncLogin}/>
+      <Route path="/logout" exact component={Logout}/>
       </Switch>
             )
           }

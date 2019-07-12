@@ -1,5 +1,5 @@
 import React from 'react';
-import Message from '../../containers/classroom/Chat/Messages/MessageTest'    
+import Message from './Chat/Messages/MessageTest'    
 import Fab from '@material-ui/core/Fab';
 import ArrowRightAltRounded from '@material-ui/icons/ArrowRightAltRounded'
 import List from '@material-ui/core/List';

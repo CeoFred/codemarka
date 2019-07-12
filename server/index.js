@@ -1,5 +1,5 @@
 const app = require('./app');
-var http = require('http').createServer(app)
+const http = require('http').createServer(app)
 require('dotenv').config()
 
 const db = require('./config/db')
@@ -12,7 +12,6 @@ http.listen(config.server.port,() => {
 });
 
 require('./app/socket')(http)
-
 db.on('connected', () => {
     app.emit('appStarted');
     console.log('Connected to mongodb')
