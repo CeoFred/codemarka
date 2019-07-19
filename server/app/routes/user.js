@@ -71,8 +71,8 @@ router.get('/classrooms/all/', (req, res) => {
 
 //  create a new classroom
 router.post('/create', checkAuth, [
-    sanitizeBody(['topic', 'visibiliity', 'created_by', 'location', 'description']).trim().toString().escape(),
-    sanitizeBody(['size']).toInt(),
+    // sanitizeBody(['topic', 'visibiliity', 'created_by', 'location', 'description']).trim().toString().escape(),
+    // sanitizeBody(['size']).toInt(),
     check(['autostart', 'name', 'size', 'topic', 'start_time', 'start_date', 'description', 'location', 'visibility', 'created_by']).exists()
 ], (req, res, next) => {
     const errors = validationResult(req);

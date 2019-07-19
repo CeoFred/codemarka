@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const classroomController = require('../controllers/classroom.js')
-const {check} = require('express-validator/check');
+const {check} = require('express-validator');
 const checkAuth = require('../middleware/check_Auth');
-const {sanitizeBody} = require('express-validator/filter');
+const {sanitizeBody} = require('express-validator');
 
 
 
@@ -11,11 +11,11 @@ const {sanitizeBody} = require('express-validator/filter');
 router.get('/l/:location',classroomController.getClassroomFromLocation)
 
 //  create a new classroom
-router.post('/create',checkAuth,[
-    sanitizeBody(['topic','visibiliity','created_by','location','description']).trim().toString().escape(),
-    sanitizeBody(['size']).toInt(),
-    check(['autostart','name','size','topic','start_time','start_date','description','location','visibility','created_by']).exists()
-],classroomController.createClassRoom);
+router.post('/create',checkAuth
+    // sanitizeBody(['topic','visibiliity','created_by','location','description']).trim().toString().escape(),
+    // sanitizeBody(['size']).toInt(),
+    // check(['autostart','name','size','topic','start_time','start_date','description','location','visibility','created_by']).exists()
+,classroomController.createClassRoom);
 
 // get details about a particular class
 router.get('/view/:id', classroomController.getDetails);

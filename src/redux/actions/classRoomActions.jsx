@@ -9,6 +9,26 @@ export const createClassRoomInit = () => {
     }
 }
 
+export const userJoinedAClass = (classroom) => {
+    return dispatch => {
+        dispatch({
+            type:actionTypes.CLASSROOM_JOINED,
+            classroom
+        })
+    }
+}
+
+export const userLeftAClass = (classroom) => {
+    return dispatch => {
+        dispatch({
+            type:actionTypes.CLASSROOM_LEFT,
+            classroom
+        })
+    }
+}
+
+
+
 export const createNewClass = (data) => {
 
 return (dispatch) => {

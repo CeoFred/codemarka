@@ -29,7 +29,7 @@ export const auth = (data) => {
     return (dispatch) => {
 
         dispatch(authStart());
-        let url = '/auth/user/login';
+        let url = 'http://localhost:8000/auth/user/login';
         // let method = 'POST'
         var myHeaders = new Headers()
         myHeaders.append('Content-Type','Application/json')
@@ -73,7 +73,7 @@ export const register = (data) => {
     return (dispatch) => {
 
         dispatch(authStart());
-        let url = '/auth/user/signup';
+        let url = 'http://localhost:8000/auth/user/signup';
         // let method = 'POST'
         var myHeaders = new Headers()
         myHeaders.append('Content-Type','Application/json')

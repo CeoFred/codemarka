@@ -34,6 +34,28 @@ const classroomCreationFailed = (state,action) => {
         });
 } 
 
+const classroomJoined = (state,action) => {
+    return helper.updateObject(state,{
+        classroom_id:action.classroom
+    })
+}
+
+const classroomLeft = (state,action) => {
+    if(state.classroom_id === action.classroom){
+        return helper.updateObject(state,{
+            classroom_id:null
+        })
+    }
+  return errorLeavingClass(state,state.classroom_id,action.classroom)
+}
+
+const errorLeavingClass = (state,prevClass,newClass) => {
+    return helper.updateObject(state,{
+        errors:"Failed to leave classroom",
+        classdetails: `${prevClass} is not same with ${newClass}`
+    })
+}
+
 
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -41,6 +63,8 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.CLASSROOM_CREATE_INIT): return classroomCreationInit(state,action)
         case(actionTypes.CLASS_CREATION_SUCCESS): return classroomCreatedSuccess(state,action)
         case(actionTypes.CLASS_CREATION_FAILED): return classroomCreationFailed(state,action)
+        case(actionTypes.CLASSROOM_JOINED): return classroomJoined(state,action)
+        case(actionTypes.CLASSROOM_LEFT): return classroomLeft(state,action)
 
         default: return state;
     }
