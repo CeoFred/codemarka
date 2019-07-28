@@ -6,7 +6,6 @@ import path from "path";
 import methodOverride from "method-override";
 import cors from "cors";
 
-
 // Controllers (route handlers)
 
 import auth from "./routes/auth";
@@ -15,16 +14,16 @@ import { NextFunction, Request, Response } from "express";
 // Create Express server
 const app = express();
 
-const whitelist = ["http://localhost:3000", "http://localhost:3001", "*"];
-const corsOptions = {
-    origin(origin: string, callback: Function) {
-        if (whitelist.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    }
-};
+// const whitelist = ["http://localhost:3000", "http://localhost:3001", "*"];
+// const corsOptions = {
+//     origin(origin: string, callback: Function) {
+//         if (whitelist.indexOf(origin) !== -1) {
+//             callback(null, true);
+//         } else {
+//             callback(new Error("Not allowed by CORS"));
+//         }
+//     }
+// };
 
 
 // Express configuration
@@ -47,7 +46,7 @@ app.use(
     express.static(path.join(__dirname, "public"), { maxAge: 31557600000 })
 );
 // routes as middlewares
-app.use("/auth", cors(corsOptions), auth);
+app.use("/auth", cors(), auth);
 
 
 // middleware for errors

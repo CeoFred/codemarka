@@ -7,23 +7,19 @@ export type UserDocument = mongoose.Document & {
     password: string;
     passwordResetToken: string;
     passwordResetExpires: Date;
-
-    facebook: string;
     tokens: AuthToken[];
 
-    profile: {
-        name: string;
-        gender: string;
-        location: string;
-        website: string;
-        picture: string;
-    };
-
+    name: string;
+    gender: string;
+    location: string;
+    website: string;
+    picture: string;
+    username: string;
     comparePassword: comparePasswordFunction;
     gravatar: (size: number) => string;
 };
 
-type comparePasswordFunction = (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void;
+type comparePasswordFunction = (candidatePassword: string, cb: (err: any, isMatch: boolean) => {}) => void;
 
 export interface AuthToken {
     accessToken: string;
@@ -35,19 +31,13 @@ const userSchema = new mongoose.Schema({
     password: String,
     passwordResetToken: String,
     passwordResetExpires: Date,
-
-    facebook: String,
-    twitter: String,
-    google: String,
     tokens: Array,
-
-    profile: {
-        name: String,
-        gender: String,
-        location: String,
-        website: String,
-        picture: String
-    }
+    username: String,
+    firstName: String,
+    gender: String,
+    location: String,
+    website: String,
+    picture: String
 }, { timestamps: true });
 
 /**
@@ -58,7 +48,7 @@ userSchema.pre("save", function save(next) {
     if (!user.isModified("password")) { return next(); }
     bcrypt.genSalt(10, (err, salt) => {
         if (err) { return next(err); }
-        bcrypt.hash(user.password, salt, undefined, (err: mongoose.Error, hash)=> {
+        bcrypt.hash(user.password, salt, undefined, (err: mongoose.Error, hash) => {
             if (err) { return next(err); }
             user.password = hash;
             next();
@@ -77,7 +67,7 @@ userSchema.methods.comparePassword = comparePassword;
 /**
  * Helper method for getting user's gravatar.
  */
-userSchema.methods.gravatar = function (size: number = 200): string{
+userSchema.methods.gravatar = function (size: number = 200): string {
     if (!this.email) {
         return `https://gravatar.com/avatar/?s=${size}&d=retro`;
     }
