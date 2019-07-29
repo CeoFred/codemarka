@@ -1,12 +1,12 @@
 import errorHandler from "errorhandler";
 import express from "express";
 import app from "./app";
-
-const http = require("http").createServer(app);
 import dotenv from "dotenv";
 import socket from "./socket/index";
-
 import "./config/db";
+
+const http = require("http").createServer(app);
+
 
 socket(http);
 dotenv.config();

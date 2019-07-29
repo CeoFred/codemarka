@@ -6,9 +6,9 @@ const router = express.Router();
 
 // router.get("/jwt", jwtCheck);
 
-router.post("/user/login",validate, postLogin);
+router.post("/user/login",validate("login"), postLogin);
 
-router.post("/user/signup", postSignup);
+router.post("/user/signup",validate("signup"), postSignup);
 
 router.delete("/:userId", postDeleteAccount);
 

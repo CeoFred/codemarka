@@ -8,7 +8,7 @@ export type UserDocument = mongoose.Document & {
     passwordResetToken: string;
     passwordResetExpires: Date;
     tokens: AuthToken[];
-
+    accountType: string;
     name: string;
     gender: string;
     location: string;
@@ -16,11 +16,12 @@ export type UserDocument = mongoose.Document & {
     picture: string;
     username: string;
     comparePassword: comparePasswordFunction;
+    addToken: addToken;
     gravatar: (size: number) => string;
 };
 
 type comparePasswordFunction = (candidatePassword: string, cb: (err: any, isMatch: boolean) => {}) => void;
-
+type addToken = (token: string,type: string) => void;
 export interface AuthToken {
     accessToken: string;
     kind: string;
@@ -32,12 +33,19 @@ const userSchema = new mongoose.Schema({
     passwordResetToken: String,
     passwordResetExpires: Date,
     tokens: Array,
-    username: String,
+    username: {
+        unique:true,
+        type: String
+    },
     firstName: String,
     gender: String,
     location: String,
     website: String,
-    picture: String
+    picture: String,
+    accountType: {
+        default: "regular",
+        type: String
+    }
 }, { timestamps: true });
 
 /**
@@ -62,8 +70,14 @@ const comparePassword: comparePasswordFunction = function (candidatePassword, cb
     });
 };
 
-userSchema.methods.comparePassword = comparePassword;
+const addToken = function(token: string, type: string){
+    let tokens = this.tokens;
+    tokens.push({accessToken:token,type});
+    this.save();
+};
 
+userSchema.methods.comparePassword = comparePassword;
+userSchema.methods.addToken = addToken;
 /**
  * Helper method for getting user's gravatar.
  */
