@@ -18,6 +18,13 @@ const checkError = (res: Response,req: Request) => {
     return true;
     
 };
+
+const signToken =  (dataToSign: object,res: Response,next: NextFunction) => {
+    jwt.sign(dataToSign,process.env.JWT_SECRET_KEY,{expiresIn:"7d"},(err,token) => {
+        if (err) { return next(err); }
+        res.status(200).json(successData({token}));
+    });
+};
 export const postLogin = (req: Request, res: Response,next: NextFunction) => {
     checkError(res,req);
     const {email,password} = req.body;
@@ -36,15 +43,7 @@ export const postLogin = (req: Request, res: Response,next: NextFunction) => {
                         username: userFound.username,
                         avatar: userFound.gravatar(50)
                     };
-                    jwt.sign(dataToSign,process.env.JWT_SECRET_KEY,{expiresIn:"7d"},(err,token) => {
-                        if (err) { return next(err); }
-    
-                        const data = {
-                            token,
-                            ...dataToSign
-                        };
-                        res.status(200).json(successData(data));
-                    });
+                    signToken(dataToSign,res,next);
                 }
             });
         } else {
@@ -81,15 +80,7 @@ export const postSignup = (req: Request, res: Response, next: NextFunction) => {
                     username: userDoc.username,
                     avatar: userDoc.gravatar(50)
                 };
-                jwt.sign(dataToSign,process.env.JWT_SECRET_KEY,{expiresIn:"7d"},(err,token) => {
-                    if (err) { return next(err); }
-
-                    const data = {
-                        token,
-                        ...dataToSign
-                    };
-                    res.status(200).json(successData(data));
-                });
+                signToken(dataToSign,res,next);
             });
         }
     });
@@ -107,7 +98,6 @@ export const postUpdateProfile = (req: Request, res: Response, next: NextFunctio
         user.name = req.body.name || "";
         user.gender = req.body.gender || "";
         user.location = req.body.location || "";
-        user.website = req.body.website || "";
         user.save((err: WriteError) => {
             if (err) {
                 return next(err);
