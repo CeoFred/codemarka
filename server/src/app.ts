@@ -5,6 +5,7 @@ import lusca from "lusca";
 import path from "path";
 import methodOverride from "method-override";
 import cors from "cors";
+import "./config/db";
 
 // Controllers (route handlers)
 

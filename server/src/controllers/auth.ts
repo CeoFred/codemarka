@@ -18,7 +18,7 @@ const checkError = (res: Response,req: Request) => {
     return true;
     
 };
-export const postLogin = (req: Request, res: Response) => {
+export const postLogin = (req: Request, res: Response,next: NextFunction) => {
     checkError(res,req);
     const {email,password} = req.body;
     User.findOne({ email },(err,userFound) => {
@@ -30,7 +30,21 @@ export const postLogin = (req: Request, res: Response) => {
                 if(err) return res.status(442).json(failed(err));
                 if(match){
                     //jwt token
-                    res.status(200).json(successData(userFound));
+                    const dataToSign =  {
+                        email:userFound.email,
+                        accountType:userFound.accountType,
+                        username: userFound.username,
+                        avatar: userFound.gravatar(50)
+                    };
+                    jwt.sign(dataToSign,process.env.JWT_SECRET_KEY,{expiresIn:"7d"},(err,token) => {
+                        if (err) { return next(err); }
+    
+                        const data = {
+                            token,
+                            ...dataToSign
+                        };
+                        res.status(200).json(successData(data));
+                    });
                 }
             });
         } else {
@@ -43,7 +57,7 @@ export const postLogin = (req: Request, res: Response) => {
  * POST /signup
  * Create a new local account.
  */
-export const postSignup = (req: Request, res: Response) => {
+export const postSignup = (req: Request, res: Response, next: NextFunction) => {
     checkError(res,req);
     const {email,password,username} = req.body;
     User.findOne({ email },(err,userFound) => {
@@ -61,7 +75,21 @@ export const postSignup = (req: Request, res: Response) => {
             });
         
             user.save().then(userDoc => {
-                res.status(201).json(successData(userDoc));
+                const dataToSign =  {
+                    email:userDoc.email,
+                    accountType:userDoc.accountType,
+                    username: userDoc.username,
+                    avatar: userDoc.gravatar(50)
+                };
+                jwt.sign(dataToSign,process.env.JWT_SECRET_KEY,{expiresIn:"7d"},(err,token) => {
+                    if (err) { return next(err); }
+
+                    const data = {
+                        token,
+                        ...dataToSign
+                    };
+                    res.status(200).json(successData(data));
+                });
             });
         }
     });
@@ -71,57 +99,36 @@ export const postSignup = (req: Request, res: Response) => {
  * POST /account/profile
  * Update profile information.
  */
-// export const postUpdateProfile = (req: Request, res: Response, next: NextFunction) => {
-//     check("email", "Please enter a valid email address.").isEmail();
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     sanitize("email").normalizeEmail({ gmail_remove_dots: false });
-
-//     const errors = validationResult(req);
-
-//     if (!errors.isEmpty()) {
-//         req.flash("errors", errors.array());
-//         return res.redirect("/account");
-//     }
-
-//     User.findById(req.body.user.id, (err, user: UserDocument) => {
-//         if (err) { return next(err); }
-//         user.email = req.body.email || "";
-//         user.profile.name = req.body.name || "";
-//         user.profile.gender = req.body.gender || "";
-//         user.profile.location = req.body.location || "";
-//         user.profile.website = req.body.website || "";
-//         user.save((err: WriteError) => {
-//             if (err) {
-//                 if (err.code === 11000) {
-//                     req.flash("errors", { msg: "The email address you have entered is already associated with an account." });
-//                     return res.redirect("/account");
-//                 }
-//                 return next(err);
-//             }
-//             req.flash("success", { msg: "Profile information has been updated." });
-//             res.redirect("/account");
-//         });
-//     });
-// };
+export const postUpdateProfile = (req: Request, res: Response, next: NextFunction) => {
+    checkError(res,req);
+    User.findById(req.body.user.id, (err, user: UserDocument) => {
+        if (err) { return next(err); }
+        user.email = req.body.email || "";
+        user.name = req.body.name || "";
+        user.gender = req.body.gender || "";
+        user.location = req.body.location || "";
+        user.website = req.body.website || "";
+        user.save((err: WriteError) => {
+            if (err) {
+                return next(err);
+            }
+            res.status(200).json(successMessage("Profile information has been updated."));
+        });
+    });
+};
 
 /**
  * POST /account/password
  * Update current password.
  */
 export const postUpdatePassword = (req: Request, res: Response, next: NextFunction) => {
-
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        res.status(422).json(failed(errors.array()));
-    }
+    checkError(res,req);
     User.findById(req.body.user.id, (err, user: UserDocument) => {
         if (err) { return next(err); }
         user.password = req.body.password;
         user.save((err: WriteError) => {
             if (err) { return next(err); }
-            req.flash("success", { msg: "Password has been changed." });
-            res.redirect("/account");
+            res.status(200).json(successMessage("Password has been changed."));
         });
     });
 };

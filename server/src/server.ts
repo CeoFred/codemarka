@@ -3,7 +3,6 @@ import express from "express";
 import app from "./app";
 import dotenv from "dotenv";
 import socket from "./socket/index";
-import "./config/db";
 
 const http = require("http").createServer(app);
 
@@ -40,3 +39,4 @@ app.use(errorHandler());
  */
 const server = new Server(app);
 server.start();
+export default server;
