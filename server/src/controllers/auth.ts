@@ -1,7 +1,8 @@
 import { User, UserDocument } from "../models/User";
+import { UserDeleted } from "../models/DeletedUsers";
 import { Request, Response, NextFunction } from "express";
 import { WriteError } from "mongodb";
-import { check, validationResult } from "express-validator";
+import { validationResult } from "express-validator";
 import { failed, successData, successMessage } from "../helpers/response";
 import jwt from "jsonwebtoken";
 /**
@@ -108,14 +109,11 @@ export const postSignup = (req: Request, res: Response) => {
  * Update current password.
  */
 export const postUpdatePassword = (req: Request, res: Response, next: NextFunction) => {
-    check("password", "Password must be at least 4 characters long").isLength({ min: 4 });
-    check("confirmPassword", "Passwords do not match").equals(req.body.password);
 
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        req.flash("errors", errors.array());
-        return res.redirect("/account");
+        res.status(422).json(failed(errors.array()));
     }
     User.findById(req.body.user.id, (err, user: UserDocument) => {
         if (err) { return next(err); }
@@ -133,8 +131,13 @@ export const postUpdatePassword = (req: Request, res: Response, next: NextFuncti
  * Delete user account.
  */
 export const postDeleteAccount = (req: Request, res: Response, next: NextFunction) => {
-    User.remove({ _id: req.params.userId }, (err) => {
+    User.findOne({ _id: req.params.userId }, (err,userFound) => {
         if (err) { return next(err); }
-        res.status(200).json(successMessage("Deleted Document Successfully"));
+        UserDeleted.create(userFound).then(done => {
+            User.deleteOne({_id: req.params.userId},(err) => {
+                if (err) { return next(err); }
+                res.status(200).json(successMessage("Deleted Document Successfully"));
+            });
+        });
     });
 };

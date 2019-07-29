@@ -21,15 +21,23 @@ const returnLoginValidation = () => {
         sanitize("email").normalizeEmail({ gmail_remove_dots: false })
     ];
 };
+
+const returnpasswordUpdateValidation = () => {
+    return [
+        body("oldPassword").not().isEmpty().trim().escape(),
+        body("newPassword").not().isEmpty().trim().escape(),
+    ];
+};
 export const validate = function(method: string): any{
     switch (method) {
         case "signup": return returnSignupValidation();    
-            break;
+            
         case "login":return returnLoginValidation();
-            break;
-        default:
-            returnSignupValidation();
-            break;
+            
+        case "passwordUpdate": return returnpasswordUpdateValidation();
+            
+        default: return returnSignupValidation();
+                   
     }
 };
 
