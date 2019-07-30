@@ -5,6 +5,11 @@ import { WriteError } from "mongodb";
 import { validationResult } from "express-validator";
 import { failed, successData, successMessage } from "../helpers/response";
 import jwt from "jsonwebtoken";
+
+
+const options  = { algorithm: "HS256", noTimestamp: false, audience: "users", issuer: "colab", subject: "auth",expiresIn:"7d" };
+
+
 /**
  * POST /login
  * Sign in using email and password.
@@ -20,7 +25,7 @@ const checkError = (res: Response,req: Request) => {
 };
 
 const signToken =  (dataToSign: object,res: Response,next: NextFunction) => {
-    jwt.sign(dataToSign,process.env.JWT_SECRET_KEY,{expiresIn:"7d"},(err,token) => {
+    jwt.sign(dataToSign,process.env.JWT_SECRET_KEY,options,(err,token) => {
         if (err) { return next(err); }
         res.status(200).json(successData({token}));
     });
@@ -138,3 +143,33 @@ export const postDeleteAccount = (req: Request, res: Response, next: NextFunctio
         });
     });
 };
+
+
+export const logout = () => {
+
+};
+
+/**
+ * POST /auth/token/refresh
+ * @returns string
+ * @param token string
+ * @requires token
+ * @method POST
+ * @description Refresh a token
+ */
+
+export const refreshToken = (req: Request, res: Response) => {
+    const oldToken = req.body.token;
+    // const tokenGenerator = ;
+    const refreshOptions = {verify: { audience: "users", issuer: "colab" }};
+    const payload: any = jwt.verify(oldToken,process.env.JWT_SECRET_KEY , refreshOptions.verify);
+    delete payload.iat;
+    delete payload.exp;
+    delete payload.nbf;
+    delete payload.jti;
+    delete payload.aud;
+    delete payload.iss;
+    delete payload.sub;
+    const token2 = jwt.sign(payload, process.env.JWT_SECRET_KEY,options);
+    res.status(201).json(successMessage(token2));
+};  

@@ -1,4 +1,4 @@
-import {postDeleteAccount, postLogin, postSignup, postUpdatePassword,postUpdateProfile} from "../controllers/auth";
+import {postDeleteAccount, postLogin, postSignup, postUpdatePassword,postUpdateProfile,refreshToken} from "../controllers/auth";
 import express from "express";
 import {validate} from "../middleware/authValidate";
 
@@ -12,11 +12,11 @@ router.post("/user/login",validate("login"), postLogin);
 //signup a user
 router.post("/user/signup",validate("signup"), postSignup);
 
-// delete a user
+// delete user account
 router.delete("/user/delete/:userId", postDeleteAccount);
 
-//forgot password
-router.post("/user/password/recovery", postDeleteAccount);
+// refresh jwt token
+router.post("/user/token/refresh", refreshToken);
 
 // update user profile
 router.patch("/user/profile/update", postUpdateProfile);
