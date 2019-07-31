@@ -18,7 +18,15 @@ router.delete("/user/delete/:userId", postDeleteAccount);
 // refresh jwt token
 router.post("/user/token/refresh", refreshToken);
 
+// destroy token
+
 // update user profile
 router.patch("/user/profile/update", postUpdateProfile);
 
+//account recovery
+router.post("/user/account/recovery", postDeleteAccount);
+
+// password reset 
+
+// all users
 export default router;
