@@ -11,22 +11,22 @@ export default function NavigationBarItems() {
           </Link>
         </li>
         <li className="nav-item ">
-          <Link className="nav-link" to="/about-us">
+          <Link className="nav-link" to="/#about-us">
             About
           </Link>
         </li>
         <li className="nav-item ">
           <Link className="nav-link" to="/contact-us">
-            Contact
+            Support
           </Link>
         </li>
 
         <li className="nav-item ">
-          <Link className="nav-link" to="/hire-us">
-            Hire IBCS
+          <Link className="nav-link" to="/auth/join">
+            Join Us
           </Link>
         </li>
-
+{/* 
         <li className="nav-item dropdown dropdown-animate" data-toggle="hover">
           <Link
             className="nav-link dropdown-toggle"
@@ -59,7 +59,7 @@ export default function NavigationBarItems() {
               </div>
             </div>
           </div>
-        </li>
+        </li> */}
       </ul>
     </div>
   );
