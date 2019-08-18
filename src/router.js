@@ -1,11 +1,15 @@
+import React from 'react'
+import {  withRouter } from 'react-router-dom';
+
+import Layout from './containers/public/Layout';
 import Routes from './routes'; 
 
-import React from 'react'
-
-export default function router() {
+const router = () => {
   return (
-    <div>
+    <Layout>
       <Routes/>
-    </div>
+    </Layout>
   )
 }
+
+export default withRouter(router)

@@ -1,5 +1,6 @@
 import Authreducer from './reducers/authReducer'
 import ClassroomReducer from './reducers/ClassroomReducer'
+import appReducer from './reducers/appReducer'
 
 import { createStore , applyMiddleware,compose,combineReducers} from 'redux';
 import thunk from 'redux-thunk'; //thunk helps to add middle ware to action creators with the help of applyMiddle from redux above
@@ -9,7 +10,8 @@ const composeEnhancers = process.env.NODE_ENV === 'development'? window.__REDUX_
 
 const rootReducer = combineReducers({
     auth : Authreducer,
-    classroom:ClassroomReducer
+    classroom:ClassroomReducer,
+    app:appReducer
 })
 
 const store =  createStore(rootReducer ,composeEnhancers(

@@ -1,18 +1,19 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import Router from './router';
-import { Provider } from 'react-redux';
-import store from './redux/store';
+import { useDispatch } from 'react-redux'
 
-class App extends Component{
 
-   render() {
-       return (
-            <Provider store={store}>
-            <Router />
-           </Provider>
+import * as actionCreator from './redux/actions/index';
 
-       )
-   }
-}
+import './app.css';
+function App() {
+  const dispatcher = useDispatch();
 
+  useEffect(() => {
+    dispatcher(actionCreator.tryValidatingCookie())
+  }, [dispatcher])
+  return (
+    <Router />
+  );
+};
 export default App;
