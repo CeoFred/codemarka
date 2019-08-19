@@ -9,14 +9,14 @@ import * as actions from './redux/actions/index';
 // const logout = React.lazy(() => import('./containers/auth/Logout'));
 
  const Home = React.lazy(() => import('./containers/public/Home/Home'))
-const Routes = () => {
+const Routes = (props) => {
     let routes = (
         <Switch>  
 <Route exact component={Home} path='/' />
         </Switch>
       );
   
-      if(this.props.isAutheticated){
+      if(props.isAutheticated){
         routes = (
   <Switch>
 <Route exact component={Home} path='/' />

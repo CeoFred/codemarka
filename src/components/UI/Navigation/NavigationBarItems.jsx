@@ -22,8 +22,8 @@ export default function NavigationBarItems() {
         </li>
 
         <li className="nav-item ">
-          <Link className="nav-link" to="/auth/join">
-            Join Us
+          <Link className="nav-link" to="/auth/signin?med=home">
+            Login
           </Link>
         </li>
 {/* 

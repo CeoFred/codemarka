@@ -77,7 +77,7 @@ export default function Layout(props) {
 
   return (
     <ErrorBoundary>
-      <Suspense fallback={<div>Loading...</div>}>{content}</Suspense>
+      <Suspense fallback={<Preloader/>}>{content}</Suspense>
     </ErrorBoundary>
   );
 }

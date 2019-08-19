@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 
 import * as actionCreator from './redux/actions/index';
 
-import './app.css';
+import './App.css';
 function App() {
   const dispatcher = useDispatch();
 
