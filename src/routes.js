@@ -4,15 +4,20 @@ import {Switch,withRouter,Route} from 'react-router-dom';
 import * as actions from './redux/actions/index';
 
 // const classrooom = React.lazy(() => import('./containers/classroom/Environment'));
-// const register = React.lazy(() => import('./containers/auth/Register'));
-// const login = React.lazy(() => import('./containers/auth/Login'));
 // const logout = React.lazy(() => import('./containers/auth/Logout'));
 
- const Home = React.lazy(() => import('./containers/public/Home/Home'))
+ const Home = React.lazy(() => import('./containers/public/Home/Home'));
+const Login = React.lazy(() => import('./containers/auth/Login'));
+const Register = React.lazy(() => import('./containers/auth/Register'));
+
 const Routes = (props) => {
     let routes = (
         <Switch>  
 <Route exact component={Home} path='/' />
+<Route exact component={Login} path='/auth/signin' />
+<Route exact component={Register} path='/auth/signup' />
+
+
         </Switch>
       );
   
