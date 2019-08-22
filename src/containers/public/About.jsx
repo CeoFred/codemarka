@@ -16,14 +16,10 @@ export default function Home() {
           <div className="col px-0">
             <div className="row row-grid align-items-center">
               <div className="col-lg-8 text-center text-lg-left">
-                <h1 className="text-white mb-4">About IBCScorp</h1>
+                <h1 className="text-white mb-4">What About colab!</h1>
                 <hr />
                 <p className="lead text-white opacity-8">
-                  Founded in 2006, we are a great team of problem solvers,
-                  creative thinkers, programmers and designers. We are an agency
-                  small enough to be cohesive and agile enough to approach every
-                  single project with devotion, care and flexibility. Yet, big
-                  enough to accept coding challenges of all shapes and sizes.
+                  Colab, is a web based platform built with love 
                 </p>
               </div>
             </div>
