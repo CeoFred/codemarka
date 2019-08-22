@@ -3,14 +3,14 @@ import Router from './router';
 import { useDispatch } from 'react-redux'
 
 
-import * as actionCreator from './redux/actions/index';
+import * as action from './redux/actions/Types';
 
 import './App.css';
 function App() {
   const dispatcher = useDispatch();
 
   useEffect(() => {
-    dispatcher(actionCreator.tryValidatingCookie())
+    dispatcher({type:action.COOKIE_VALIDATE_INIT})
   }, [dispatcher])
   return (
     <Router />

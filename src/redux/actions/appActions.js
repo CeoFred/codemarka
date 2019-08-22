@@ -1,44 +1,63 @@
 import * as actionTypes from './Types'
+import { put, all,takeLatest  } from 'redux-saga/effects';
 
-export const dispatchCookieAccepted = (token) => {
+
+ const dispatchCookieAccepted = (token) => {
     return {
         type: actionTypes.ACCEPT_COOKIE,
         token
     }
 };
 
-export const cookieAccepted = () => {
-    return dispatch => {
-        const cookie_token = localStorage.getItem('ctok');
-        if (cookie_token) {
-            localStorage.setItem('ctok', cookie_token)
-
-            dispatch(dispatchCookieAlreadyAccepted(cookie_token));
-
-        } else {
-            const cookie_token = (Math.random() * 22345678912345678934)
-            localStorage.setItem('ctok', cookie_token)
-            dispatch(dispatchCookieAccepted(cookie_token));
-
-        }
-    }
-}
-
-export const dispatchCookieAlreadyAccepted = (oldToken) => {
+ const dispatchCookieAlreadyAccepted = (oldToken) => {
     return {
         type: actionTypes.COOKIE_ALREADY_ACCEPTED,
         token: oldToken
     }
 }
 
-export const tryValidatingCookie = () => {
-    return dispatch => {
+export function* cookieAccepted() {
+    
         const cookie_token = localStorage.getItem('ctok');
         if (cookie_token) {
             localStorage.setItem('ctok', cookie_token)
 
-            dispatch(dispatchCookieAlreadyAccepted(cookie_token));
+          yield  put(dispatchCookieAlreadyAccepted(cookie_token));
+
+        } else {
+            const cookie_token = (Math.random() * 22345678912345678934)
+            localStorage.setItem('ctok', cookie_token)
+           yield put(dispatchCookieAccepted(cookie_token));
 
         }
-    }
+
+}
+
+
+export function* tryValidatingCookie() {
+        const cookie_token = localStorage.getItem('ctok');
+      
+
+        if (cookie_token) {
+            localStorage.setItem('ctok', cookie_token)
+            yield put(dispatchCookieAlreadyAccepted(cookie_token))
+        }else {
+            yield console.log('NO COOKIE SET');
+        }
+    
+}
+
+export function* watchAsyncCookieValidationInit(){
+    yield takeLatest(actionTypes.COOKIE_VALIDATE_INIT,tryValidatingCookie)
+  }
+export function* watchAsyncCookieAccepted(){
+    yield takeLatest(actionTypes.ACCEPT_COOKIE,cookieAccepted)
+}
+
+
+export default function* appRootSaga() {
+    yield all([
+      watchAsyncCookieValidationInit(),
+      watchAsyncCookieAccepted()
+    ])
 }

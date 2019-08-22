@@ -7,7 +7,7 @@ import NavigationBar from "../../components/UI/Navigation/NavigationBar";
 import Button from "../../components/Partials/Button";
 import ErrorBoundary from "../../HOC/Error/ErrorBoundary";
 
-import * as actions from "../../redux/actions/index";
+import * as actions from "../../redux/actions/Types";
 export default function Layout(props) {
   const [appLoaded, setappLoaded] = useState(false);
   const [content, setContent] = useState(<Preloader />);
@@ -16,7 +16,7 @@ export default function Layout(props) {
   const dispatch = useDispatch();
 
   const acceptCookieForUser = () => {
-    dispatch(actions.cookieAccepted());
+    dispatch({type:actions.ACCEPT_COOKIE});
   };
   const body = (
     <div>
