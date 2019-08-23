@@ -1,0 +1,22 @@
+div.header-container-fluid{
+    width: 100%;
+    display: block;
+}
+section.header-bg {
+    background-image: url('../../media/images/01.jpg');
+}
+
+div.header-intro-body p.header-intro-paragraph {
+    font-weight: bolder;
+    margin-top: 50px;
+    font-size: 20px;
+}
+div.header-intro-body .header-intro-button {
+    font-weight: bolder;
+    margin-top: 50px;
+    font-size: 20px;
+}
+img.target_icon {
+    height: 50px;
+    width: 50px;
+}

@@ -3,44 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@date-io/date-fns": "^1.3.7",
-    "@material-ui/core": "^4.0.1",
-    "@material-ui/icons": "^4.2.0",
-    "@material-ui/pickers": "^3.1.1",
-    "bcrypt": "^3.0.6",
-    "body-parser": "^1.19.0",
-    "codemirror": "^5.47.0",
-    "compression": "^1.7.4",
-    "cookie-parser": "^1.4.4",
-    "cors": "^2.8.5",
-    "date-fns": "^2.0.0-alpha.35",
-    "dotenv": "^8.0.0",
-    "express": "^4.17.1",
-    "express-validator": "^5.3.1",
-    "jsonwebtoken": "^8.4.0",
-    "method-override": "^3.0.0",
-    "mongoose": "^5.6.0",
-    "multer": "^1.4.1",
+    "codemirror": "^5.48.0",
     "react": "^16.8.6",
     "react-codemirror2": "^6.0.0",
     "react-dom": "^16.8.6",
+    "react-helmet": "^5.2.1",
     "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
-    "react-swipeable-views": "^0.13.3",
     "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0",
-    "socket.io": "^2.2.0",
-    "websocket": "^1.0.28"
-  },
-  "devDependencies": {
-    "prettier": "^1.17.1",
-    "nodemon": "^1.19.1",
-    "morgan": "^1.9.1"
+    "redux-saga": "^1.0.5",
+    "socket.io-client": "^2.2.0"
   },
   "scripts": {
-    "start": "concurrently \"react-scripts start \" \"cd server & nodemon index.js\"",
-    "start:ezemmuo": "NODE_ENV=production concurrently \"npm start \" \"cd server & nodemon index.js\" ",
+    "start": "react-scripts start",
+    "dual": "concurrently \"npm start \" \"cd server & npm run watch\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -48,11 +25,6 @@
   },
   "eslintConfig": {
     "extends": "react-app"
-  },
-  "proxy": "http://localhost:8000",
-  "engines": {
-    "node": "8.12.0",
-    "npm": "6.9.0"
   },
   "browserslist": {
     "production": [
