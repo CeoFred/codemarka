@@ -23,7 +23,7 @@ export default function ForgotPassword() {
           <div class="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
             <div>
               <div class="mb-5 text-center">
-                <h6 class="h3 mb-1">Account Reecovery</h6>
+                <h6 class="h3 mb-1">Account Recovery</h6>
                 <p class="text-muted mb-0">
                 We would help you recover your account if you know the email associated with your account.
                 </p>

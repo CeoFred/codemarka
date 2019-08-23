@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 
 import Preloader from "../../components/Partials/Preloader";
 import NavigationBar from "../../components/UI/Navigation/NavigationBar";
+import FooterBar from "../../components/UI/Footer/FooterBar";
+
 import Button from "../../components/Partials/Button";
 import ErrorBoundary from "../../HOC/Error/ErrorBoundary";
 
@@ -61,6 +63,7 @@ export default function Layout(props) {
       )}
       <NavigationBar />
       {props.children}
+      <FooterBar/>
     </div>
   );
   useEffect(() => {

@@ -4,7 +4,7 @@ import {Switch,withRouter,Route} from 'react-router-dom';
 import * as actions from './redux/actions/index';
 
 // const classrooom = React.lazy(() => import('./containers/classroom/Environment'));
-// const logout = React.lazy(() => import('./containers/auth/Logout'));
+const logout = React.lazy(() => import('./containers/auth/Logout'));
 
  const Home = React.lazy(() => import('./containers/public/Home/Home'));
 const Login = React.lazy(() => import('./containers/auth/Login'));
@@ -12,6 +12,7 @@ const Register = React.lazy(() => import('./containers/auth/Register'));
 const ForgotPassword = React.lazy(() => import('./containers/auth/ForgotPassword'));
 const ChangePassword = React.lazy(() => import('./containers/auth/ChangePassword'));
 
+const NotFound = React.lazy(() => import('./containers/public/404'));
 
 const Routes = (props) => {
     let routes = (
@@ -20,8 +21,7 @@ const Routes = (props) => {
 <Route exact component={Login} path='/auth/signin' />
 <Route exact component={Register} path='/auth/signup' />
 <Route exact component={ForgotPassword} path='/auth/account/recovery' />
-<Route exact component={ChangePassword} path='/auth/user/account/password/change' />
-
+<Route component={NotFound} />
 
         </Switch>
       );
@@ -30,6 +30,9 @@ const Routes = (props) => {
         routes = (
   <Switch>
 <Route exact component={Home} path='/' />
+<Route exact component={ChangePassword} path='/auth/user/account/password/change' />
+<Route exact component={logout} path='/auth/user/logout' />
+
   </Switch>
         )
       }

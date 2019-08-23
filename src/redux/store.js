@@ -3,7 +3,6 @@ import ClassroomReducer from './reducers/ClassroomReducer'
 import appReducer from './reducers/appReducer'
 import {counter} from './reducers/counter'
 import { createStore , applyMiddleware,compose,combineReducers} from 'redux';
-// import thunk from 'redux-thunk'; //thunk helps to add middle ware to action creators with the help of applyMiddle from redux above
 import createSagaMiddleware from 'redux-saga'
 import rootSaga from './actions/rootsaga';
 
@@ -23,8 +22,4 @@ const store =  createStore(rootReducer ,composeEnhancers(
 ));
 sagaMiddleware.run(rootSaga)
 
-const action = type => store.dispatch({type})
-
-action('INCREMENT');
-console.log(store.getState())
 export default store;
