@@ -8,7 +8,7 @@ import * as serviceWorker from './serviceWorker';
 
 import store from './redux/store';
 
-const app = (
+export const app = (
     <Provider store={store}>
     <BrowserRouter>
     <App/>

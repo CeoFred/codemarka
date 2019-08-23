@@ -1,4 +1,3 @@
-## Very Clear and precise README isn't it?
+## Welcome to Colab
 
-Install Dependencies run - npm run client-install
-start client and server - npm run dual
+[![Build Status](https://travis-ci.com/CeoFred/colab.svg?token=8zGCZEFENvahi3TRnh5R&branch=master)](https://travis-ci.com/CeoFred/colab)
