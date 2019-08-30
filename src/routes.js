@@ -1,7 +1,9 @@
 import React from "react";
 import { connect } from 'react-redux'
 import {Switch,withRouter,Route} from 'react-router-dom';
+
 import * as actions from './redux/actions/index';
+import * as url from './config/url';
 
 // const classrooom = React.lazy(() => import('./containers/classroom/Environment'));
 const logout = React.lazy(() => import('./containers/auth/Logout'));
@@ -17,10 +19,10 @@ const NotFound = React.lazy(() => import('./containers/public/404'));
 const Routes = (props) => {
     let routes = (
         <Switch>  
-<Route exact component={Home} path='/' />
-<Route exact component={Login} path='/auth/signin' />
-<Route exact component={Register} path='/auth/signup' />
-<Route exact component={ForgotPassword} path='/auth/account/recovery' />
+<Route exact component={Home} path={url.HOME} />
+<Route exact component={Login} path={url.AUTH_SIGN_IN} />
+<Route exact component={Register} path={url.AUTH_SIGN_UP} />
+<Route exact component={ForgotPassword} path={url.AUTH_FORGOT_PASSWORD} />
 <Route component={NotFound} />
 
         </Switch>
@@ -29,9 +31,9 @@ const Routes = (props) => {
       if(props.isAutheticated){
         routes = (
   <Switch>
-<Route exact component={Home} path='/' />
-<Route exact component={ChangePassword} path='/auth/user/account/password/change' />
-<Route exact component={logout} path='/auth/user/logout' />
+<Route exact component={Home} path={url.HOME} />
+<Route exact component={ChangePassword} path={url.AUTH_CHANGE_PASSWORD} />
+<Route exact component={logout} path={url.AUTH_LOGOUT} />
 
   </Switch>
         )

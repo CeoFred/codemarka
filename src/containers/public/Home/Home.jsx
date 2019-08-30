@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import Macbook from "../../../media/images/svg/devices/macbook.svg";
 
 import "../styles.css";
+import * as url from '../../../config/url';
+
 export default function Home() {
   return (
     <>
@@ -24,9 +26,9 @@ export default function Home() {
                   </p>
                   <div className="mt-5">
                     <Button color="warning" size="md" icon="btn-icon">
-                      <span className="btn-inner--icon" />
+                      <span className="btn-inner--icon" />  
                       <Link
-                        to="/auth/join-us"
+                        to={url.AUTH_SIGN_UP}
                         className="btn-inner--text text-white"
                       >
                         Join
@@ -104,9 +106,7 @@ export default function Home() {
                   </div>
                   <div>
                     <span class="h6">Real Time Communication</span>
-                    <p class="text-sm text-muted mb-0">
-                      Time is precious
-                    </p>
+                    <p class="text-sm text-muted mb-0">Time is precious</p>
                   </div>
                 </div>
               </div>
@@ -132,9 +132,7 @@ export default function Home() {
                   </div>
                   <div>
                     <span class="h6">Code Liniting</span>
-                    <p class="text-sm text-muted mb-0">
-                      Faster build time.
-                    </p>
+                    <p class="text-sm text-muted mb-0">Faster build time.</p>
                   </div>
                 </div>
               </div>
@@ -190,9 +188,7 @@ export default function Home() {
                   </div>
                   <div>
                     <span class="h6">20+ Language Support</span>
-                    <p class="text-sm text-muted mb-0">
-                      Built for everyone.
-                    </p>
+                    <p class="text-sm text-muted mb-0">Built for everyone.</p>
                   </div>
                 </div>
               </div>
@@ -253,7 +249,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-           
           </div>
         </div>
       </section>
