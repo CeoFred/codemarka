@@ -1,7 +1,7 @@
 import React from "react";
-import "../../components/Partials/Editor/editor.css";
+import "../../components/classroom/Editor/editor.css";
 import { useSelector,useDispatch} from "react-redux";
-import * as action from "../../redux/actions/index.jsx";
+import * as action from "../../redux/actions/";
 
 import io from "socket.io-client";
 

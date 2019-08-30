@@ -2,9 +2,10 @@ export const HOME = '/';
 export const ABOUT = '/about-us'
 export const CONTACT = '/contact-us'
 //classroom
-export const CLASSROMS = '/classrooms/'
+export const CLASSROOMS = '/classrooms/locale/all'
 export const JOIN_CLASSROOM = '/classrooms/join/:classroom'
-
+export const CLASSROOM = '/classroom/'
+export const CLASSROOM_NEW = '/classroom/create'
 // Authentication
 export const AUTH_SIGN_IN  = '/auth/signin';
 export const AUTH_SIGN_UP  = '/auth/signup';
