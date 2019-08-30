@@ -1,28 +1,30 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import * as url from '../../../config/url';
+
 export default function NavigationBarItems() {
   return (
     <div className="collapse navbar-collapse" id="navbar-primary">
       <ul className="navbar-nav ml-lg-auto">
         <li className="nav-item">
-          <Link className="nav-link" to="/">
+          <Link className="nav-link" to={url.HOME}>
             Home
           </Link>
         </li>
         <li className="nav-item ">
-          <Link className="nav-link" to="/#about-us">
+          <Link className="nav-link" to={url.ABOUT}>
             About
           </Link>
         </li>
         <li className="nav-item ">
-          <Link className="nav-link" to="/contact-us">
+          <Link className="nav-link" to={url.CONTACT}>
             Support
           </Link>
         </li>
 
         <li className="nav-item ">
-          <Link className="nav-link" to="/auth/signin?med=home">
+          <Link className="nav-link" to={url.AUTH_SIGN_IN}>
             Login
           </Link>
         </li>

@@ -1,7 +1,7 @@
 import React from "react";
-import "../../containers/classroom/Editor/editor.css";
+import "../../components/classroom/Editor/editor.css";
 import { useSelector,useDispatch} from "react-redux";
-import * as action from "../../redux/actions/index.jsx";
+import * as action from "../../redux/actions/";
 
 import io from "socket.io-client";
 
@@ -9,10 +9,10 @@ export default function Environment() {
   const state = useSelector(state => state);
   const dispatch = useDispatch();
   const user = state.auth;
-  // const [messageCount, setMessageCount] = React.useState(0);
-  // const [theme, setTheme] = React.useState("dark");
+  const [messageCount, setMessageCount] = React.useState(0);
+  const [theme, setTheme] = React.useState("dark");
   const [inRoom, setInRoom] = React.useState(null);
-  // const [serverConfirmedToJoin, setserverConfirmedToJoin] = React.useState(false);
+  const [serverConfirmedToJoin, setserverConfirmedToJoin] = React.useState(false);
 
   const urlParams = new URLSearchParams(window.location.search);
   let classroom_id = ''
