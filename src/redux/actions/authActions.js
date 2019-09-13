@@ -1,4 +1,5 @@
 import * as actionTypes from './Types'
+import { put, all,takeLatest  } from 'redux-saga/effects';
 
 // import axios from 'axios';
 export const authStart = () => {
@@ -153,4 +154,15 @@ export const authCheckState = () => {
            
         }
     }
+}
+
+export function* authInit(){
+    yield takeLatest(actionTypes.AUTH_START,authStart)
+}
+
+
+export default function* authRootSaga(){
+    yield all([
+        authInit()
+    ])
 }

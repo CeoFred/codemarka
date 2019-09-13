@@ -4,14 +4,14 @@ import googleIcon from '../../../../media/images/icons/brands/google.svg';
 
 export default function Google(props) {
     return (
-        <a href={props.link} class="btn btn-block btn-neutral btn-icon">
-                    <span class="btn-inner--icon">
+        <a href={props.link} className="btn btn-block btn-neutral btn-icon">
+                    <span className="btn-inner--icon">
                       <img
                         src={googleIcon}
                         alt="placeholder"
                       />
                     </span>
-                    <span class="btn-inner--text">Google</span>
+                    <span className="btn-inner--text">Google</span>
                   </a>
     )
 }

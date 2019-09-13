@@ -5,38 +5,38 @@ import {Link} from 'react-router-dom';
 
  export default function Input(props) {
     const regular =  (
-        <div class="form-group mb-4">
-                  <div class="d-flex align-items-center justify-content-between">
+        <div className="form-group mb-4">
+                  <div className="d-flex align-items-center justify-content-between">
                     <div>
-                      <label class="form-control-label">{props.label}</label>
+                      <label className="form-control-label">{props.label}</label>
                     </div>
-                   {props.isLoginPasswordInput ? (<div class="mb-2">
+                   {props.isLoginPasswordInput ? (<div className="mb-2">
                       <Link
                         to="/auth/recover"
-                        class="small text-muted text-underline--dashed border-primary"
+                        className="small text-muted text-underline--dashed border-primary"
                       >
                         Lost password?
                       </Link>
                    </div>) : ''
                    }
                   </div>
-                  <div class="input-group input-group-merge">
+                  <div className="input-group input-group-merge">
                     {props.initialPrepend ?
-                         (<div class="input-group-prepend">
-                      <span class="input-group-text">
+                         (<div className="input-group-prepend">
+                      <span className="input-group-text">
                          {props.initialPrependsvg}
                       </span>
                          </div>) : ''}
                     <input
                       type={props.type}
-                      class="form-control"
+                      className="form-control"
                       id={props.id || ''}
-                      placeholder={props.plaveholder}
-                      onKeyUp={props.inputChange}
+                      placeholder={props.placeholder}
+                      onChange={props.changed}
                       value={props.value}
                     />
-                    {props.finalAppend ? <div class="input-group-append">
-                      <span class="input-group-text">
+                    {props.finalAppend ? <div className="input-group-append">
+                      <span className="input-group-text">
                         <a
                           href="/#"
                           data-toggle="password-text"
@@ -52,11 +52,11 @@ import {Link} from 'react-router-dom';
     )
 const checkbox = (
 
-    <div class="my-4">
-    <div class="custom-control custom-checkbox mb-3">
-      <input type="checkbox" 
-      class="custom-control-input" id="check-terms" />
-       <label class="custom-control-label" for="check-terms">
+    <div className="my-4">
+    <div className="custom-control custom-checkbox mb-3">
+      <input type="checkbox" selected={props.selected}
+      className="custom-control-input" onSelect={props.clicked} id="check-terms" />
+       <label className="custom-control-label" htmlFor="check-terms">
            {props.children}
        </label>
        </div>
