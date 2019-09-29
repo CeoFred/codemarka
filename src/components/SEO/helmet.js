@@ -9,6 +9,7 @@ export default function helmet(props) {
                 <title>{props.title}</title>
                 {props.link}
                 <meta name="description" content={props.metaDescription}/>
+                {props.children}
             </Helmet>
     )
 }

@@ -8,7 +8,7 @@ export const TERMS_AND_CONDITIONS = '/terms-and-condition'
 //classroom
 export const CLASSROOMS = '/classrooms/locale/all'
 export const JOIN_CLASSROOM = '/classrooms/join/:classroom'
-export const CLASSROOM = '/classroom/'
+export const CLASSROOM = '/c/classroom/:classroom'
 export const CLASSROOM_NEW = '/classroom/create'
 
 
