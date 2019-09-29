@@ -1,24 +1,57 @@
-import * as actionTypes from './Types'
-
 import { put ,takeLatest  } from 'redux-saga/effects';
 
+
+import * as actionTypes from './Types'
 import * as apiURL from '../../config/api_url';
+
+
+let myHeader = new Headers()
 
 const delay = (ms) => new Promise(res => setTimeout(res, ms))
 
 // use them in parallel
 export function* classroomWatchers() {
-    yield takeLatest(actionTypes.CLASSROOM_VERIFICATION_INIT, checkClassroom)
+    yield takeLatest(actionTypes.CLASSROOM_ASYNC_VERIFICATION_INIT, checkClassroom)
 }
 
 
-export function* checkClassroom(){
+export function* checkClassroom(action){
        yield delay(100)
+        
        yield put({ type: actionTypes.CLASSROOM_VERIFICATION_INIT })
+
+       const classroom_id = action.classroom
+       const user = action.user;
+
+       const requestData = {
+           classroom: classroom_id,
+           user
+       }
+        const url = apiURL.CLASSROOM_VERIFY_URL;
+        myHeader.append('Content-Type', 'Application/json')
+
+       const request = new Request(url, {
+        method: 'POST',
+        cache: 'default',
+        headers: myHeader,
+        body: JSON.stringify(requestData),
+        mode: 'cors'
+
+    })
+      yield fetch(request).then(res => {
+
+        return res
+
+    }).then(res => {
+        console.log(res)
+    }).catch(err => {
+        console.error(err)
+
+    })
+
 }
 
 
-var myHeader = new Headers()
 
 
 
@@ -119,10 +152,4 @@ export const classCreationSuccess = (details) => {
     }
 }
 
-const checkClassroomInit = (id) => {
-    return {
-        type: actionTypes.CLASSROOM_VERIFICATION_INIT,
-        classroom_id:id
-    }
-}
 

@@ -56,6 +56,12 @@ const errorLeavingClass = (state,prevClass,newClass) => {
     })
 }
 
+const classroomVerifyStart = (state,action) => {
+    return helper.updateObject(state,{
+        classroom_id:null,
+        errors:null
+    })
+}
 
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -65,7 +71,7 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.CLASS_CREATION_FAILED): return classroomCreationFailed(state,action)
         case(actionTypes.CLASSROOM_JOINED): return classroomJoined(state,action)
         case(actionTypes.CLASSROOM_LEFT): return classroomLeft(state,action)
-
+        case(actionTypes.CLASSROOM_VERIFICATION_INIT): return classroomVerifyStart(state,action) 
         default: return state;
     }
 }

@@ -1,14 +1,16 @@
 import React from "react";
-import "../../components/classroom/Editor/editor.css";
 import { useSelector,useDispatch} from "react-redux";
-import * as action from "../../redux/actions/";
-
 import io from "socket.io-client";
 
-import './css/Environment.css';
 
+import * as action from "../../redux/actions/";
+import * as actionTypes from "../../redux/actions/Types";
 import { dispatchAppEnvironment } from '../../redux/actions/appActions';
-import {checkClassroom} from '../../redux/actions/classRoomActions'
+
+
+import './css/Environment.css';
+import "../../components/classroom/Editor/editor.css";
+
 
 export default function Environment(props) {
 
@@ -18,6 +20,7 @@ export default function Environment(props) {
   const user = auth;
   const { match: { params } } = props;
   const classroomId = params.classroom;
+
   const checking = (
     <div class="env--content--loading text-center">
     <div class="spinner-grow" style={{width:'3rem',height:'3rem'}} role="status">
@@ -26,6 +29,7 @@ export default function Environment(props) {
     <div style={{marginTop:'5'}}>Checking classroom..</div>
   </div>
   );
+
   const [messageCount, setMessageCount] = React.useState(0);
   const [theme, setTheme] = React.useState("dark");
   const [inRoom, setInRoom] = React.useState(null);
@@ -45,17 +49,21 @@ export default function Environment(props) {
     css_editor_content: "",
     username: 'User-'+Math.random()*32,
     loading: true,
-    // theme,
     hasReallyJoined: false,
     content:checking
   });
 
   React.useEffect(() => {
       dispatch(dispatchAppEnvironment('classroom'));
+
+      dispatch({
+        type:actionTypes.CLASSROOM_ASYNC_VERIFICATION_INIT,
+        classroom:colabstate.classroom_id
+      })
      return () => {
     dispatch(dispatchAppEnvironment('regular'));
     }
-  },[dispatch])
+  },[dispatch,colabstate.classroom_id])
 
   // runs for every re-render and initial render
   // React.useEffect(() => {
