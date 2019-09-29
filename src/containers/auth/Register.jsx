@@ -15,6 +15,8 @@ import * as authAction from '../../redux/actions/authActions';
 
 import Spinner from "../../components/Partials/Preloader";
 
+import * as url from '../../config/url';
+
 const emailIconSvg = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -197,17 +199,17 @@ const handleFormSubmit =  (e) => {
               <div className="row">
                 <div className="col-sm-6">
                   {/* github action button */}
-                  <Github link="github.com/oauth/" />
+                  <Github link={url.GITHUB_AUTH_URL} />
                   {/* github action button */}
                 </div>
 
                 <div className="col-sm-6">
-                  <Google link="https://www.google.com/oauth" />
+                  <Google link={url.GOOGLE_AUTH_URL} />
                 </div>
               </div>
               <div className="mt-4 text-center">
                 <small>Already have an account?</small>
-                <Link to="/auth/signin" className="small font-weight-bold">
+                <Link to={url.AUTH_SIGN_IN} className="small font-weight-bold">
                   signin
                 </Link>
               </div>

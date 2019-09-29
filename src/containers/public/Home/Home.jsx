@@ -4,7 +4,9 @@ import { Link } from "react-router-dom";
 import Macbook from "../../../media/images/svg/devices/macbook.svg";
 
 import "../styles.css";
-import * as url from '../../../config/url';
+import * as url from "../../../config/url";
+import laptopImg from '../../../media/images/Screenshot(68).png';
+
 
 export default function Home() {
   return (
@@ -25,15 +27,15 @@ export default function Home() {
                     already?
                   </p>
                   <div className="mt-5">
-                    <Button color="warning" size="md" icon="btn-icon">
-                      <span className="btn-inner--icon" />  
-                      <Link
-                        to={url.AUTH_SIGN_UP}
-                        className="btn-inner--text text-white"
-                      >
+                    <Link
+                      to={url.AUTH_SIGN_UP}
+                      className="btn-inner--text text-white"
+                    >
+                      <Button color="warning" size="md" icon="btn-icon">
+                        <span className="btn-inner--icon" />
                         Join
-                      </Link>
-                    </Button>
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -61,7 +63,7 @@ export default function Home() {
               <div class="frame-inner">
                 <img
                   alt="placeholder"
-                  src="assets/img/theme/light/laptop-screen-1.jpg"
+                  src={laptopImg}
                   className="img-fluid"
                 />
               </div>

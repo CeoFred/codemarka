@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt-nodejs";
+import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import mongoose from "mongoose";
 
@@ -51,18 +51,18 @@ const userSchema = new mongoose.Schema({
 /**
  * Password hash middleware.
  */
-userSchema.pre("save", function save(next) {
-    const user = this as UserDocument;
-    if (!user.isModified("password")) { return next(); }
-    bcrypt.genSalt(10, (err, salt) => {
-        if (err) { return next(err); }
-        bcrypt.hash(user.password, salt, undefined, (err: mongoose.Error, hash) => {
-            if (err) { return next(err); }
-            user.password = hash;
-            next();
-        });
-    });
-});
+// userSchema.pre("save", function save(next: any) {
+//     const user = this as UserDocument;
+//     if (!user.isModified("password")) { return next(); }
+//     bcrypt.genSalt(10, (err, salt) => {
+//         if (err) { return next(err); }
+//         bcrypt.hash(user.password, salt, undefined, (err: mongoose.Error, hash) => {
+//             if (err) { return next(err); }
+//             user.password = hash;
+//             next();
+//         });
+//     });
+// });
 
 const comparePassword: comparePasswordFunction = function (candidatePassword, cb) {
     bcrypt.compare(candidatePassword, this.password, (err: mongoose.Error, isMatch: boolean) => {
