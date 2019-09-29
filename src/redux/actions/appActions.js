@@ -16,6 +16,15 @@ import { put, all,takeLatest  } from 'redux-saga/effects';
     }
 }
 
+export const dispatchAppEnvironment = (environ) => {
+    return {
+        type: actionTypes.ENVIRONMENT_SWITCH,
+        currentEnv:environ
+    }
+}
+
+
+
 export function* cookieAccepted() {
     
         const cookie_token = localStorage.getItem('ctok');
@@ -49,15 +58,10 @@ export function* tryValidatingCookie() {
 
 export function* watchAsyncCookieValidationInit(){
     yield takeLatest(actionTypes.COOKIE_VALIDATE_INIT,tryValidatingCookie)
-  }
+}
+
 export function* watchAsyncCookieAccepted(){
     yield takeLatest(actionTypes.ACCEPT_COOKIE,cookieAccepted)
 }
 
 
-export default function* appRootSaga() {
-    yield all([
-      watchAsyncCookieValidationInit(),
-      watchAsyncCookieAccepted()
-    ])
-}

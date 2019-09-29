@@ -5,21 +5,33 @@ import * as action from "../../redux/actions/";
 
 import io from "socket.io-client";
 
-export default function Environment() {
-  const state = useSelector(state => state);
+import './css/Environment.css';
+
+import { dispatchAppEnvironment } from '../../redux/actions/appActions';
+import {checkClassroom} from '../../redux/actions/classRoomActions'
+
+export default function Environment(props) {
+
+  const {auth} = useSelector(state => state);
   const dispatch = useDispatch();
-  const user = state.auth;
+  
+  const user = auth;
+  const { match: { params } } = props;
+  const classroomId = params.classroom;
+  const checking = (
+    <div class="env--content--loading text-center">
+    <div class="spinner-grow" style={{width:'3rem',height:'3rem'}} role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <div style={{marginTop:'5'}}>Checking classroom..</div>
+  </div>
+  );
   const [messageCount, setMessageCount] = React.useState(0);
   const [theme, setTheme] = React.useState("dark");
   const [inRoom, setInRoom] = React.useState(null);
   const [serverConfirmedToJoin, setserverConfirmedToJoin] = React.useState(false);
 
-  const urlParams = new URLSearchParams(window.location.search);
-  let classroom_id = ''
-    if (urlParams.has("classroom_id")) {
-       classroom_id = urlParams.get("classroom_id");
-    
-    }
+
   const [colabstate, setColabState] = React.useState({
     messages: [],
     users: [],
@@ -27,24 +39,33 @@ export default function Environment() {
     last_sent_message: { value: "" },
     has_sent_message: false,
     user_id: user.userId,
-    classroom_id: classroom_id || null,
+    classroom_id: classroomId,
     javascript_editor_content: "",
     html_editor_content: "",
     css_editor_content: "",
     username: 'User-'+Math.random()*32,
+    loading: true,
     // theme,
     hasReallyJoined: false,
+    content:checking
   });
 
-  // runs for every re-render and initial render
   React.useEffect(() => {
-    window.document.title = "Join A classroom";
-    const button = document.getElementById("user_class_state");
-    button.addEventListener("click", handleInRoom);
-    return function removeListener() {
-      button.removeEventListener("click", handleInRoom);
-    };
-  });
+      dispatch(dispatchAppEnvironment('classroom'));
+     return () => {
+    dispatch(dispatchAppEnvironment('regular'));
+    }
+  },[dispatch])
+
+  // runs for every re-render and initial render
+  // React.useEffect(() => {
+  //   window.document.title = "Join A classroom";
+  //   const button = document.getElementById("user_class_state");
+  //   button.addEventListener("click", handleInRoom);
+  //   return function removeListener() {
+  //     button.removeEventListener("click", handleInRoom);
+  //   };
+  // });
 
   // effect for joining a room
   React.useEffect(() => {
@@ -120,28 +141,18 @@ export default function Environment() {
   //   setMessageCount(messageCount + 1);
   // };
 
-  let msg = 'No message';
-  if(colabstate.messages){
-    const classMsg = colabstate.messages;
-    msg = '';
-  msg = classMsg.map((message) => {
-    return <div key={Math.random()*32}><b>{message.from} - </b>{message.msg}</div>
-  });
-    console.log(msg)
-  }
+  // let msg = 'No message';
+  // if(colabstate.messages){
+  //   const classMsg = colabstate.messages;
+  //   msg = '';
+  // msg = classMsg.map((message) => {
+  //   return <div key={Math.random()*32}><b>{message.from} - </b>{message.msg}</div>
+  // });
+  //   console.log(msg)
+  // }
   return (
-    <>
-      <button id="user_class_state">{inRoom ? "LEAVE" : "JOIN"}</button>
-      <h3>
-      </h3>
-      <hr/>
-      {msg}
-      <div class="text-center">
-  <div class="spinner-grow" style={{width:'3rem',height:'3rem'}} role="status">
-    <span class="sr-only">Loading...</span>
-  </div>
-  <div style={{marginTop:'5'}}>Checking classroom..</div>
-</div>
-    </>
+    <div className="env--container">
+      {colabstate.content}
+    </div>
   );
 }

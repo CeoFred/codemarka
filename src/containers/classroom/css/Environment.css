@@ -1,0 +1,13 @@
+.env--continer{
+    position: relative;
+    z-index:1;
+
+}
+
+.env--content--loading {
+    /* position: absolute; */
+    z-index:3;
+    margin: 20% auto;
+    width: 100%;
+    height: 100%;
+}

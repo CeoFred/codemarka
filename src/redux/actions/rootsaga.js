@@ -1,9 +1,14 @@
-import appRootSaga from './appActions';
+import { all } from 'redux-saga/effects'
 
-function rootSaga() {
-    
-    return appRootSaga()
-    
+import {watchAsyncCookieAccepted,watchAsyncCookieValidationInit} from './appActions';
+import {classroomWatchers} from './classRoomActions';
+
+function* rootSaga() {
+    yield all([
+        classroomWatchers(),
+        watchAsyncCookieValidationInit(),
+        watchAsyncCookieAccepted(),
+      ])    
 }
 
 export default rootSaga;
