@@ -1,10 +1,23 @@
 import React from "react";
+import { useSelector} from "react-redux";
 
 import logo from '../../../media/images/logo.png'
+
+
 export default function FooterBar() {
+
+  const {app} = useSelector(state => state);
+  let display;
+
+  if(app.environment === 'classroom'){
+    display = false;
+  }else{
+    display = true;
+  }
+
   return (
     <div>
-      <footer id="footer-main">
+      <footer id="footer-main" style={{display:display ? 'block' : 'none'}}>
         <div className="footer footer-dark">
           <div className="container">
             <div className="row pt-md">
