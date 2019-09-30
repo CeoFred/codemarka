@@ -1,5 +1,5 @@
 import * as actionTypes from './Types'
-import { put, all,takeLatest  } from 'redux-saga/effects';
+import {  all,takeLatest  } from 'redux-saga/effects';
 
 // import axios from 'axios';
 export const authStart = () => {

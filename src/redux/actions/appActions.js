@@ -1,5 +1,5 @@
 import * as actionTypes from './Types'
-import { put, all,takeLatest  } from 'redux-saga/effects';
+import { put,takeLatest  } from 'redux-saga/effects';
 
 
  const dispatchCookieAccepted = (token) => {

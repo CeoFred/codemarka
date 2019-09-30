@@ -30,10 +30,10 @@ export default function Environment(props) {
   </div>
   );
 
-  const [messageCount, setMessageCount] = React.useState(0);
-  const [theme, setTheme] = React.useState("dark");
-  const [inRoom, setInRoom] = React.useState(null);
-  const [serverConfirmedToJoin, setserverConfirmedToJoin] = React.useState(false);
+  // const [messageCount, setMessageCount] = React.useState(0);
+  // const [theme, setTheme] = React.useState("dark");
+  const [inRoom] = React.useState(null);
+  // const [serverConfirmedToJoin, setserverConfirmedToJoin] = React.useState(false);
 
 
   const [colabstate, setColabState] = React.useState({
@@ -137,9 +137,9 @@ export default function Environment(props) {
     }
   },[dispatch,inRoom,colabstate.username,colabstate.classroom_id]);
 
-  const handleInRoom = () => {
-    inRoom ? setInRoom(false) : setInRoom(true);
-  };
+  // const handleInRoom = () => {
+  //   inRoom ? setInRoom(false) : setInRoom(true);
+  // };
 
   // const handleNewMessage = () => {
   //   console.log("emitting new message");
