@@ -16,7 +16,7 @@ export const Index = (
     </Provider>
 );
 
-export default App;
+export default {App};
 
 ReactDOM.render(Index, document.getElementById('root') || document.createElement('div'));
 
