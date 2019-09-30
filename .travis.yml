@@ -6,10 +6,11 @@ cache:
     - node_modules
 script:
   - npm test
+  - npm run build
 deploy:
   provider: surge
   skip_cleanup: true
-  domain: colab.surge.sh
-  project: ./src/build/
+  domain: withcolab.surge.sh
+  project: ./build/
 on:
   branch: master
