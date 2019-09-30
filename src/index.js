@@ -8,21 +8,15 @@ import * as serviceWorker from './serviceWorker';
 
 import store from './redux/store';
 
-// export const app = (
-//     <Provider store={store}>
-//     <BrowserRouter>
-//     <App/>
-//     </BrowserRouter>
-//     </Provider>
-// );
-
-ReactDOM.render((
+export const Index = (
     <Provider store={store}>
     <BrowserRouter>
     <App/>
     </BrowserRouter>
     </Provider>
-), document.getElementById('root') || document.createElement('div'));
+);
+
+ReactDOM.render(Index, document.getElementById('root') || document.createElement('div'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
