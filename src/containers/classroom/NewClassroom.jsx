@@ -1,9 +1,9 @@
 import React,{useState} from "react";
-// import * as actions from '../../redux/actions/'
+import * as actions from '../../redux/actions/Types'
 
 // import {Redirect} from 'react-router-dom';
-// import {useSelector} from 'react-redux'
-// import Spinner from '../../components/Partials/Preloader';
+import {useDispatch} from 'react-redux'
+import Spinner from '../../components/Partials/Preloader';
 import { checkValidity } from '../../utility/shared';
 
 import Button from "../../components/Partials/Button";
@@ -15,6 +15,7 @@ import Helmet from '../../components/SEO/helmet';
 import './newclassroom.css';
 
 function NewClassroom(props) {
+  const dispatch = useDispatch()
 
   const [state, setState] = useState({
     controls: {
@@ -88,6 +89,7 @@ function NewClassroom(props) {
             touched:false
         },
     }, formisValid:false,
+    formisSubmitted:false
 })
 
     
@@ -115,8 +117,11 @@ for(let inputIdentifier in updatedControls){
 
 const submitHandler = (event) => {
   event.preventDefault();
+  setState({...state,formisSubmitted:true})
+  dispatch({
+    type: actions.CLASSROOM_CREATE_INIT
+  })
 } 
-  // const dispatch = useDispatch()
 
   const formElementArray = [];
   for(let key in state.controls){
@@ -139,7 +144,9 @@ const submitHandler = (event) => {
       />
   ))}
 
-  <Button block textColor='#fff' color="success" disabled={!state.formisValid}>{'Submit'}</Button>
+  <Button block textColor='#fff' color="success" clicked={submitHandler} disabled={!state.formisValid}>
+  {state.formisSubmitted ? <Spinner /> : 'Go'}
+  </Button>
 
   </form>
 
