@@ -10,7 +10,7 @@ import Button from "../../components/Partials/Button";
 import Input from "../../components/Partials/Input/Input";
 import Helmet from '../../components/SEO/helmet';
 
-// import Select from '../../components/Partials/Select';
+import  Alert from '../../components/Partials/Alert/Alert';
 
 import './newclassroom.css';
 
@@ -88,8 +88,35 @@ function NewClassroom(props) {
             valid:false,
             touched:false
         },
-    }, formisValid:false,
-    formisSubmitted:false
+        classType: {
+          label:'classtype',
+            elementType:'select',
+            elementConfig:{
+                options:[
+                  {
+                    value: '',
+                    displayValue:'Select class Type'
+                  },
+                  {
+                    value:'Basic Web App',
+                    displayValue:'Basic Web App'
+                  }
+                ],
+            },
+            value:'',
+            validation: {
+                required:true,
+                minLength: 3
+            },
+            valid:false,
+            touched:false
+        },
+    }, 
+    formisValid:false,
+    formisSubmitted:false,
+    formErrorMessage: null,
+    formErrored:false,
+    alertType:null
 })
 
     
@@ -110,7 +137,7 @@ for(let inputIdentifier in updatedControls){
   formisValid = updatedControls[inputIdentifier].valid && formisValid
 }
 
-  setState({controls:updatedControls,formisValid})
+  setState({...state,controls:updatedControls,formisValid})
 // console.log(updatedControls);
   
 }   
@@ -118,9 +145,24 @@ for(let inputIdentifier in updatedControls){
 const submitHandler = (event) => {
   event.preventDefault();
   setState({...state,formisSubmitted:true})
-  dispatch({
-    type: actions.CLASSROOM_CREATE_INIT
-  })
+let formData ;
+  if(state.formisValid && state.formisSubmitted){
+    for (const key in state.controls) {
+      if (state.controls.hasOwnProperty(key)) {
+       const value = state.controls[key].value;
+        console.log(value)
+        formData[key] = state.controls[key].value;
+      }
+    }
+    console.log(formData)
+    dispatch({
+      type: actions.CLASSROOM_CREATE_INIT
+    })
+  } else {
+      setState({...state,alertType:'error',formErrored:true,formErrorMessage:'Form Validation Failed, please check inputs and try again'})
+      return false;
+  }
+  
 } 
 
   const formElementArray = [];
@@ -161,15 +203,18 @@ const submitHandler = (event) => {
         </Helmet>
 
       <section >
-        <div class="row min-vh-100">
-          <div class="col-md-6 col-lg-6 col-xl-6 p-7 pl-3 pr-3 py-6 py-md-0">
+        <div className="row min-vh-100">
+          <div className="col-md-6 col-lg-6 col-xl-6 p-7 pl-3 pr-3 py-6 py-md-0">
             <div>
-              <div class="mb-5 mt-2 text-center">
-                <b class="text-muted mb-0">
+              <div className="mb-5 mt-2 text-center">
+                <b className="text-muted mb-0">
                   Hello, {'user'}
                 </b>
               </div>
-              <span class="clearfix" />
+              <span className="clearfix" />
+              <Alert type={state.alertType} display={state.formErrorMessage} title='Heads Up!'>
+                {state.formErrorMessage}
+              </Alert>
                 {form}
             </div>
           </div>
