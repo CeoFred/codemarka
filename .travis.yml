@@ -8,9 +8,11 @@ script:
   - npm test
   - npm run build
 deploy:
-  provider: surge
-  skip_cleanup: true
-  domain: withcolab.surge.sh
-  project: ./build/
+  - provider: surge
+    skip_cleanup: true
+    domain: withcolab.surge.sh
+    project: ./build/
+  - provider: firebase
+    token: 
 on:
   branch: master
