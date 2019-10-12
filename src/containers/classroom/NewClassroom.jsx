@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import * as actions from "../../redux/actions/Types";
 
 // import {Redirect} from 'react-router-dom';
@@ -14,8 +14,9 @@ import Alert from "../../components/Partials/Alert/Alert";
 
 import "./newclassroom.css";
 
-function NewClassroom(props) {
+function NewClassroom() {
   const dispatch = useDispatch();
+  const alertEl = useRef(null)
 
   const [state, setState] = useState({
     controls: {
@@ -117,10 +118,11 @@ function NewClassroom(props) {
     },
     formisValid: false,
     formisSubmitted: false,
-    formErrorMessage: null,
+    formErrorMessage: false,
     formErrored: false,
     alertType: null
   });
+
 
   const inputChangeHandler = (event, controlName) => {
     const updatedControls = {
@@ -225,7 +227,7 @@ function NewClassroom(props) {
                 <b className="text-muted mb-0">Hello, {"user"}</b>
               </div>
               <span className="clearfix" />
-              <Alert
+              <Alert ref={alertEl}
                 type={state.alertType}
                 display={state.formErrorMessage}
                 title="Heads Up!"

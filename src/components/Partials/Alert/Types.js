@@ -2,7 +2,6 @@ const Types = {
     success: 'success',
     danger: 'danger',
     info: 'info',
-    error : 'error',
     warning: 'warning'
 }
 
