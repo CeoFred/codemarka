@@ -5,13 +5,14 @@ import * as actionTypes from './Types'
 import * as apiURL from '../../config/api_url';
 
 
-let myHeader = new Headers()
+let header = new Headers()
 
 const delay = (ms) => new Promise(res => setTimeout(res, ms))
 
 // use them in parallel
 export function* classroomWatchers() {
     yield takeLatest(actionTypes.CLASSROOM_ASYNC_VERIFICATION_INIT, checkClassroom)
+    yield takeLatest(actionTypes.CLASSROOM_CREATE_INIT, createNewClass)
 }
 
 
@@ -28,12 +29,12 @@ export function* checkClassroom(action){
            user
        }
         const url = apiURL.CLASSROOM_VERIFY_URL;
-        myHeader.append('Content-Type', 'Application/json')
+        header.append('Content-Type', 'Application/json')
 
        const request = new Request(url, {
         method: 'POST',
         cache: 'default',
-        headers: myHeader,
+        headers: header,
         body: JSON.stringify(requestData),
         mode: 'cors'
 
@@ -81,60 +82,44 @@ export const userLeftAClass = (classroom) => {
 
 
 
-export const createNewClass = (data) => {
+export function* createNewClass({data}){
+    yield console.log(data)
+    // return (dispatch) => {
+    //     dispatch(createClassRoomInit)
+        let url = 'http://localhost:2001/classroom/create'
 
-    return (dispatch) => {
-        dispatch(createClassRoomInit)
-        let url = '/classroom/create'
-
-        if (!(myHeader.get('Authorization')) & myHeader.get('Content-Type') !== 'Application/json') {
-            myHeader.append('Authorization', `Bearer ${data.token}`)
-            myHeader.append('Content-Type', 'Application/json')
+        if (!(header.get('Authorization')) & header.get('Content-Type') !== 'Application/json') {
+            header.append('Authorization', `Bearer ${data.token}`)
+            header.append('Content-Type', 'Application/json')
 
         }
 
-        let realSize = data.size.split(' ')
-
-        let requestData = {
-            name: data.name,
-            created_by: data.owner,
-            visibility: data.visibility,
-            description: data.description,
-            location: data.location,
-            start_time: data.time,
-            start_date: data.date,
-            topic: data.topic,
-            autostart: false,
-            size: realSize[1],
-            token: data.token
-        }
 
         let loginRequest = new Request(url, {
             method: 'POST',
             cache: 'default',
-            headers: myHeader,
-            body: JSON.stringify(requestData),
+            headers: header,
+            body: JSON.stringify(data),
             mode: 'cors'
 
         })
-        fetch(loginRequest).then(res => {
+       yield fetch(loginRequest).then(res => {
 
             return res.json()
 
         }).then(res => {
             console.log(res)
             if (res.status === 'created') {
-                dispatch(classCreationSuccess(res.data))
+                put(classCreationSuccess(res.data))
             } else if (res.error && res.type === 'mongo') {
-                dispatch(classCreationFailed(res.error.errors))
+                put(classCreationFailed(res.error.errors))
             }
         }).catch(err => {
             console.error(err)
-            dispatch(classCreationFailed(err))
+            put(classCreationFailed(err))
 
         })
 
-    }
 }
 
 export const classCreationFailed = (error) => {

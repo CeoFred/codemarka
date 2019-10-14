@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import * as actions from "../../redux/actions/Types";
 
 // import {Redirect} from 'react-router-dom';
@@ -16,7 +16,6 @@ import "./newclassroom.css";
 
 function NewClassroom() {
   const dispatch = useDispatch();
-  const alertEl = useRef(null)
 
   const [state, setState] = useState({
     controls: {
@@ -227,7 +226,7 @@ function NewClassroom() {
                 <b className="text-muted mb-0">Hello, {"user"}</b>
               </div>
               <span className="clearfix" />
-              <Alert ref={alertEl}
+              <Alert
                 type={state.alertType}
                 display={state.formErrorMessage}
                 title="Heads Up!"

@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "dual": "concurrently \"npm start \" \"cd server & npm run watch\"",
+    "dual": "concurrently \"npm start \" \"cd ../colab-server & npm run watch-debug\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

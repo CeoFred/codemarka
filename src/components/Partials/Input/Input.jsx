@@ -56,9 +56,9 @@ if(props.elementType === 'input'){
        onChange={props.changed} />;
     }
     return(
-        <div class="form-group">
-        <label class="form-control-label">{props.label}</label>
-        <div class="input-group input-group-merge">
+        <div className="form-group">
+        <label className="form-control-label">{props.label}</label>
+        <div className="input-group input-group-merge">
             {inputElement}
             {/* <div class="input-group-append">
                 <span class="input-group-text"><i data-feather="credit-card"></i></span>
