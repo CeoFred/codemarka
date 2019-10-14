@@ -1,4 +1,4 @@
-import { put ,takeLatest  } from 'redux-saga/effects';
+import { put ,takeLatest,call  } from 'redux-saga/effects';
 
 
 import * as actionTypes from './Types'
@@ -12,7 +12,7 @@ const delay = (ms) => new Promise(res => setTimeout(res, ms))
 // use them in parallel
 export function* classroomWatchers() {
     yield takeLatest(actionTypes.CLASSROOM_ASYNC_VERIFICATION_INIT, checkClassroom)
-    yield takeLatest(actionTypes.CLASSROOM_CREATE_INIT, createNewClass)
+    yield takeLatest(actionTypes.CLASSROOM_CREATE_INIT, createClassroomAsync)
 }
 
 
@@ -80,10 +80,13 @@ export const userLeftAClass = (classroom) => {
     }
 }
 
+ export function* createClassroomAsync({data}){
+    let fetchResult = yield call(createNewClass,[data]);
+    console.log(fetchResult); // logs Promise object
+    yield put(classCreationSuccess(fetchResult)) // I want payload to be 1
+  }
 
-
-export function* createNewClass({data}){
-    yield console.log(data)
+ function createNewClass(data){
     // return (dispatch) => {
     //     dispatch(createClassRoomInit)
         let url = 'http://localhost:2001/classroom/create'
@@ -103,21 +106,14 @@ export function* createNewClass({data}){
             mode: 'cors'
 
         })
-       yield fetch(loginRequest).then(res => {
+     return fetch(loginRequest).then(res => {
 
             return res.json()
 
         }).then(res => {
-            console.log(res)
-            if (res.status === 'created') {
-                put(classCreationSuccess(res.data))
-            } else if (res.error && res.type === 'mongo') {
-                put(classCreationFailed(res.error.errors))
-            }
+            return res;
         }).catch(err => {
-            console.error(err)
-            put(classCreationFailed(err))
-
+            return err;
         })
 
 }
