@@ -87,8 +87,6 @@ export const userLeftAClass = (classroom) => {
   }
 
  function createNewClass(data){
-    // return (dispatch) => {
-    //     dispatch(createClassRoomInit)
         let url = 'http://localhost:2001/classroom/create'
 
         if (!(header.get('Authorization')) & header.get('Content-Type') !== 'Application/json') {

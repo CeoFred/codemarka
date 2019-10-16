@@ -19,7 +19,7 @@ function NewClassroom() {
 
   const [state, setState] = useState({
     controls: {
-      email: {
+      name: {
         label: "Classroom Name",
         elementType: "input",
         elementConfig: {
@@ -29,7 +29,22 @@ function NewClassroom() {
         value: "",
         validation: {
           required: true,
-          minLength: 10
+          minLength: 6
+        },
+        valid: false,
+        touched: false
+      },
+      topic: {
+        label: "Topic",
+        elementType: "input",
+        elementConfig: {
+          type: "text",
+          placeholder: "Javascript ES6"
+        },
+        value: "",
+        validation: {
+          required: true,
+          minLength: 5
         },
         valid: false,
         touched: false
