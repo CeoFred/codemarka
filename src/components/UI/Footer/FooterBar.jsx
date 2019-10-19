@@ -93,7 +93,7 @@ export default function FooterBar() {
               </div>
               <div className="col-md-6">
                 <ul className="nav align-items-center justify-content-center justify-content-md-end">
-                  <li className="nav-item dropdown border-right pr-2">
+                  {/* <li className="nav-item dropdown border-right pr-2">
                     <a
                       className="nav-link btn btn-xs btn-neutral"
                       href="/#"
@@ -135,7 +135,7 @@ export default function FooterBar() {
                         Greek
                       </a>
                     </div>
-                  </li>
+                  </li> */}
                   <li className="nav-item">
                     <a className="nav-link" href="//#">
                       Support

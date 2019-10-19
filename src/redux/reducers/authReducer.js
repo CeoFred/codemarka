@@ -29,7 +29,6 @@ const authSuccess = (state,action) => {
     return helper.updateObject(state,{
         loading:false,
         errorMessage:null,
-        userId:action.userId,
         token:action.idToken
     })
 }
@@ -56,7 +55,7 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.AUTH_FAILED): return authFailed(state,action);    
         case(actionTypes.AUTH_LOGOUT): return authLogout(state,action);   
         case(actionTypes.SET_AUTH_REDIRECT_PATH): return setAuthRedirectPat(state,action);     
-
+        case(actionTypes.AUTO_AUTH_FALED): return authLogout(state,action);
         default: return state;
     }
 }

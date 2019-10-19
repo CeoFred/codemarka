@@ -1,8 +1,8 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { connect } from 'react-redux'
 import {Switch,withRouter,Route, Redirect} from 'react-router-dom';
 
-import * as actions from './redux/actions/index';
+import * as actionType from './redux/actions/Types';
 import * as url from './config/url';
 
 const classrooom = React.lazy(() => import('./containers/classroom/Environment'));
@@ -19,6 +19,9 @@ const ChangePassword = React.lazy(() => import('./containers/auth/ChangePassword
 const NotFound = React.lazy(() => import('./containers/public/404'));
 
 const Routes = (props) => {
+  useEffect(() => {
+    props.onTryAutoSignup()
+  }, [props])
     let routes = (
         <Switch>  
 <Route exact component={Home} path={url.HOME} />
@@ -29,6 +32,7 @@ const Routes = (props) => {
 <Route exact component={classrooom} path={url.CLASSROOM} />
 <Redirect from={url.CLASSROOMS} to={url.AUTH_SIGN_IN} />
 <Route component={NotFound} />
+<Redirect from={url.AUTH_LOGOUT} to={url.AUTH_SIGN_IN}/>
 
         </Switch>
       );
@@ -39,6 +43,10 @@ const Routes = (props) => {
 <Route exact component={Home} path={url.HOME} />
 <Route exact component={ChangePassword} path={url.AUTH_CHANGE_PASSWORD} />
 <Route exact component={logout} path={url.AUTH_LOGOUT} />
+<Redirect from={url.AUTH_SIGN_IN} to={url.HOME}/>
+<Redirect from={url.AUTH_SIGN_UP} to={url.HOME}/>
+<Route component={NotFound} />
+
 {/* <Route exact component={classrooom} path={url.CLASSROOM + ':classroomid'} /> */}
 {/* <Route exact component={newclassrooom} path={url.CLASSROOM_NEW} /> */}
   </Switch>
@@ -58,7 +66,7 @@ const mapStateToProps = state => {
   
   const matchDispatchToProps = (dispatch) => {
     return {
-  onTryAutoSignup: () => dispatch(actions.authCheckState())
+  onTryAutoSignup: () => dispatch({type: actionType.AUTO_AUTH_INIT})
     };
   };
   

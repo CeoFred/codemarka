@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import {useDispatch} from "react-redux"
+import {useDispatch,useSelector} from "react-redux"
 import { Link } from "react-router-dom";
 
 import Github from "../../components/Partials/Auth/Button/Github";
@@ -8,6 +8,8 @@ import Google from "../../components/Partials/Auth/Button/Google";
 import Button from "../../components/Partials/Button";
 import Input from "../../components/Partials/Input";
 import Helmet from '../../components/SEO/helmet';
+import Spinner from '../../components/Partials/Preloader';
+import Alert from '../../components/Partials/Alert/Alert';
 
 import * as actions from "../../redux/actions/Types";
 
@@ -56,14 +58,18 @@ const emailIconSvg = (
 
 export default function Login() {
   const dispatch = useDispatch();
-
+  const {auth} = useSelector(state => state);
+  console.log(auth)
   const [state, setState] = useState({controls:{
     email: {
       value:''
     },password: {
       value:''
     }
-  },formSubmitted: false
+  },
+  formSubmitted: false,
+  alertMessage:null,
+  alertType:null
 })
   const handleInputChange = (e,controlName) => {
     e.preventDefault();
@@ -86,11 +92,15 @@ export default function Login() {
         formData[formElementIdentifier] =
           state.controls[formElementIdentifier].value;
       }
-      console.log(formData);
       dispatch({
         type: actions.AUTH_START,
         data: formData
       });
+      if(auth.errorMessage){
+        setState({...state,authErrored:true,errorMessage:auth.errorMessage,alertType:'danger'})
+      } else {
+          setState({...state,authSuccess:true,errorMessage:null,authErrored:false,alertType:'success'});
+      }
     } else {
       setState({
         ...state,
@@ -118,6 +128,9 @@ export default function Login() {
                 </p>
               </div>
               <span className="clearfix" />
+              <Alert display={state.alertMessage} type={state.alertType}>
+                {state.alertMessage ? state.alertMessage : 'Great! Valid credentails,please wait'}
+              </Alert>
               <form onSubmit={submitHandler}>
                 <Input 
                 type="email"
@@ -143,7 +156,7 @@ export default function Login() {
                 />
                 <div className="mt-4">
                   <Button type="button" clicked={submitHandler} disabled={state.formSubmitted} textColor="#fff" block color="primary">
-                    Sign in
+                    {state.formSubmitted ? <Spinner/> : 'Sign In'}
                   </Button>
                 </div>
               </form>
