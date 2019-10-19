@@ -6,11 +6,13 @@ import {watchAsyncCookieAccepted,
 
     import {classroomWatchers} from './classRoomActions';
 
+    import { authRootSaga } from './authActions';
 function* rootSaga() {
     yield all([
         classroomWatchers(),
         watchAsyncCookieValidationInit(),
         watchAsyncCookieAccepted(),
+        authRootSaga()
       ])    
 }
 

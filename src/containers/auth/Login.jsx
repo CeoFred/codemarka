@@ -1,5 +1,5 @@
-import React from "react";
-
+import React,{useState} from "react";
+import {useDispatch} from "react-redux"
 import { Link } from "react-router-dom";
 
 import Github from "../../components/Partials/Auth/Button/Github";
@@ -9,6 +9,8 @@ import Button from "../../components/Partials/Button";
 import Input from "../../components/Partials/Input";
 import Helmet from '../../components/SEO/helmet';
 
+import * as actions from "../../redux/actions/Types";
+
 const initialPrependsvg = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -17,9 +19,9 @@ const initialPrependsvg = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     class="feather feather-key"
   >
     <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
@@ -34,9 +36,9 @@ const finalAppendsvg = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     class="feather feather-eye"
   >
     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
@@ -53,29 +55,78 @@ const emailIconSvg = (
 )
 
 export default function Login() {
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({controls:{
+    email: {
+      value:''
+    },password: {
+      value:''
+    }
+  },formSubmitted: false
+})
+  const handleInputChange = (e,controlName) => {
+    e.preventDefault();
+    const value  = e.target.value;
+    const updatedControls = {
+      ...state.controls,[controlName]:{
+        ...state.controls[controlName],
+      value
+    }}
+    setState({...state,controls:updatedControls});
+  }
+
+  const submitHandler = event => {
+    event.preventDefault();
+    let formisSubmitted = true;
+    setState({ ...state, formisSubmitted });
+    let formData = {};
+    if (formisSubmitted) {
+      for (let formElementIdentifier in state.controls) {
+        formData[formElementIdentifier] =
+          state.controls[formElementIdentifier].value;
+      }
+      console.log(formData);
+      dispatch({
+        type: actions.AUTH_START,
+        data: formData
+      });
+    } else {
+      setState({
+        ...state,
+        alertType: "error",
+        formErrored: true,
+        formErrorMessage:
+          "Form Validation Failed, please check inputs and try again"
+      });
+      return false;
+    }
+  };
+
   return (
     <div>
-      <Helmet title="Sign Into your account" metaDescription="" />
+      <Helmet title="Sign Into your account" metaDescription="Return back to learn or host classrooms in real time" />
 
       <section>
-        <div class="row align-items-center justify-content-center min-vh-100">
-          <div class="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
+        <div className="row align-items-center justify-content-center min-vh-100">
+          <div className="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
             <div>
-              <div class="mb-5 text-center">
-                <h6 class="h3 mb-1">Login</h6>
-                <p class="text-muted mb-0">
+              <div className="mb-5 text-center">
+                <h6 className="h3 mb-1">Login</h6>
+                <p className="text-muted mb-0">
                   Sign in to your account to continue.
                 </p>
               </div>
-              <span class="clearfix" />
-              <form>
+              <span className="clearfix" />
+              <form onSubmit={submitHandler}>
                 <Input 
                 type="email"
                 placeholder="someone@someserver.com"
                 label="Email address"
                 initialPrepend
                 initialPrependsvg={emailIconSvg}
-                value=""
+                value={state.controls.email.value}
+                changed={event => handleInputChange(event,'email')}
                 />
                 {/* pasword input */}
                 <Input
@@ -85,33 +136,34 @@ export default function Login() {
                   isLoginPasswordInput
                   initialPrepend
                   initialPrependsvg={initialPrependsvg}
-                  value=""
+                  value={state.controls.password.value}
                   finalAppend
                   finalAppendsvg={finalAppendsvg}
+                  changed={event => handleInputChange(event,'password')}
                 />
-                <div class="mt-4">
-                  <Button type="button" textColor="#fff" block color="primary">
+                <div className="mt-4">
+                  <Button type="button" clicked={submitHandler} disabled={state.formSubmitted} textColor="#fff" block color="primary">
                     Sign in
                   </Button>
                 </div>
               </form>
-              <div class="py-3 text-center">
-                <span class="text-xs text-uppercase">or</span>
+              <div className="py-3 text-center">
+                <span className="text-xs text-uppercase">or</span>
               </div>
-              <div class="row">
-                <div class="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6">
                   {/* github action button */}
                   <Github link="github.com/oauth/" />
                   {/* github action button */}
                 </div>
 
-                <div class="col-sm-6">
+                <div className="col-sm-6">
                   <Google link="https://www.google.com/oauth" />
                 </div>
               </div>
-              <div class="mt-4 text-center">
+              <div className="mt-4 text-center">
                 <small>Not registered?</small>
-                <Link to="/auth/signup" class="small font-weight-bold">
+                <Link to="/auth/signup" className="small font-weight-bold">
                   Create account
                 </Link>
               </div>

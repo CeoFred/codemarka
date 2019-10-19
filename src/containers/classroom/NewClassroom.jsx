@@ -171,7 +171,6 @@ function NewClassroom() {
         formData[formElementIdentifier] =
           state.controls[formElementIdentifier].value;
       }
-      console.log(formData);
       dispatch({
         type: actions.CLASSROOM_CREATE_INIT,
         data: formData

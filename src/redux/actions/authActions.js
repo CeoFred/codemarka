@@ -1,12 +1,12 @@
 import * as actionTypes from './Types'
-import {  all,takeLatest  } from 'redux-saga/effects';
+import {  takeLatest  } from 'redux-saga/effects';
 
 // import axios from 'axios';
-export const authStart = () => {
-    return {
-        type: actionTypes.AUTH_START
-    }
-};
+
+export function* authRootSaga(){
+    yield takeLatest(actionTypes.AUTH_START,auth)
+}
+
 
 export const authSuccess = (userId,token) => {
 
@@ -27,10 +27,8 @@ export const authFailed = (error) => {
 
 export const auth = (data) => {
     
-    return (dispatch) => {
 
-        dispatch(authStart());
-        let url = 'http://localhost:8000/auth/user/login';
+        let url = 'http://localhost:2001/auth/user/signin';
         // let method = 'POST'
         var myHeaders = new Headers()
         myHeaders.append('Content-Type','Application/json')
@@ -39,7 +37,7 @@ let loginRequest = new Request(url,{
     method:'POST',
     cache:'default',
     headers:myHeaders,
-    body:JSON.stringify(data),
+    body:JSON.stringify(data.data),
     mode:'cors'
 
 })
@@ -53,27 +51,20 @@ let loginRequest = new Request(url,{
             localStorage.setItem('expirationDate', expirationDate);
             localStorage.setItem('userId',res.meta.userId);
             setTimeout(() => {
-                dispatch(authSuccess(res.meta.useerId,res.meta.token));
                 // dispatch(checkAuthTimeout(res.data.expiresIn));          
             }, 2000);
           
         }).catch(err =>  {
             setTimeout(() => {
-            dispatch(authFailed(err))
             }, 2000);
              console.error(err)
         })
-        
-
-            }
-            
+                    
 };
 
 export const register = (data) => {
     
-    return (dispatch) => {
 
-        dispatch(authStart());
         let url = 'http://localhost:8000/auth/user/signup';
         // let method = 'POST'
         var myHeaders = new Headers()
@@ -98,7 +89,6 @@ let loginRequest = new Request(url,{
                 localStorage.setItem('userId',res.meta.userId);
 
             // setTimeout(() => {
-             dispatch(authSuccess(res.meta.userId,res.meta.token));
             // dispatch(checkAuthTimeout(res.data.expiresIn));          
                 // }, 2000);
               
@@ -106,14 +96,9 @@ let loginRequest = new Request(url,{
           
         }).catch(err =>  {
             setTimeout(() => {
-            dispatch(authFailed(err))
             }, 2000);
              console.error(err)
-        })
-        
-
-            }
-            
+        })            
 };
 
 
@@ -136,7 +121,6 @@ export const logout = () => {
 }
 
 export const authCheckState = () => {
-    return dispatch => {
         const token = localStorage.getItem('token');
         if(token){
             const expirationDate = new Date(localStorage.getItem('expirationDate'));
@@ -144,25 +128,11 @@ export const authCheckState = () => {
             // console.log('Date Nw ' + new Date().getTime());
             if(expirationDate > new Date()){
                 const userId = localStorage.getItem('userId');
-                dispatch(authSuccess(userId,token));
                 // dispatch(checkAuthTimeout( (expirationDate.getTime() - new Date().getTime()) / 1000));
             }else{ 
-            dispatch(logout());
             }
         } else {
-            dispatch(logout());
            
         }
-    }
 }
 
-export function* authInit(){
-    yield takeLatest(actionTypes.AUTH_START,authStart)
-}
-
-
-export default function* authRootSaga(){
-    yield all([
-        authInit()
-    ])
-}
