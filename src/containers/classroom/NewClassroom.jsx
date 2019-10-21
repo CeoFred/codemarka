@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as actions from "../../redux/actions/Types";
 
 // import {Redirect} from 'react-router-dom';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../../components/Partials/Preloader";
 import { checkValidity } from "../../utility/shared";
 
@@ -13,10 +13,11 @@ import Helmet from "../../components/SEO/helmet";
 import Alert from "../../components/Partials/Alert/Alert";
 
 import "./newclassroom.css";
+import { auth } from "../../redux/actions";
 
 function NewClassroom() {
   const dispatch = useDispatch();
-
+  const {token} = useSelector(s => s.auth);
   const [state, setState] = useState({
     controls: {
       name: {
@@ -49,7 +50,7 @@ function NewClassroom() {
         valid: false,
         touched: false
       },
-      startdate: {
+      startDate: {
         label: "Start Date",
         elementType: "input",
         elementConfig: {
@@ -64,7 +65,7 @@ function NewClassroom() {
         valid: false,
         touched: false
       },
-      starttime: {
+      startTime: {
         label: "Start Time",
         elementType: "input",
         elementConfig: {
@@ -79,6 +80,7 @@ function NewClassroom() {
         valid: false,
         touched: false
       },
+
       visibility: {
         label: "Visibility",
         elementType: "select",
@@ -128,7 +130,22 @@ function NewClassroom() {
         },
         valid: false,
         touched: false
-      }
+      },
+      description: {
+        label: "class description",
+        elementType: "textarea",
+        elementConfig: {
+          type: "textarea",
+          // placeholder: "Sele"
+        },
+        value: "",
+        validation: {
+          required: true
+          // minLength: 3
+        },
+        valid: false,
+        touched: false
+      },
     },
     formisValid: false,
     formisSubmitted: false,
@@ -171,6 +188,8 @@ function NewClassroom() {
         formData[formElementIdentifier] =
           state.controls[formElementIdentifier].value;
       }
+      formData.token = token;
+      console.log(formData);
       dispatch({
         type: actions.CLASSROOM_CREATE_INIT,
         data: formData

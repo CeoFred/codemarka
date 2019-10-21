@@ -28,8 +28,7 @@ const Routes = (props) => {
 <Route exact component={Login} path={url.AUTH_SIGN_IN} />
 <Route exact component={Register} path={url.AUTH_SIGN_UP} />
 <Route exact component={ForgotPassword} path={url.AUTH_FORGOT_PASSWORD} />
-<Route exact component={newclassroom} path={url.CLASSROOM_NEW}/>
-<Route exact component={classrooom} path={url.CLASSROOM} />
+
 <Redirect from={url.CLASSROOMS} to={url.AUTH_SIGN_IN} />
 <Route component={NotFound} />
 <Redirect from={url.AUTH_LOGOUT} to={url.AUTH_SIGN_IN}/>
@@ -43,6 +42,8 @@ const Routes = (props) => {
 <Route exact component={Home} path={url.HOME} />
 <Route exact component={ChangePassword} path={url.AUTH_CHANGE_PASSWORD} />
 <Route exact component={logout} path={url.AUTH_LOGOUT} />
+<Route exact component={newclassroom} path={url.CLASSROOM_NEW}/>
+<Route exact component={classrooom} path={url.CLASSROOM} />
 <Redirect from={url.AUTH_SIGN_IN} to={url.HOME}/>
 <Redirect from={url.AUTH_SIGN_UP} to={url.HOME}/>
 <Route component={NotFound} />

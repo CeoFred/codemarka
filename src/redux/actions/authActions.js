@@ -6,6 +6,7 @@ import { put, takeLatest  } from 'redux-saga/effects';
 export function* authRootSaga(){
     yield takeLatest(actionTypes.AUTH_START,auth)
     yield takeLatest(actionTypes.AUTO_AUTH_INIT,authCheckState);
+    yield takeLatest(actionTypes.AUTH_LOGOUT,logout)
 }
 
 
@@ -103,14 +104,12 @@ export const checkAuthTimeout = (expirationTime) => {
     };
 };
 
-export const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('expirationDate');
-    localStorage.removeItem('userId');
-
-    return {
-        type: actionTypes.AUTH_LOGOUT
-    }
+export function* logout() {
+    const token = localStorage.getItem('r_ks');
+    if(token){
+        localStorage.removeItem('r_ks');
+        yield put({type: actionTypes.AUTH_LOGOUT})
+    }   
 }
 
 export function* authCheckState() {

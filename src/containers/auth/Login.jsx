@@ -59,7 +59,6 @@ const emailIconSvg = (
 export default function Login() {
   const dispatch = useDispatch();
   const {auth} = useSelector(state => state);
-  console.log(auth)
   const [state, setState] = useState({controls:{
     email: {
       value:''
@@ -84,10 +83,10 @@ export default function Login() {
 
   const submitHandler = event => {
     event.preventDefault();
-    let formisSubmitted = true;
-    setState({ ...state, formisSubmitted });
+    let formSubmitted = true;
+    setState({ ...state, formSubmitted });
     let formData = {};
-    if (formisSubmitted) {
+    if (formSubmitted) {
       for (let formElementIdentifier in state.controls) {
         formData[formElementIdentifier] =
           state.controls[formElementIdentifier].value;
@@ -96,12 +95,17 @@ export default function Login() {
         type: actions.AUTH_START,
         data: formData
       });
+      
       if(auth.errorMessage){
-        setState({...state,authErrored:true,errorMessage:auth.errorMessage,alertType:'danger'})
+        console.log('error,server errors')
+        setState({...state,authErrored:true,alertMessage:auth.errorMessage,alertType:'danger'})
       } else {
-          setState({...state,authSuccess:true,errorMessage:null,authErrored:false,alertType:'success'});
+        console.log('Auth success')
+          setState({...state,authSuccess:true,alertMessage:null,authErrored:false,alertType:'success'});
       }
     } else {
+      console.log('error,not submitted')
+
       setState({
         ...state,
         alertType: "error",

@@ -1,46 +1,34 @@
-// import React, { Component } from 'react'
-// import { connect } from 'react-redux'
-// import {withRouter,Redirect} from 'react-router-dom';
+import React,{useEffect, useRef} from 'react'
+import { useDispatch,useSelector } from 'react-redux'
+import {Redirect} from 'react-router-dom';
 
-// import * as actions from '../../redux/actions/Types'
+import * as actions from '../../redux/actions/Types'
+import * as url from '../../config/url';
+ 
 
-//  class Logout extends Component {
 
-//     componentDidMount(){
-//         this.props.dispatchLogout()
-//       }
+export default function Logout() {
+    const dispatch = useDispatch()
+    const {auth} = useSelector(state => state)
+    let content= 'Redirecting please wait ....'
+    const ref = useRef(content)
 
-//     componentWillUnmount(){
+    useEffect(() => {
+        if(auth.token)dispatch({type:actions.AUTH_LOGOUT})
+        console.log(auth.token)
+        return () => {
+             ref.current = <Redirect to={url.AUTH_SIGN_IN}/>
+            console.log('component unmounted '+ auth.token)
+        }
 
-//     }
+    }, [dispatch,auth.token])
 
-//     render() {
 
-//         let content= 'Redirecting please wait ....'
-//         if(this.props.token === null){
-//           content = <Redirect to="/login"/>
-//         }
 
-//         return (
-//             <div>
-//                 {content}
-//             </div>
-//         )
     
-// }
-// }
-
-// const mapStateToProps = state => {
-//     return {
-//       token: state.auth.token
-//     }
-//   }
-  
-//   const matchDispatchToProps = (dispatch) => {
-//     return {
-//       dispatchLogout: () => dispatch({type:actions.AUTH_LOGOUT})
-//     };
-//   };
-  
-//   export default withRouter(connect(mapStateToProps,matchDispatchToProps)(Logout));
-  
+    return (
+        <div>
+                <React.Fragment>{ref.current}</React.Fragment>            
+        </div>
+    )
+}

@@ -1,6 +1,5 @@
 import { put ,takeLatest,call  } from 'redux-saga/effects';
 
-
 import * as actionTypes from './Types'
 import * as apiURL from '../../config/api_url';
 
@@ -89,18 +88,17 @@ export const userLeftAClass = (classroom) => {
  function createNewClass(data){
         let url = 'http://localhost:2001/classroom/create'
 
-        if (!(header.get('Authorization')) & header.get('Content-Type') !== 'Application/json') {
-            header.append('Authorization', `Bearer ${data.token}`)
-            header.append('Content-Type', 'Application/json')
-
+        if(!header.get('Authorization')){
+            header.set('Authorization',`Bearer ${data[0].token}`)
         }
+        header.set('Content-Type', 'Application/json')
 
 
         let loginRequest = new Request(url, {
             method: 'POST',
             cache: 'default',
             headers: header,
-            body: JSON.stringify(data),
+            body: JSON.stringify(data[0]),
             mode: 'cors'
 
         })
