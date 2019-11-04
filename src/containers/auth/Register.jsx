@@ -1,7 +1,7 @@
 import React,{useState} from "react";
 
 import { Link } from "react-router-dom";
-import {useDispatch,useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import Github from "../../components/Partials/Auth/Button/Github";
 import Google from "../../components/Partials/Auth/Button/Google";
@@ -10,8 +10,8 @@ import Button from "../../components/Partials/Button";
 import Input from "../../components/Partials/Input";
 
 import Helmet from "../../components/SEO/helmet";
-import * as actionType from '../../redux/actions/Types';
-import * as authAction from '../../redux/actions/authActions';
+// import * as actionType from '../../store/actions/Types';
+// import * as authAction from '../../store/actions/auth';
 
 import Spinner from "../../components/Partials/Preloader";
 
@@ -72,7 +72,7 @@ const userIconSvg = (
 
 
 export default function Register() {
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
   const {loading} = useSelector((state) => state.auth)
   const formErrors = '';
 
@@ -120,9 +120,9 @@ export default function Register() {
 const handleFormSubmit =  (e) => {
   e.preventDefault();
   // console.log('submitted');
-  dispatch({type:actionType.AUTH_START})
-  const {auth} = authAction;
-  dispatch(auth(state))
+  // dispatch({type:actionType.AUTH_START})
+  // const {auth} = authAction;
+  // dispatch(auth(state))
 }
 
 

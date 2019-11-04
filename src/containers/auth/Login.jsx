@@ -1,17 +1,16 @@
 import React,{useState} from "react";
-import {useDispatch,useSelector} from "react-redux"
+import {useDispatch,useSelector,connect} from "react-redux"
 import { Link } from "react-router-dom";
 
 import Github from "../../components/Partials/Auth/Button/Github";
 import Google from "../../components/Partials/Auth/Button/Google";
-
 import Button from "../../components/Partials/Button";
 import Input from "../../components/Partials/Input";
 import Helmet from '../../components/SEO/helmet';
 import Spinner from '../../components/Partials/Preloader';
 import Alert from '../../components/Partials/Alert/Alert';
 
-import * as actions from "../../redux/actions/Types";
+import * as action from "../../store/actions";
 
 const initialPrependsvg = (
   <svg
@@ -56,9 +55,10 @@ const emailIconSvg = (
   </svg>
 )
 
-export default function Login() {
+function Login(props) {
   const dispatch = useDispatch();
   const {auth} = useSelector(state => state);
+
   const [state, setState] = useState({controls:{
     email: {
       value:''
@@ -68,8 +68,10 @@ export default function Login() {
   },
   formSubmitted: false,
   alertMessage:null,
-  alertType:null
+  alertType:null,
+  getAuthState: useSelector(state => state)
 })
+
   const handleInputChange = (e,controlName) => {
     e.preventDefault();
     const value  = e.target.value;
@@ -83,26 +85,19 @@ export default function Login() {
 
   const submitHandler = event => {
     event.preventDefault();
+
     let formSubmitted = true;
     setState({ ...state, formSubmitted });
     let formData = {};
+
     if (formSubmitted) {
       for (let formElementIdentifier in state.controls) {
         formData[formElementIdentifier] =
           state.controls[formElementIdentifier].value;
       }
-      dispatch({
-        type: actions.AUTH_START,
-        data: formData
-      });
-      
-      if(auth.errorMessage){
-        console.log('error,server errors')
-        setState({...state,authErrored:true,alertMessage:auth.errorMessage,alertType:'danger'})
-      } else {
-        console.log('Auth success')
-          setState({...state,authSuccess:true,alertMessage:null,authErrored:false,alertType:'success'});
-      }
+      // dispatch(action.authLoginUser(formData));
+      props.onAuth({...formData})
+
     } else {
       console.log('error,not submitted')
 
@@ -115,6 +110,7 @@ export default function Login() {
       });
       return false;
     }
+    console.log(auth);
   };
 
   return (
@@ -132,8 +128,8 @@ export default function Login() {
                 </p>
               </div>
               <span className="clearfix" />
-              <Alert display={state.alertMessage} type={state.alertType}>
-                {state.alertMessage ? state.alertMessage : 'Great! Valid credentails,please wait'}
+              <Alert display={props.loading} type={state.alertType}>
+                {props.error ? `${props.error}` : 'Great! Valid credentails,please wait'}
               </Alert>
               <form onSubmit={submitHandler}>
                 <Input 
@@ -159,8 +155,12 @@ export default function Login() {
                   changed={event => handleInputChange(event,'password')}
                 />
                 <div className="mt-4">
-                  <Button type="button" clicked={submitHandler} disabled={state.formSubmitted} textColor="#fff" block color="primary">
-                    {state.formSubmitted ? <Spinner/> : 'Sign In'}
+                  <Button type="button"
+                   clicked={submitHandler} 
+                  disabled={state.formSubmitted && props.loading}
+                   textColor="#fff" 
+                   block color="primary">
+                    {state.formSubmitted && props.loading ? <Spinner/> : 'Sign In'}
                   </Button>
                 </div>
               </form>
@@ -191,3 +191,20 @@ export default function Login() {
     </div>
   );
 }
+
+
+const mapStateToProps = state => {
+  return {
+    loading: state.auth.loading,
+    error: state.auth.errorMessage,
+    isAuthenticated: state.auth.token !== null,
+  }
+}
+
+
+const mapDispatchToProps = dispatch => {
+  return {
+      onAuth: ( email, password ) => dispatch( action.authLoginUser( email, password ) ),
+  };
+};
+export default connect( mapStateToProps, mapDispatchToProps )(Login)

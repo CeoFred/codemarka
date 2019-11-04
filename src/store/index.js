@@ -5,8 +5,7 @@ import createSagaMiddleware from 'redux-saga'
 import Authreducer from './reducers/authReducer'
 import ClassroomReducer from './reducers/ClassroomReducer'
 import appReducer from './reducers/appReducer'
-import {counter} from './reducers/counter'
-import rootSaga from './actions/rootsaga';
+import rootSaga from './sagas/index';
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -16,7 +15,6 @@ const rootReducer = combineReducers({
     auth : Authreducer,
     classroom:ClassroomReducer,
     app:appReducer,
-    counter
 })
 
 const store =  createStore(rootReducer ,composeEnhancers(

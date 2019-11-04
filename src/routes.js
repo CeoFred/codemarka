@@ -2,7 +2,7 @@ import React,{useEffect} from "react";
 import { connect } from 'react-redux'
 import {Switch,withRouter,Route, Redirect} from 'react-router-dom';
 
-import * as actionType from './redux/actions/Types';
+import * as actionType from './store/actions/Types';
 import * as url from './config/url';
 
 const classrooom = React.lazy(() => import('./containers/classroom/Environment'));

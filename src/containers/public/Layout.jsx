@@ -9,7 +9,7 @@ import FooterBar from "../../components/UI/Footer/FooterBar";
 import Button from "../../components/Partials/Button";
 import ErrorBoundary from "../../HOC/Error/ErrorBoundary";
 
-import * as actions from "../../redux/actions/Types";
+import * as actions from "../../store/actions/Types";
 export default function Layout(props) {
   const [appLoaded, setappLoaded] = useState(false);
   const [content, setContent] = useState(<Preloader />);

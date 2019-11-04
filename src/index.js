@@ -6,7 +6,7 @@ import { BrowserRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 
-import store from './redux/store';
+import store from './store/index';
 
 export const Index = (
     <Provider store={store}>

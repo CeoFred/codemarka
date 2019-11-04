@@ -8,7 +8,8 @@ let INITIAL_STATE = {
     token:null,
     userId:null,
     loading:false,
-    authRedirectPath:'/'
+    authRedirectPath:'/',
+    message:''
 }
 
 const authStart = (state,action) => {
@@ -19,13 +20,16 @@ const authStart = (state,action) => {
                                 });
 }
 
-const authFailed = (state,action) => {
+const authLoginFailed = (state,action) => {
+    const msg = action.message
     return helper.updateObject(state,{
-        errorMessage:action.errorM,
-        loading: false});
+        errorMessage:msg,
+        loading: false,
+        message:msg
+    });
 }
 
-const authSuccess = (state,action) => {
+const authLoginSuccess = (state,action) => {
     return helper.updateObject(state,{
         loading:false,
         errorMessage:null,
@@ -50,12 +54,13 @@ const setAuthRedirectPat = (state,action) => {
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
 
-        case(actionTypes.AUTH_START): return authStart(state,action)
-        case(actionTypes.AUTH_SUCCESS): return authSuccess(state,action);
-        case(actionTypes.AUTH_FAILED): return authFailed(state,action);    
+        case(actionTypes.AUTH_USER_LOGIN_START): return authStart(state,action)
+        case(actionTypes.AUTH_USER_LOGIN_SUCCESS): return authLoginSuccess(state,action);
+        case(actionTypes.AUTH_USER_LOGIN_FAILED): return authLoginFailed(state,action);    
         case(actionTypes.AUTH_LOGOUT): return authLogout(state,action);   
         case(actionTypes.SET_AUTH_REDIRECT_PATH): return setAuthRedirectPat(state,action);     
         case(actionTypes.AUTO_AUTH_FALED): return authLogout(state,action);
+      
         default: return state;
     }
 }

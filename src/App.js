@@ -2,16 +2,16 @@ import React, { useEffect } from 'react';
 import Router from './router';
 import { useDispatch } from 'react-redux'
 
-
-import * as action from './redux/actions/Types';
-
+import * as action from './store/actions/Types';
 import './App.css';
+
 function App() {
-  const dispatcher = useDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatcher({type:action.COOKIE_VALIDATE_INIT})
-  }, [dispatcher])
+    dispatch({ type: action.COOKIE_VALIDATE_INIT })
+  }, [dispatch])
+
   return (
     <Router />
   );

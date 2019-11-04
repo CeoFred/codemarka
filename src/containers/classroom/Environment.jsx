@@ -3,9 +3,9 @@ import { useSelector,useDispatch} from "react-redux";
 import io from "socket.io-client";
 
 
-import * as action from "../../redux/actions/";
-import * as actionTypes from "../../redux/actions/Types";
-import { dispatchAppEnvironment } from '../../redux/actions/appActions';
+import * as action from "../../store/actions/";
+import * as actionTypes from "../../store/actions/Types";
+import { dispatchAppEnvironment } from '../../store/actions/app';
 
 
 import './css/Environment.css';

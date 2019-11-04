@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import * as actions from "../../redux/actions/Types";
+import * as actions from "../../store/actions/Types";
 
 // import {Redirect} from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +13,7 @@ import Helmet from "../../components/SEO/helmet";
 import Alert from "../../components/Partials/Alert/Alert";
 
 import "./newclassroom.css";
-import { auth } from "../../redux/actions";
+// import * as action from "../../redux/actions";
 
 function NewClassroom() {
   const dispatch = useDispatch();
@@ -194,6 +194,7 @@ function NewClassroom() {
         type: actions.CLASSROOM_CREATE_INIT,
         data: formData
       });
+    
     } else {
       setState({
         ...state,
