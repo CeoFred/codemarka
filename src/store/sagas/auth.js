@@ -1,4 +1,4 @@
-import { put,delay } from 'redux-saga/effects';
+import { put,delay,call } from 'redux-saga/effects';
 
 import * as actions from '../actions/index';
 
@@ -41,15 +41,25 @@ export function* authLoginUserSaga({email,password}){
     
     try {
         const response = yield fetch(loginRequest)
-        console.log(response.json());
-        yield put(actions.authLoginSuccess(response.token))
+        const resolvedResponse =  yield call(resolvePromise,response.json())
+        console.log(resolvedResponse)
 
+            if(resolvedResponse.status === 1){
+            yield  put(actions.authLoginSuccess(resolvedResponse.token))
+
+            }else {
+            yield put(actions.authLoginFailed(resolvedResponse.message))
+            }
+        
     } catch ({message}) {
-        yield put({type:'AUTH_USER_LOGIN_FAILED',message});
-        // yield put({type:'AUTH_USER_LOGIN_FAILED',error:{message:'Network ErrorAUTH_USER_LOGIN_FAILED'}})
+        yield put(actions.authLoginFailed(message));
     }
 
     
+}
+
+function resolvePromise(promise){
+    return promise.then(data => data).catch(error => error);
 }
 
 // export function* authCheckState() {

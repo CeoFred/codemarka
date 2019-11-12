@@ -11,7 +11,7 @@ export const authLoginSuccess = (token) => {
 export const authLoginFailed = (error) => {
     return {
         type: actionTypes.AUTH_USER_LOGIN_FAILED,
-        error 
+        message:error 
     }
 }
 
