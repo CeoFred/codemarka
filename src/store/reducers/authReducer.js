@@ -3,45 +3,49 @@ import * as actionTypes from '../actions/Types'
 import * as helper from '../../utility/shared'
 
 let INITIAL_STATE = {
-    username:null,
-    errorMessage:null,
-    token:null,
-    userId:null,
+    
+    error:false,
     loading:false,
-    authRedirectPath:'/',
-    message:''
+    message:'',
+    user:{
+        username:null,
+        token:null,
+        userId:null,
+        photoUrl:null
+    },
+    authenticated:false
 }
 
 const authStart = (state,action) => {
-    return helper.updateObject(state,{ errorMessage:null,
-                                 loading: true,
-                                 token:null,
-                                 userId:null
-                                });
+    return helper.updateObject(state,{ 
+        error:false,
+        message:'',
+        loading: true
+      });
 }
 
 const authLoginFailed = (state,action) => {
-    const msg = action.message
+    // const msg = action.message
     return helper.updateObject(state,{
-        errorMessage:msg,
+        error:true,
         loading: false,
-        message:msg
+        message:action
     });
 }
 
 const authLoginSuccess = (state,action) => {
     return helper.updateObject(state,{
         loading:false,
-        errorMessage:null,
-        token:action.idToken
+        error:false,
+        message:'',
+        authenticated:true,
     })
 }
 
 const authLogout = (state,action) => {
 
     return helper.updateObject(state,{
-        token:null,
-        userId:null
+        authenticated:false,
     });
 } 
 

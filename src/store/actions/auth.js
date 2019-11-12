@@ -11,15 +11,19 @@ export const authLoginSuccess = (token) => {
 export const authLoginFailed = (error) => {
     return {
         type: actionTypes.AUTH_USER_LOGIN_FAILED,
-        message: error
+        error 
     }
 }
 
-
-export const authLoginUser = (email) => {
+/**
+ *  Action Dispatcher for authenticating users
+ * @returns object
+ * @param required paremeters  
+ */
+export const authLoginUser = (paremeters) => {
     return {
         type: actionTypes.AUTH_USER_LOGIN_INIT,
-        ...email
+        ...paremeters
     }
 }
 

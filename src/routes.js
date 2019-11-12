@@ -61,7 +61,7 @@ const Routes = (props) => {
 }
 const mapStateToProps = state => {
     return {
-      isAutheticated: state.auth.token !== null
+      isAutheticated: state.auth.user.token !== null
     }
   }
   

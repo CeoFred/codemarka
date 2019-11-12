@@ -45,7 +45,9 @@ export function* authLoginUserSaga({email,password}){
         yield put(actions.authLoginSuccess(response.token))
 
     } catch (error) {
-        yield put(actions.authLoginFailed(error))
+        yield put({type:'AUTH_USER_LOGIN_FAILED',message:error});
+        console.log(error)
+        // yield put({type:'AUTH_USER_LOGIN_FAILED',error:{message:'Network ErrorAUTH_USER_LOGIN_FAILED'}})
     }
 
     

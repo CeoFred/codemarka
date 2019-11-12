@@ -11,6 +11,8 @@ import Spinner from '../../components/Partials/Preloader';
 import Alert from '../../components/Partials/Alert/Alert';
 
 import * as action from "../../store/actions";
+import { updateObject } from '../../utility/shared';
+
 
 const initialPrependsvg = (
   <svg
@@ -69,9 +71,13 @@ function Login(props) {
   formSubmitted: false,
   alertMessage:null,
   alertType:null,
-  getAuthState: useSelector(state => state)
 })
 
+/**
+ * Handle input changes
+ * 
+ @returns void
+ */
   const handleInputChange = (e,controlName) => {
     e.preventDefault();
     const value  = e.target.value;
@@ -87,10 +93,11 @@ function Login(props) {
     event.preventDefault();
 
     let formSubmitted = true;
-    setState({ ...state, formSubmitted });
+    setState(updateObject(state,formSubmitted));
     let formData = {};
 
     if (formSubmitted) {
+      
       for (let formElementIdentifier in state.controls) {
         formData[formElementIdentifier] =
           state.controls[formElementIdentifier].value;
@@ -196,8 +203,8 @@ function Login(props) {
 const mapStateToProps = state => {
   return {
     loading: state.auth.loading,
-    error: state.auth.errorMessage,
-    isAuthenticated: state.auth.token !== null,
+    error: state.auth.message,
+    isAuthenticated: state.auth.user.token !== null,
   }
 }
 
