@@ -69,8 +69,8 @@ function Login(props) {
     }
   },
   formSubmitted: false,
-  alertMessage:null,
-  alertType:null,
+  alertMessage:props.message,
+  alertType:props.error && props.message  ? 'success' : 'danger',
 })
 
 /**
@@ -135,8 +135,8 @@ function Login(props) {
                 </p>
               </div>
               <span className="clearfix" />
-              <Alert display={props.loading} type={state.alertType}>
-                {props.error ? `${props.error}` : 'Great! Valid credentails,please wait'}
+              <Alert display={props.message} type={state.alertType}>
+                {props.message ? `${props.message}` : ''}
               </Alert>
               <form onSubmit={submitHandler}>
                 <Input 
@@ -164,10 +164,10 @@ function Login(props) {
                 <div className="mt-4">
                   <Button type="button"
                    clicked={submitHandler} 
-                  disabled={state.formSubmitted && props.loading}
+                  disabled={props.loading}
                    textColor="#fff" 
                    block color="primary">
-                    {state.formSubmitted && props.loading ? <Spinner/> : 'Sign In'}
+                    {props.loading ? <Spinner/> : 'Sign In'}
                   </Button>
                 </div>
               </form>
@@ -205,6 +205,7 @@ const mapStateToProps = state => {
     loading: state.auth.loading,
     error: state.auth.message,
     isAuthenticated: state.auth.user.token !== null,
+    message: state.auth.message
   }
 }
 

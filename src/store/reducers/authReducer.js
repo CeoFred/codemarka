@@ -24,12 +24,12 @@ const authStart = (state,action) => {
       });
 }
 
-const authLoginFailed = (state,action) => {
+const authLoginFailed = (state,{message}) => {
     // const msg = action.message
     return helper.updateObject(state,{
         error:true,
         loading: false,
-        message:action
+        message
     });
 }
 
