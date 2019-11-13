@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "codemirror": "^5.48.0",
+    "logrocket": "1.0.3",
     "react": "^16.8.6",
     "react-codemirror2": "^6.0.0",
     "react-dom": "^16.8.6",
