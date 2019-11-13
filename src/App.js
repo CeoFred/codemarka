@@ -12,7 +12,7 @@ function App() {
   useEffect(() => {
     dispatch({ type: action.COOKIE_VALIDATE_INIT })
     LogRocket.init('gn0zcj/colab')
-  }, [dispatch,LogRocket])
+  }, [dispatch])
 
   return (
     <Router />
