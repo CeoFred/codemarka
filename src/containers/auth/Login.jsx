@@ -187,7 +187,7 @@ function Login(props) {
               </div>
               <div className="mt-4 text-center">
                 <small>Not registered?</small>
-                <Link to="/auth/signup" className="small font-weight-bold">
+                <Link to="/auth/signup" className="small font-weight-bold ml-1">
                   Create account
                 </Link>
               </div>

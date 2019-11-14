@@ -15,6 +15,26 @@ export const authLoginFailed = (error) => {
     }
 }
 
+export const authRegisterUser  = (params) => {
+    return {
+        type: actionTypes.AUTH_USER_SIGNUP_INIT,
+        ...params
+    }
+}
+
+export const authRegisterFailed = (error) => {
+    return {
+        type: actionTypes.AUTH_USER_SIGNUP_FAILED,
+        error
+    }
+}
+
+export const authRegisterSuccess = (user) => {
+    return {
+        type: actionTypes.AUTH_USER_SIGNUP_SUCCESS,
+        user
+    }
+}
 /**
  *  Action Dispatcher for authenticating users
  * @returns object

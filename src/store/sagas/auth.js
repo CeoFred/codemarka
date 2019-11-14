@@ -1,6 +1,8 @@
 import { put,delay,call } from 'redux-saga/effects';
+import React from 'react';
 
 import * as actions from '../actions/index';
+import * as actionTypes from '../actions/Types';
 
 export function* userLoginSaga(){
    yield put({
@@ -22,6 +24,48 @@ export function* checkAuthTimeoutSaga(action) {
     yield put()
 }
 
+export function* authRegisterUserSaga({email,password,username}){
+    yield put({type: actionTypes.AUTH_USER_SIGNUP_START});
+
+    let url = 'http://localhost:2001/auth/user/signup';
+    let myHeaders = yield new Headers()
+    myHeaders.append('Content-Type', 'Application/json')
+
+    let loginRequest = yield new Request(url, {
+        method: 'POST',
+        cache: 'default',
+        headers: myHeaders,
+        body: JSON.stringify({email,password,username}),
+        mode: 'cors'
+
+    });
+    try {
+        const response = yield fetch(loginRequest)
+        const resolvedResponse =  yield call(resolvePromise,response.json())
+        console.log(resolvedResponse)
+        console.log(typeof resolvedResponse)
+
+
+            if(resolvedResponse.status === 1){
+
+            yield  put(actions.authRegisterSuccess(resolvedResponse.token))
+
+            }else if(typeof resolvedResponse.message == 'object') {
+                
+               yield put(actions.authRegisterFailed(resolvedResponse.message[0].msg))
+               
+            } else {
+                yield put(actions.authRegisterFailed(resolvedResponse.message))
+
+            }
+             
+        
+    } catch ({message}) {
+        yield put(actions.authRegisterFailed(message));
+    }
+
+    
+}
 
 export function* authLoginUserSaga({email,password}){
     yield put({type: 'AUTH_USER_LOGIN_START'});
@@ -43,13 +87,25 @@ export function* authLoginUserSaga({email,password}){
         const response = yield fetch(loginRequest)
         const resolvedResponse =  yield call(resolvePromise,response.json())
         console.log(resolvedResponse)
+        console.log(typeof resolvedResponse)
+
 
             if(resolvedResponse.status === 1){
+
             yield  put(actions.authLoginSuccess(resolvedResponse.token))
 
-            }else {
-            yield put(actions.authLoginFailed(resolvedResponse.message))
+            }else if(typeof resolvedResponse.message == 'object') {
+                let messages;
+              messages =  resolvedResponse.message.map(data => {
+                    return (<b>{data.msg}</b>)
+                })
+               yield put(actions.authLoginFailed(messages))
+            } else {
+                yield put(actions.authLoginFailed(resolvedResponse.message))
+
             }
+
+             
         
     } catch ({message}) {
         yield put(actions.authLoginFailed(message));
@@ -71,23 +127,3 @@ function resolvePromise(promise){
 //     }
 // }
 
-export function* register(data) {
-
-
-    let url = 'http://localhost:8000/auth/user/signup';
-    // let method = 'POST'
-    var myHeaders = yield new Headers()
-    myHeaders.append('Content-Type', 'Application/json')
-    let loginRequest = new Request(url, {
-        method: 'POST',
-        cache: 'default',
-        headers: myHeaders,
-        body: JSON.stringify(data),
-        mode: 'cors'
-
-    })
-   const response = yield fetch(loginRequest)
-   const jsonResponse = yield response.json()
-   yield put({type:'AUTH_USER_REGISTRATION_SUCCESS',jsonResponse})
-
-};

@@ -1,21 +1,21 @@
 import React,{useState} from "react";
 
 import { Link } from "react-router-dom";
-import {useSelector} from 'react-redux';
+import {connect} from "react-redux"
+
 
 import Github from "../../components/Partials/Auth/Button/Github";
 import Google from "../../components/Partials/Auth/Button/Google";
 
 import Button from "../../components/Partials/Button";
 import Input from "../../components/Partials/Input";
-
 import Helmet from "../../components/SEO/helmet";
-// import * as actionType from '../../store/actions/Types';
-// import * as authAction from '../../store/actions/auth';
-
-import Spinner from "../../components/Partials/Preloader";
+import Spinner from '../../components/Partials/Preloader';
+import Alert from '../../components/Partials/Alert/Alert';
 
 import * as url from '../../config/url';
+import * as action from "../../store/actions";
+import { updateObject } from '../../utility/shared';
 
 const emailIconSvg = (
   <svg
@@ -70,14 +70,10 @@ const userIconSvg = (
   </svg>
 );
 
-
-export default function Register() {
-  // const dispatch = useDispatch()
-  const {loading} = useSelector((state) => state.auth)
-  const formErrors = '';
+function Register(props) {
 
   const [state, setState] = useState({
-    formInputs : {
+    controls : {
       username : {
         value: '',
         isTouched: false,
@@ -100,32 +96,54 @@ export default function Register() {
         isTouched:false
       }
     },
-    isFormSubmitted : false,
-    formerror : null,
+    formSubmitted: false,
+    alertMessage:props.message,
+    alertType:props.error && props.message  ? 'success' : 'danger',
+  
   })
   
-  const handleInputChange = (e,field) => {
-    const updatedInput =  {
-      ...state.formInputs,
-        [field]: {
-          ...state.formInputs[field],
-          value: e.target.value,
-          isTouched: true
-        }
-    }
-    setState({...state,formInputs:updatedInput})
+  const handleInputChange = (e,controlName) => {
+    e.preventDefault();
+    const value  = e.target.value;
+    const updatedControls = {
+      ...state.controls,[controlName]:{
+        ...state.controls[controlName],
+      value
+    }}
+    setState({...state,controls:updatedControls});
   }
 
   
-const handleFormSubmit =  (e) => {
-  e.preventDefault();
-  // console.log('submitted');
-  // dispatch({type:actionType.AUTH_START})
-  // const {auth} = authAction;
-  // dispatch(auth(state))
-}
 
+  const submitHandler = event => {
+    event.preventDefault();
 
+    let formSubmitted = true;
+    setState(updateObject(state,formSubmitted));
+    let formData = {};
+
+    if (formSubmitted) {
+      
+      for (let formElementIdentifier in state.controls) {
+        formData[formElementIdentifier] =
+          state.controls[formElementIdentifier].value;
+      }
+      // dispatch(action.authLoginUser(formData));
+      props.onAuth({...formData})
+
+    } else {
+      console.log('error,not submitted')
+
+      setState({
+        ...state,
+        alertType: "error",
+        formErrored: true,
+        formErrorMessage:
+          "Form Validation Failed, please check inputs and try again"
+      });
+      return false;
+    }
+  };
   return (
     <div>
       <Helmet title="Signup to colab" metaDescription="" />
@@ -137,12 +155,12 @@ const handleFormSubmit =  (e) => {
               <div className="mb-5 text-center">
                 <h6 className="h3 mb-1">Create your account</h6>
                 <p className="text-muted mb-0">Made with love for developers</p>
-                <div className="alert alert-danger">
-                  {formErrors}
-                </div>
+                <Alert display={props.message} type={state.alertType}>
+                {props.message ? `${props.message}` : ''}
+              </Alert>
               </div>
               <span className="clearfix" />
-              <form>
+              <form onSubmit={submitHandler}>
                 {/* username input */}
                 <Input
                   type="text"
@@ -150,7 +168,7 @@ const handleFormSubmit =  (e) => {
                   label="username"
                   initialPrepend
                   initialPrependsvg={userIconSvg}
-                  value={state.formInputs.username.value}
+                  value={state.controls.username.value}
                   changed={(e) => handleInputChange(e,'username')}
                 />
 
@@ -161,7 +179,7 @@ const handleFormSubmit =  (e) => {
                   label="Email address"
                   initialPrepend
                   initialPrependsvg={emailIconSvg}
-                  value={state.formInputs.email.value}
+                  value={state.controls.email.value}
                   changed={(e) => handleInputChange(e,'email')}
 
                   
@@ -174,22 +192,26 @@ const handleFormSubmit =  (e) => {
                   isLoginPasswordInput={false}
                   initialPrepend
                   initialPrependsvg={initialPrependsvg}
-                  value={state.formInputs.password.value}
+                  value={state.controls.password.value}
                   changed={(e) => handleInputChange(e,'password')}
 
                 />
 
                 {/* checkbox */}
                 <Input fieldtype="checkbox"
-                selected={state.formInputs.checkbox.value}
+                selected={state.controls.checkbox.value}
                 clicked={(e) => handleInputChange(e,'checkbox')}>
                   I agree to the{" "}
                   <Link to="/public/terms">terms and conditions</Link>
                 </Input>
 
                 <div className="mt-4">
-                  <Button disabled={loading}  clicked={handleFormSubmit} type="button" textColor="#fff" block color="primary">
-                    {!loading ?  'Create my account' : <Spinner/>}
+                <Button type="button"
+                   clicked={submitHandler} 
+                  disabled={props.loading}
+                   textColor="#fff" 
+                   block color="primary">
+                    {props.loading ? <Spinner/> : 'Sign In'}
                   </Button>
                 </div>
               </form>
@@ -220,3 +242,20 @@ const handleFormSubmit =  (e) => {
     </div>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+    loading: state.auth.loading,
+    error: state.auth.message,
+    isAuthenticated: state.auth.user.token !== null,
+    message: state.auth.message
+  }
+}
+
+
+const mapDispatchToProps = dispatch => {
+  return {
+      onAuth: ( email, password,username ) => dispatch( action.authRegisterUser( email, password,username ) ),
+  };
+};
+export default connect( mapStateToProps, mapDispatchToProps )(Register)
