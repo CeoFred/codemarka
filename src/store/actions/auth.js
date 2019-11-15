@@ -15,6 +15,12 @@ export const authLoginFailed = (error) => {
     }
 }
 
+export const ClearMessage = () => {
+    return {
+        type: actionTypes.NOTIFICATION_ALERT_CLOSE
+    }
+}
+
 export const authRegisterUser  = (params) => {
     return {
         type: actionTypes.AUTH_USER_SIGNUP_INIT,

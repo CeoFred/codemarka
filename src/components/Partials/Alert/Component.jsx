@@ -13,6 +13,7 @@ const Component = props => {
         className="close"
         data-dismiss="alert"
         aria-label="Close"
+        onClick={props.clicked}
       >
         <span aria-hidden="true">&times;</span>
       </button>

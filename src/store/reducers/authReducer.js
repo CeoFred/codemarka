@@ -76,6 +76,13 @@ const authRegistrationFailed = (state, action) => {
     })
 }
 
+const ClearAlertMessage = (state,action) => {
+    return helper.updateObject(state,{
+        message:null,
+        error: false
+    })
+}
+
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
 
@@ -88,7 +95,7 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.AUTH_USER_SIGNUP_FAILED): return authRegistrationFailed(state,action);
         case(actionTypes.AUTH_USER_SIGNUP_SUCCESS): return authRegistrationSuccess(state,action);
         case(actionTypes.AUTH_USER_SIGNUP_START): return authStart(state,action)
-
+        case(actionTypes.NOTIFICATION_ALERT_CLOSE): return ClearAlertMessage(state,action)
         default: return state;
     }
 }

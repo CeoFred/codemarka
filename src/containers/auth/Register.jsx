@@ -144,6 +144,19 @@ function Register(props) {
       return false;
     }
   };
+
+  const handleAlertClick = (e) => {
+       e.preventDefault();
+       console.log('clicked')
+      props.onAlertClose()
+  }
+
+  let alert = (
+<Alert display={props.message} clicked={handleAlertClick} type={state.alertType}>
+                {props.message ? `${props.message}` : ''}
+              </Alert>
+  );
+
   return (
     <div>
       <Helmet title="Signup to colab" metaDescription="" />
@@ -155,9 +168,7 @@ function Register(props) {
               <div className="mb-5 text-center">
                 <h6 className="h3 mb-1">Create your account</h6>
                 <p className="text-muted mb-0">Made with love for developers</p>
-                <Alert display={props.message} type={state.alertType}>
-                {props.message ? `${props.message}` : ''}
-              </Alert>
+                {alert}
               </div>
               <span className="clearfix" />
               <form onSubmit={submitHandler}>
@@ -256,6 +267,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
       onAuth: ( email, password,username ) => dispatch( action.authRegisterUser( email, password,username ) ),
+      onAlertClose: () => dispatch(action.ClearMessage())
   };
 };
 export default connect( mapStateToProps, mapDispatchToProps )(Register)
