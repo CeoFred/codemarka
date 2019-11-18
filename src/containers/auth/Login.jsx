@@ -105,7 +105,6 @@ function Login(props) {
       props.onAuth({...formData})
 
     } else {
-      console.log('error,not submitted')
 
       setState({
         ...state,
@@ -116,7 +115,6 @@ function Login(props) {
       });
       return false;
     }
-    console.log(auth);
   };
 
   return (

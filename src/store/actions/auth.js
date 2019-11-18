@@ -15,6 +15,20 @@ export const authLoginFailed = (error) => {
     }
 }
 
+export const autoAuthFailed = (reason) => {
+    return {
+        type: actionTypes.AUTO_AUTH_FAILED
+    }
+}
+
+export const autoAuthSuccess = (id,token) => {
+    return {
+        type: actionTypes.AUTO_AUTH_SUCCESS,
+        token,
+        id
+    }
+}
+
 export const ClearMessage = () => {
     return {
         type: actionTypes.NOTIFICATION_ALERT_CLOSE

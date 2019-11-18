@@ -45,3 +45,7 @@ if(rules.maxlength){
 return isValid;
 
 }
+
+export const resolvePromise = (promise) => {
+    return promise.then(data => data).catch(error => error);
+}

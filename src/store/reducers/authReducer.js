@@ -34,6 +34,7 @@ const authLoginFailed = (state,{message}) => {
 }
 
 const authLoginSuccess = (state,action) => {
+    console.log(action)
     return helper.updateObject(state,{
         loading:false,
         error:false,
@@ -87,6 +88,19 @@ const ClearAlertMessage = (state,action) => {
     })
 }
 
+const authAutoSuccess = ( state, action ) => {
+    return helper.updateObject(state,{
+        authenticated: true,
+        error: false,
+        loading: false,
+        message: '',
+        user: { 
+            token: action.token,
+            userId: action.id
+        }
+    })
+}
+
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
 
@@ -96,6 +110,7 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.AUTH_LOGOUT): return authLogout(state,action);   
         case(actionTypes.SET_AUTH_REDIRECT_PATH): return setAuthRedirectPat(state,action);     
         case(actionTypes.AUTO_AUTH_FALED): return authLogout(state,action);
+        case(actionTypes.AUTO_AUTH_SUCCESS): return authAutoSuccess(state,action);
         case(actionTypes.AUTH_USER_SIGNUP_FAILED): return authRegistrationFailed(state,action);
         case(actionTypes.AUTH_USER_SIGNUP_SUCCESS): return authRegistrationSuccess(state,action);
         case(actionTypes.AUTH_USER_SIGNUP_START): return authStart(state,action)

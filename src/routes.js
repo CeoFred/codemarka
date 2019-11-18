@@ -47,9 +47,7 @@ const Routes = (props) => {
 <Redirect from={url.AUTH_SIGN_IN} to={url.HOME}/>
 <Redirect from={url.AUTH_SIGN_UP} to={url.HOME}/>
 <Route component={NotFound} />
-
-{/* <Route exact component={classrooom} path={url.CLASSROOM + ':classroomid'} /> */}
-{/* <Route exact component={newclassrooom} path={url.CLASSROOM_NEW} /> */}
+<Route exact component={classrooom} path={url.CLASSROOM + ':classroomid'} />
   </Switch>
         )
       }
@@ -61,7 +59,7 @@ const Routes = (props) => {
 }
 const mapStateToProps = state => {
     return {
-      isAutheticated: state.auth.user.token !== null
+      isAutheticated: state.auth.authenticated !== false
     }
   }
   

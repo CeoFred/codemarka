@@ -17,7 +17,7 @@ import "./newclassroom.css";
 
 function NewClassroom() {
   const dispatch = useDispatch();
-  const {token} = useSelector(s => s.auth);
+  const {token} = useSelector(s => s.auth.user);
   const [state, setState] = useState({
     controls: {
       name: {
@@ -183,13 +183,22 @@ function NewClassroom() {
     let formisSubmitted = true;
     setState({ ...state, formisSubmitted });
     let formData = {};
-    if (state.formisValid && formisSubmitted) {
+    if (!state.formisValid && formisSubmitted) {
       for (let formElementIdentifier in state.controls) {
         formData[formElementIdentifier] =
           state.controls[formElementIdentifier].value;
       }
+      formData = {
+        classType: "Basic Web App",
+description: "wwdw",
+name: "jhgkdw",
+startDate: "2019-11-15",
+startTime: "02:03",
+token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGQxOTgwNDEwYTIzZDEzYmNhMjMzNDciLCJ0b2tlbiI6IiIsImlhdCI6MTU3NDA4MTE4MiwiZXhwIjoxNTc0MTk5OTgyfQ.tucfo9tCpPFiQozLNHGgHp7iAib_r9GdA5Ri2imAHh8",
+topic: "kjnm,swd",
+visibility: "Public",
+      }
       formData.token = token;
-      console.log(formData);
       dispatch({
         type: actions.CLASSROOM_CREATE_INIT,
         data: formData
@@ -234,7 +243,7 @@ function NewClassroom() {
         textColor="#fff"
         color="success"
         clicked={submitHandler}
-        disabled={!state.formisValid}
+        disabled={state.formisValid}
       >
         {state.formisSubmitted ? <Spinner /> : "Go"}
       </Button>

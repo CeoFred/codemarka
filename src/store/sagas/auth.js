@@ -3,7 +3,10 @@ import React from 'react';
 
 import * as actions from '../actions/index';
 import * as actionTypes from '../actions/Types';
+import { resolvePromise } from '../../utility/shared';
 
+const userTokenAlias = 'wx1298';
+        const userIdAlias = 'u342345'
 export function* userLoginSaga(){
    yield put({
         type:'AUTH_USER_LOGIN'
@@ -39,14 +42,23 @@ export function* authRegisterUserSaga({email,password,username}){
         mode: 'cors'
 
     });
+    
     try {
         const response = yield fetch(loginRequest)
         const resolvedResponse =  yield call(resolvePromise,response.json())
-        console.log(resolvedResponse)
-        console.log(typeof resolvedResponse)
-
 
             if(resolvedResponse.status === 1){
+
+    if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
+        yield localStorage.removeItem(userIdAlias);
+        yield localStorage.removeItem(userTokenAlias);
+        yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
+        yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)
+
+    } else {
+        yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
+        yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)        
+    }
 
             yield  put(actions.authRegisterSuccess(resolvedResponse.token))
 
@@ -67,20 +79,6 @@ export function* authRegisterUserSaga({email,password,username}){
     
 }
 
-export function* saveUserData(params){
-    const userTokenAlias = 'wx1298';
-    const userIdAlias = 'u342345'
-    if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
-        yield localStorage.removeItem(userIdAlias);
-        yield localStorage.removeItem(userTokenAlias);
-        yield localStorage.setItem(userTokenAlias,params.response.message.token)
-        yield localStorage.setItem(userIdAlias,params.response.message._id)
-
-    } else {
-        yield localStorage.setItem(userTokenAlias,params.response.message.token)
-        yield localStorage.setItem(userIdAlias,params.response.message._id)        
-    }
-}
 
 export function* authLoginUserSaga({email,password}){
     yield put({type: 'AUTH_USER_LOGIN_START'});
@@ -103,7 +101,17 @@ export function* authLoginUserSaga({email,password}){
         const resolvedResponse =  yield call(resolvePromise,response.json())
         console.log(resolvedResponse)
         console.log(typeof resolvedResponse)
-
+        
+        if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
+            yield localStorage.removeItem(userIdAlias);
+            yield localStorage.removeItem(userTokenAlias);
+            yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
+            yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)
+    
+        } else {
+            yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
+            yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)        
+        }
 
             if(resolvedResponse.status === 1){
 
@@ -129,16 +137,14 @@ export function* authLoginUserSaga({email,password}){
     
 }
 
-function resolvePromise(promise){
-    return promise.then(data => data).catch(error => error);
-}
 
-// export function* authCheckState() {
-//     const token = localStorage.getItem('r_ks');
-//     if (token) {
-//         yield put(actions.authSuccess(token))
-//     } else {
-//         yield put(actions.authFailed('No token'))
-//     }
-// }
+export function* autoLoginUserSaga() {
+    const _id = localStorage.getItem(userIdAlias);
+    const _token = localStorage.getItem(userTokenAlias)
+    if (_id && _token) {
+        yield put(actions.autoAuthSuccess(_id,_token))
+    } else {
+        yield put(actions.autoAuthFailed('No token'))
+    }
+}
 
