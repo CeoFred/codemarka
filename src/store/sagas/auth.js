@@ -67,6 +67,21 @@ export function* authRegisterUserSaga({email,password,username}){
     
 }
 
+export function* saveUserData(params){
+    const userTokenAlias = 'wx1298';
+    const userIdAlias = 'u342345'
+    if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
+        yield localStorage.removeItem(userIdAlias);
+        yield localStorage.removeItem(userTokenAlias);
+        yield localStorage.setItem(userTokenAlias,params.response.message.token)
+        yield localStorage.setItem(userIdAlias,params.response.message._id)
+
+    } else {
+        yield localStorage.setItem(userTokenAlias,params.response.message.token)
+        yield localStorage.setItem(userIdAlias,params.response.message._id)        
+    }
+}
+
 export function* authLoginUserSaga({email,password}){
     yield put({type: 'AUTH_USER_LOGIN_START'});
 
@@ -92,7 +107,7 @@ export function* authLoginUserSaga({email,password}){
 
             if(resolvedResponse.status === 1){
 
-            yield  put(actions.authLoginSuccess(resolvedResponse.token))
+            yield  put(actions.authLoginSuccess(resolvedResponse.message))
 
             }else if(typeof resolvedResponse.message == 'object') {
                 let messages;

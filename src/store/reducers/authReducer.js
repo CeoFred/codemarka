@@ -39,6 +39,10 @@ const authLoginSuccess = (state,action) => {
         error:false,
         message:'',
         authenticated:true,
+        user:{
+            token: action.response.token,
+            userId:action.response._id
+        }
     })
 }
 

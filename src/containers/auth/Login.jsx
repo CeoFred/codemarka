@@ -75,8 +75,7 @@ function Login(props) {
 
 /**
  * Handle input changes
- * 
- @returns void
+ * @returns void
  */
   const handleInputChange = (e,controlName) => {
     e.preventDefault();

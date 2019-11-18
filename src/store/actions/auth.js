@@ -4,7 +4,7 @@ export const authLoginSuccess = (token) => {
 
     return {
         type: actionTypes.AUTH_USER_LOGIN_SUCCESS,
-        idToken: token,
+        response: token,
     }
 };
 

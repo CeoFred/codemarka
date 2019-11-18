@@ -124,6 +124,10 @@ function Register(props) {
 
     if (formSubmitted) {
       
+      if(!state.controls.checkbox.value){
+        setState({...state,alertMessage:'You have agreed'})
+      }
+
       for (let formElementIdentifier in state.controls) {
         formData[formElementIdentifier] =
           state.controls[formElementIdentifier].value;
@@ -152,10 +156,14 @@ function Register(props) {
   }
 
   let alert = (
-<Alert display={props.message} clicked={handleAlertClick} type={state.alertType}>
+              <Alert 
+              display={props.message}
+              clicked={handleAlertClick}
+              type={state.alertType}
+              >
                 {props.message ? `${props.message}` : ''}
               </Alert>
-  );
+);
 
   return (
     <div>
