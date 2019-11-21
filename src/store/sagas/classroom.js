@@ -1,7 +1,5 @@
-import { put,delay,call } from 'redux-saga/effects';
-import React from 'react';
+import { put,call } from 'redux-saga/effects';
 
-import * as actions from '../actions/index';
 import * as actionTypes from '../actions/Types';
 import { CLASSROOM_CREATE } from '../../config/api_url'
 import { resolvePromise } from '../../utility/shared';
