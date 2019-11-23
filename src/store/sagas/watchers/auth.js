@@ -1,6 +1,6 @@
 import { takeLatest } from 'redux-saga/effects'
 
-import { logoutSaga,checkAuthTimeoutSaga ,authLoginUserSaga,autoLoginUserSaga,authRegisterUserSaga,saveUserData} from '../auth';
+import { logoutSaga,checkAuthTimeoutSaga ,authLoginUserSaga,autoLoginUserSaga,authRegisterUserSaga} from '../auth';
 import * as actionTypes from '../../actions/Types';
 
 export function* watchAuth(){

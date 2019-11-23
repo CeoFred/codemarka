@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import {useSelector,connect} from "react-redux"
+import {connect} from "react-redux"
 import { Link } from "react-router-dom";
 
 import Github from "../../components/Partials/Auth/Button/Github";
@@ -58,8 +58,6 @@ const emailIconSvg = (
 )
 
 function Login(props) {
-  // const dispatch = useDispatch();
-  const {auth} = useSelector(state => state);
 
   const [state, setState] = useState({controls:{
     email: {

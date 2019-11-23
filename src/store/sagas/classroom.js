@@ -1,24 +1,28 @@
 import { put,call } from 'redux-saga/effects';
 
 import * as actionTypes from '../actions/Types';
-import { CLASSROOM_CREATE } from '../../config/api_url'
+import * as actions from '../actions/index'
+import { CLASSROOM_CREATE,CLASSROOM_VERIFY_URL } from '../../config/api_url'
 import { resolvePromise } from '../../utility/shared';
+
+const delay = (ms) => new Promise(res => setTimeout(res, ms))
+let myHeaders =  new Headers(); 
+
 
 export function* createClass({data}){
     yield put({type: actionTypes.CLASSROOM_CREATE_START});
 
-    let url = `http://localhost:2001/${CLASSROOM_CREATE}`;
-    let myHeaders = yield new Headers()
-    myHeaders.append('Content-Type', 'Application/json')
-
+    let url = `http://localhost:2001${CLASSROOM_CREATE}`;
+    myHeaders.set('Content-Type', 'Application/json')
+    myHeaders.set('Authorization',`Bearer ${data.token}`)
     let loginRequest = yield new Request(url, {
         method: 'POST',
         cache: 'default',
         headers: myHeaders,
         body: JSON.stringify(data),
         mode: 'cors'
-
     });
+
     
     try {
         const response = yield fetch(loginRequest)
@@ -29,4 +33,34 @@ export function* createClass({data}){
     }
     console.log(data)
 
+}
+
+export function* verifyClassRoom({classId}){
+    yield delay(100)
+     
+    yield put({ type: actionTypes.CLASSROOM_VERIFICATION_INIT })
+
+
+    const requestData = {classroom: classId }
+
+     const url = `http://localhost:2001${CLASSROOM_VERIFY_URL}`;
+     myHeaders.set('Content-Type', 'Application/json')
+
+    const request = new Request(url, {
+     method: 'POST',
+     cache: 'default',
+     headers: myHeaders,
+     body: JSON.stringify(requestData),
+     mode: 'cors'
+
+ })
+ try {
+    const response = yield fetch(request)
+    const resolvedResponse =  yield call(resolvePromise,response.json())
+    console.log(resolvedResponse)
+    yield put(actions.classVerifySuccess(resolvedResponse.message._id))
+} catch (e) {
+    yield put(actions.classVerifyFailed(classId))
+    console.log(e)
+}
 }

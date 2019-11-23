@@ -7,7 +7,8 @@ let INITIAL_STATE = {
     is_loaded:null,
     errors:null,
     loading:false,
-    classdetails:null
+    classdetails:null,
+    validated:false
 }
 
 
@@ -63,6 +64,13 @@ const classroomVerifyStart = (state,action) => {
     })
 }
 
+
+const classroomVerified = (state,action) => {
+    return helper.updateObject(state,{
+        classroom_id: action.classroom,
+        validated: true
+    })
+}
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
 
@@ -72,6 +80,7 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.CLASSROOM_JOINED): return classroomJoined(state,action)
         case(actionTypes.CLASSROOM_LEFT): return classroomLeft(state,action)
         case(actionTypes.CLASSROOM_VERIFICATION_INIT): return classroomVerifyStart(state,action) 
+        case(actionTypes.CLASSROOM_VERIFICATION_SUCCESS): return classroomVerified(state,action)
         default: return state;
     }
 }

@@ -1,0 +1,6 @@
+div.conversation__container {
+    width: 30%,
+    max-width:30%,
+    height: 100%,
+    border-right: 3px solid grey;
+}
