@@ -1,11 +1,16 @@
-import React from 'react'
+import React,{useState} from 'react'
 // import io from "socket.io-client";
 
 import Navigation from "../../components/classroom/UI/NavBar";
 import Convo from "./Conversation";
-import Editor from "../../components/classroom/Editor/Editor";
+// import Editor from "../../components/classroom/Editor/Editor";
 
 const MainClassLayout = ({user_id,classroom_id}) => {
+
+    const [inputState, setInputState] = useState({
+        value:'',
+        isFocused:false
+    });
 
     // const [inRoom, setInRoom] = useState(false);
 
@@ -71,15 +76,42 @@ const MainClassLayout = ({user_id,classroom_id}) => {
     //       };
     //     }
     //   },[dispatch,inRoom,colabstate.username,colabstate.classroom_id]);
-    
+    const handleInputChange = (e) => {
+        e.preventDefault();
+        const value = e.target.value;
+        setInputState({...inputState,value})
+    }
+
+    const handleMessageSubmit = () => {
+        console.log('Message was sent');
+    }
+
+    const userLeftInput = (e) => {
+        e.preventDefault();
+
+        console.log('User left input')
+    }
+
+    const userEnteredInput = (e) => {
+        e.preventDefault();
+        console.log('User entered input')
+    }
+
     return (
         <div>
         <Navigation classid={classroom_id}/>
-            <div style={{width:'100%',position:'relative',height:'90vh'}}>
-                <Convo />
+            <div style={{width:'100%',height:'87vh'}}>
+                <Convo 
+                inputValue={inputState}
+                handleInputChange={handleInputChange}
+                sendMessage={handleMessageSubmit}
+                inputBlur={userLeftInput}
+                inputFocused={userEnteredInput}
+                />
 
-                <div style={{float:'left',width:'70%',height:'100%'}}>
-                <Editor />
+                <div style={{float:'left',width:'60%',height:'100%'}}>
+                {/* <Editor /> */}
+                Editor Here
                 </div>
                 
             </div>

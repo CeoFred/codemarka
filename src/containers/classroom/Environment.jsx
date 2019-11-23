@@ -44,7 +44,7 @@ function Environment(props) {
   },[dispatch,colabstate.classroom_id,props,onClassroomVerify])
 
   const getContent = () => {
-    if(!props.class_verified){
+    if(props.class_verified){
       return checking;
     } else {
       return (<ColabLayout data={colabstate}/>)
