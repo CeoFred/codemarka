@@ -4,7 +4,7 @@ import * as actionTypes from '../actions/Types';
 import * as actions from '../actions/index'
 import { CLASSROOM_CREATE,CLASSROOM_VERIFY_URL } from '../../config/api_url'
 import { resolvePromise } from '../../utility/shared';
-const host = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test" ? process.env.REMOTE_API_URL : process.env.LOCAL_API_URL
+const host = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test" ? process.env.REACT_APP_REMOTE_API_URL : process.env.REACT_APP_LOCAL_API_URL
 
 const delay = (ms) => new Promise(res => setTimeout(res, ms))
 let myHeaders =  new Headers(); 
