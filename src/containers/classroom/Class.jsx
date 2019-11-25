@@ -18,7 +18,7 @@ const MainClassLayout = ({ data }) => {
   const [colabstate, setColabState] = useState({
       messages:[]
   });
-  const [inRoom, setInRoom] = useState(false);
+  const [inRoom] = useState(false);
 
   React.useEffect(() => {
 
@@ -99,7 +99,7 @@ const MainClassLayout = ({ data }) => {
         //   dispatch(action.userLeftAClass(colabstate.classroom_id));
         };
       }
-    },[inRoom,colabstate.username,colabstate.classroom_id]);
+    },[data.classroom_id,data.user_id,inRoom,colabstate.username,colabstate.classroom_id]);
 
   const handleInputChange = e => {
     e.preventDefault();

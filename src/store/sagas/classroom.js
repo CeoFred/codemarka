@@ -4,6 +4,7 @@ import * as actionTypes from '../actions/Types';
 import * as actions from '../actions/index'
 import { CLASSROOM_CREATE,CLASSROOM_VERIFY_URL } from '../../config/api_url'
 import { resolvePromise } from '../../utility/shared';
+const host = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test" ? process.env.REMOTE_API_URL : process.env.LOCAL_API_URL
 
 const delay = (ms) => new Promise(res => setTimeout(res, ms))
 let myHeaders =  new Headers(); 
@@ -12,7 +13,7 @@ let myHeaders =  new Headers();
 export function* createClass({data}){
     yield put({type: actionTypes.CLASSROOM_CREATE_START});
 
-    let url = `http://localhost:2001${CLASSROOM_CREATE}`;
+    let url = `${host}${CLASSROOM_CREATE}`;
     myHeaders.set('Content-Type', 'Application/json')
     myHeaders.set('Authorization',`Bearer ${data.token}`)
     let loginRequest = yield new Request(url, {
@@ -43,7 +44,7 @@ export function* verifyClassRoom({classId}){
 
     const requestData = {classroom: classId }
 
-     const url = `http://localhost:2001${CLASSROOM_VERIFY_URL}`;
+     const url = `${host}${CLASSROOM_VERIFY_URL}`;
      myHeaders.set('Content-Type', 'Application/json')
 
     const request = new Request(url, {

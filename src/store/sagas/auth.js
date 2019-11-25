@@ -5,6 +5,7 @@ import * as actions from '../actions/index';
 import * as actionTypes from '../actions/Types';
 import { resolvePromise } from '../../utility/shared';
 
+const host = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test" ? process.env.REMOTE_API_URL : process.env.LOCAL_API_URL
 const userTokenAlias = 'wx1298';
         const userIdAlias = 'u342345'
 export function* userLoginSaga(){
@@ -30,7 +31,7 @@ export function* checkAuthTimeoutSaga(action) {
 export function* authRegisterUserSaga({email,password,username}){
     yield put({type: actionTypes.AUTH_USER_SIGNUP_START});
 
-    let url = 'http://localhost:2001/auth/user/signup';
+    let url = `${host}auth/user/signup`;
     let myHeaders = yield new Headers()
     myHeaders.append('Content-Type', 'Application/json')
 
@@ -83,7 +84,7 @@ export function* authRegisterUserSaga({email,password,username}){
 export function* authLoginUserSaga({email,password}){
     yield put({type: 'AUTH_USER_LOGIN_START'});
 
-    let url = 'http://localhost:2001/auth/user/signin';
+    let url = `${host}auth/user/signin`;
     let myHeaders = yield new Headers()
     myHeaders.append('Content-Type', 'Application/json')
 
