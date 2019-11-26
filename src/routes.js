@@ -43,6 +43,7 @@ const Routes = (props) => {
 <Route exact component={newclassroom} path={url.CLASSROOM_NEW}/>
 <Route exact component={classrooom} path={url.CLASSROOM} />
 <Redirect from={url.CLASSROOMS} to={url.AUTH_SIGN_IN} />
+<Route exact component={Login} path={url.AUTH_SIGN_IN} />
 <Route exact component={Register} path={url.AUTH_SIGN_UP} />
 <Route component={NotFound} />
 <Route exact component={classrooom} path={url.CLASSROOM + ':classroomid'} />
