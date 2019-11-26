@@ -1,8 +1,7 @@
-import React,{useState} from "react";
-
+import React,{ useState, useEffect } from "react";
+import { Redirect } from "react-router-dom"
 import { Link } from "react-router-dom";
 import {connect} from "react-redux"
-
 
 import Github from "../../components/Partials/Auth/Button/Github";
 import Google from "../../components/Partials/Auth/Button/Google";
@@ -71,6 +70,13 @@ const userIconSvg = (
 );
 
 function Register(props) {
+const {onResetAll} = props;
+useEffect(() => {
+  
+  return () => {
+    onResetAll();
+  };
+}, [onResetAll]);
 
   const [state, setState] = useState({
     controls : {
@@ -132,7 +138,6 @@ function Register(props) {
         formData[formElementIdentifier] =
           state.controls[formElementIdentifier].value;
       }
-      // dispatch(action.authLoginUser(formData));
       props.onAuth({...formData})
 
     } else {
@@ -164,9 +169,16 @@ function Register(props) {
                 {props.message ? `${props.message}` : ''}
               </Alert>
 );
+let redct;
 
+if(props.isAuthenticated){
+  setTimeout(() => {
+    redct = <Redirect to='/'/>
+  },1500);
+}
   return (
     <div>
+{redct}
       <Helmet title="Signup to colab" metaDescription="" />
 
       <section>
@@ -275,7 +287,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
       onAuth: ( email, password,username ) => dispatch( action.authRegisterUser( email, password,username ) ),
-      onAlertClose: () => dispatch(action.ClearMessage())
+      onAlertClose: () => dispatch(action.ClearMessage()),
+      onResetAll: () => dispatch(action.authResetAll())
   };
 };
 export default connect( mapStateToProps, mapDispatchToProps )(Register)

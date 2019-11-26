@@ -9,13 +9,12 @@ const classrooom = React.lazy(() => import('./containers/classroom/Environment')
 const newclassroom = React.lazy(() => import('./containers/classroom/NewClassroom'));
 
 const logout = React.lazy(() => import('./containers/auth/Logout'));
-const Home = React.lazy(() => import('./containers/public/Home/Home'));
+const Home = React.lazy(() => import('./containers/public/Home/Index'));
 
 const Login = React.lazy(() => import('./containers/auth/Login'));
 const Register = React.lazy(() => import('./containers/auth/Register'));
 const ForgotPassword = React.lazy(() => import('./containers/auth/ForgotPassword'));
 const ChangePassword = React.lazy(() => import('./containers/auth/ChangePassword'));
-
 const NotFound = React.lazy(() => import('./containers/public/404'));
 
 const Routes = (props) => {
@@ -32,7 +31,6 @@ const Routes = (props) => {
 <Redirect from={url.CLASSROOMS} to={url.AUTH_SIGN_IN} />
 <Route component={NotFound} />
 <Redirect from={url.AUTH_LOGOUT} to={url.AUTH_SIGN_IN}/>
-
         </Switch>
       );
   
@@ -44,10 +42,11 @@ const Routes = (props) => {
 <Route exact component={logout} path={url.AUTH_LOGOUT} />
 <Route exact component={newclassroom} path={url.CLASSROOM_NEW}/>
 <Route exact component={classrooom} path={url.CLASSROOM} />
-<Redirect from={url.AUTH_SIGN_IN} to={url.HOME}/>
-<Redirect from={url.AUTH_SIGN_UP} to={url.HOME}/>
+<Redirect from={url.CLASSROOMS} to={url.AUTH_SIGN_IN} />
+<Route exact component={Register} path={url.AUTH_SIGN_UP} />
 <Route component={NotFound} />
 <Route exact component={classrooom} path={url.CLASSROOM + ':classroomid'} />
+
   </Switch>
         )
       }

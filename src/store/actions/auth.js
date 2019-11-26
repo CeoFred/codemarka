@@ -15,6 +15,12 @@ export const authLoginFailed = (error) => {
     }
 }
 
+export const authResetAll = () => {
+    return {
+        type: actionTypes.AUTH_RESET
+    }
+}
+
 export const autoAuthFailed = (reason) => {
     return {
         type: actionTypes.AUTO_AUTH_FAILED
@@ -49,10 +55,10 @@ export const authRegisterFailed = (error) => {
     }
 }
 
-export const authRegisterSuccess = (user) => {
+export const authRegisterSuccess = (data) => {
     return {
         type: actionTypes.AUTH_USER_SIGNUP_SUCCESS,
-        user
+        ...data
     }
 }
 /**

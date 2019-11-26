@@ -24,6 +24,15 @@ const authStart = (state,action) => {
       });
 }
 
+
+const reset = (state, action ) => {
+    return helper.updateObject(state,{
+        error:false,
+        message:'',
+        loading: false
+    })
+}
+
 const authLoginFailed = (state,{message}) => {
     // const msg = action.message
     return helper.updateObject(state,{
@@ -64,7 +73,9 @@ const authRegistrationSuccess = (state,action) => {
     return helper.updateObject(state,{
             user: {
                 ...state.user,
-                token:action.response.token
+                token:action.token,
+                email: action.email,
+                username: action.username
             },
             authenticated:true,
             loading:false,
@@ -115,6 +126,7 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.AUTH_USER_SIGNUP_SUCCESS): return authRegistrationSuccess(state,action);
         case(actionTypes.AUTH_USER_SIGNUP_START): return authStart(state,action)
         case(actionTypes.NOTIFICATION_ALERT_CLOSE): return ClearAlertMessage(state,action)
+        case(actionTypes.AUTH_RESET): return reset(state,action)
         default: return state;
     }
 }

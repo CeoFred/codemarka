@@ -5,6 +5,7 @@ import * as actions from '../actions/index';
 import * as actionTypes from '../actions/Types';
 import { resolvePromise } from '../../utility/shared';
 
+
 const host = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test" ? process.env.REACT_APP_REMOTE_API_URL : process.env.REACT_APP_LOCAL_API_URL
 const userTokenAlias = 'wx1298';
         const userIdAlias = 'u342345'
@@ -60,8 +61,9 @@ export function* authRegisterUserSaga({email,password,username}){
         yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
         yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)        
     }
+            
+            yield put(actions.authRegisterSuccess(resolvedResponse.data));
 
-            yield  put(actions.authRegisterSuccess(resolvedResponse.token))
 
             }else if(typeof resolvedResponse.message == 'object') {
                 
@@ -128,9 +130,6 @@ export function* authLoginUserSaga({email,password}){
                 yield put(actions.authLoginFailed(resolvedResponse.message))
 
             }
-
-             
-        
     } catch ({message}) {
         yield put(actions.authLoginFailed(message));
     }

@@ -1,6 +1,6 @@
-import React,{useState} from "react";
+import React,{useState , useEffect} from "react";
 import {connect} from "react-redux"
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 import Github from "../../components/Partials/Auth/Button/Github";
 import Google from "../../components/Partials/Auth/Button/Google";
@@ -58,7 +58,15 @@ const emailIconSvg = (
 )
 
 function Login(props) {
+  const {onResetAll} = props;
 
+  useEffect(() => {
+  
+    return () => {
+      onResetAll();
+    };
+  }, [onResetAll]);
+  
   const [state, setState] = useState({controls:{
     email: {
       value:''
@@ -114,11 +122,26 @@ function Login(props) {
       return false;
     }
   };
+  let alert = (
+    <Alert 
+    display={props.message}
+    type={state.alertType}
+    >
+      {props.message ? `${props.message}` : ''}
+    </Alert>
+);
+let redct;
+
+if(props.isAuthenticated){
+setTimeout(() => {
+redct = <Redirect to='/'/>
+},1500);
+}
 
   return (
     <div>
       <Helmet title="Sign Into your account" metaDescription="Return back to learn or host classrooms in real time" />
-
+{redct}
       <section>
         <div className="row align-items-center justify-content-center min-vh-100">
           <div className="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
@@ -130,9 +153,7 @@ function Login(props) {
                 </p>
               </div>
               <span className="clearfix" />
-              <Alert display={props.message} type={state.alertType}>
-                {props.message ? `${props.message}` : ''}
-              </Alert>
+              {alert}
               <form onSubmit={submitHandler}>
                 <Input 
                 type="email"
@@ -207,7 +228,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-      onAuth: ( email, password ) => dispatch( action.authLoginUser( email, password ) ),
+      onResetAll: () => dispatch(action.authResetAll()),
+      onAuth: ( email, password ) => dispatch( action.authLoginUser( email, password ) )
   };
 };
 export default connect( mapStateToProps, mapDispatchToProps )(Login)
