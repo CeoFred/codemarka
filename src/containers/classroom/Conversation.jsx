@@ -12,7 +12,7 @@ export default function Conversation(props) {
  }
 
  let messages = props.messages.map(m => {
-   if((m.from).toLowerCase() === 'server'){
+   if((m.by).toLowerCase() === 'server'){
      if(m.user === props.user){
        return (
          
@@ -29,7 +29,7 @@ export default function Conversation(props) {
    }else {
     return (
       <div className="message" key={m.index}>
-      <span className="message__username">{m.from}</span>
+      <span className="message__username">{m.by === props.user ? 'You' : m.by}</span>
      <div className="message_content">{m.msg}</div>
     </div>
      )
