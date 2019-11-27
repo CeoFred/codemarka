@@ -1,9 +1,33 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import {connect} from "react-redux"
 
 import * as url from '../../../config/url';
+function NavigationBarItems(props) {
+    if(props.isAuthenticated){
+      return(
+        <div className="collapse navbar-collapse" id="navbar-primary">
+      <ul className="navbar-nav ml-lg-auto">
+        <li className="nav-item">
+          <Link className="nav-link" to={url.HOME}>
+            Home
+          </Link>
+        </li>
 
-export default function NavigationBarItems() {
+        <li className="nav-item ">
+          <Link className="nav-link" to={url.CLASSROOM_NEW}>
+            Create
+          </Link>
+        </li>
+
+        <li className="nav-item">
+      <span className="nav-link">Welcome, {props.username}</span>
+        </li>
+
+      </ul>
+    </div>
+      )
+    } else {
   return (
     <div className="collapse navbar-collapse" id="navbar-primary">
       <ul className="navbar-nav ml-lg-auto">
@@ -28,41 +52,21 @@ export default function NavigationBarItems() {
             Login
           </Link>
         </li>
-{/* 
-        <li className="nav-item dropdown dropdown-animate" data-toggle="hover">
-          <Link
-            className="nav-link dropdown-toggle"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-            to="/support"
-          >
-            Services
-          </Link>
-          <div className="dropdown-menu">
-            <div className="dropdown-menu-links rounded-bottom delimiter-top p-4">
-              <div className="row">
-                <div className="col-sm-6">
-                  <Link
-                    to="pages/webdesgin"
-                    className="dropdown-item"
-                  >
-                    Web Design
-                  </Link>
-                  </div>
-                <div className="col-sm-6">
-                  <a
-                    href="docs/styleguide/icons.html"
-                    className="dropdown-item"
-                  >
-                    Icons
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </li> */}
+
       </ul>
     </div>
   );
+    }
 }
+
+
+
+const mapStateToProps = ({auth}) => {
+  return {
+    username: auth.user.username,
+    isAuthenticated: auth.authenticated
+  }
+}
+
+
+export default connect( mapStateToProps, null )(NavigationBarItems)

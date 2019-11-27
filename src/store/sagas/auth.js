@@ -142,10 +142,55 @@ export function* authLoginUserSaga({email,password}){
 export function* autoLoginUserSaga() {
     const _id = localStorage.getItem(userIdAlias);
     const _token = localStorage.getItem(userTokenAlias)
-    if (_id && _token) {
-        yield put(actions.autoAuthSuccess(_id,_token))
-    } else {
-        yield put(actions.autoAuthFailed('No token'))
+
+    let url = `${host}auth/user/token/verify`;
+    let myHeaders = yield new Headers()
+    myHeaders.append('Content-Type', 'Application/json')
+
+    let autoLoginRequest = yield new Request(url, {
+        method: 'POST',
+        cache: 'default',
+        headers: myHeaders,
+        body: JSON.stringify({token:_token,user:_id}),
+        mode: 'cors'
+
+    });
+
+    try {
+        
+        const response = yield fetch(autoLoginRequest)
+        const resolvedResponse =  yield call(resolvePromise,response.json())
+        console.log(resolvedResponse);
+        if(resolvedResponse.status === 1){
+                
+            if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
+                yield localStorage.removeItem(userIdAlias);
+                yield localStorage.removeItem(userTokenAlias);
+                yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
+                yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)
+        
+            } else {
+                yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
+                yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)        
+            }
+                    
+                    yield put(actions.autoAuthSuccess(resolvedResponse.data));
+        
+        
+                    }else if(typeof resolvedResponse.message == 'object') {
+                        
+                       yield put(actions.autoAuthFailed(resolvedResponse.message[0].msg))
+                       
+                    } else {
+                        yield put(actions.autoAuthFailed(resolvedResponse.message))
+        
+                }
+
+    } catch ({message}) {
+        console.log(message);
+        yield put(actions.autoAuthFailed({message}))
+        
     }
+
 }
 

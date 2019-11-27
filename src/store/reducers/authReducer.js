@@ -51,7 +51,8 @@ const authLoginSuccess = (state,action) => {
         authenticated:true,
         user:{
             token: action.response.token,
-            userId:action.response._id
+            userId:action.response._id,
+            username: action.response.username
         }
     })
 }
@@ -107,7 +108,9 @@ const authAutoSuccess = ( state, action ) => {
         message: '',
         user: { 
             token: action.token,
-            userId: action.id
+            userId: action.id,
+            username:action.username,
+            email: action.email
         }
     })
 }

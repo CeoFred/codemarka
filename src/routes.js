@@ -19,7 +19,9 @@ const NotFound = React.lazy(() => import('./containers/public/404'));
 
 const Routes = (props) => {
   useEffect(() => {
-    props.onTryAutoSignup()
+    if(!props.isAutheticated){
+      props.onTryAutoSignup();
+    }
   }, [props])
     let routes = (
         <Switch>  
