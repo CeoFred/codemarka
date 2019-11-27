@@ -133,9 +133,7 @@ function Login(props) {
 let redct;
 
 if(props.isAuthenticated){
-setTimeout(() => {
-redct = <Redirect to='/'/>
-},1500);
+    redct = <Redirect to='/'/>
 }
 
   return (

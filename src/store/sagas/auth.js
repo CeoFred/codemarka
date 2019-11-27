@@ -1,5 +1,4 @@
 import { put,delay,call } from 'redux-saga/effects';
-import React from 'react';
 
 import * as actions from '../actions/index';
 import * as actionTypes from '../actions/Types';
@@ -105,31 +104,33 @@ export function* authLoginUserSaga({email,password}){
         console.log(resolvedResponse)
         console.log(typeof resolvedResponse)
         
-        if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
-            yield localStorage.removeItem(userIdAlias);
-            yield localStorage.removeItem(userTokenAlias);
-            yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
-            yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)
-    
-        } else {
-            yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
-            yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)        
-        }
+        
 
             if(resolvedResponse.status === 1){
+                
+    if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
+        yield localStorage.removeItem(userIdAlias);
+        yield localStorage.removeItem(userTokenAlias);
+        yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
+        yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)
 
-            yield  put(actions.authLoginSuccess(resolvedResponse.message))
+    } else {
+        yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
+        yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)        
+    }
+            
+            yield put(actions.authRegisterSuccess(resolvedResponse.data));
+
 
             }else if(typeof resolvedResponse.message == 'object') {
-                let messages;
-              messages =  resolvedResponse.message.map(data => {
-                    return (<b>{data.msg}</b>)
-                })
-               yield put(actions.authLoginFailed(messages))
+                
+               yield put(actions.authRegisterFailed(resolvedResponse.message[0].msg))
+               
             } else {
-                yield put(actions.authLoginFailed(resolvedResponse.message))
+                yield put(actions.authRegisterFailed(resolvedResponse.message))
 
-            }
+        }
+            
     } catch ({message}) {
         yield put(actions.authLoginFailed(message));
     }

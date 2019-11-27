@@ -70,11 +70,12 @@ const userIconSvg = (
 );
 
 function Register(props) {
+
 const {onResetAll} = props;
 useEffect(() => {
   
   return () => {
-    onResetAll();
+     onResetAll();
   };
 }, [onResetAll]);
 
@@ -104,7 +105,7 @@ useEffect(() => {
     },
     formSubmitted: false,
     alertMessage:props.message,
-    alertType:props.error && props.message  ? 'success' : 'danger',
+    alertType : !props.error   ? 'danger' : 'success',
   
   })
   
@@ -172,15 +173,15 @@ useEffect(() => {
 let redct;
 
 if(props.isAuthenticated){
-  setTimeout(() => {
-    redct = <Redirect to='/'/>
-  },1500);
+  // setTimeout(() => {
+  // },1500);
+  redct = <Redirect to='/'/>
+
 }
   return (
     <div>
-{redct}
       <Helmet title="Signup to colab" metaDescription="" />
-
+      {redct}
       <section>
         <div className="mt-3 row align-items-center justify-content-center min-vh-100">
           <div className="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
@@ -277,7 +278,7 @@ if(props.isAuthenticated){
 const mapStateToProps = state => {
   return {
     loading: state.auth.loading,
-    error: state.auth.message,
+    error: state.auth.error,
     isAuthenticated: state.auth.user.token !== null,
     message: state.auth.message
   }
