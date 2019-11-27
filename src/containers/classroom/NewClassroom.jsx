@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import * as actions from "../../store/actions/Types";
+import {connect} from "react-redux"
+import {Redirect} from 'react-router-dom';
 
-// import {Redirect} from 'react-router-dom';
-import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../../components/Partials/Preloader";
 import { checkValidity } from "../../utility/shared";
 
@@ -13,11 +12,9 @@ import Helmet from "../../components/SEO/helmet";
 import Alert from "../../components/Partials/Alert/Alert";
 
 import "./newclassroom.css";
-// import * as action from "../../redux/actions";
+import * as action from "../../store/actions";
 
-function NewClassroom() {
-  const dispatch = useDispatch();
-  const {token} = useSelector(s => s.auth.user);
+function NewClassroom(props) {
   const [state, setState] = useState({
     controls: {
       name: {
@@ -148,7 +145,7 @@ function NewClassroom() {
       },
     },
     formisValid: false,
-    formisSubmitted: false,
+    formisSubmitted: props.loading ? true : false,
     formErrorMessage: false,
     formErrored: false,
     alertType: null
@@ -182,27 +179,27 @@ function NewClassroom() {
     event.preventDefault();
     let formisSubmitted = true;
     setState({ ...state, formisSubmitted });
+    
     let formData = {};
-    if (!state.formisValid && formisSubmitted) {
+
+    if (state.formisValid) {
       for (let formElementIdentifier in state.controls) {
         formData[formElementIdentifier] =
           state.controls[formElementIdentifier].value;
       }
-      formData = {
-        classType: "Basic Web App",
-description: "wwdw",
-name: "jhgkdw",
-startDate: "2019-11-15",
-startTime: "02:03",
-topic: "kjnm,swd",
-token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGNjOTI2NzdhMjg1ZjA4MzgxOWFkNzQiLCJ0b2tlbiI6IiIsImlhdCI6MTU3NDUyNTY4NiwiZXhwIjoxNTc0NjQ0NDg2fQ.Aom8vObSHTcQakLG7wBYR_3c12V1mOALPYMtO_6yD5c",
-visibility: "Public",
-      }
-      formData.token = token;
-      dispatch({
-        type: actions.CLASSROOM_CREATE_INIT,
-        data: formData
-      });
+//       formData = {
+//         classType: "Basic Web App",
+// description: "wwdw",
+// name: "jhgkdw",
+// startDate: "2019-11-15",
+// startTime: "02:03",
+// topic: "kjnm,swd",
+// token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGNjOTI2NzdhMjg1ZjA4MzgxOWFkNzQiLCJ0b2tlbiI6IiIsImlhdCI6MTU3NDUyNTY4NiwiZXhwIjoxNTc0NjQ0NDg2fQ.Aom8vObSHTcQakLG7wBYR_3c12V1mOALPYMtO_6yD5c",
+// visibility: "Public",
+//       }
+      formData.token = props.token;
+  
+      props.onCreate(formData);
     
     } else {
       setState({
@@ -243,16 +240,16 @@ visibility: "Public",
         textColor="#fff"
         color="success"
         clicked={submitHandler}
-        disabled={state.formisValid}
+        disabled={!state.formisValid}
       >
         {state.formisSubmitted ? <Spinner /> : "Go"}
       </Button>
     </form>
   );
 
-  // if(state.classroom.classdetails){
-  //   return (<Redirect to={`/classroom/preview/${state.classroom.classdetails._id}`}/>)
-  // }
+  if(props.classroom){
+    return (<Redirect to={`/c/classroom/${props.classroom}`}/>)
+  }
 
   return (
     <div>
@@ -295,4 +292,21 @@ visibility: "Public",
   );
 }
 
-export default NewClassroom;
+
+const mapStateToProps = ({auth,classroom}) => {
+  return {
+    token: auth.user.token,
+    classroom: classroom.classdetails ? classroom.classdetails._id : null,
+    loading: classroom.loading
+  }
+}
+
+
+const mapDispatchToProps = dispatch => {
+  return {
+      onCreate: (data) => dispatch( action.createClassRoomInit(data) ),
+      
+      onResetAll: () => dispatch(action.classResetAll())
+  };
+};
+export default connect( mapStateToProps, mapDispatchToProps )(NewClassroom)

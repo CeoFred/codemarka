@@ -15,15 +15,21 @@ export function classVerifySuccess(classroom){
     }
 }
 
+export function classResetAll(){
+    return {
+        type: 'CLASSROO_RESET'
+    }
+}
 
 export function classVerifyFailed(classroom){
     return {
         type: actionTypes.CLASSROOM_VERIFICATION_FAILED
     }
 }
-export const createClassRoomInit = () => {
+export const createClassRoomInit = (data) => {
     return {
-        type: actionTypes.CLASSROOM_CREATE_INIT
+        type: actionTypes.CLASSROOM_CREATE_INIT,
+        ...data
     }
 }
 

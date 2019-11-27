@@ -10,7 +10,7 @@ const delay = (ms) => new Promise(res => setTimeout(res, ms))
 let myHeaders =  new Headers(); 
 
 
-export function* createClass({data}){
+export function* createClass(data){
     yield put({type: actionTypes.CLASSROOM_CREATE_START});
 
     let url = `${host}${CLASSROOM_CREATE}`;
@@ -29,10 +29,28 @@ export function* createClass({data}){
         const response = yield fetch(loginRequest)
         const resolvedResponse =  yield call(resolvePromise,response.json())
         console.log(resolvedResponse)
-    } catch (e) {
-        console.log(e)
+
+        
+
+        if(resolvedResponse.status === 1){
+                    
+                    yield put(actions.classCreationSuccess(resolvedResponse.data));
+        
+        
+                    }else if(typeof resolvedResponse.message == 'object') {
+                        
+                       yield put(actions.classCreationFailed(resolvedResponse.message[0].msg))
+                       
+                    } else {
+                        yield put(actions.classCreationFailed(resolvedResponse.message))
+        
+                    }
+             
+
+    } catch ({message}) {
+        yield put(actions.authRegisterFailed(message));
+
     }
-    console.log(data)
 
 }
 
