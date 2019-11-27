@@ -40,14 +40,7 @@ const MainClassLayout = ({ data }) => {
         
         
 
-        //listen for new members added
-        socket.on('someoneJoined',(from,msg,user) => {
-          setColabState((c) =>{
-            let oldmsg = c.messages;
-            oldmsg.push({by:from,msg,user})
-            return {...c,messages:oldmsg}
-          });
-        });
+
 
 
         //listen for old message
@@ -57,13 +50,21 @@ const MainClassLayout = ({ data }) => {
           });
         });
 
+                //listen for new members added
+                socket.on('someoneJoined',(from,msg,user) => {
+                  setColabState((c) =>{
+                    let oldmsg = c.messages;
+                    oldmsg.push({by:from,msg,user})
+                    return {...c,messages:oldmsg}
+                  });
+                });
 
         //listen for new messages
         socket.on('nM',(data) => {
           console.log(data);
           setColabState((c) =>{
             let oldmsg = c.messages;
-            oldmsg.push({by:data.user,msg: data.message})
+            oldmsg.push({by:data.user,msg: data.message,name:data.name})
             return {...c,messages:oldmsg}
           });
 

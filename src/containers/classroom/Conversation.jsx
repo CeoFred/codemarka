@@ -29,7 +29,7 @@ export default function Conversation(props) {
    }else {
     return (
       <div className="message" key={m.index}>
-      <span className="message__username">{m.by === props.user ? 'You' : m.by}</span>
+      <span className="message__username text-highlight-primary">{m.by === props.user ? 'You' : m.name}</span>
      <div className="message_content">{m.msg}</div>
     </div>
      )
