@@ -23,7 +23,8 @@ export const authResetAll = () => {
 
 export const autoAuthFailed = (reason) => {
     return {
-        type: actionTypes.AUTO_AUTH_FAILED
+        type: actionTypes.AUTO_AUTH_FAILED,
+        message: reason
     }
 }
 
@@ -31,6 +32,13 @@ export const autoAuthSuccess = (data) => {
     return {
         type: actionTypes.AUTO_AUTH_SUCCESS,
         ...data
+    }
+}
+
+export const autoAuthAborted = (reason) => {
+
+    return {
+        type: actionTypes.AUTO_AUTO_ABORTED
     }
 }
 

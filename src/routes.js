@@ -25,14 +25,14 @@ const Routes = (props) => {
   }, [props])
     let routes = (
         <Switch>  
+<Route exact component={logout} path={url.AUTH_LOGOUT} />
 <Route exact component={Home} path={url.HOME} />
 <Route exact component={Login} path={url.AUTH_SIGN_IN} />
 <Route exact component={Register} path={url.AUTH_SIGN_UP} />
 <Route exact component={ForgotPassword} path={url.AUTH_FORGOT_PASSWORD} />
-
 <Redirect from={url.CLASSROOMS} to={url.AUTH_SIGN_IN} />
 <Route component={NotFound} />
-<Redirect from={url.AUTH_LOGOUT} to={url.AUTH_SIGN_IN}/>
+
         </Switch>
       );
   

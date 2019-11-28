@@ -11,7 +11,8 @@ let INITIAL_STATE = {
         username:null,
         token:null,
         userId:null,
-        photoUrl:null
+        photoUrl:null,
+        email:null
     },
     authenticated:false
 }
@@ -61,6 +62,12 @@ const authLogout = (state,action) => {
 
     return helper.updateObject(state,{
         authenticated:false,
+        user: {
+            token: null,
+            userId: null,
+            username: null,
+            email: null
+        }
     });
 } 
 
@@ -76,7 +83,8 @@ const authRegistrationSuccess = (state,action) => {
                 ...state.user,
                 token:action.token,
                 email: action.email,
-                username: action.username
+                username: action.username,
+                userId: action._id
             },
             authenticated:true,
             loading:false,
@@ -115,6 +123,22 @@ const authAutoSuccess = ( state, action ) => {
     })
 }
 
+
+const logoutSuccessful = (state, action) => {
+    return helper.updateObject(state,{
+        authenticated: false,
+        user : {
+            token: null,
+            userId: null,
+            username: null,
+            email: null
+        },
+        error: false,
+        loading: false,
+        message: ''
+    })
+}
+
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
 
@@ -130,6 +154,7 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.AUTH_USER_SIGNUP_START): return authStart(state,action)
         case(actionTypes.NOTIFICATION_ALERT_CLOSE): return ClearAlertMessage(state,action)
         case(actionTypes.AUTH_RESET): return reset(state,action)
+        case(actionTypes.LOGOUT_SUCCESSFUL): return logoutSuccessful(state,action);
         default: return state;
     }
 }

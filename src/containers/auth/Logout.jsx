@@ -1,18 +1,32 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import * as actions from '../../store/actions/index';
+import * as url from "../../config/url";
 
-class Logout extends Component {
-    componentDidMount () {
-        this.props.onLogout();
-    }
+function Logout(props) {
+    
+    const {isAuthenticated, onLogout} = props;
 
-    render () {
-        return <Redirect to="/"/>;
+    useEffect(() => {
+        if(isAuthenticated){
+            onLogout();
+        } 
+    }, [onLogout,isAuthenticated]);
+
+    const checkAuth = () => {
+        if(!isAuthenticated){
+            return (<Redirect to={url.AUTH_SIGN_IN}/>);
+        }
     }
+    return (
+        <div>
+            {checkAuth()}
+        </div>
+    )
 }
+
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -20,4 +34,10 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(null, mapDispatchToProps)(Logout);
+const mapStateToPorps = ({auth}) => {
+    return {
+        isAuthenticated: auth.authenticated
+    }
+}
+
+export default connect(mapStateToPorps, mapDispatchToProps)(Logout);

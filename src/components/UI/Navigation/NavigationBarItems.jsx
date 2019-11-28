@@ -24,6 +24,11 @@ function NavigationBarItems(props) {
       <span className="nav-link">Welcome, {props.username}</span>
         </li>
 
+        <li className="nav-item">
+        <Link to={url.AUTH_LOGOUT} className="nav-link">
+        logout</Link>
+        </li>
+
       </ul>
     </div>
       )

@@ -1,4 +1,4 @@
-import { put,delay,call } from 'redux-saga/effects';
+import { put, delay, call } from 'redux-saga/effects';
 
 import * as actions from '../actions/index';
 import * as actionTypes from '../actions/Types';
@@ -7,17 +7,17 @@ import { resolvePromise } from '../../utility/shared';
 
 const host = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test" ? process.env.REACT_APP_REMOTE_API_URL : process.env.REACT_APP_LOCAL_API_URL
 const userTokenAlias = 'wx1298';
-        const userIdAlias = 'u342345'
-export function* userLoginSaga(){
-   yield put({
-        type:'AUTH_USER_LOGIN'
+const userIdAlias = 'u342345';
+
+export function* userLoginSaga() {
+    yield put({
+        type: 'AUTH_USER_LOGIN'
     })
 }
 
-export function* logoutSaga(action) {
-    yield localStorage.removeItem('token')
-    yield localStorage.removeItem('expirationTime')
-    yield localStorage.removeItem('userId')
+export function* logoutSaga() {
+    yield localStorage.removeItem(userTokenAlias);
+    yield localStorage.removeItem(userIdAlias);
     yield put({
         type: 'LOGOUT_SUCCESSFUL'
     })
@@ -28,8 +28,8 @@ export function* checkAuthTimeoutSaga(action) {
     yield put()
 }
 
-export function* authRegisterUserSaga({email,password,username}){
-    yield put({type: actionTypes.AUTH_USER_SIGNUP_START});
+export function* authRegisterUserSaga({ email, password, username }) {
+    yield put({ type: actionTypes.AUTH_USER_SIGNUP_START });
 
     let url = `${host}auth/user/signup`;
     let myHeaders = yield new Headers()
@@ -39,51 +39,51 @@ export function* authRegisterUserSaga({email,password,username}){
         method: 'POST',
         cache: 'default',
         headers: myHeaders,
-        body: JSON.stringify({email,password,username}),
+        body: JSON.stringify({ email, password, username }),
         mode: 'cors'
 
     });
-    
+
     try {
         const response = yield fetch(loginRequest)
-        const resolvedResponse =  yield call(resolvePromise,response.json())
+        const resolvedResponse = yield call(resolvePromise, response.json())
 
-            if(resolvedResponse.status === 1){
+        if (resolvedResponse.status === 1) {
 
-    if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
-        yield localStorage.removeItem(userIdAlias);
-        yield localStorage.removeItem(userTokenAlias);
-        yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
-        yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)
+            if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
+                yield localStorage.removeItem(userIdAlias);
+                yield localStorage.removeItem(userTokenAlias);
+                yield localStorage.setItem(userTokenAlias, resolvedResponse.data.token)
+                yield localStorage.setItem(userIdAlias, resolvedResponse.data._id)
 
-    } else {
-        yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
-        yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)        
-    }
-            
+            } else {
+                yield localStorage.setItem(userTokenAlias, resolvedResponse.data.token)
+                yield localStorage.setItem(userIdAlias, resolvedResponse.data._id)
+            }
+
             yield put(actions.authRegisterSuccess(resolvedResponse.data));
 
 
-            }else if(typeof resolvedResponse.message == 'object') {
-                
-               yield put(actions.authRegisterFailed(resolvedResponse.message[0].msg))
-               
-            } else {
-                yield put(actions.authRegisterFailed(resolvedResponse.message))
+        } else if (typeof resolvedResponse.message == 'object') {
 
-            }
-             
-        
-    } catch ({message}) {
+            yield put(actions.authRegisterFailed(resolvedResponse.message[0].msg))
+
+        } else {
+            yield put(actions.authRegisterFailed(resolvedResponse.message))
+
+        }
+
+
+    } catch ({ message }) {
         yield put(actions.authRegisterFailed(message));
     }
 
-    
+
 }
 
 
-export function* authLoginUserSaga({email,password}){
-    yield put({type: 'AUTH_USER_LOGIN_START'});
+export function* authLoginUserSaga({ email, password }) {
+    yield put({ type: 'AUTH_USER_LOGIN_START' });
 
     let url = `${host}auth/user/signin`;
     let myHeaders = yield new Headers()
@@ -93,47 +93,47 @@ export function* authLoginUserSaga({email,password}){
         method: 'POST',
         cache: 'default',
         headers: myHeaders,
-        body: JSON.stringify({email,password}),
+        body: JSON.stringify({ email, password }),
         mode: 'cors'
 
     });
-    
+
     try {
         const response = yield fetch(loginRequest)
-        const resolvedResponse =  yield call(resolvePromise,response.json())
-        
-        
+        const resolvedResponse = yield call(resolvePromise, response.json())
 
-            if(resolvedResponse.status === 1){
-                
-    if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
-        yield localStorage.removeItem(userIdAlias);
-        yield localStorage.removeItem(userTokenAlias);
-        yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
-        yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)
 
-    } else {
-        yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
-        yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)        
-    }
-            
+
+        if (resolvedResponse.status === 1) {
+
+            if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
+                yield localStorage.removeItem(userIdAlias);
+                yield localStorage.removeItem(userTokenAlias);
+                yield localStorage.setItem(userTokenAlias, resolvedResponse.data.token)
+                yield localStorage.setItem(userIdAlias, resolvedResponse.data._id)
+
+            } else {
+                yield localStorage.setItem(userTokenAlias, resolvedResponse.data.token)
+                yield localStorage.setItem(userIdAlias, resolvedResponse.data._id)
+            }
+
             yield put(actions.authRegisterSuccess(resolvedResponse.data));
 
 
-            }else if(typeof resolvedResponse.message == 'object') {
-                
-               yield put(actions.authRegisterFailed(resolvedResponse.message[0].msg))
-               
-            } else {
-                yield put(actions.authRegisterFailed(resolvedResponse.message))
+        } else if (typeof resolvedResponse.message == 'object') {
+
+            yield put(actions.authRegisterFailed(resolvedResponse.message[0].msg))
+
+        } else {
+            yield put(actions.authRegisterFailed(resolvedResponse.message))
 
         }
-            
-    } catch ({message}) {
+
+    } catch ({ message }) {
         yield put(actions.authLoginFailed(message));
     }
 
-    
+
 }
 
 
@@ -149,40 +149,54 @@ export function* autoLoginUserSaga() {
         method: 'POST',
         cache: 'default',
         headers: myHeaders,
-        body: JSON.stringify({token:_token,user:_id}),
+        body: JSON.stringify({ token: _token, user: _id }),
         mode: 'cors'
 
     });
 
-    try {
-        
-        const response = yield fetch(autoLoginRequest)
-        const resolvedResponse =  yield call(resolvePromise,response.json())
-        if(resolvedResponse.status === 1){
-                
-            if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
-           
-                yield localStorage.setItem(userTokenAlias,localStorage.getItem(userTokenAlias))
-                yield localStorage.setItem(userIdAlias,localStorage.getItem(userIdAlias))
-        
+    const token_v = yield localStorage.getItem(userTokenAlias);
+    const userid_v = yield localStorage.getItem(userIdAlias);
+
+    if (token_v && userid_v) {
+
+
+        try {
+
+            const response = yield fetch(autoLoginRequest)
+            const resolvedResponse = yield call(resolvePromise, response.json())
+            if (resolvedResponse.status === 1) {
+
+                if (token_v && userid_v) {
+
+                    yield localStorage.setItem(userTokenAlias, token_v)
+                    yield localStorage.setItem(userIdAlias, userid_v)
+
+                }
+                resolvedResponse.data.token = token_v;
+                yield put(actions.autoAuthSuccess(resolvedResponse.data));
+
+
+            } else if (resolvedResponse.message.name === 'JsonWebTokenError') {
+
+                yield put(actions.autoAuthFailed('jwt malformed'))
+
             } else {
-            }
-                    resolvedResponse.data.token = yield localStorage.getItem(userTokenAlias);       
-                    yield put(actions.autoAuthSuccess(resolvedResponse.data));
-        
-        
-                    }else if(resolvedResponse.message.name === 'JsonWebTokenError') {
-                        
-                       yield put(actions.autoAuthFailed('jwt malformed'))
-                       
-                    } else {
-                        yield put(actions.autoAuthFailed(resolvedResponse.message))
-        
+
+                if (resolvedResponse.message) {
+                    yield localStorage.clear();
                 }
 
-    } catch ({message}) {
-        yield put(actions.autoAuthFailed({message}))
-        
+                yield put(actions.autoAuthFailed(resolvedResponse.message))
+
+            }
+
+        } catch ({ message }) {
+            yield put(actions.autoAuthFailed({ message }))
+
+        }
+    } else {
+        yield put(actions.autoAuthAborted('Token and userid not found'))
+
     }
 
 }
