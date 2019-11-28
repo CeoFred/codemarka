@@ -12,8 +12,8 @@ export default function Conversation(props) {
  }
 
  let messages = props.messages.map(m => {
-   if((m.by).toLowerCase() === 'server'){
-     if(m.user === props.user){
+   if((m.by).toLowerCase() === 'server' && m.type === 'sJoin'){
+     if(m.for === props.user){
        return (
          
        <div>
@@ -23,18 +23,27 @@ export default function Conversation(props) {
      }
      return (
        <div>
-      <span className="message__username text-info">{m.msg}</span>
+      <span className="message__username text-info">{m.name} Joined</span>
        </div>
      )
-   }else {
+   } else if(m.by === 'server' && m.type === 'oldMsgUpdate'){
+     console.log('oldmessages',m);
+      return(
+        <div className="message" key={m.by}>
+      <span className="message__username text-highlight-primary">{m.by === props.user ? 'You' : m.name}</span>
+     <div className="message_content">{m.msg}</div>
+    </div>
+      )
+   }
+   
+   else {
     return (
-      <div className="message" key={m.index}>
+      <div className="message" key={m.by}>
       <span className="message__username text-highlight-primary">{m.by === props.user ? 'You' : m.name}</span>
      <div className="message_content">{m.msg}</div>
     </div>
      )
-   }
-   
+   }   
  })
   return (
     <div className="conversation__container">

@@ -101,8 +101,6 @@ export function* authLoginUserSaga({email,password}){
     try {
         const response = yield fetch(loginRequest)
         const resolvedResponse =  yield call(resolvePromise,response.json())
-        console.log(resolvedResponse)
-        console.log(typeof resolvedResponse)
         
         
 
@@ -160,26 +158,22 @@ export function* autoLoginUserSaga() {
         
         const response = yield fetch(autoLoginRequest)
         const resolvedResponse =  yield call(resolvePromise,response.json())
-        console.log(resolvedResponse);
         if(resolvedResponse.status === 1){
                 
             if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
-                yield localStorage.removeItem(userIdAlias);
-                yield localStorage.removeItem(userTokenAlias);
-                yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
-                yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)
+           
+                yield localStorage.setItem(userTokenAlias,localStorage.getItem(userTokenAlias))
+                yield localStorage.setItem(userIdAlias,localStorage.getItem(userIdAlias))
         
             } else {
-                yield localStorage.setItem(userTokenAlias,resolvedResponse.data.token)
-                yield localStorage.setItem(userIdAlias,resolvedResponse.data._id)        
             }
                     
                     yield put(actions.autoAuthSuccess(resolvedResponse.data));
         
         
-                    }else if(typeof resolvedResponse.message == 'object') {
+                    }else if(resolvedResponse.message.name === 'JsonWebTokenError') {
                         
-                       yield put(actions.autoAuthFailed(resolvedResponse.message[0].msg))
+                       yield put(actions.autoAuthFailed('jwt malformed'))
                        
                     } else {
                         yield put(actions.autoAuthFailed(resolvedResponse.message))
@@ -187,7 +181,6 @@ export function* autoLoginUserSaga() {
                 }
 
     } catch ({message}) {
-        console.log(message);
         yield put(actions.autoAuthFailed({message}))
         
     }

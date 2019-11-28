@@ -23,48 +23,46 @@ const MainClassLayout = ({ data }) => {
   React.useEffect(() => {
 
 
-      console.log('Room status - ',inRoom);
 
       const requestData = {
         classroom_id:data.classroom_id,
-        user:data.user_id
+        userId:data.user_id,
+        username: data.username
         };  
 
       if(inRoom !== true && inRoom !== null){
        // set listeners and emitters
 
      
-        // tell server to add user to class
-        socket.emit('join',requestData);
-        console.log('You joined');
-        
-        
-
-
-
-
+       
         //listen for old message
-        socket.on('updateMsg',(who,msg) => {
+        socket.on('updateMsg',(msg) => {
           setColabState((c) =>{
-            return {...c,messages:msg}
+            let oldmsg = c.messages;
+            msg.msgs.forEach(element => {
+              oldmsg.push(element);
+            });
+            return {...c,messages:oldmsg}
           });
         });
+        // tell server to add user to class
+        socket.emit('join',requestData);
+        
 
                 //listen for new members added
-                socket.on('someoneJoined',(from,msg,user) => {
+                socket.on('someoneJoined',(msg) => {
                   setColabState((c) =>{
                     let oldmsg = c.messages;
-                    oldmsg.push({by:from,msg,user})
+                    oldmsg.push(msg)
                     return {...c,messages:oldmsg}
                   });
                 });
 
         //listen for new messages
         socket.on('nM',(data) => {
-          console.log(data);
           setColabState((c) =>{
             let oldmsg = c.messages;
-            oldmsg.push({by:data.user,msg: data.message,name:data.name})
+            oldmsg.push(data)
             return {...c,messages:oldmsg}
           });
 
@@ -97,10 +95,9 @@ const MainClassLayout = ({ data }) => {
             oldmsg.push({from:'self',msg:'you left'})
             return {...c,messages:oldmsg}
           });
-        //   dispatch(action.userLeftAClass(colabstate.classroom_id));
         };
       }
-    },[data.classroom_id,data.user_id,inRoom,colabstate.username,colabstate.classroom_id]);
+    },[data.username,data.classroom_id,data.user_id,inRoom,colabstate.username,colabstate.classroom_id]);
 
   const handleInputChange = e => {
     e.preventDefault();
@@ -150,7 +147,7 @@ const MainClassLayout = ({ data }) => {
           user={data.user_id}
         />
 
-        <div style={{ float: "left", width: "60%", height: "100%" }}>
+        <div style={{ float: "left", width: "70%", height: "100%" }}>
           {/* <Editor /> */}
           Editor Here
         </div>

@@ -108,7 +108,7 @@ const authAutoSuccess = ( state, action ) => {
         message: '',
         user: { 
             token: action.token,
-            userId: action.id,
+            userId: action._id,
             username:action.username,
             email: action.email
         }

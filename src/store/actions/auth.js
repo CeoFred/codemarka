@@ -27,11 +27,10 @@ export const autoAuthFailed = (reason) => {
     }
 }
 
-export const autoAuthSuccess = (id,token) => {
+export const autoAuthSuccess = (data) => {
     return {
         type: actionTypes.AUTO_AUTH_SUCCESS,
-        token,
-        id
+        ...data
     }
 }
 

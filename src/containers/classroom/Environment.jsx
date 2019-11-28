@@ -30,8 +30,9 @@ function Environment(props) {
 
 
   const [colabstate] = React.useState({
-    user_id: props.user,
-    classroom_id: classroomId
+    user_id: props.userid,
+    classroom_id: classroomId,
+    username: props.username
   });
 
   React.useEffect(() => {
@@ -61,7 +62,8 @@ function Environment(props) {
 const mapStateToProps = ({auth,classroom}) => {
   return {
     isAuthenticated: auth.user.token !== null,
-    user: auth.user.userId,
+    userid: auth.user.userId,
+    username : auth.user.username,
     user_t:auth.user.token,
     class_verified: classroom.validated
   }
