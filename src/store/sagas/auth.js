@@ -167,7 +167,7 @@ export function* autoLoginUserSaga() {
         
             } else {
             }
-                    
+                    resolvedResponse.data.token = yield localStorage.getItem(userTokenAlias);       
                     yield put(actions.autoAuthSuccess(resolvedResponse.data));
         
         
