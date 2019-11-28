@@ -5,8 +5,9 @@ import Navigation from "../../components/classroom/UI/NavBar";
 import Convo from "./Conversation";
 // import Editor from "../../components/classroom/Editor/Editor";
 
+const host = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test" ? process.env.REACT_APP_REMOTE_API_URL : process.env.REACT_APP_LOCAL_API_URL
 
-const socket = io("http://localhost:2001/classrooms");
+const socket = io(`${host}classrooms`);
 
 const MainClassLayout = ({ data }) => {
   const [inputState, setInputState] = useState({
