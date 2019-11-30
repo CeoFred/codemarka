@@ -10,26 +10,29 @@ export default function Conversation(props) {
         props.sendMessage(event);
       }
  }
+ 
+//  let lastIndex;
 
- let messages = props.messages.map(m => {
+ 
+
+ let messages = props.messages.map((m,i) => {
    if((m.by).toLowerCase() === 'server' && m.type === 'sJoin'){
      if(m.for === props.user){
        return (
          
-       <div>
+       <div id={i} key={i}>
        <span className="message__username text-info">You Joined</span>
         </div>
        )
      }
      return (
-       <div>
+       <div id={i} key={i}>
       <span className="message__username text-info">{m.name} Joined</span>
        </div>
      )
    } else if(m.by === 'server' && m.type === 'oldMsgUpdate'){
-     console.log('oldmessages',m);
       return(
-        <div className="message" key={m.by}>
+        <div className="message" key={i} id={i}>
       <span className="message__username text-highlight-primary">{m.by === props.user ? 'You' : m.name}</span>
      <div className="message_content">{m.msg}</div>
     </div>
@@ -38,13 +41,23 @@ export default function Conversation(props) {
    
    else {
     return (
-      <div className="message" key={m.by}>
+      <div className="message" key={i} id={i}>
       <span className="message__username text-highlight-primary">{m.by === props.user ? 'You' : m.name}</span>
      <div className="message_content">{m.msg}</div>
     </div>
      )
-   }   
+   }
+      
  })
+//  const lelem = document.getElementById(lastIndex);
+
+//  useEffect(() => {
+//    if(lelem){
+//     // lelem.scrollIntoView(false);
+    
+//    }
+//  }, [lelem]);
+ 
   return (
     <div className="conversation__container">
       {/* messages tab */}

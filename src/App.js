@@ -4,14 +4,14 @@ import { useDispatch } from 'react-redux'
 
 import * as action from './store/actions/Types';
 import './App.css';
-import LogRocket from 'logrocket';
+// import LogRocket from 'logrocket';
 
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch({ type: action.COOKIE_VALIDATE_INIT })
-    LogRocket.init('gn0zcj/colab')
+    // LogRocket.init('gn0zcj/colab')
   }, [dispatch])
 
   return (

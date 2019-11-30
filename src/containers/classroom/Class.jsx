@@ -65,7 +65,18 @@ const MainClassLayout = ({ data }) => {
             let oldmsg = c.messages;
             oldmsg.push(data)
             return {...c,messages:oldmsg}
+          },function(d){
+            console.log(d);
           });
+          if(colabstate.messages){
+            const len = colabstate.messages.length;
+            const lastIndex = len - 1;
+            
+            const lelem = document.getElementById(lastIndex);
+
+              lelem.scrollIntoView(false);
+ 
+          }
 
         });
 
