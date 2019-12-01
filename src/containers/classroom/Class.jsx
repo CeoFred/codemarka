@@ -12,7 +12,7 @@ const host = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "
 
 const socket = io(`${host}classrooms`);
 
-const MainClassLayout = ({ data }) => {
+const MainClassLayout = ({ data,owner }) => {
   const [inputState, setInputState] = useState({
     value: "",
     isFocused: false,
@@ -25,14 +25,13 @@ const MainClassLayout = ({ data }) => {
       previewContent: {
         html:null,
         css:null
-      }
+      },
+      owner: owner === data.user_id
   });
 
   const [inRoom] = useState(false);
 
   React.useEffect(() => {
-
-
 
       const requestData = {
         classroom_id:data.classroom_id,
@@ -121,10 +120,38 @@ const MainClassLayout = ({ data }) => {
 
         //listen to file changes
         socket.on("class_files_updated",({id,file,content}) => {
+          if(colabstate.owner){
+            setColabState((c) => {
+              return {...c,previewContent:{...c.previewContent,[file]:{content,id}}}
+            });
+            console.log('Owner');
+          } else {
 
-          setColabState((c) => {
-            return {...c,previewContent:{...c.previewContent,[file]:{content,id}}}
-          });
+
+
+
+            setColabState(c => {
+              let oldFiles;
+            c.editors.forEach((element,i) => {
+              if(element.file === file && element.id === id){
+               
+                console.log(element);
+                
+             oldFiles = c.editors;
+            oldFiles[i].content = content
+              }
+            });
+            return {...c,editors:oldFiles}
+
+            })
+
+            setColabState((c) => {
+              return {...c,previewContent:{...c.previewContent,[file]:{content,id}}}
+            });
+            console.log('Not owner');
+
+          }
+          
 
         });
 
@@ -144,7 +171,14 @@ const MainClassLayout = ({ data }) => {
           });
         };
       }
-    },[colabstate.messages,data.username,data.classroom_id,data.user_id,inRoom,colabstate.username,colabstate.classroom_id]);
+    },[colabstate.owner,
+      colabstate.messages,
+      data.username,
+      data.classroom_id,
+      data.user_id,
+      inRoom,
+      colabstate.username,
+      colabstate.classroom_id]);
 
   const handleInputChange = e => {
     e.preventDefault();
@@ -196,9 +230,8 @@ const MainClassLayout = ({ data }) => {
     console.log(o);
 
     socket.emit('editorChanged',emitObj);
-
-    
   }
+
   const handlePreview = (e) => {
         const previewFrame = document.getElementById('preview_iframe');
 
@@ -228,7 +261,7 @@ const MainClassLayout = ({ data }) => {
           user={data.user_id}
         />
 
-          <Editor 
+          <Editor readOnly={colabstate.owner}
           handleEditorChange={(e,o,v,t) => editorChanged(e,o,v,t)} 
           files={colabstate.editors}/>
 

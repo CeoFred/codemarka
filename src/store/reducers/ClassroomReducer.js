@@ -67,8 +67,8 @@ const classroomVerifyStart = (state,action) => {
 
 const classroomVerified = (state,action) => {
     return helper.updateObject(state,{
-        classroom_id: action.classroom,
-        validated: true
+        validated: true,
+        ...action.classroom
     })
 }
 export default (state = INITIAL_STATE, action) => {

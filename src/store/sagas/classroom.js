@@ -27,10 +27,7 @@ export function* createClass(data){
     
     try {
         const response = yield fetch(loginRequest)
-        const resolvedResponse =  yield call(resolvePromise,response.json())
-        console.log(resolvedResponse)
-
-        
+        const resolvedResponse =  yield call(resolvePromise,response.json())        
 
         if(resolvedResponse.status === 1){
                     
@@ -76,8 +73,7 @@ export function* verifyClassRoom({classId}){
  try {
     const response = yield fetch(request)
     const resolvedResponse =  yield call(resolvePromise,response.json())
-    console.log(resolvedResponse)
-    yield put(actions.classVerifySuccess(resolvedResponse.message._id))
+    yield put(actions.classVerifySuccess(resolvedResponse.data))
 } catch (e) {
     yield put(actions.classVerifyFailed(classId))
     console.log(e)

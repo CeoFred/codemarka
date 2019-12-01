@@ -9,20 +9,25 @@ require("codemirror/mode/htmlmixed/htmlmixed");
 require("codemirror/mode/php/php");
 
 
-const cssOptions = {
-  mode : 'css',
-  lineNumbers: true,
-  theme: 'dracula',
-}
 
-const htmlOptions = {
-  lineNumbers: true,
-  mode : 'htmlmixed',
-  theme: 'dracula',
-}
 
 
 export default function Editor(props) {
+
+  const cssOptions = {
+    mode : 'css',
+    lineNumbers: true,
+    theme: 'dracula',
+    readOnly: props.readOnly ? false : "nocursor" ,
+    autofocus:true
+  }
+  
+  const htmlOptions = {
+    lineNumbers: true,
+    mode : 'htmlmixed',
+    theme: 'dracula',
+    readOnly: props.readOnly ? false : "nocursor" ,
+  }
 
   let editors ;
 

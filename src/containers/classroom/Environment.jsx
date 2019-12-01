@@ -32,8 +32,10 @@ function Environment(props) {
   const [colabstate] = React.useState({
     user_id: props.userid,
     classroom_id: classroomId,
-    username: props.username
+    username: props.username,
   });
+
+  console.log(props);
 
   React.useEffect(() => {
       dispatch(dispatchAppEnvironment('classroom'));
@@ -48,7 +50,7 @@ function Environment(props) {
     if(!props.class_verified){
       return checking;
     } else {
-      return (<ColabLayout data={colabstate}/>)
+      return (<ColabLayout owner={props.class_owner} data={colabstate}/>)
     }
   }
   return (
@@ -65,7 +67,8 @@ const mapStateToProps = ({auth,classroom}) => {
     userid: auth.user.userId,
     username : auth.user.username,
     user_t:auth.user.token,
-    class_verified: classroom.validated
+    class_verified: classroom.validated,
+    class_owner: classroom.owner 
   }
 }
 
