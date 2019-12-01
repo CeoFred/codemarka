@@ -3,7 +3,10 @@ import io from "socket.io-client";
 
 import Navigation from "../../components/classroom/UI/NavBar";
 import Convo from "./Conversation";
-// import Editor from "../../components/classroom/Editor/Editor";
+import Editor from "../../components/classroom/Editor/Editor";
+import Preview from "../../components/classroom/Editor/Preview";
+
+import "./css/Environment.css";
 
 const host = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test" ? process.env.REACT_APP_REMOTE_API_URL : process.env.REACT_APP_LOCAL_API_URL
 
@@ -17,8 +20,14 @@ const MainClassLayout = ({ data }) => {
   });
 
   const [colabstate, setColabState] = useState({
-      messages:[]
+      messages:[],
+      editors: [],
+      previewContent: {
+        html:null,
+        css:null
+      }
   });
+
   const [inRoom] = useState(false);
 
   React.useEffect(() => {
@@ -80,7 +89,6 @@ const MainClassLayout = ({ data }) => {
 
         });
 
-
         //listen for members leaving
         socket.on('updatechat_left',(who,msg) => {
           setColabState((c) =>{
@@ -90,10 +98,37 @@ const MainClassLayout = ({ data }) => {
           });
         });
 
-      } else if(inRoom === null) {
-        console.log('You have not joined')
-      } else if(inRoom === false){
-        console.log('You left')
+        // listen for classroom files 
+        socket.on('class_files',(css,html) => {
+          
+          setColabState((c) => {
+            return {...c, editors : [
+              {file:'css',...css},
+              // {file:'js',content:js},
+              {file:'html',...html}
+
+            ]}
+          });
+
+          // set preview state
+          setColabState((c) => {
+            return {...c,previewContent:{
+            html,css
+            }}
+          })
+
+        });
+
+        //listen to file changes
+        socket.on("class_files_updated",({id,file,content}) => {
+
+          setColabState((c) => {
+            return {...c,previewContent:{...c.previewContent,[file]:{content,id}}}
+          });
+
+        });
+
+
       }
 
       return () => {
@@ -109,7 +144,7 @@ const MainClassLayout = ({ data }) => {
           });
         };
       }
-    },[data.username,data.classroom_id,data.user_id,inRoom,colabstate.username,colabstate.classroom_id]);
+    },[colabstate.messages,data.username,data.classroom_id,data.user_id,inRoom,colabstate.username,colabstate.classroom_id]);
 
   const handleInputChange = e => {
     e.preventDefault();
@@ -129,8 +164,6 @@ const MainClassLayout = ({ data }) => {
           class:data.classroom_id,
           message:inputState.value
         }
-        console.log(msg_data);
-
         socket.emit('newMessage',msg_data)
   };
 
@@ -144,10 +177,46 @@ const MainClassLayout = ({ data }) => {
     setInputState({ ...inputState, isFocused: true });
   };
 
+  const editorChanged = (e,o,v,t) => {
+    let fid;
+    
+    colabstate.editors.forEach(element => {
+      if(element.file === t){
+        fid = element.id;
+      }
+    });
+
+    const emitObj = {
+      file:t,
+      content: v,
+      class: data.classroom_id,
+      user: data.user_id,
+      id:fid
+    };
+    console.log(o);
+
+    socket.emit('editorChanged',emitObj);
+
+    
+  }
+  const handlePreview = (e) => {
+        const previewFrame = document.getElementById('preview_iframe');
+
+        var preview =  previewFrame.contentDocument ||  previewFrame.contentWindow.document;
+        preview.open();
+        preview.write(colabstate.previewContent.html.content);
+        preview.close();
+  }
+
+  
   return (
     <div>
+      
+      
+    <Preview previewBtnClicked={handlePreview}/>
       <Navigation classid={data.classroom_id} />
       <div style={{ width: "100%", height: "87vh" }}>
+
         <Convo
           inputValue={inputState.value}
           handleInputChange={handleInputChange}
@@ -159,10 +228,10 @@ const MainClassLayout = ({ data }) => {
           user={data.user_id}
         />
 
-        <div style={{ float: "left", width: "70%", height: "100%" }}>
-          {/* <Editor /> */}
-          Editor Here
-        </div>
+          <Editor 
+          handleEditorChange={(e,o,v,t) => editorChanged(e,o,v,t)} 
+          files={colabstate.editors}/>
+
       </div>
     </div>
   );

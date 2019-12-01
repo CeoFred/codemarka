@@ -49,14 +49,6 @@ export default function Conversation(props) {
    }
       
  })
-//  const lelem = document.getElementById(lastIndex);
-
-//  useEffect(() => {
-//    if(lelem){
-//     // lelem.scrollIntoView(false);
-    
-//    }
-//  }, [lelem]);
  
   return (
     <div className="conversation__container">

@@ -1,2 +1,17 @@
 @import './styles/codemirror.css';
-@import './styles/theme/material.css';
+@import './styles/theme/material-darker.css';
+@import './styles/theme/dracula.css';
+
+div.editors__container {
+    height: 100%;
+    float: left;
+     width: 70%;
+    height: 100%;
+    position: relative;
+    max-width: 70%;
+}
+div.CodeMirror {
+    height:100vh;
+    padding-left:0;
+    border-right: 13px solid gray;
+}
