@@ -19,14 +19,18 @@ export default function Editor(props) {
     lineNumbers: true,
     theme: 'dracula',
     readOnly: props.readOnly ? false : "nocursor" ,
-    autofocus:true
+    autofocus:true,
+    pollInterval:3000,
+    lineWrapping:true
   }
   
   const htmlOptions = {
     lineNumbers: true,
     mode : 'htmlmixed',
-    theme: 'dracula',
+    theme: 'dracula', 
     readOnly: props.readOnly ? false : "nocursor" ,
+    pollInterval:3000,
+    lineWrapping:true
   }
 
   let editors ;
@@ -39,7 +43,6 @@ export default function Editor(props) {
         <CodeMirror  
         value={f.content}
          options={cssOptions} 
-         
         onChange={(e,ob,v) => props.handleEditorChange(e,ob,v,'css')}/>
         </div>)
     }
