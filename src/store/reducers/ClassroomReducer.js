@@ -71,6 +71,13 @@ const classroomVerified = (state,action) => {
         ...action.classroom
     })
 }
+
+const classroomVerificationFailed = (state, action) => {
+    return helper.updateObject(state,{
+        validated:false,
+        validation_error_message : action.message
+    })
+}
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
 
@@ -81,6 +88,8 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.CLASSROOM_LEFT): return classroomLeft(state,action)
         case(actionTypes.CLASSROOM_VERIFICATION_INIT): return classroomVerifyStart(state,action) 
         case(actionTypes.CLASSROOM_VERIFICATION_SUCCESS): return classroomVerified(state,action)
+        case(actionTypes.CLASSROOM_VERIFICATION_FAILED): return classroomVerificationFailed(state,action)
+
         default: return state;
     }
 }

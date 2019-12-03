@@ -23,7 +23,8 @@ export function classResetAll(){
 
 export function classVerifyFailed(classroom){
     return {
-        type: actionTypes.CLASSROOM_VERIFICATION_FAILED
+        type: actionTypes.CLASSROOM_VERIFICATION_FAILED,
+        message:classroom
     }
 }
 export const createClassRoomInit = (data) => {

@@ -5,6 +5,7 @@ import Navigation from "../../components/classroom/UI/NavBar";
 import Convo from "./Conversation";
 import Editor from "../../components/classroom/Editor/Editor";
 import Preview from "../../components/classroom/Editor/Preview";
+import Alert from "../../components/Partials/Alert/Alert";
 
 import "./css/Environment.css";
 
@@ -15,7 +16,7 @@ const host =
 
 const socket = io(`${host}classrooms`);
 
-const MainClassLayout = ({ data, owner }) => {
+const MainClassLayout = ({ data, owner, name }) => {
   const [inputState, setInputState] = useState({
     value: "",
     isFocused: false,
@@ -32,7 +33,7 @@ const MainClassLayout = ({ data, owner }) => {
     owner: owner === data.user_id
   });
 
-  const [inRoom] = useState(false);
+  const [inRoom, setInRoom] = useState(false);
 
   React.useEffect(() => {
     const requestData = {
@@ -56,7 +57,7 @@ const MainClassLayout = ({ data, owner }) => {
       });
       // tell server to add user to class
       socket.emit("join", requestData);
-
+      setInRoom(true)
       //listen for new members added
       socket.on("someoneJoined", msg => {
         setColabState(c => {
@@ -164,12 +165,7 @@ const MainClassLayout = ({ data, owner }) => {
       if (inRoom) {
         console.log("Leaving room");
         socket.emit("leave", requestData);
-
-        setColabState(c => {
-          let oldmsg = c.messages;
-          oldmsg.push({ from: "self", msg: "you left" });
-          return { ...c, messages: oldmsg };
-        });
+        socket.disconnect();
       }
     };
   }, [
@@ -254,17 +250,42 @@ const MainClassLayout = ({ data, owner }) => {
   const handlePreview = e => {
     const previewFrame = document.getElementById("preview_iframe");
     var preview =  previewFrame.contentDocument || previewFrame.contentWindow.document;
+
     preview.open();
-    preview.write(colabstate.previewContent.html.content);
+    if(colabstate.previewContent.html.content !== null) {
+      preview.write(colabstate.previewContent.html.content);
+    }
     preview.close();
   };
+
+  let classNotification;
+  if(!colabstate.owner){
+    classNotification = (
+      <div class="alert alert-group alert-info alert-icon fixed-bottom w-25 left-10" role="alert">
+	<div class="alert-group-prepend"> 
+        <span class="alert-group-icon text-white">
+            <i className="fa fa-info-circle"></i>
+        </span>
+    </div>
+    <div class="alert-content">
+        <strong>Heads up!</strong> You cannot format the editors.
+    </div>
+	<div class="alert-action">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+    </div>
+</div>
+    );
+  }
 
 
 
   return (
     <div>
       <Preview previewBtnClicked={handlePreview} />
-      <Navigation classid={data.classroom_id} />
+      <Navigation name={name} />
+      {classNotification}
       <div style={{ width: "100%", height: "87vh" }}>
         <Convo
           inputValue={inputState.value}

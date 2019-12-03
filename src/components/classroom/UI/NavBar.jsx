@@ -5,7 +5,7 @@ function NavBar(props) {
         <div>
 <nav className="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-success">
     <div className="container">
-    <a className="navbar-brand" href="/w#">ClassRoom__name</a>
+<a className="navbar-brand" href="/w#">{props.name}</a>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-success" aria-controls="navbar-success" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
         </button>
@@ -15,13 +15,13 @@ function NavBar(props) {
                 <li className="nav-item">
                     <a className="nav-link nav-link-icon" href="/w#">
                         <i className="fa fa-star"></i>
-                        <span className="nav-link-inner--text d-lg-none">Favorites</span>
+                        <span className="nav-link-inner--text d-lg-none">Favorite</span>
                     </a>
                 </li>
                 <li className="nav-item">
                      <a className="nav-link nav-link-icon" href="/w#">
-                        <i className="fa fa-fire"></i>
-                        <span className="nav-link-inner--text d-lg-none">Another action</span>
+                        <i className="fa fa-info-circle"></i>
+                        <span className="nav-link-inner--text d-lg-none">Details</span>
                     </a>
                 </li>
                 <li className="nav-item dropdown">
@@ -30,10 +30,10 @@ function NavBar(props) {
                         <span className="nav-link-inner--text d-lg-none">Settings</span>
                     </a>
                     <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbar-success_dropdown_1">
-                        <a className="dropdown-item" href="/w#">Action</a>
-                        <a className="dropdown-item" href="/w#">Another action</a>
+                        <a className="dropdown-item" href="/w#">Leave</a>
+                        <a className="dropdown-item" href="/w#">Report classroom</a>
                         <div className="dropdown-divider"></div>
-                        <a className="dropdown-item" href="/w#">Something else here</a>
+                        <a className="dropdown-item" href="/w#">Alert Admin</a>
                     </div>
                 </li>
             </ul>
