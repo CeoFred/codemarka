@@ -65,6 +65,14 @@ const MainClassLayout = ({ data, owner, name }) => {
           oldmsg.push(msg);
           return { ...c, messages: oldmsg };
         });
+        if (colabstate.messages) {
+          const len = colabstate.messages.length;
+          const lastIndex = len - 1;
+
+          const lelem = document.getElementById(lastIndex);
+
+          lelem.scrollIntoView(false);
+        }
       });
 
       //listen for new messages
@@ -74,11 +82,8 @@ const MainClassLayout = ({ data, owner, name }) => {
             let oldmsg = c.messages;
             oldmsg.push(data);
             return { ...c, messages: oldmsg };
-          },
-          function(d) {
-            console.log(d);
-          }
-        );
+          });
+
         if (colabstate.messages) {
           const len = colabstate.messages.length;
           const lastIndex = len - 1;
@@ -90,12 +95,20 @@ const MainClassLayout = ({ data, owner, name }) => {
       });
 
       //listen for members leaving
-      socket.on("updatechat_left", (who, msg) => {
+      socket.on("updatechat_left", (msg) => {
         setColabState(c => {
           let oldmsg = c.messages;
-          oldmsg.push({ by: who, msg });
+          oldmsg.push(msg);
           return { ...c, messages: oldmsg };
         });
+        if (colabstate.messages) {
+          const len = colabstate.messages.length;
+          const lastIndex = len - 1;
+
+          const lelem = document.getElementById(lastIndex);
+
+          lelem.scrollIntoView(false);
+        }
       });
 
       // listen for classroom files
@@ -161,11 +174,8 @@ const MainClassLayout = ({ data, owner, name }) => {
     }
 
     return () => {
-      console.log("return function", inRoom);
       if (inRoom) {
-        console.log("Leaving room");
         socket.emit("leave", requestData);
-        socket.disconnect();
       }
     };
   }, [
@@ -242,7 +252,6 @@ const MainClassLayout = ({ data, owner, name }) => {
 
     //   }
     // }
-    console.log(emitObj);
   };
 
 

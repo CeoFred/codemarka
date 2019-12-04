@@ -36,7 +36,7 @@ export default function Layout(props) {
             <div className="modal-content bg-dark">
               <div className="modal-body">
                 <p className="text-sm text-white mb-3">
-                  We use cookies so that our themes work for you. By using our
+                  We use cookies so that our services works just fine for you. By using our
                   website, you agree to our use of cookies.
                 </p>
                 <Link

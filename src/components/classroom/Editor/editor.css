@@ -11,7 +11,7 @@ div.editors__container {
     max-width: 70%;
 }
 div.CodeMirror {
-    height:100vh;
+    height:87vh;
     padding-left:0;
     border-right: 13px solid gray;
 }

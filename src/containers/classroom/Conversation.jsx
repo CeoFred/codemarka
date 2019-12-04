@@ -16,18 +16,20 @@ export default function Conversation(props) {
  
 
  let messages = props.messages.map((m,i) => {
-   if((m.by).toLowerCase() === 'server' && m.type === 'sJoin'){
+   if((m.by).toLowerCase() === 'server' && m.type ){
      if(m.for === props.user){
        return (
          
        <div id={i} key={i}>
-       <span className="message__username text-info">You Joined</span>
+     <span className="message__username text-info">You
+      {m.type === 'mLeft' ? ' left' : ' Joined'}</span>
         </div>
        )
      }
      return (
        <div id={i} key={i}>
-      <span className="message__username text-info">{m.name} Joined</span>
+      <span className="message__username text-info">{m.name}
+       {m.type === 'mLeft' ? ' left' : ' Joined'}</span>
        </div>
      )
    } else if(m.by === 'server' && m.type === 'oldMsgUpdate'){

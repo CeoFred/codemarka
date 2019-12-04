@@ -33,7 +33,7 @@ div.message {
     height: auto;
     width: 100%;
     border:2px solid white;
-    margin-bottom: 10px;
+    margin-bottom: 13px;
     margin-top:10px;
     border-top-right-radius: 10px;
     position: relative;
@@ -48,7 +48,9 @@ span.message__username {
 }
 div.message_content {
     margin-left:10px;
-    font-size: 20px;
+    font-size: 15px;
+    color:#fff;
+    float:left;
 
 }
 /* div.message::after{

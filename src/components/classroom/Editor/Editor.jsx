@@ -39,7 +39,7 @@ export default function Editor(props) {
   editors = files.map((f,i) => {
 
     if(f.file === 'css'){
-      return (<div className="col-6 h-100vh pl-0 pr-0" key={i}>
+      return (<div className="col-6 h-100 pl-0 pr-0" key={i}>
         <CodeMirror  
         value={f.content}
          options={cssOptions} 
@@ -48,7 +48,7 @@ export default function Editor(props) {
     }
 
     if(f.file === 'html'){
-      return (<div className="col-6 h-100vh pl-0 pr-0" key={i}>
+      return (<div className="col-6 h-100 pl-0 pr-0" key={i}>
         <CodeMirror  
         value={f.content}
          options={htmlOptions} 
