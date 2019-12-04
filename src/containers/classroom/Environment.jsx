@@ -12,7 +12,6 @@ function Environment(props) {
   const dispatch = useDispatch();
   const { match: { params }  } = props;
   const classroomId = params.classroom;
-  console.log(props);
   const { onClassroomVerify } = props;
 
   const checking = (
@@ -53,7 +52,7 @@ function Environment(props) {
       return (
         <ColabLayout
           name={props.class_name}
-          owner={props.class_owner}
+          owner={props.class_owner === props.userid}
           data={colabstate}
         />
       );

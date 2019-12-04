@@ -25,6 +25,7 @@ const content = useRef(<Preloader />);
                return fetch(fetchTrendingClassroomsRequest)
             }
             fetchTrending().then(d => d.json()).then(rd => {
+                console.log(rd);
                 content.current = rd.data.map(tr => {
                     return (
 <div className="col-md-4" key={tr._id}>

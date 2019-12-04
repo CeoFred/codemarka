@@ -200,6 +200,7 @@ function NewClassroom(props) {
       formData.token = props.token;
   
       props.onCreate(formData);
+      console.log(formData);
     
     } else {
       setState({

@@ -30,7 +30,7 @@ const MainClassLayout = ({ data, owner, name }) => {
       html: null,
       css: null
     },
-    owner: owner === data.user_id
+    owner
   });
 
   const [inRoom, setInRoom] = useState(false);
@@ -259,7 +259,7 @@ const MainClassLayout = ({ data, owner, name }) => {
   };
 
   let classNotification;
-  if(!colabstate.owner){
+  if(!owner){
     classNotification = (
       <div class="alert alert-group alert-info alert-icon fixed-bottom w-25 left-10" role="alert">
 	<div class="alert-group-prepend"> 
@@ -297,7 +297,7 @@ const MainClassLayout = ({ data, owner, name }) => {
         />
 
         <Editor
-          readOnly={colabstate.owner}
+          readOnly={owner}
           handleEditorChange={(e, o, v, t) => editorChanged(e, o, v, t)}
           files={colabstate.editors}
         />
