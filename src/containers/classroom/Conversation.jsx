@@ -22,14 +22,14 @@ export default function Conversation(props) {
          
        <div id={i} key={i}>
      <span className="message__username text-info">You
-      {m.type === 'mLeft' ? ' left' : ' Joined'}</span>
+      {m.type === 'sLeft' ? ' left' : ' Joined'}</span>
         </div>
        )
      }
      return (
        <div id={i} key={i}>
       <span className="message__username text-info">{m.name}
-       {m.type === 'mLeft' ? ' left' : ' Joined'}</span>
+       {m.type === 'sLeft' ? ' left' : ' Joined'}</span>
        </div>
      )
    } else if(m.by === 'server' && m.type === 'oldMsgUpdate'){

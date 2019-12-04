@@ -13,7 +13,7 @@ function Environment(props) {
   const dispatch = useDispatch();
   const { match: { params }  } = props;
   const classroomId = params.classroom;
-  const { onClassroomVerify } = props;
+  const { onClassroomVerify, onClassroomSwitch } = props;
 
   const checking = (
     <div className="env--content--loading text-center">
@@ -36,28 +36,37 @@ function Environment(props) {
   });
 
   console.log(props);
-
+  const {class_verified, isAuthenticated} = props
   React.useEffect(() => {
-    dispatch(dispatchAppEnvironment("classroom"));
+      onClassroomSwitch("classroom")
+    if(!class_verified && isAuthenticated){
 
-    onClassroomVerify(colabstate.classroom_id);
+      onClassroomVerify(classroomId);
+
+      }
+
+
     return () => {
-      dispatch(dispatchAppEnvironment("regular"));
+      onClassroomSwitch("regular");
     };
-  }, [dispatch, colabstate.classroom_id, props, onClassroomVerify]);
+  });
 
   const getContent = () => {
+    
     if (!props.class_verified && !props.validation_error_message) {
       return checking;
     } else if (props.validation_error_message && !props.class_verified) {
     return (<Redirect to="/classError/notFound/"/>)
     }
-    else {
+    else if(props.isAuthenticated && props.class_verified && props.username && props.userid) {
       return (
         <ColabLayout
           name={props.class_name}
           owner={props.class_owner === props.userid}
           data={colabstate}
+          username={props.username}
+          userid={props.userid}
+          description={props.class_description}
         />
       );
     }
@@ -79,13 +88,16 @@ const mapStateToProps = ({ auth, classroom }) => {
     class_verified: classroom.validated,
     class_owner: classroom.owner,
     class_name: classroom.name,
-    validation_error_message: classroom.validation_error_message
+    validation_error_message: classroom.validation_error_message,
+    class_description: classroom.description
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onClassroomVerify: classroomid => dispatch(action.classVerify(classroomid))
+    onClassroomVerify: classroomid => dispatch(action.classVerify(classroomid)),
+    onClassroomSwitch: state => dispatch(dispatchAppEnvironment(state)),
+    
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Environment);

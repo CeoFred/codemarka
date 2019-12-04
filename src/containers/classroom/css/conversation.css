@@ -1,5 +1,5 @@
 div.conversation__container {
-    max-width:30%;
+    max-width: 30%;
     border-right: 1px solid grey;
     height: 100%;
     width: 30%;
@@ -7,9 +7,10 @@ div.conversation__container {
     float: left;
     position: relative;
 }
+
 div.input_container textarea.form-control {
     height: 50px;
-    outline:none;
+    outline: none;
     border-radius: 0px;
 }
 
@@ -17,24 +18,24 @@ div.input_container {
     width: 100%;
     position: absolute;
     bottom: 0;
-    left:0;
+    left: 0;
     height: 50px;
 }
 
 div.messages {
     position: absolute;
-    top:0;
+    top: 0;
     overflow-y: auto;
     height: 92%;
-    margin-bottom:70px;
+    margin-bottom: 70px;
 }
 
 div.message {
     height: auto;
     width: 100%;
-    border:2px solid white;
+    border: 2px solid white;
     margin-bottom: 13px;
-    margin-top:10px;
+    margin-top: 10px;
     border-top-right-radius: 10px;
     position: relative;
     animation: message 2s ease;
@@ -44,15 +45,19 @@ span.message__username {
     font-weight: bold;
     font-size: 15px;
     text-transform: lowercase;
-    margin-left:10px;
+    margin-left: 10px;
+    /* float: left; */
+    display: block;
 }
+
 div.message_content {
-    margin-left:10px;
+    margin-left: 10px;
     font-size: 15px;
-    color:#fff;
-    float:left;
+    color: #fff;
+    /* float: left; */
 
 }
+
 /* div.message::after{
     content: '';
     position: relative;
@@ -66,25 +71,27 @@ div.message_content {
         /* height: 0px; */
         opacity: 0.2;
     }
+
     to {
         /* height: auto; */
         opacity: 1;
 
     }
 }
+
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
+}
+
+/* Track */
+::-webkit-scrollbar-track {
     box-shadow: inset 0 0 5px grey;
     border-radius: 10px;
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
     background: #fff;
     border-radius: 10px;
-  }
+}

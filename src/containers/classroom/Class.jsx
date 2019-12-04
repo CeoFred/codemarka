@@ -5,7 +5,7 @@ import Navigation from "../../components/classroom/UI/NavBar";
 import Convo from "./Conversation";
 import Editor from "../../components/classroom/Editor/Editor";
 import Preview from "../../components/classroom/Editor/Preview";
-import Alert from "../../components/Partials/Alert/Alert";
+import Seo from "../../components/SEO/helmet";
 
 import "./css/Environment.css";
 
@@ -16,7 +16,7 @@ const host =
 
 const socket = io(`${host}classrooms`);
 
-const MainClassLayout = ({ data, owner, name }) => {
+const MainClassLayout = ({ data, owner, name, description ,username, userid}) => {
   const [inputState, setInputState] = useState({
     value: "",
     isFocused: false,
@@ -38,8 +38,8 @@ const MainClassLayout = ({ data, owner, name }) => {
   React.useEffect(() => {
     const requestData = {
       classroom_id: data.classroom_id,
-      userId: data.user_id,
-      username: data.username
+      userId: userid,
+      username
     };
 
     if (inRoom !== true && inRoom !== null) {
@@ -181,9 +181,9 @@ const MainClassLayout = ({ data, owner, name }) => {
   }, [
     colabstate.owner,
     colabstate.messages,
-    data.username,
+    username,
     data.classroom_id,
-    data.user_id,
+    userid,
     inRoom,
     colabstate.username,
     colabstate.classroom_id
@@ -205,7 +205,7 @@ const MainClassLayout = ({ data, owner, name }) => {
     });
 
     const msg_data = {
-      user: data.user_id,
+      user: userid,
       class: data.classroom_id,
       message: inputState.value
     };
@@ -296,13 +296,14 @@ const MainClassLayout = ({ data, owner, name }) => {
       <Navigation name={name} />
       {classNotification}
       <div style={{ width: "100%", height: "87vh" }}>
+        <Seo title={`${name} :: colab classroom`} description={description}/>
         <Convo
           inputValue={inputState.value}
           handleInputChange={handleInputChange}
           sendMessage={e => handleMessageSubmit(e)}
           focused={inputState.isFocused}
           messages={colabstate.messages}
-          user={data.user_id}
+          user={userid}
         />
 
         <Editor
