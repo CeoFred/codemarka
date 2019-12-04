@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, connect } from "react-redux";
 
+import { Redirect } from "react-router-dom";
 import * as action from "../../store/actions/";
 import { dispatchAppEnvironment } from "../../store/actions/app";
 
@@ -48,7 +49,10 @@ function Environment(props) {
   const getContent = () => {
     if (!props.class_verified && !props.validation_error_message) {
       return checking;
-    } else {
+    } else if (props.validation_error_message && !props.class_verified) {
+    return (<Redirect to="/classError/notFound/"/>)
+    }
+    else {
       return (
         <ColabLayout
           name={props.class_name}
