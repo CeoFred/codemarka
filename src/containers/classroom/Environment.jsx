@@ -10,10 +10,9 @@ import ColabLayout from "./Class";
 
 function Environment(props) {
   const dispatch = useDispatch();
-  const {
-    match: { params }
-  } = props;
+  const { match: { params }  } = props;
   const classroomId = params.classroom;
+  console.log(props);
   const { onClassroomVerify } = props;
 
   const checking = (
