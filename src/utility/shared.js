@@ -1,3 +1,5 @@
+import {isFuture} from "date-fns";
+
 export const fetch  = (url='',method='GET',data={}) => {
     
 return fetch(url,{
@@ -41,6 +43,9 @@ if(rules.minLength){
 
 if(rules.maxlength){
     isValid = value.length <= rules.maxlength && isValid;
+}
+if(rules.isFutureDate){
+    isValid = isFuture(value) && isValid;
 }
 return isValid;
 

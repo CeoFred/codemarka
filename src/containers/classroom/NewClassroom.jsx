@@ -56,7 +56,8 @@ function NewClassroom(props) {
         },
         value: "",
         validation: {
-          required: true
+          required: true,
+          isFutureDate: true
           // minLength: 3
         },
         valid: false,
