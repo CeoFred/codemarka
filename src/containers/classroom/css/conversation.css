@@ -27,7 +27,7 @@ div.messages {
     top: 0;
     overflow-y: auto;
     height: 92%;
-    margin-bottom: 70px;
+    /* margin-bottom: 70px; */
 }
 
 div.message {
@@ -47,7 +47,6 @@ span.message__username {
     text-transform: lowercase;
     margin-left: 10px;
     /* float: left; */
-    display: block;
 }
 
 div.message_content {

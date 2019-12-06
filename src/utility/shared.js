@@ -45,7 +45,7 @@ if(rules.maxlength){
     isValid = value.length <= rules.maxlength && isValid;
 }
 if(rules.isFutureDate){
-    isValid = isFuture(value) && isValid;
+    isValid = isFuture(new Date(value)) && isValid;
 }
 return isValid;
 

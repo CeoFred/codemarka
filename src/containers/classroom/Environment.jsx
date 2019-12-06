@@ -52,8 +52,11 @@ function Environment(props) {
   });
 
   const getContent = () => {
-    
+    if(!props.isAuthenticated && props.authState === 'done' ){
+        return (<Redirect to={`/auth/signin?authCheck=failed&redir=/c/classroom/${classroomId}`}/>)
+      }
     if (!props.class_verified && !props.validation_error_message) {
+      
       return checking;
     } else if (props.validation_error_message && !props.class_verified) {
     return (<Redirect to="/classError/notFound/"/>)
@@ -89,7 +92,9 @@ const mapStateToProps = ({ auth, classroom }) => {
     class_owner: classroom.owner,
     class_name: classroom.name,
     validation_error_message: classroom.validation_error_message,
-    class_description: classroom.description
+    class_description: classroom.description,
+    authState: auth.authState
+
   };
 };
 

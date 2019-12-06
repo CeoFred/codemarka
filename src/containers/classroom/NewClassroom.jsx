@@ -58,7 +58,6 @@ function NewClassroom(props) {
         validation: {
           required: true,
           isFutureDate: true
-          // minLength: 3
         },
         valid: false,
         touched: false
@@ -73,7 +72,6 @@ function NewClassroom(props) {
         value: "",
         validation: {
           required: true
-          // minLength: 3
         },
         valid: false,
         touched: false

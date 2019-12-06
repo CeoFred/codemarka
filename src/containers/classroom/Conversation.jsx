@@ -20,22 +20,24 @@ export default function Conversation(props) {
      if(m.for === props.user){
        return (
          
-       <div id={i} key={i}>
+       <div key={m.msgId} id={m.msgId}>
      <span className="message__username text-info">You
       {m.type === 'sLeft' ? ' left' : ' Joined'}</span>
         </div>
        )
      }
      return (
-       <div id={i} key={i}>
+       <div key={m.msgId} id={m.msgId}>
       <span className="message__username text-info">{m.name}
        {m.type === 'sLeft' ? ' left' : ' Joined'}</span>
        </div>
      )
    } else if(m.by === 'server' && m.type === 'oldMsgUpdate'){
       return(
-        <div className="message" key={i} id={i}>
+        <div className="message" key={m.msgId} id={m.msgId}>
       <span className="message__username text-highlight-primary">{m.by === props.user ? 'You' : m.name}</span>
+      <span className="float-right text-neutral text-sm">{m.timeSent}</span>
+
      <div className="message_content">{m.msg}</div>
     </div>
       )
@@ -43,10 +45,14 @@ export default function Conversation(props) {
    
    else {
     return (
-      <div className="message" key={i} id={i}>
+      <div className="message" key={m.msgId} id={m.msgId}>
       <span className="message__username text-highlight-primary">{m.by === props.user ? 'You' : m.name}</span>
+          <span className="float-right text-neutral text-sm">{m.timeSent}</span>
+   
      <div className="message_content">{m.msg}</div>
     </div>
+
+
      )
    }
       

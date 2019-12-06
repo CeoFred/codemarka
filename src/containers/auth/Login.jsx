@@ -59,7 +59,7 @@ const emailIconSvg = (
 
 function Login(props) {
   const {onResetAll} = props;
-
+  console.log(props);
   useEffect(() => {
   
     return () => {
@@ -133,7 +133,14 @@ function Login(props) {
 let redct;
 
 if(props.isAuthenticated){
+  const host = window.location.href;
+  let url = new URLSearchParams(host);
+  let redirectPath = url.get("redir");
+  if(redirectPath){
+    redct = <Redirect to={`${redirectPath}`}/>
+  } else {
     redct = <Redirect to='/'/>
+  }
 }
 
   return (
@@ -219,7 +226,7 @@ const mapStateToProps = state => {
     loading: state.auth.loading,
     error: state.auth.message,
     isAuthenticated: state.auth.user.token !== null,
-    message: state.auth.message
+    message: state.auth.message,
   }
 }
 

@@ -195,7 +195,7 @@ export function* autoLoginUserSaga() {
 
         }
     } else {
-        yield put(actions.autoAuthAborted('Token and userid not found'))
+        yield put(actions.autoAuthFailed('Token and userid not found'))
 
     }
 

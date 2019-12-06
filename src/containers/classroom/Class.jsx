@@ -68,8 +68,8 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
         if (colabstate.messages) {
           const len = colabstate.messages.length;
           const lastIndex = len - 1;
-
-          const lelem = document.getElementById(lastIndex);
+          const ele = colabstate.messages[lastIndex].msgId
+          const lelem = document.getElementById(ele);
 
           lelem.scrollIntoView(false);
         }
@@ -88,7 +88,9 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
           const len = colabstate.messages.length;
           const lastIndex = len - 1;
 
-          const lelem = document.getElementById(lastIndex);
+
+          const ele = colabstate.messages[lastIndex].msgId
+          const lelem = document.getElementById(ele);
 
           lelem.scrollIntoView(false);
         }
@@ -141,27 +143,37 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       //listen to file changes
       socket.on("class_files_updated", ({ id, file, content }) => {
 
+        
         if (colabstate.owner) {
           // user owns the class, has the current state, no need to update Editor
           // rather update the preview content which has no listners or cause anny
           // side effect.
 
           setColabState(c => {
-            return {
+            // check preview states
+            if(c.previewContent[file].content !== content){
+              return {
               ...c,
               previewContent: { ...c.previewContent, [file]: { content, id } }
             };
+            }else {
+              return {...c};
+            }          
           });
 
-        } else {
 
+        } else {
 
           setColabState(c => {
             let oldFiles;
             c.editors.forEach((element, i) => {
               if (element.file === file && element.id === id) {
                 console.log(element);
-
+                if(element.content === content){
+                  console.log('same')
+                } else {
+                  console.log('not same');
+                }
                 oldFiles = c.editors;
                 oldFiles[i].content = content;
               }
@@ -229,6 +241,15 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       user: data.user_id,
       id: fid
     };
+     
+        if (colabstate.owner) {
+          setColabState(c => {           
+            return {
+              ...c,
+              previewContent: { ...c.previewContent, [t]: { content:v, id:fid } }
+            };
+          });
+        }
 
     if(o.origin === '+input'){
       if((o.text[0]).trim() !== '' && ((o.text[0]).trim()).length === 1){
