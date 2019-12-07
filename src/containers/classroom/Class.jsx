@@ -107,7 +107,8 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
           const len = colabstate.messages.length;
           const lastIndex = len - 1;
 
-          const lelem = document.getElementById(lastIndex);
+          const ele = colabstate.messages[lastIndex].msgId
+          const lelem = document.getElementById(ele);
 
           lelem.scrollIntoView(false);
         }
@@ -144,28 +145,11 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       socket.on("class_files_updated", ({ id, file, content }) => {
 
         
-        if (colabstate.owner) {
-          // user owns the class, has the current state, no need to update Editor
-          // rather update the preview content which has no listners or cause anny
-          // side effect.
-
           setColabState(c => {
             // check preview states
             if(c.previewContent[file].content !== content){
-              return {
-              ...c,
-              previewContent: { ...c.previewContent, [file]: { content, id } }
-            };
-            }else {
-              return {...c};
-            }          
-          });
-
-
-        } else {
-
-          setColabState(c => {
-            let oldFiles;
+              console.log('not same');
+              let oldFiles;
             c.editors.forEach((element, i) => {
               if (element.file === file && element.id === id) {
                 console.log(element);
@@ -178,10 +162,18 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
                 oldFiles[i].content = content;
               }
             });
-            return { ...c, editors: oldFiles,
-              previewContent:{...c.previewContent,[file]:{content,id}} };
+              return {
+              ...c,
+              editors: oldFiles,
+              previewContent: { ...c.previewContent, [file]: { content, id } }
+            };
+            }else {
+              console.log('same');
+              return {...c};
+            }          
           });
-        }
+
+
       });
     }
 
@@ -241,19 +233,18 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       user: data.user_id,
       id: fid
     };
-     
-        if (colabstate.owner) {
-          setColabState(c => {           
+
+            setColabState(c => {           
             return {
               ...c,
               previewContent: { ...c.previewContent, [t]: { content:v, id:fid } }
             };
-          });
-        }
-
+          });    
+     
+    
     if(o.origin === '+input'){
       if((o.text[0]).trim() !== '' && ((o.text[0]).trim()).length === 1){
-      socket.emit("editorChanged", emitObj);
+        socket.emit("editorChanged", emitObj);
       }
     }
 
@@ -262,6 +253,8 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
         socket.emit("editorChanged", emitObj);
       }
     }
+
+    console.log('editor changed');
 
     // if(o.origin === 'cut' && o.removed[0] !== ""){
     //   socket.emit("editorChanged", emitObj);
