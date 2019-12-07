@@ -10,7 +10,7 @@ export const CLASSROOMS = '/classrooms/locale/all'
 export const JOIN_CLASSROOM = '/classrooms/join/:classroom'
 export const CLASSROOM = '/c/classroom/:classroom'
 export const CLASSROOM_NEW = '/classroom/create'
-
+export const PROTECTED_CLASSROOM_PREVIEW = '/c/classroom/preview/:classroomId'
 
 // Authentication
 export const AUTH_SIGN_IN  = '/auth/signin';

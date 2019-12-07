@@ -202,7 +202,8 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
   const handleMessageSubmit = e => {
     e.preventDefault();
 
-    setInputState({
+    if(inputState.value !== ''){
+      setInputState({
       ...inputState,
       lastSentMessage: e.target.value,
       value: ""
@@ -214,6 +215,8 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       message: inputState.value
     };
     socket.emit("newMessage", msg_data);
+    }
+    
   };
 
 

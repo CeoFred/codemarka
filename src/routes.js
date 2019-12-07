@@ -17,6 +17,8 @@ const ForgotPassword = React.lazy(() => import('./containers/auth/ForgotPassword
 const ChangePassword = React.lazy(() => import('./containers/auth/ChangePassword'));
 const NotFound = React.lazy(() => import('./containers/public/404'));
 
+
+const ClassRoomPreview = React.lazy(() => import('./containers/classroom/ClassroomPreview'));
 const Routes = (props) => {
   useEffect(() => {
     if(!props.isAutheticated){
@@ -31,6 +33,7 @@ const Routes = (props) => {
 <Route exact component={Register} path={url.AUTH_SIGN_UP} />
 <Route exact component={ForgotPassword} path={url.AUTH_FORGOT_PASSWORD} />
 <Redirect from={url.CLASSROOMS} to={url.AUTH_SIGN_IN} />
+<Route exact component={ClassRoomPreview} path={url.PROTECTED_CLASSROOM_PREVIEW}/>
 <Route exact component={classrooom} path={url.CLASSROOM} />
 <Route component={NotFound} />
 
@@ -48,6 +51,7 @@ const Routes = (props) => {
 <Redirect from={url.CLASSROOMS} to={url.AUTH_SIGN_IN} />
 <Route exact component={Login} path={url.AUTH_SIGN_IN} />
 <Route exact component={Register} path={url.AUTH_SIGN_UP} />
+<Route exact component={ClassRoomPreview} path={url.PROTECTED_CLASSROOM_PREVIEW}/>
 <Route component={NotFound} />
   </Switch>
         )
