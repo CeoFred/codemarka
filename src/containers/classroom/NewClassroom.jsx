@@ -248,7 +248,7 @@ function NewClassroom(props) {
   );
 
   if(props.classroom){
-    return (<Redirect to={`/c/classroom/${props.classroom}`}/>)
+    return (<Redirect to={`/c/classroom/setup/${props.classroom}`}/>)
   }
 
   return (
