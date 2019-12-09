@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch, connect } from "react-redux";
+import { connect } from "react-redux";
 
 import { Redirect } from "react-router-dom";
 import * as action from "../../store/actions/";
@@ -10,7 +10,6 @@ import "../../components/classroom/Editor/editor.css";
 import ColabLayout from "./Class";
 
 function Environment(props) {
-  const dispatch = useDispatch();
   const { match: { params }  } = props;
   const classroomId = params.classroom;
   const { onClassroomVerify, onClassroomSwitch } = props;
@@ -97,6 +96,18 @@ const mapStateToProps = ({ auth, classroom }) => {
 
   };
 };
+
+
+
+
+
+
+
+
+
+
+
+
 
 const mapDispatchToProps = dispatch => {
   return {

@@ -1,23 +1,68 @@
 import React from "react";
+import { connect } from "react-redux";
 
- const ClassroomPreview = () => {
+// import { Redirect } from "react-router-dom";
+// import * as action from "../../store/actions/";
+import { dispatchAppEnvironment } from "../../store/actions/app";
+
+import ColabClassPreviewLayout from "./ColabClassPreviewLayout.jsx";
+
+import "./css/preview.css";
+
+ const ClassroomPreview = (props) => {
+    //  const { match: { params }  } = props;
+  // const classroomId = params.classroom;
+  const { onClassroomSwitch } = props;
+
+  const checking = (
+    <div className="env--content--loading text-center">
+      <div
+        className="spinner-grow"
+        style={{ width: "3rem", height: "3rem", background: "grey" }}
+        role="status"
+      >
+        <span className="sr-only">Loading...</span>
+      </div>
+      <div style={{ marginTop: "5" }}>Two Seconds..</div>
+    </div>
+  );
+
+  React.useEffect(() => {
+      onClassroomSwitch("classroom")
+
+    return () => {
+      onClassroomSwitch("regular");
+    };
+  });
+
+  
+  const getContent = () => {
+    
+      return (
+        <ColabClassPreviewLayout
+
+        />
+      );
+  };
   return(
     <React.Fragment>
-       <div class="container-fluid container-docs">
-    <nav class="sidenav navbar navbar-vertical navbar-expand-xs navbar-light bg-white" id="sidenav-main">
-     sidenav
-     
-    </nav>
-    <div class="main-content row position-relative pb-5">
-      <div class="col-xl-9 docs-content pb-5">
-       
-      content
-      </div>
-    </div>
-  </div>
+      {getContent()}
     </React.Fragment>
   )
 }
 
+const mapStateToProps = ({ auth, classroom }) => {
+  return {
 
-export default ClassroomPreview;
+  };
+};
+
+
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onClassroomSwitch: state => dispatch(dispatchAppEnvironment(state)),
+    
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ClassroomPreview);
