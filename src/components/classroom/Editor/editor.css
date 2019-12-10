@@ -5,13 +5,14 @@
 div.editors__container {
     height: 100%;
     float: left;
-     width: 70%;
+    width: 80%;
     height: 100%;
     position: relative;
-    max-width: 70%;
+    max-width: 80%;
 }
+
 div.CodeMirror {
-    height:87vh;
-    padding-left:0;
+    height: 87vh;
+    padding-left: 0;
     border-right: 13px solid gray;
 }

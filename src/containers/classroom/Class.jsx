@@ -115,7 +115,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       });
 
       // listen for classroom files
-      socket.on("class_files", (css, html) => {
+      socket.on("class_files", (css, html, js) => {
 
         // set editor state
         setColabState(c => {
@@ -123,7 +123,8 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
             ...c,
             editors: [
               { file: "css", ...css },
-              { file: "html", ...html }
+              { file: "html", ...html },
+              {file: "js",...js}
             ]
           };
         });
@@ -134,7 +135,8 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
             ...c,
             previewContent: {
               html,
-              css
+              css,
+              js
             }
           };
         });
@@ -142,12 +144,12 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       });
 
       //listen to file changes
-      socket.on("class_files_updated", ({ id, file, content }) => {
+      socket.on("class_files_updated", ({ id, file, content ,editedBy}) => {
 
         
           setColabState(c => {
             // check preview states
-            if(c.previewContent[file].content !== content){
+            if(editedBy !== userid) {
               console.log('not same');
               let oldFiles;
             c.editors.forEach((element, i) => {
@@ -234,7 +236,8 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       content: v,
       class: data.classroom_id,
       user: data.user_id,
-      id: fid
+      id: fid,
+      editedBy: userid
     };
 
             setColabState(c => {           
@@ -276,10 +279,41 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
   const handlePreview = e => {
     const previewFrame = document.getElementById("preview_iframe");
     var preview =  previewFrame.contentDocument || previewFrame.contentWindow.document;
+    let styles, html , script;
 
+    styles = colabstate.previewContent.css.content;
+    html = colabstate.previewContent.html.content;
+    script = colabstate.previewContent.js.content;
+
+    
+    const skeleton =  `
+    <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Class preview on colab</title>
+    <style>
+    ${styles}
+    </style>
+    </head>
+
+<body>
+${html}
+
+
+<script>
+${script}
+</script>
+</body>
+</html>
+    `
+    console.log(skeleton);
     preview.open();
-    if(colabstate.previewContent.html.content !== null) {
-      preview.write(colabstate.previewContent.html.content);
+    if(styles && html && script) {
+      preview.write(skeleton);
     }
     preview.close();
   };

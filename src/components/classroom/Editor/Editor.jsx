@@ -33,13 +33,21 @@ export default function Editor(props) {
     lineWrapping:true
   }
 
+  const jsOptions = {
+    lineNumbers: true,
+    mode : 'javascript',
+    theme: 'dracula', 
+    readOnly: props.readOnly ? false : "nocursor" ,
+    pollInterval:3000,
+    lineWrapping:true
+  }
   let editors ;
 
   const {files} = props;
   editors = files.map((f,i) => {
 
     if(f.file === 'css'){
-      return (<div className="col-6 h-100 pl-0 pr-0" key={i}>
+      return (<div className="col-4 h-100 pl-0 pr-0" key={i}>
         <CodeMirror  
         value={f.content}
          options={cssOptions} 
@@ -48,11 +56,21 @@ export default function Editor(props) {
     }
 
     if(f.file === 'html'){
-      return (<div className="col-6 h-100 pl-0 pr-0" key={i}>
+      return (<div className="col-4 h-100 pl-0 pr-0" key={i}>
         <CodeMirror  
         value={f.content}
          options={htmlOptions} 
          onChange={(e,ob,v) => props.handleEditorChange(e,ob,v,'html')}
+         />
+        </div>)
+    }
+
+    if(f.file === 'js'){
+      return (<div className="col-4 h-100 pl-0 pr-0" key={i}>
+        <CodeMirror  
+        value={f.content}
+         options={jsOptions} 
+         onChange={(e,ob,v) => props.handleEditorChange(e,ob,v,'js')}
          />
         </div>)
     }

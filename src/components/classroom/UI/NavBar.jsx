@@ -1,17 +1,29 @@
-import React from 'react'
+import React from 'react';
+import {Link} from 'react-router-dom'
 
+import logo from '../../../media/images/colab-04.png'
+
+const savebtn = {
+    position:'relative',
+    top: '15%',
+    border: '2px solid #e22baa'
+}
 function NavBar(props) {
     return (
         <div>
-<nav className="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-success">
+<nav className="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-dark">
     <div className="container">
-<a className="navbar-brand" href="/w#">{props.name}</a>
+        <Link className="navbar-brand" to="/"><img height="30px" src={logo } alt='logo'/></Link>
+<span className="navbar-brand">{props.name}</span>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-success" aria-controls="navbar-success" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbar-success">
             
             <ul className="navbar-nav ml-lg-auto">
+                <li className="nav-item">
+                        <button style={savebtn} className="btn btn-outline-light btn-sm">Save</button>
+                </li>
                 <li className="nav-item">
                     <a className="nav-link nav-link-icon" href="/w#">
                         <i className="fa fa-star"></i>
@@ -30,8 +42,8 @@ function NavBar(props) {
                         <span className="nav-link-inner--text d-lg-none">Settings</span>
                     </a>
                     <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbar-success_dropdown_1">
-                        <a className="dropdown-item" href="/w#">Leave</a>
-                        <a className="dropdown-item" href="/w#">Report classroom</a>
+                        <a className="dropdown-item" href="/">Leave</a>
+                        <a className="dropdown-item" href="/classroom/report/:classid">Report classroom</a>
                         <div className="dropdown-divider"></div>
                         <a className="dropdown-item" href="/w#">Alert Admin</a>
                     </div>

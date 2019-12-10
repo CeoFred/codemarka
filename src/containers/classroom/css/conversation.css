@@ -1,8 +1,7 @@
 div.conversation__container {
-    max-width: 30%;
-    border-right: 1px solid grey;
+    max-width: 20%;
     height: 100%;
-    width: 30%;
+    width: 20%;
     max-height: 100%;
     float: left;
     position: relative;
