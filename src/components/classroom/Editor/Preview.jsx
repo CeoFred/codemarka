@@ -19,6 +19,10 @@ export default function Preview(props) {
             </div>
         </div>
     </div>
+    
+<button type="button" onClick={props.openPreviewInNewTab}  className="open_new_tab_btn" >
+        <i className="fa fa-external-link-square-alt fa-3x"></i>
+      </button>
 </div>
         </div>
     )

@@ -22,7 +22,14 @@ function NavBar(props) {
             
             <ul className="navbar-nav ml-lg-auto">
                 <li className="nav-item">
-                        <button style={savebtn} className="btn btn-outline-light btn-sm">Save</button>
+                        <button style={savebtn} className="btn btn-outline-light btn-sm">Save <i className="fa fa-file-download"></i></button>
+                </li>
+                 <li className="nav-item">
+                    <span className="nav-link nav-link-icon" >
+                        <i className="fa fa-users"></i>
+                        <span className="nav-link-inner--text d-lg-none">Participants</span>
+                    </span>
+
                 </li>
                 <li className="nav-item">
                     <a className="nav-link nav-link-icon" href="/w#">
