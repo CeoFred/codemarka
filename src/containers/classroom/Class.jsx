@@ -149,17 +149,10 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
         
           setColabState(c => {
             // check preview states
-            if(editedBy !== userid) {
-              console.log('not same');
+            if(editedBy !== userid){
               let oldFiles;
             c.editors.forEach((element, i) => {
               if (element.file === file && element.id === id) {
-                console.log(element);
-                if(element.content === content){
-                  console.log('same')
-                } else {
-                  console.log('not same');
-                }
                 oldFiles = c.editors;
                 oldFiles[i].content = content;
               }
@@ -170,7 +163,6 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
               previewContent: { ...c.previewContent, [file]: { content, id } }
             };
             }else {
-              console.log('same');
               return {...c};
             }          
           });
@@ -278,44 +270,53 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
 
   const handlePreview = e => {
     const previewFrame = document.getElementById("preview_iframe");
-    var preview =  previewFrame.contentDocument || previewFrame.contentWindow.document;
+    // var preview =  previewFrame.contentDocument || previewFrame.contentWindow.document;
     let styles, html , script;
 
     styles = colabstate.previewContent.css.content;
     html = colabstate.previewContent.html.content;
     script = colabstate.previewContent.js.content;
 
-    
-    const skeleton =  `
-    <!DOCTYPE html>
-<html lang="en">
+    const getGeneratedPageURL = ({ html, css, js }) => {
+  const getBlobURL = (code, type) => {
+    const blob = new Blob([code], { type })
+    return URL.createObjectURL(blob)
+  }
 
-<head>
+  const cssURL = getBlobURL(css, 'text/css')
+  const jsURL = getBlobURL(js, 'text/javascript')
+
+  const source = `
+    <html>
+      <head>
+<html lang="en">
+      
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Class preview on colab</title>
-    <style>
-    ${styles}
-    </style>
-    </head>
+        ${css && `<link rel="stylesheet" type="text/css" href="${cssURL}" />`}
+        ${js && `<script src="${jsURL}"></script>`}
+      </head>
+      <body>
+        ${html || ''}
+      </body>
+    </html>
+  `
 
-<body>
-${html}
+  return getBlobURL(source, 'text/html')
+}
+
+const url = getGeneratedPageURL({
+  html,
+  css:styles,
+  js: script
+})
 
 
-<script>
-${script}
-</script>
-</body>
-</html>
-    `
-    console.log(skeleton);
-    preview.open();
     if(styles && html && script) {
-      preview.write(skeleton);
+      previewFrame.src = url
+
     }
-    preview.close();
   };
 
   let classNotification;
