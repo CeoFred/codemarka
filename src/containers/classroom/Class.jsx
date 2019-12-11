@@ -317,6 +317,7 @@ const url = getGeneratedPageURL({
       previewFrame.src = url
 
     }
+    
   };
 
   let classNotification;
@@ -344,7 +345,7 @@ const url = getGeneratedPageURL({
 
   return (
     <div>
-      <Preview previewBtnClicked={handlePreview} />
+      <Preview previewBtnClicked={handlePreview} classroomid={data.classroom_id}/>
       <Navigation name={name} />
       {classNotification}
       <div style={{ width: "100%", height: "87vh" }}>

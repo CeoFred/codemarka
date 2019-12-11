@@ -17,6 +17,7 @@ const ForgotPassword = React.lazy(() => import('./containers/auth/ForgotPassword
 const ChangePassword = React.lazy(() => import('./containers/auth/ChangePassword'));
 const NotFound = React.lazy(() => import('./containers/public/404'));
 
+const classPreviewNewTab = React.lazy(() => import('./containers/classroom/classPreviewNewTab'))
 
 const ClassRoomPreview = React.lazy(() => import('./containers/classroom/ClassroomPreview'));
 const Routes = (props) => {
@@ -35,6 +36,7 @@ const Routes = (props) => {
 <Redirect from={url.CLASSROOMS} to={url.AUTH_SIGN_IN} />
 <Route exact component={ClassRoomPreview} path={url.PROTECTED_CLASSROOM_PREVIEW}/>
 <Route exact component={classrooom} path={url.CLASSROOM} />
+<Route exact component={classPreviewNewTab} path={url.CLASSROOM_PREVIEW_NEW_TAB}/>
 <Route component={NotFound} />
 
         </Switch>
@@ -52,6 +54,7 @@ const Routes = (props) => {
 <Route exact component={Login} path={url.AUTH_SIGN_IN} />
 <Route exact component={Register} path={url.AUTH_SIGN_UP} />
 <Route exact component={ClassRoomPreview} path={url.PROTECTED_CLASSROOM_PREVIEW}/>
+<Route exact component={classPreviewNewTab} path={url.CLASSROOM_PREVIEW_NEW_TAB}/>
 <Route component={NotFound} />
   </Switch>
         )
