@@ -98,8 +98,8 @@ const url = getGeneratedPageURL({
   }
   render() {
     return (
-        <div>
-      <iframe id="tabpreviewframe" style={{height:'100%',width:'100%'}} title='classpreview'></iframe>
+        <div className="h-100vh w-100">
+      <iframe id="tabpreviewframe" className="w-100 h-100" title='classpreview'></iframe>
     </div>
     )
   }
