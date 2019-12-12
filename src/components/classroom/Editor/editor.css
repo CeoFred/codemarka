@@ -4,11 +4,11 @@
 
 div.editors__container {
     height: 100%;
-    float: left;
-    width: 80%;
+    /* float: left; */
+    /* width: 80%; */
     height: 100%;
-    position: relative;
-    max-width: 80%;
+    /* position: relative; */
+    /* max-width: 80%; */
 }
 
 div.CodeMirror {

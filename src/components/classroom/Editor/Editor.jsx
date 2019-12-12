@@ -78,7 +78,7 @@ export default function Editor(props) {
   })
     return (
       <div className="editors__container">
-      <div className="row h-100">
+      <div className="row h-100 p-0 m-0">
         {editors}
       </div>
       </div>

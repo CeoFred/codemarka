@@ -346,10 +346,14 @@ const url = getGeneratedPageURL({
   return (
     <div>
       <Preview previewBtnClicked={handlePreview} classroomid={data.classroom_id}/>
-      <Navigation name={name} />
       {classNotification}
+      <Navigation name={name} />
+
       <div style={{ width: "100%", height: "87vh" }}>
-        <Seo title={`${name} :: colab classroom`} description={description}/>
+        <div className="container-fluid ">
+          <div className="row">
+            <div className="col-2 p-0">
+    <Seo title={`${name} :: colab classroom`} description={description}/>
         <Convo
           inputValue={inputState.value}
           handleInputChange={handleInputChange}
@@ -358,12 +362,19 @@ const url = getGeneratedPageURL({
           messages={colabstate.messages}
           user={userid}
         />
-
-        <Editor
+            </div>
+            <div className="col-10 p-0">
+<Editor
           readOnly={owner}
           handleEditorChange={(e, o, v, t) => editorChanged(e, o, v, t)}
           files={colabstate.editors}
         />
+            </div>
+          </div>
+        </div>
+        
+
+        
       </div>
     </div>
   );
