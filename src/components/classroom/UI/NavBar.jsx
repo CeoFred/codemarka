@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link} from 'react-router-dom'
 
 import logo from '../../../media/images/colab-04.png'
 
@@ -13,7 +12,7 @@ function NavBar(props) {
         <div>
 <nav className="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-dark">
     <div className="container">
-        <Link className="navbar-brand" to="/"><img height="30px" src={logo } alt='logo'/></Link>
+        <a className="navbar-brand" href="/"><img height="30px" src={logo } alt='codemarka_logo'/></a>
 <span className="navbar-brand">{props.name}</span>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-success" aria-controls="navbar-success" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>

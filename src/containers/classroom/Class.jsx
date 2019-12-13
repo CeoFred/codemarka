@@ -174,6 +174,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
     return () => {
       if (inRoom) {
         socket.emit("leave", requestData);
+        setInRoom(false);
       }
     };
   }, [
