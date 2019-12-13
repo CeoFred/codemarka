@@ -75,7 +75,12 @@ export function* authRegisterUserSaga({ email, password, username }) {
 
 
     } catch ({ message }) {
-        yield put(actions.authRegisterFailed(message));
+        if(message && message === 'Failed to fetch'){
+            yield put(actions.authRegisterFailed('Whoops! Newtwork error!'))
+        } else {
+        yield put(actions.authRegisterFailed('Opps! Something went wrong'));
+
+            }
     }
 
 
@@ -130,7 +135,12 @@ export function* authLoginUserSaga({ email, password }) {
         }
 
     } catch ({ message }) {
-        yield put(actions.authLoginFailed(message));
+        if(message && message === 'Failed to fetch'){
+            yield put(actions.authLoginFailed('Whoops! Newtwork error!'))
+        } else {
+        yield put(actions.authLoginFailed('Opps! Something went wrong'));
+
+            }
     }
 
 

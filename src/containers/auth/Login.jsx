@@ -25,41 +25,22 @@ const initialPrependsvg = (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    class="feather feather-key"
+    className="feather feather-key"
   >
     <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
   </svg>
 );
 
-const finalAppendsvg = (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="1em"
-    height="1em"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    class="feather feather-eye"
-  >
-    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-    <circle cx="12" cy="12" r="3" />
-  </svg>
-);
-
 const emailIconSvg = (
-  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-at-sign">
+  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-at-sign">
   <circle cx="12" cy="12" r="4"></circle>
   <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94">
   </path>
   </svg>
-)
+);
 
 function Login(props) {
   const {onResetAll} = props;
-  console.log(props);
   useEffect(() => {
   
     return () => {
@@ -162,6 +143,7 @@ if(props.isAuthenticated){
               <form onSubmit={submitHandler}>
                 <Input 
                 type="email"
+                id="emailinput"
                 placeholder="someone@someserver.com"
                 label="Email address"
                 initialPrepend
@@ -172,14 +154,14 @@ if(props.isAuthenticated){
                 {/* pasword input */}
                 <Input
                   type="password"
+                  id="passwordinput"
                   placeholder="Secret password"
                   label="password"
                   isLoginPasswordInput
                   initialPrepend
                   initialPrependsvg={initialPrependsvg}
                   value={state.controls.password.value}
-                  finalAppend
-                  finalAppendsvg={finalAppendsvg}
+                  finalAppend={false}
                   changed={event => handleInputChange(event,'password')}
                 />
                 <div className="mt-4">

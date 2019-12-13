@@ -8,15 +8,7 @@ const Component = props => {
       ref={props.ref}
     >
       {props.message}
-      <button
-        type="button"
-        className="close"
-        data-dismiss="alert"
-        aria-label="Close"
-        onClick={props.clicked}
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
+      
     </div>
   );
 };
