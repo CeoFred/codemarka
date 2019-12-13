@@ -254,7 +254,7 @@ function NewClassroom(props) {
   return (
     <div>
       <Helmet
-        title="Create a classroom || colab.inc"
+        title="Create a classroom || codemarka.inc"
         metaDescription=""
       ></Helmet>
 

@@ -10,7 +10,7 @@ script:
 deploy:
   - provider: surge
     skip_cleanup: true
-    domain: withcolab.surge.sh
+    domain: codemarka.surge.sh
     project: ./build/
 on:
   branch: master

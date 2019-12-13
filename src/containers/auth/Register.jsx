@@ -180,7 +180,7 @@ if(props.isAuthenticated){
 }
   return (
     <div>
-      <Helmet title="Signup to colab" metaDescription="" />
+      <Helmet title="Signup to codemarka" metaDescription="" />
       {redct}
       <section>
         <div className="mt-3 row align-items-center justify-content-center min-vh-100">

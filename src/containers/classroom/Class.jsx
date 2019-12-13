@@ -23,7 +23,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
     lastSentMessage: null
   });
 
-  const [colabstate, setColabState] = useState({
+  const [codemarkastate, setcodemarkaState] = useState({
     messages: [],
     editors: [],
     previewContent: {
@@ -47,7 +47,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
 
       //listen for old message
       socket.on("updateMsg", msg => {
-        setColabState(c => {
+        setcodemarkaState(c => {
           let oldmsg = c.messages;
           msg.msgs.forEach(element => {
             oldmsg.push(element);
@@ -60,15 +60,15 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       setInRoom(true)
       //listen for new members added
       socket.on("someoneJoined", msg => {
-        setColabState(c => {
+        setcodemarkaState(c => {
           let oldmsg = c.messages;
           oldmsg.push(msg);
           return { ...c, messages: oldmsg };
         });
-        if (colabstate.messages) {
-          const len = colabstate.messages.length;
+        if (codemarkastate.messages) {
+          const len = codemarkastate.messages.length;
           const lastIndex = len - 1;
-          const ele = colabstate.messages[lastIndex].msgId
+          const ele = codemarkastate.messages[lastIndex].msgId
           const lelem = document.getElementById(ele);
 
           lelem.scrollIntoView(false);
@@ -77,19 +77,19 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
 
       //listen for new messages
       socket.on("nM", data => {
-        setColabState(
+        setcodemarkaState(
           c => {
             let oldmsg = c.messages;
             oldmsg.push(data);
             return { ...c, messages: oldmsg };
           });
 
-        if (colabstate.messages) {
-          const len = colabstate.messages.length;
+        if (codemarkastate.messages) {
+          const len = codemarkastate.messages.length;
           const lastIndex = len - 1;
 
 
-          const ele = colabstate.messages[lastIndex].msgId
+          const ele = codemarkastate.messages[lastIndex].msgId
           const lelem = document.getElementById(ele);
 
           lelem.scrollIntoView(false);
@@ -98,16 +98,16 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
 
       //listen for members leaving
       socket.on("updatechat_left", (msg) => {
-        setColabState(c => {
+        setcodemarkaState(c => {
           let oldmsg = c.messages;
           oldmsg.push(msg);
           return { ...c, messages: oldmsg };
         });
-        if (colabstate.messages) {
-          const len = colabstate.messages.length;
+        if (codemarkastate.messages) {
+          const len = codemarkastate.messages.length;
           const lastIndex = len - 1;
 
-          const ele = colabstate.messages[lastIndex].msgId
+          const ele = codemarkastate.messages[lastIndex].msgId
           const lelem = document.getElementById(ele);
 
           lelem.scrollIntoView(false);
@@ -118,7 +118,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       socket.on("class_files", (css, html, js) => {
 
         // set editor state
-        setColabState(c => {
+        setcodemarkaState(c => {
           return {
             ...c,
             editors: [
@@ -130,7 +130,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
         });
 
         // set preview state
-        setColabState(c => {
+        setcodemarkaState(c => {
           return {
             ...c,
             previewContent: {
@@ -147,7 +147,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       socket.on("class_files_updated", ({ id, file, content ,editedBy}) => {
 
         
-          setColabState(c => {
+          setcodemarkaState(c => {
             // check preview states
             if(editedBy !== userid){
               let oldFiles;
@@ -177,14 +177,14 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       }
     };
   }, [
-    colabstate.owner,
-    colabstate.messages,
+    codemarkastate.owner,
+    codemarkastate.messages,
     username,
     data.classroom_id,
     userid,
     inRoom,
-    colabstate.username,
-    colabstate.classroom_id
+    codemarkastate.username,
+    codemarkastate.classroom_id
   ]);
 
   const handleInputChange = e => {
@@ -217,7 +217,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
   const editorChanged = (e, o, v, t) => {
     let fid;
 
-    colabstate.editors.forEach(element => {
+    codemarkastate.editors.forEach(element => {
       if (element.file === t) {
         fid = element.id;
       }
@@ -232,7 +232,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       editedBy: userid
     };
 
-            setColabState(c => {           
+            setcodemarkaState(c => {           
             return {
               ...c,
               previewContent: { ...c.previewContent, [t]: { content:v, id:fid } }
@@ -273,9 +273,9 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
     // var preview =  previewFrame.contentDocument || previewFrame.contentWindow.document;
     let styles, html , script;
 
-    styles = colabstate.previewContent.css.content;
-    html = colabstate.previewContent.html.content;
-    script = colabstate.previewContent.js.content;
+    styles = codemarkastate.previewContent.css.content;
+    html = codemarkastate.previewContent.html.content;
+    script = codemarkastate.previewContent.js.content;
 
     const getGeneratedPageURL = ({ html, css, js }) => {
   const getBlobURL = (code, type) => {
@@ -353,13 +353,13 @@ const url = getGeneratedPageURL({
         <div className="container-fluid ">
           <div className="row">
             <div className="col-2 p-0">
-    <Seo title={`${name} :: colab classroom`} description={description}/>
+    <Seo title={`${name} :: codemarka classroom`} description={description}/>
         <Convo
           inputValue={inputState.value}
           handleInputChange={handleInputChange}
           sendMessage={e => handleMessageSubmit(e)}
           focused={inputState.isFocused}
-          messages={colabstate.messages}
+          messages={codemarkastate.messages}
           user={userid}
         />
             </div>
@@ -367,7 +367,7 @@ const url = getGeneratedPageURL({
 <Editor
           readOnly={owner}
           handleEditorChange={(e, o, v, t) => editorChanged(e, o, v, t)}
-          files={colabstate.editors}
+          files={codemarkastate.editors}
         />
             </div>
           </div>

@@ -16,7 +16,7 @@ const emailIconSvg = (
 export default function ForgotPassword() {
   return (
     <div>
-      <Helmet title="Account Recovery || colab.io " metaDescription="" />
+      <Helmet title="Account Recovery || codemarka.io " metaDescription="" />
 
       <section>
         <div class="row align-items-center justify-content-center min-vh-100">

@@ -79,7 +79,7 @@ export default function Home() {
               <h1 class="mb-4 text-white">Features that you really need</h1>
               <p class="lh-190 text-white opacity-8">
                 With an intuitive markup, powerful and lightning fast build
-                tools, colab has everything you need to turn your ideas into
+                tools, codemarka has everything you need to turn your ideas into
                 incredible products.
               </p>
             </div>

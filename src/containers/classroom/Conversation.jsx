@@ -35,7 +35,10 @@ export default function Conversation(props) {
    } else if(m.by === 'server' && m.type === 'oldMsgUpdate'){
       return(
         <div className={`message ${m.by === props.user ? 'sent' : 'received'}`} key={m.msgId} id={m.msgId}>
-       {m.msg}      
+         <div className="font-weight-800 text-success">
+       {m.by !== props.user ? m.name : ''}
+       </div>
+        {m.msg}      
                   <span class="metadata">
                       <span class="time">{m.timeSent}</span>
                       {m.by === props.user ?
@@ -53,8 +56,11 @@ export default function Conversation(props) {
    else {
     return (
       <div className={`message ${m.by === props.user ? 'sent' : 'received'}`} key={m.msgId} id={m.msgId}>
+       <div className="font-weight-800 text-success">
+       {m.by !== props.user ? m.name : ''}
+       </div>
           {m.msg}
-       
+
         <span class="metadata">
                  <span class="time">{m.timeSent}</span>
                      

@@ -86,7 +86,7 @@ export default function FooterBar() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    colab inc
+                    codemarka inc
                   </a>
                   . All rights reserved.
                 </div>
