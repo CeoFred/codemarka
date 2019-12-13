@@ -85,6 +85,7 @@ export default function Home() {
             </div>
           </div>
           <div class="row mx-lg-n4">
+
             <div class="col-lg-4 col-md-6 px-lg-4">
               <div class="card shadow-none">
                 <div class="p-3 d-flex">
@@ -167,6 +168,92 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
+                        <div class="col-lg-4 col-md-6 px-lg-4">
+              <div class="card shadow-none">
+                <div class="p-3 d-flex">
+                  <div>
+                    <div class="icon icon-shape rounded-circle bg-warning text-white mr-4">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1em"
+                        height="1em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-check"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div>
+                    <span class="h6">Classroom monitoring</span>
+                    <p class="text-sm text-muted mb-0">Know when, why and how it happened.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="card shadow-none">
+                <div class="p-3 d-flex">
+                  <div>
+                    <div class="icon icon-shape rounded-circle bg-primary text-white mr-4">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1em"
+                        height="1em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-check"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div>
+                    <span class="h6">Github Integration</span>
+                    <p class="text-sm text-muted mb-0">Export class files to github.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card shadow-none">
+                <div class="p-3 d-flex">
+                  <div>
+                    <div class="icon icon-shape rounded-circle bg-danger text-white mr-4">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1em"
+                        height="1em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-check"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div>
+                    <span class="h6">Audio Broadcast</span>
+                    <p class="text-sm text-muted mb-0">
+                      If texts don't hit hard,voices might.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
             <div class="col-lg-4 col-md-6 px-lg-4">
               <div class="card shadow-none">
                 <div class="p-3 d-flex">
@@ -194,6 +281,8 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+
+
               <div class="card shadow-none">
                 <div class="p-3 d-flex">
                   <div>
@@ -222,6 +311,8 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+
+
               <div class="card shadow-none">
                 <div class="p-3 d-flex">
                   <div>
@@ -250,6 +341,8 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+
+
             </div>
           </div>
         </div>
