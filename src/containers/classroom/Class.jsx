@@ -7,6 +7,7 @@ import Editor from "../../components/classroom/Editor/Editor";
 import Preview from "../../components/classroom/Editor/Preview";
 import Seo from "../../components/SEO/helmet";
 
+import { CLASSROOM_FILE_DOWNLOAD } from "../../config/api_url";
 import "./css/Environment.css";
 
 const host =
@@ -342,13 +343,13 @@ const url = getGeneratedPageURL({
     );
   }
 
-
+const classfilesdownloadlink =  `${host}${CLASSROOM_FILE_DOWNLOAD}${data.classroom_id}`;
 
   return (
     <div>
       <Preview previewBtnClicked={handlePreview} classroomid={data.classroom_id}/>
       {classNotification}
-      <Navigation name={name} />
+      <Navigation name={name} downloadLink={classfilesdownloadlink}/>
 
       <div style={{ width: "100%", height: "87vh" }}>
         <div className="container-fluid ">

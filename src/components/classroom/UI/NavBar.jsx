@@ -8,6 +8,7 @@ const savebtn = {
     border: '2px solid #e22baa'
 }
 function NavBar(props) {
+    console.log(props);
     return (
         <div>
 <nav className="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-dark">
@@ -21,7 +22,9 @@ function NavBar(props) {
             
             <ul className="navbar-nav ml-lg-auto">
                 <li className="nav-item">
-                        <button style={savebtn} className="btn btn-outline-light btn-sm">Save <i className="fa fa-file-download"></i></button>
+                <a className="nav-link nav-link-icon" href={props.downloadLink}>
+                         <i className="fa fa-file-download"></i>
+                    </a>
                 </li>
                  <li className="nav-item">
                     <span className="nav-link nav-link-icon" >
