@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import io from "socket.io-client";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Navigation from "../../components/classroom/UI/NavBar";
 import Convo from "./Conversation";
@@ -15,7 +17,11 @@ const host =
     ? process.env.REACT_APP_REMOTE_API_URL
     : process.env.REACT_APP_LOCAL_API_URL;
 
-const socket = io(`${host}classrooms`);
+const socket = io(`${host}classrooms`,{autoConnect: false});
+toast.configure({
+          autoClose:6000,
+          draggable:true
+        });
 
 const MainClassLayout = ({ data, owner, name, description ,username, userid}) => {
   const [inputState, setInputState] = useState({
@@ -42,9 +48,11 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       userId: userid,
       username
     };
+    console.log(socket.id);
 
     if (inRoom !== true && inRoom !== null) {
       // set listeners and emitters
+      socket.open();
 
       //listen for old message
       socket.on("updateMsg", msg => {
@@ -58,14 +66,6 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       });
 
 
-
-      socket.on('disconnect',(reason) => {
-        console.log(reason);
-      })
-
-      socket.on('connected',() => {
-        console.log('connected');
-      })
 
 
 
@@ -88,6 +88,24 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
           lelem.scrollIntoView(false);
         }
       });
+
+      socket.on('disconnect',(reason) => {
+        console.log(reason);
+        
+        toast.warn("Disconnected from classroom",{
+       position: toast.POSITION.BOTTOM_RIGHT
+     });
+      })
+
+      socket.on('connect', () => {
+     console.log(socket.connected); // true
+     toast.success("Connected",{
+       position: toast.POSITION.BOTTOM_RIGHT
+     })
+    });
+
+
+
 
       //listen for new messages
       socket.on("nM", data => {
@@ -367,6 +385,7 @@ const classfilesdownloadlink =  `${host}${CLASSROOM_FILE_DOWNLOAD}${data.classro
 
   return (
     <div>
+     <ToastContainer />
       <Preview previewBtnClicked={handlePreview} classroomid={data.classroom_id}/>
       {classNotification}
       <Navigation name={name} downloadLink={classfilesdownloadlink}/>
