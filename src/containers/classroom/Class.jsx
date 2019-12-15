@@ -56,6 +56,19 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
           return { ...c, messages: oldmsg };
         });
       });
+
+
+
+      socket.on('disconnect',(reason) => {
+        console.log(reason);
+      })
+
+      socket.on('connected',() => {
+        console.log('connected');
+      })
+
+
+
       // tell server to add user to class
       socket.emit("join", requestData);
       setInRoom(true)
@@ -114,6 +127,10 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
           lelem.scrollIntoView(false);
         }
       });
+
+      socket.on("utyping", ({username, userid}) => {
+        console.log(username,'is typing');
+      })
 
       // listen for classroom files
       socket.on("class_files", (css, html, js) => {
@@ -190,9 +207,12 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
   ]);
 
   const handleInputChange = e => {
+
     e.preventDefault();
     const value = e.target.value;
     setInputState({ ...inputState, value });
+
+    socket.emit('user_typing',{username,userid,classroomid:data.classroom_id});
   };
 
   const handleMessageSubmit = e => {
@@ -357,6 +377,7 @@ const classfilesdownloadlink =  `${host}${CLASSROOM_FILE_DOWNLOAD}${data.classro
             <div className="col-2 p-0">
     <Seo title={`${name} :: codemarka classroom`} description={description}/>
         <Convo
+        username={username}
           inputValue={inputState.value}
           handleInputChange={handleInputChange}
           sendMessage={e => handleMessageSubmit(e)}

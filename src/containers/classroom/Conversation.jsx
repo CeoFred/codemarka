@@ -85,7 +85,7 @@ export default function Conversation(props) {
                
     <span class="name">
        
-                  <span>Zeno Rocha</span>
+                  <span>{ props.username }</span>
                 </span>
       <span className="float-right">
         <i className="fa fa-dot-circle-o"></i>
