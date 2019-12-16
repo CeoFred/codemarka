@@ -9,6 +9,8 @@ import Editor from "../../components/classroom/Editor/Editor";
 import Preview from "../../components/classroom/Editor/Preview";
 import Seo from "../../components/SEO/helmet";
 
+import ParticipantModal from "../../components/classroom/Participants/Modal";
+
 import { CLASSROOM_FILE_DOWNLOAD } from "../../config/api_url";
 import "./css/Environment.css";
 
@@ -37,7 +39,8 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       html: null,
       css: null
     },
-    owner
+    owner,
+    users:[]
   });
 
   const [inRoom, setInRoom] = useState(false);
@@ -77,7 +80,14 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
         setcodemarkaState(c => {
           let oldmsg = c.messages;
           oldmsg.push(msg);
-          return { ...c, messages: oldmsg };
+          let newuser = c.users;
+
+          if(msg.for !== userid){
+            
+          newuser.push({_id:msg.for,username: msg.name});
+
+          }
+          return { ...c, messages: oldmsg, users: newuser};
         });
         if (codemarkastate.messages) {
           const len = codemarkastate.messages.length;
@@ -95,6 +105,8 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
         toast.warn("Disconnected from classroom",{
        position: toast.POSITION.BOTTOM_RIGHT
      });
+      socket.open();
+
       })
 
       socket.on('connect', () => {
@@ -150,6 +162,12 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
         console.log(username,'is typing');
       })
 
+      socket.on("classroom_users",(data) => {
+        setcodemarkaState(c => {
+          return {...c,users:data}
+        });
+      });
+
       // listen for classroom files
       socket.on("class_files", (css, html, js) => {
 
@@ -178,6 +196,10 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
         });
 
       });
+
+      socket.on("newuser_role",(newroles) => {
+        console.log(newroles);
+      })
 
       //listen to file changes
       socket.on("class_files_updated", ({ id, file, content ,editedBy}) => {
@@ -381,6 +403,11 @@ const url = getGeneratedPageURL({
     );
   }
 
+  const handletoogleUserEditAccess = (e, u) => {
+    
+    socket.emit("toogle_class_role",{user:u,role: e.target.value});
+  }
+
 const classfilesdownloadlink =  `${host}${CLASSROOM_FILE_DOWNLOAD}${data.classroom_id}`;
 
   return (
@@ -389,7 +416,10 @@ const classfilesdownloadlink =  `${host}${CLASSROOM_FILE_DOWNLOAD}${data.classro
       <Preview previewBtnClicked={handlePreview} classroomid={data.classroom_id}/>
       {classNotification}
       <Navigation name={name} downloadLink={classfilesdownloadlink}/>
-
+<ParticipantModal users={codemarkastate.users} 
+toogleUserEditAccess={handletoogleUserEditAccess}
+owner={owner}
+/>
       <div style={{ width: "100%", height: "87vh" }}>
         <div className="container-fluid ">
           <div className="row">

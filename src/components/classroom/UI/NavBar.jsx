@@ -2,13 +2,7 @@ import React from 'react';
 
 import logo from '../../../media/images/colab-04.png'
 
-const savebtn = {
-    position:'relative',
-    top: '15%',
-    border: '2px solid #e22baa'
-}
 function NavBar(props) {
-    console.log(props);
     return (
         <div>
 <nav className="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-dark">
@@ -26,7 +20,7 @@ function NavBar(props) {
                          <i className="fa fa-file-download"></i>
                     </a>
                 </li>
-                 <li className="nav-item">
+                 <li className="nav-item" data-toggle="modal" data-target=".participants_modal_cont">
                     <span className="nav-link nav-link-icon" >
                         <i className="fa fa-users"></i>
                         <span className="nav-link-inner--text d-lg-none">Participants</span>

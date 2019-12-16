@@ -98,8 +98,9 @@ export default function Conversation(props) {
       </div>
 
       {/* input text area */}
-      <div className="input_container">
+      <div className="input_container bg-dark">
         <textarea
+
           resize="none"
           id="input_area"
           onBlur={props.inputBlur}
@@ -109,6 +110,7 @@ export default function Conversation(props) {
           onKeyDown={inputKeyDown}
           placeholder="Write a message"
           className="form-control"
+          style={{borderRadius:'15px'}}
         ></textarea>
       </div>
     </div>
