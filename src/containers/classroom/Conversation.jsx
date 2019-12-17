@@ -78,6 +78,31 @@ export default function Conversation(props) {
    }
       
  })
+
+ const getTyping = () => {
+
+   let whoIsTypingArray = props.typing.filter(utypist => {
+     return utypist.id !== props.user
+   });
+
+   if(Array.isArray(whoIsTypingArray)){
+
+     const usersTyping = whoIsTypingArray.length;
+     
+     if(usersTyping > 0){
+       if(usersTyping === 1){
+          return (<span>{whoIsTypingArray[0].username} is typing...</span>)
+        } else if(usersTyping === 2){
+          return (<span>{whoIsTypingArray[0].username} and {whoIsTypingArray[1].username} are typing</span>)
+       } else if (usersTyping === 3){
+          return (<span>{whoIsTypingArray[0].username},{whoIsTypingArray[1].username} and {whoIsTypingArray[2].username} are typing</span>)
+
+       }
+     } else {
+       return '';
+     }
+   }
+ }
  
   return (
     <div className="conversation__container d-block">
@@ -87,9 +112,9 @@ export default function Conversation(props) {
        
                   <span>{ props.username }</span>
                 </span>
-      <span className="float-right">
-        <i className="fa fa-dot-circle-o"></i>
-      </span>
+      <div className="font-italic text-justify text-white" style={{fontSize:10}}>
+        {getTyping()}
+      </div>
      </div>
       {/* messages tab */}
       <div className="container bg-black messages">

@@ -19,13 +19,19 @@ const host =
     ? process.env.REACT_APP_REMOTE_API_URL
     : process.env.REACT_APP_LOCAL_API_URL;
 
-const socket = io(`${host}classrooms`,{autoConnect: false});
+const socket = io(`${host}classrooms`,{
+    'reconnection': true,
+    'reconnectionDelay': 6000,
+    'reconnectionDelayMax' : 6000,
+    'reconnectionAttempts': 6
+});
 toast.configure({
           autoClose:6000,
           draggable:true
         });
 
 const MainClassLayout = ({ data, owner, name, description ,username, userid}) => {
+
   const [inputState, setInputState] = useState({
     value: "",
     isFocused: false,
@@ -40,7 +46,9 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       css: null
     },
     owner,
-    users:[]
+    users:[],
+    editorPriviledge:owner,
+    typingState:[]
   });
 
   const [inRoom, setInRoom] = useState(false);
@@ -51,11 +59,9 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       userId: userid,
       username
     };
-    console.log(socket.id);
 
     if (inRoom !== true && inRoom !== null) {
       // set listeners and emitters
-      socket.open();
 
       //listen for old message
       socket.on("updateMsg", msg => {
@@ -77,17 +83,14 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       setInRoom(true)
       //listen for new members added
       socket.on("someoneJoined", msg => {
+
         setcodemarkaState(c => {
           let oldmsg = c.messages;
+
           oldmsg.push(msg);
-          let newuser = c.users;
 
-          if(msg.for !== userid){
-            
-          newuser.push({_id:msg.for,username: msg.name});
-
-          }
-          return { ...c, messages: oldmsg, users: newuser};
+          return { ...c, messages: oldmsg, users: msg.newuserslist};
+          
         });
         if (codemarkastate.messages) {
           const len = codemarkastate.messages.length;
@@ -101,25 +104,28 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
 
       socket.on('disconnect',(reason) => {
         console.log(reason);
+        if (reason === 'io server disconnect') {
+    // the disconnection was initiated by the server, you need to reconnect manually
+         socket.connect();
+      }
         
         toast.warn("Disconnected from classroom",{
        position: toast.POSITION.BOTTOM_RIGHT
      });
-
-        // setInterval(() => {
-        //   !socket.connected ? socket.open() : socket.connected
-        // }, 1500);
-
       })
 
-      socket.on('connect', () => {
-     console.log(socket.connected); // true
-     toast.success("Connected",{
-       position: toast.POSITION.BOTTOM_RIGHT
-     })
+      socket.on('reconnecting', (attemptNumber) => {
+        toast.info('Attempting to reconnect to classroom');
     });
 
+    socket.on('reconnect_error', (error) => {
+      toast.warn('Reconnection failed, try refreshing this window');
+    });
 
+  socket.on('reconnect', (attemptNumber) => {
+      socket.emit("join", requestData);
+  toast.success('Welcome back online');
+  });
 
 
       //listen for new messages
@@ -128,7 +134,11 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
           c => {
             let oldmsg = c.messages;
             oldmsg.push(data);
-            return { ...c, messages: oldmsg };
+            let newuserTypingList = c.typingState.filter(typist => {
+            return  typist.id !== data.by
+             
+          });
+            return { ...c, messages: oldmsg, typingState: newuserTypingList };
           });
 
         if (codemarkastate.messages) {
@@ -162,7 +172,45 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
       });
 
       socket.on("utyping", ({username, userid}) => {
-        console.log(username,'is typing');
+
+        setcodemarkaState(c => {
+
+          let found = false;
+
+         c.typingState.forEach(typist => {
+          
+          if(String(typist.id) === String(userid)){
+            found = true;
+          }
+             
+          });
+
+          if(found){
+            console.log('found',username)
+            // user has typed and was recorded, don't do anything
+            return c;
+          } else {
+            console.log('not found',username)
+            let oldT = c.typingState;
+            oldT.push({username,id:userid});
+            return {...c,typingState: oldT};
+          }
+          
+        })
+      })
+
+      socket.on("utyping_cleared", ({username, userid}) => {
+        console.log(username,'cleared input');
+        // remove user from typing list;
+       
+
+        setcodemarkaState(c => {
+           let newuserTypingList = c.typingState.filter(typist => {
+          return  typist.id !== userid
+             
+          });
+           return {...c,typingState: newuserTypingList};
+        })
       })
 
       socket.on("classroom_users",(data) => {
@@ -200,10 +248,26 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
 
       });
 
-      socket.on("newuser_role",(user) => {
-        console.log(user);
-        if(user.id === userid && user.role === "2"){
-          toast.info("You now Have access to the Editor");
+      socket.on("newuser_role",(data) => {
+        console.log(data);
+        
+        if(String(data.id) === String(userid) && data.role){
+          setcodemarkaState(c => {
+          let oldUsers = c.users;
+          let newUserRole = oldUsers.map(user => {
+            if(user.id === data.id){
+              return {id:user.id,role:data.role,username: user.username}
+            } else {
+              return user;
+            }
+          });
+          return {...c,users:newUserRole, editorPriviledge: data.role === "2" ? true: false}
+        });
+          if(data.role === "1"){
+            toast.info("You have been placed on restrictions to modify the Editors");
+          } else if( data.role === "2") {
+            toast.info('You now have access to modify the Editors');
+          }
         }
       })
 
@@ -259,7 +323,11 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
     const value = e.target.value;
     setInputState({ ...inputState, value });
 
-    socket.emit('user_typing',{username,userid,classroomid:data.classroom_id});
+    if(e.target.value.trim().length > 0){
+      socket.emit('user_typing',{username,userid,classroomid:data.classroom_id});
+    } else {
+      socket.emit('user_typing_cleared',{username,userid,classroomid:data.classroom_id})
+    }
   };
 
   const handleMessageSubmit = e => {
@@ -335,21 +403,6 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
     // }
   };
 
-
-const checkSubAdminStatus = () => {
-  const currentUserId = userid;
-  const classUsers = codemarkastate.users;
-  classUsers.forEach(user => {
-    if(user._id === currentUserId){
-      if(user.role === "2"){
-        return true;
-      } else {
-        return false;
-      }
-    }
-  })
-}
-
   const handlePreview = e => {
     const previewFrame = document.getElementById("preview_iframe");
     // var preview =  previewFrame.contentDocument || previewFrame.contentWindow.document;
@@ -403,7 +456,7 @@ const url = getGeneratedPageURL({
   };
 
   let classNotification;
-  if(!owner){
+  if(!owner && !codemarkastate.editorPriviledge){
     classNotification = (
       <div class="alert alert-group alert-info alert-icon fixed-bottom w-25 left-10" role="alert">
 	<div class="alert-group-prepend"> 
@@ -446,6 +499,7 @@ owner={owner}
             <div className="col-2 p-0">
     <Seo title={`${name} :: codemarka classroom`} description={description}/>
         <Convo
+        typing={codemarkastate.typingState}
         username={username}
           inputValue={inputState.value}
           handleInputChange={handleInputChange}
@@ -457,7 +511,7 @@ owner={owner}
             </div>
             <div className="col-10 p-0">
 <Editor
-          readOnly={owner || checkSubAdminStatus}
+          readOnly={codemarkastate.editorPriviledge}
           handleEditorChange={(e, o, v, t) => editorChanged(e, o, v, t)}
           files={codemarkastate.editors}
         />
