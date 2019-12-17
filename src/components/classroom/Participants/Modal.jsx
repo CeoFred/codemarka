@@ -14,7 +14,8 @@ const Modal = ({users, toogleUserEditAccess, owner}) => {
     <a href={`/user/profile/${u._id}?ref=classroom`} className="text-dark font-weight-900 pl-3">{u.username}</a>
     
 <i className="fa fa-envelope-open-text text-info p-1"></i>
-<i className="fa fa-hand-peace text-info p-1"></i>
+<i className="fa fa-hand-peace text-dark p-1"></i>
+<i className="fa fa-ban text-danger p-1"></i>
   </div>
 {owner ? (
   <span className="float-right">

@@ -105,7 +105,10 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
         toast.warn("Disconnected from classroom",{
        position: toast.POSITION.BOTTOM_RIGHT
      });
-      socket.open();
+
+        // setInterval(() => {
+        //   !socket.connected ? socket.open() : socket.connected
+        // }, 1500);
 
       })
 
@@ -197,9 +200,13 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
 
       });
 
-      socket.on("newuser_role",(newroles) => {
-        console.log(newroles);
+      socket.on("newuser_role",(user) => {
+        console.log(user);
+        if(user.id === userid && user.role === "2"){
+          toast.info("You now Have access to the Editor");
+        }
       })
+
 
       //listen to file changes
       socket.on("class_files_updated", ({ id, file, content ,editedBy}) => {
@@ -329,6 +336,19 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
   };
 
 
+const checkSubAdminStatus = () => {
+  const currentUserId = userid;
+  const classUsers = codemarkastate.users;
+  classUsers.forEach(user => {
+    if(user._id === currentUserId){
+      if(user.role === "2"){
+        return true;
+      } else {
+        return false;
+      }
+    }
+  })
+}
 
   const handlePreview = e => {
     const previewFrame = document.getElementById("preview_iframe");
@@ -405,7 +425,7 @@ const url = getGeneratedPageURL({
 
   const handletoogleUserEditAccess = (e, u) => {
     
-    socket.emit("toogle_class_role",{user:u,role: e.target.value});
+    socket.emit("toogle_class_role",{user:u,new_role: e.target.value});
   }
 
 const classfilesdownloadlink =  `${host}${CLASSROOM_FILE_DOWNLOAD}${data.classroom_id}`;
@@ -437,7 +457,7 @@ owner={owner}
             </div>
             <div className="col-10 p-0">
 <Editor
-          readOnly={owner}
+          readOnly={owner || checkSubAdminStatus}
           handleEditorChange={(e, o, v, t) => editorChanged(e, o, v, t)}
           files={codemarkastate.editors}
         />
