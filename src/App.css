@@ -1,6 +1,7 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
 
-html{
-  padding:0;
-  margin:0;
-  font-family: 'Nunito Light', sans-serif; 
+* {
+  padding: 0;
+  margin: 0;
+  font-family: 'Ubuntu', sans-serif;
 }
