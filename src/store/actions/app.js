@@ -20,5 +20,3 @@ export const dispatchAppEnvironment = (environ) => {
         currentEnv:environ
     }
 }
-
-

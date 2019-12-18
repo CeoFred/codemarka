@@ -1,6 +1,6 @@
-import React,{useEffect} from "react";
+import React,{ useEffect } from "react";
 import { connect } from 'react-redux'
-import {Switch,withRouter,Route, Redirect} from 'react-router-dom';
+import { Switch,withRouter,Route, Redirect } from 'react-router-dom';
 
 import * as actionType from './store/actions/Types';
 import * as url from './config/url';
@@ -25,44 +25,44 @@ const Routes = (props) => {
     if(!props.isAutheticated){
       props.onTryAutoSignup();
     }
-  }, [props])
+  }, [ props ])
     let routes = (
         <Switch>  
-<Route exact component={logout} path={url.AUTH_LOGOUT} />
-<Route exact component={Home} path={url.HOME} />
-<Route exact component={Login} path={url.AUTH_SIGN_IN} />
-<Route exact component={Register} path={url.AUTH_SIGN_UP} />
-<Route exact component={ForgotPassword} path={url.AUTH_FORGOT_PASSWORD} />
-<Redirect from={url.CLASSROOMS} to={url.AUTH_SIGN_IN} />
-<Route exact component={ClassRoomPreview} path={url.PROTECTED_CLASSROOM_PREVIEW}/>
-<Route exact component={classrooom} path={url.CLASSROOM} />
-<Route exact component={classPreviewNewTab} path={url.CLASSROOM_PREVIEW_NEW_TAB}/>
-<Route component={NotFound} />
+            <Route exact component={ logout } path={ url.AUTH_LOGOUT } />
+            <Route exact component={ Home } path={ url.HOME } />
+            <Route exact component={ Login } path={ url.AUTH_SIGN_IN } />
+            <Route exact component={ Register } path={ url.AUTH_SIGN_UP } />
+            <Route exact component={ ForgotPassword } path={ url.AUTH_FORGOT_PASSWORD } />
+            <Redirect from={ url.CLASSROOMS } to={ url.AUTH_SIGN_IN } />
+            <Route exact component={ ClassRoomPreview } path={ url.PROTECTED_CLASSROOM_PREVIEW }/>
+            <Route exact component={ classrooom } path={ url.CLASSROOM } />
+            <Route exact component={ classPreviewNewTab } path={ url.CLASSROOM_PREVIEW_NEW_TAB }/>
+            <Route component={ NotFound } />
 
         </Switch>
       );
   
       if(props.isAutheticated){
         routes = (
-  <Switch>
-<Route exact component={Home} path={url.HOME} />
-<Route exact component={ChangePassword} path={url.AUTH_CHANGE_PASSWORD} />
-<Route exact component={logout} path={url.AUTH_LOGOUT} />
-<Route exact component={newclassroom} path={url.CLASSROOM_NEW}/>
-<Route exact component={classrooom} path={url.CLASSROOM} />
-<Redirect from={url.CLASSROOMS} to={url.AUTH_SIGN_IN} />
-<Route exact component={Login} path={url.AUTH_SIGN_IN} />
-<Route exact component={Register} path={url.AUTH_SIGN_UP} />
-<Route exact component={ClassRoomPreview} path={url.PROTECTED_CLASSROOM_PREVIEW}/>
-<Route exact component={classPreviewNewTab} path={url.CLASSROOM_PREVIEW_NEW_TAB}/>
-<Route component={NotFound} />
-  </Switch>
+            <Switch>
+                <Route exact component={ Home } path={ url.HOME } />
+                <Route exact component={ ChangePassword } path={ url.AUTH_CHANGE_PASSWORD } />
+                <Route exact component={ logout } path={ url.AUTH_LOGOUT } />
+                <Route exact component={ newclassroom } path={ url.CLASSROOM_NEW }/>
+                <Route exact component={ classrooom } path={ url.CLASSROOM } />
+                <Redirect from={ url.CLASSROOMS } to={ url.AUTH_SIGN_IN } />
+                <Route exact component={ Login } path={ url.AUTH_SIGN_IN } />
+                <Route exact component={ Register } path={ url.AUTH_SIGN_UP } />
+                <Route exact component={ ClassRoomPreview } path={ url.PROTECTED_CLASSROOM_PREVIEW }/>
+                <Route exact component={ classPreviewNewTab } path={ url.CLASSROOM_PREVIEW_NEW_TAB }/>
+                <Route component={ NotFound } />
+            </Switch>
         )
       }
     return (
-<React.Fragment>
-    {routes}
-</React.Fragment>
+        <React.Fragment>
+            {routes}
+        </React.Fragment>
     );
 }
 const mapStateToProps = state => {
@@ -73,9 +73,8 @@ const mapStateToProps = state => {
   
   const matchDispatchToProps = (dispatch) => {
     return {
-  onTryAutoSignup: () => dispatch({type: actionType.AUTO_AUTH_INIT})
+  onTryAutoSignup: () => dispatch({ type: actionType.AUTO_AUTH_INIT })
     };
   };
   
   export default withRouter(connect(mapStateToProps,matchDispatchToProps)(Routes));
-  

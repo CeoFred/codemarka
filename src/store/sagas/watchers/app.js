@@ -1,6 +1,6 @@
 import { takeLatest } from 'redux-saga/effects'
 
-import { tryValidatingCookie,cookieAccepted} from '../application';
+import { tryValidatingCookie,cookieAccepted } from '../application';
 import * as actionTypes from '../../actions/Types';
 
 export function* watchApp(){

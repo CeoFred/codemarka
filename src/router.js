@@ -6,9 +6,9 @@ import Routes from './routes';
 
 const router = () => {
   return (
-    <Layout>
-      <Routes/>
-    </Layout>
+      <Layout>
+          <Routes/>
+      </Layout>
   )
 }
 

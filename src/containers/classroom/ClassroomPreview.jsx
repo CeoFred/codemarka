@@ -15,16 +15,16 @@ import "./css/preview.css";
   const { onClassroomSwitch } = props;
 
   const checking = (
-    <div className="env--content--loading text-center">
-      <div
+      <div className="env--content--loading text-center">
+          <div
         className="spinner-grow"
-        style={{ width: "3rem", height: "3rem", background: "grey" }}
+        style={ { width: "3rem", height: "3rem", background: "grey" } }
         role="status"
       >
-        <span className="sr-only">Loading...</span>
+              <span className="sr-only">Loading...</span>
+          </div>
+          <div style={ { marginTop: "5" } }>Two Seconds..</div>
       </div>
-      <div style={{ marginTop: "5" }}>Two Seconds..</div>
-    </div>
   );
 
   React.useEffect(() => {
@@ -34,20 +34,19 @@ import "./css/preview.css";
       onClassroomSwitch("regular");
     };
   });
-
   
   const getContent = () => {
     
       return (
-        <ColabClassPreviewLayout
+          <ColabClassPreviewLayout
 
         />
       );
   };
   return(
-    <React.Fragment>
-      {getContent()}
-    </React.Fragment>
+      <React.Fragment>
+          {getContent()}
+      </React.Fragment>
   )
 }
 
@@ -56,8 +55,6 @@ const mapStateToProps = ({ auth, classroom }) => {
 
   };
 };
-
-
 
 const mapDispatchToProps = dispatch => {
   return {

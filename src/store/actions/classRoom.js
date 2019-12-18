@@ -1,6 +1,5 @@
 import * as actionTypes from './Types'
 
-
 export function classVerify(classId){
     return {
         type:actionTypes.CLASSROOM_ASYNC_VERIFICATION_INIT,
@@ -52,7 +51,6 @@ export const userLeftAClass = (classroom) => {
     }
 }
 
-
 export const classCreationFailed = (error) => {
     return {
         type: actionTypes.CLASS_CREATION_FAILED,
@@ -67,5 +65,3 @@ export const classCreationSuccess = (details) => {
         payload: details
     }
 }
-
-

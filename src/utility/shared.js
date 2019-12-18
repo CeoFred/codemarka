@@ -1,4 +1,4 @@
-import {isFuture} from "date-fns";
+import { isFuture } from "date-fns";
 
 export const fetch  = (url='',method='GET',data={}) => {
     
@@ -22,7 +22,6 @@ export const updateObject = (oldObject, UpdatedProperties) => {
         ...UpdatedProperties
     }
 }
-
 
 export const checkValidity = (value,rules) => {
 

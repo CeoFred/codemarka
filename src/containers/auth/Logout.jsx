@@ -7,17 +7,17 @@ import * as url from "../../config/url";
 
 function Logout(props) {
     
-    const {isAuthenticated, onLogout} = props;
+    const { isAuthenticated, onLogout } = props;
 
     useEffect(() => {
         if(isAuthenticated){
             onLogout();
         } 
-    }, [onLogout,isAuthenticated]);
+    }, [ onLogout,isAuthenticated ]);
 
     const checkAuth = () => {
         if(!isAuthenticated){
-            return (<Redirect to={url.AUTH_SIGN_IN}/>);
+            return (<Redirect to={ url.AUTH_SIGN_IN }/>);
         }
     }
     return (
@@ -27,14 +27,13 @@ function Logout(props) {
     )
 }
 
-
 const mapDispatchToProps = dispatch => {
     return {
         onLogout: () => dispatch(actions.logout())
     };
 };
 
-const mapStateToPorps = ({auth}) => {
+const mapStateToPorps = ({ auth }) => {
     return {
         isAuthenticated: auth.authenticated
     }

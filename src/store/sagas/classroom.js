@@ -9,13 +9,12 @@ const host = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "
 const delay = (ms) => new Promise(res => setTimeout(res, ms))
 let myHeaders =  new Headers(); 
 
-
 export function* createClass(data){
-    yield put({type: actionTypes.CLASSROOM_CREATE_START});
+    yield put({ type: actionTypes.CLASSROOM_CREATE_START });
 
-    let url = `${host}${CLASSROOM_CREATE}`;
+    let url = `${ host }${ CLASSROOM_CREATE }`;
     myHeaders.set('Content-Type', 'Application/json')
-    myHeaders.set('Authorization',`Bearer ${data.token}`)
+    myHeaders.set('Authorization',`Bearer ${ data.token }`)
     let loginRequest = yield new Request(url, {
         method: 'POST',
         cache: 'default',
@@ -23,7 +22,6 @@ export function* createClass(data){
         body: JSON.stringify(data),
         mode: 'cors'
     });
-
     
     try {
         const response = yield fetch(loginRequest)
@@ -33,33 +31,30 @@ export function* createClass(data){
                     
                     yield put(actions.classCreationSuccess(resolvedResponse.data));
         
-        
                     }else if(typeof resolvedResponse.message == 'object') {
                         
-                       yield put(actions.classCreationFailed(resolvedResponse.message[0].msg))
+                       yield put(actions.classCreationFailed(resolvedResponse.message[ 0 ].msg))
                        
                     } else {
                         yield put(actions.classCreationFailed(resolvedResponse.message))
         
                     }
-             
 
-    } catch ({message}) {
+    } catch ({ message }) {
         yield put(actions.authRegisterFailed(message));
 
     }
 
 }
 
-export function* verifyClassRoom({classId}){
+export function* verifyClassRoom({ classId }){
     yield delay(100)
      
     yield put({ type: actionTypes.CLASSROOM_VERIFICATION_INIT })
 
+    const requestData = { classroom: classId }
 
-    const requestData = {classroom: classId }
-
-     const url = `${host}${CLASSROOM_VERIFY_URL}`;
+     const url = `${ host }${ CLASSROOM_VERIFY_URL }`;
      myHeaders.set('Content-Type', 'Application/json')
 
     const request = new Request(url, {

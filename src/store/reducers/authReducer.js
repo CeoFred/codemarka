@@ -1,4 +1,3 @@
-
 import * as actionTypes from '../actions/Types'
 import * as helper from '../../utility/shared'
 
@@ -27,7 +26,6 @@ const authStart = (state,action) => {
       });
 }
 
-
 const reset = (state, action ) => {
     return helper.updateObject(state,{
         error:false,
@@ -37,7 +35,7 @@ const reset = (state, action ) => {
     })
 }
 
-const authLoginFailed = (state,{message}) => {
+const authLoginFailed = (state,{ message }) => {
     // const msg = action.message
     return helper.updateObject(state,{
         error:true,
@@ -143,7 +141,6 @@ const authAutoSuccess = ( state, action ) => {
 
     })
 }
-
 
 const logoutSuccessful = (state, action) => {
     return helper.updateObject(state,{

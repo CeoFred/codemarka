@@ -1,5 +1,4 @@
-
-import { createStore , applyMiddleware,compose,combineReducers} from 'redux';
+import { createStore , applyMiddleware,compose,combineReducers } from 'redux';
 import createSagaMiddleware from 'redux-saga'
 
 import Authreducer from './reducers/authReducer'

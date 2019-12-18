@@ -98,6 +98,3 @@ export const logoutSucceed = () => {
         type: 'LOGOUT_SUCCESSFUL'
     }
 }
-
-
-

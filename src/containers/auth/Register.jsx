@@ -1,7 +1,7 @@
 import React,{ useState, useEffect } from "react";
 import { Redirect } from "react-router-dom"
 import { Link } from "react-router-dom";
-import {connect} from "react-redux"
+import { connect } from "react-redux"
 
 import Github from "../../components/Partials/Auth/Button/Github";
 import Google from "../../components/Partials/Auth/Button/Google";
@@ -17,7 +17,7 @@ import * as action from "../../store/actions";
 import { updateObject } from '../../utility/shared';
 
 const emailIconSvg = (
-  <svg
+    <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
     height="1em"
@@ -29,13 +29,13 @@ const emailIconSvg = (
     strokeLinejoin="round"
     className="feather feather-at-sign"
   >
-    <circle cx="12" cy="12" r="4" />
-    <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94" />
-  </svg>
+        <circle cx="12" cy="12" r="4" />
+        <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94" />
+    </svg>
 );
 
 const initialPrependsvg = (
-  <svg
+    <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
     height="1em"
@@ -47,12 +47,12 @@ const initialPrependsvg = (
     strokeLinejoin="round"
     className="feather feather-key"
   >
-    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
-  </svg>
+        <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
+    </svg>
 );
 
 const userIconSvg = (
-  <svg
+    <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
     height="1em"
@@ -64,22 +64,22 @@ const userIconSvg = (
     strokeLinejoin="round"
     className="feather feather-user"
   >
-    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-    <circle cx="12" cy="7" r="4" />
-  </svg>
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+    </svg>
 );
 
 function Register(props) {
 
-const {onResetAll} = props;
+const { onResetAll } = props;
 useEffect(() => {
   
   return () => {
      onResetAll();
   };
-}, [onResetAll]);
+}, [ onResetAll ]);
 
-  const [state, setState] = useState({
+  const [ state, setState ] = useState({
     controls : {
       username : {
         value: '',
@@ -113,14 +113,12 @@ useEffect(() => {
     e.preventDefault();
     const value  = e.target.value;
     const updatedControls = {
-      ...state.controls,[controlName]:{
-        ...state.controls[controlName],
+      ...state.controls,[ controlName ]:{
+        ...state.controls[ controlName ],
       value
-    }}
-    setState({...state,controls:updatedControls});
+    } }
+    setState({ ...state,controls:updatedControls });
   }
-
-  
 
   const submitHandler = event => {
     event.preventDefault();
@@ -132,14 +130,14 @@ useEffect(() => {
     if (formSubmitted) {
       
       if(!state.controls.checkbox.value){
-        setState({...state,alertMessage:'You have agreed'})
+        setState({ ...state,alertMessage:'You have agreed' })
       }
 
       for (let formElementIdentifier in state.controls) {
-        formData[formElementIdentifier] =
-          state.controls[formElementIdentifier].value;
+        formData[ formElementIdentifier ] =
+          state.controls[ formElementIdentifier ].value;
       }
-      props.onAuth({...formData})
+      props.onAuth({ ...formData })
 
     } else {
       console.log('error,not submitted')
@@ -162,13 +160,13 @@ useEffect(() => {
   }
 
   let alert = (
-              <Alert 
-              display={props.message}
-              clicked={handleAlertClick}
-              type={state.alertType}
+      <Alert 
+              display={ props.message }
+              clicked={ handleAlertClick }
+              type={ state.alertType }
               >
-                {props.message ? `${props.message}` : ''}
-              </Alert>
+          {props.message ? `${ props.message }` : ''}
+      </Alert>
 );
 let redct;
 
@@ -179,99 +177,98 @@ if(props.isAuthenticated){
 
 }
   return (
-    <div>
-      <Helmet title="Signup to codemarka" metaDescription="" />
-      {redct}
-      <section>
-        <div className="mt-3 row align-items-center justify-content-center min-vh-100">
-          <div className="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
-            <div>
-              <div className="mb-5 text-center">
-                <h6 className="h3 mb-1">Create your account</h6>
-                <p className="text-muted mb-0">Made with love for developers</p>
-                {alert}
-              </div>
-              <span className="clearfix" />
-              <form onSubmit={submitHandler}>
-                {/* username input */}
-                <Input
+      <div>
+          <Helmet title="Signup to codemarka" metaDescription="" />
+          {redct}
+          <section>
+              <div className="mt-3 row align-items-center justify-content-center min-vh-100">
+                  <div className="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
+                      <div>
+                          <div className="mb-5 text-center">
+                              <h6 className="h3 mb-1">Create your account</h6>
+                              <p className="text-muted mb-0">Made with love for developers</p>
+                              {alert}
+                          </div>
+                          <span className="clearfix" />
+                          <form onSubmit={ submitHandler }>
+                              {/* username input */}
+                              <Input
                   type="text"
                   placeholder="superuser"
                   label="username"
                   initialPrepend
-                  initialPrependsvg={userIconSvg}
-                  value={state.controls.username.value}
-                  changed={(e) => handleInputChange(e,'username')}
+                  initialPrependsvg={ userIconSvg }
+                  value={ state.controls.username.value }
+                  changed={ (e) => handleInputChange(e,'username') }
                 />
 
-                {/* email input */}
-                <Input
+                              {/* email input */}
+                              <Input
                   type="email"
                   placeholder="someone@someserver.com"
                   label="Email address"
                   initialPrepend
-                  initialPrependsvg={emailIconSvg}
-                  value={state.controls.email.value}
-                  changed={(e) => handleInputChange(e,'email')}
-
+                  initialPrependsvg={ emailIconSvg }
+                  value={ state.controls.email.value }
+                  changed={ (e) => handleInputChange(e,'email') }
                   
                 />
-                {/* pasword input */}
-                <Input
+                              {/* pasword input */}
+                              <Input
                   type="password"
                   placeholder="Secret password"
                   label="password"
-                  isLoginPasswordInput={false}
+                  isLoginPasswordInput={ false }
                   initialPrepend
-                  initialPrependsvg={initialPrependsvg}
-                  value={state.controls.password.value}
-                  changed={(e) => handleInputChange(e,'password')}
+                  initialPrependsvg={ initialPrependsvg }
+                  value={ state.controls.password.value }
+                  changed={ (e) => handleInputChange(e,'password') }
 
                 />
 
-                {/* checkbox */}
-                <Input fieldtype="checkbox"
-                selected={state.controls.checkbox.value}
-                clicked={(e) => handleInputChange(e,'checkbox')}>
+                              {/* checkbox */}
+                              <Input fieldtype="checkbox"
+                selected={ state.controls.checkbox.value }
+                clicked={ (e) => handleInputChange(e,'checkbox') }>
                   I agree to the{" "}
-                  <Link to="/public/terms">terms and conditions</Link>
-                </Input>
+                                  <Link to="/public/terms">terms and conditions</Link>
+                              </Input>
 
-                <div className="mt-4">
-                <Button type="button"
-                   clicked={submitHandler} 
-                  disabled={props.loading}
+                              <div className="mt-4">
+                                  <Button type="button"
+                   clicked={ submitHandler } 
+                  disabled={ props.loading }
                    textColor="#fff" 
                    block color="primary">
-                    {props.loading ? <Spinner/> : 'Sign In'}
-                  </Button>
-                </div>
-              </form>
-              <div className="py-3 text-center">
-                <span className="text-xs text-uppercase">or</span>
-              </div>
-              <div className="row">
-                <div className="col-sm-6">
-                  {/* github action button */}
-                  <Github link={url.GITHUB_AUTH_URL} />
-                  {/* github action button */}
-                </div>
+                                      {props.loading ? <Spinner/> : 'Sign In'}
+                                  </Button>
+                              </div>
+                          </form>
+                          <div className="py-3 text-center">
+                              <span className="text-xs text-uppercase">or</span>
+                          </div>
+                          <div className="row">
+                              <div className="col-sm-6">
+                                  {/* github action button */}
+                                  <Github link={ url.GITHUB_AUTH_URL } />
+                                  {/* github action button */}
+                              </div>
 
-                <div className="col-sm-6">
-                  <Google link={url.GOOGLE_AUTH_URL} />
-                </div>
-              </div>
-              <div className="mt-4 text-center">
-                <small>Already have an account?</small>
-                <Link to={url.AUTH_SIGN_IN} className="small font-weight-bold">
+                              <div className="col-sm-6">
+                                  <Google link={ url.GOOGLE_AUTH_URL } />
+                              </div>
+                          </div>
+                          <div className="mt-4 text-center">
+                              <small>Already have an account?</small>
+                              <Link to={ url.AUTH_SIGN_IN } className="small font-weight-bold">
                   signin
-                </Link>
+                              </Link>
+                          </div>
+                      </div>
+                  </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+          </section>
+      </div>
   );
 }
 
@@ -283,7 +280,6 @@ const mapStateToProps = state => {
     message: state.auth.message
   }
 }
-
 
 const mapDispatchToProps = dispatch => {
   return {

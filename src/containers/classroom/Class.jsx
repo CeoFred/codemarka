@@ -19,7 +19,7 @@ const host =
     ? process.env.REACT_APP_REMOTE_API_URL
     : process.env.REACT_APP_LOCAL_API_URL;
 
-const socket = io(`${host}classrooms`,{
+const socket = io(`${ host }classrooms`,{
     'reconnection': true,
     'reconnectionDelay': 6000,
     'reconnectionDelayMax' : 6000,
@@ -30,15 +30,15 @@ toast.configure({
           draggable:true
         });
 
-const MainClassLayout = ({ data, owner, name, description ,username, userid}) => {
+const MainClassLayout = ({ data, owner, name, description ,username, userid }) => {
 
-  const [inputState, setInputState] = useState({
+  const [ inputState, setInputState ] = useState({
     value: "",
     isFocused: false,
     lastSentMessage: null
   });
 
-  const [codemarkastate, setcodemarkaState] = useState({
+  const [ codemarkastate, setcodemarkaState ] = useState({
     messages: [],
     editors: [],
     previewContent: {
@@ -51,7 +51,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
     typingState:[]
   });
 
-  const [inRoom, setInRoom] = useState(false);
+  const [ inRoom, setInRoom ] = useState(false);
 
   React.useEffect(() => {
     const requestData = {
@@ -74,10 +74,6 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
         });
       });
 
-
-
-
-
       // tell server to add user to class
       socket.emit("join", requestData);
       setInRoom(true)
@@ -89,13 +85,13 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
 
           oldmsg.push(msg);
 
-          return { ...c, messages: oldmsg, users: msg.newuserslist};
+          return { ...c, messages: oldmsg, users: msg.newuserslist };
           
         });
         if (codemarkastate.messages) {
           const len = codemarkastate.messages.length;
           const lastIndex = len - 1;
-          const ele = codemarkastate.messages[lastIndex].msgId
+          const ele = codemarkastate.messages[ lastIndex ].msgId
           const lelem = document.getElementById(ele);
 
           lelem.scrollIntoView(false);
@@ -127,7 +123,6 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
   toast.success('Welcome back online');
   });
 
-
       //listen for new messages
       socket.on("nM", data => {
         setcodemarkaState(
@@ -145,8 +140,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
           const len = codemarkastate.messages.length;
           const lastIndex = len - 1;
 
-
-          const ele = codemarkastate.messages[lastIndex].msgId
+          const ele = codemarkastate.messages[ lastIndex ].msgId
           const lelem = document.getElementById(ele);
 
           lelem.scrollIntoView(false);
@@ -164,14 +158,14 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
           const len = codemarkastate.messages.length;
           const lastIndex = len - 1;
 
-          const ele = codemarkastate.messages[lastIndex].msgId
+          const ele = codemarkastate.messages[ lastIndex ].msgId
           const lelem = document.getElementById(ele);
 
           lelem.scrollIntoView(false);
         }
       });
 
-      socket.on("utyping", ({username, userid}) => {
+      socket.on("utyping", ({ username, userid }) => {
 
         setcodemarkaState(c => {
 
@@ -192,30 +186,29 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
           } else {
             console.log('not found',username)
             let oldT = c.typingState;
-            oldT.push({username,id:userid});
-            return {...c,typingState: oldT};
+            oldT.push({ username,id:userid });
+            return { ...c,typingState: oldT };
           }
           
         })
       })
 
-      socket.on("utyping_cleared", ({username, userid}) => {
+      socket.on("utyping_cleared", ({ username, userid }) => {
         console.log(username,'cleared input');
         // remove user from typing list;
-       
 
         setcodemarkaState(c => {
            let newuserTypingList = c.typingState.filter(typist => {
           return  typist.id !== userid
              
           });
-           return {...c,typingState: newuserTypingList};
+           return { ...c,typingState: newuserTypingList };
         })
       })
 
       socket.on("classroom_users",(data) => {
         setcodemarkaState(c => {
-          return {...c,users:data}
+          return { ...c,users:data }
         });
       });
 
@@ -229,7 +222,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
             editors: [
               { file: "css", ...css },
               { file: "html", ...html },
-              {file: "js",...js}
+              { file: "js",...js }
             ]
           };
         });
@@ -256,12 +249,12 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
           let oldUsers = c.users;
           let newUserRole = oldUsers.map(user => {
             if(user.id === data.id){
-              return {id:user.id,role:data.role,username: user.username}
+              return { id:user.id,role:data.role,username: user.username }
             } else {
               return user;
             }
           });
-          return {...c,users:newUserRole, editorPriviledge: data.role === "2" ? true: false}
+          return { ...c,users:newUserRole, editorPriviledge: data.role === "2" ? true: false }
         });
           if(data.role === "1"){
             toast.info("You have been placed on restrictions to modify the Editors");
@@ -271,10 +264,8 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
         }
       })
 
-
       //listen to file changes
-      socket.on("class_files_updated", ({ id, file, content ,editedBy}) => {
-
+      socket.on("class_files_updated", ({ id, file, content ,editedBy }) => {
         
           setcodemarkaState(c => {
             // check preview states
@@ -283,19 +274,18 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
             c.editors.forEach((element, i) => {
               if (element.file === file && element.id === id) {
                 oldFiles = c.editors;
-                oldFiles[i].content = content;
+                oldFiles[ i ].content = content;
               }
             });
               return {
               ...c,
               editors: oldFiles,
-              previewContent: { ...c.previewContent, [file]: { content, id } }
+              previewContent: { ...c.previewContent, [ file ]: { content, id } }
             };
             }else {
-              return {...c};
+              return { ...c };
             }          
           });
-
 
       });
     }
@@ -324,9 +314,9 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
     setInputState({ ...inputState, value });
 
     if(e.target.value.trim().length > 0){
-      socket.emit('user_typing',{username,userid,classroomid:data.classroom_id});
+      socket.emit('user_typing',{ username,userid,classroomid:data.classroom_id });
     } else {
-      socket.emit('user_typing_cleared',{username,userid,classroomid:data.classroom_id})
+      socket.emit('user_typing_cleared',{ username,userid,classroomid:data.classroom_id })
     }
   };
 
@@ -350,7 +340,6 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
     
   };
 
-
   const editorChanged = (e, o, v, t) => {
     let fid;
 
@@ -372,19 +361,18 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
             setcodemarkaState(c => {           
             return {
               ...c,
-              previewContent: { ...c.previewContent, [t]: { content:v, id:fid } }
+              previewContent: { ...c.previewContent, [ t ]: { content:v, id:fid } }
             };
           });    
-     
     
     if(o.origin === '+input'){
-      if((o.text[0]).trim() !== '' && ((o.text[0]).trim()).length === 1){
+      if((o.text[ 0 ]).trim() !== '' && ((o.text[ 0 ]).trim()).length === 1){
         socket.emit("editorChanged", emitObj);
       }
     }
 
     if(o.origin === '+delete'){
-      if((o.removed[0]).trim() !== ""){
+      if((o.removed[ 0 ]).trim() !== ""){
         socket.emit("editorChanged", emitObj);
       }
     }
@@ -414,7 +402,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
 
     const getGeneratedPageURL = ({ html, css, js }) => {
   const getBlobURL = (code, type) => {
-    const blob = new Blob([code], { type })
+    const blob = new Blob([ code ], { type })
     return URL.createObjectURL(blob)
   }
 
@@ -429,11 +417,11 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid}) =>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        ${css && `<link rel="stylesheet" type="text/css" href="${cssURL}" />`}
-        ${js && `<script src="${jsURL}"></script>`}
+        ${ css && `<link rel="stylesheet" type="text/css" href="${ cssURL }" />` }
+        ${ js && `<script src="${ jsURL }"></script>` }
       </head>
       <body>
-        ${html || ''}
+        ${ html || '' }
       </body>
     </html>
   `
@@ -447,7 +435,6 @@ const url = getGeneratedPageURL({
   js: script
 })
 
-
     if(styles && html && script) {
       previewFrame.src = url
 
@@ -458,71 +445,69 @@ const url = getGeneratedPageURL({
   let classNotification;
   if(!owner && !codemarkastate.editorPriviledge){
     classNotification = (
-      <div class="alert alert-group alert-info alert-icon fixed-bottom w-25 left-10" role="alert">
-	<div class="alert-group-prepend"> 
-        <span class="alert-group-icon text-white">
-            <i className="fa fa-info-circle"></i>
-        </span>
-    </div>
-    <div class="alert-content">
-        <strong>Heads up!</strong> You cannot format the editors.
-    </div>
-	<div class="alert-action">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-		<span aria-hidden="true">&times;</span>
-	</button>
-    </div>
-</div>
+        <div class="alert alert-group alert-info alert-icon fixed-bottom w-25 left-10" role="alert">
+            <div class="alert-group-prepend"> 
+                <span class="alert-group-icon text-white">
+                    <i className="fa fa-info-circle"></i>
+                </span>
+            </div>
+            <div class="alert-content">
+                <strong>Heads up!</strong> You cannot format the editors.
+            </div>
+            <div class="alert-action">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
     );
   }
 
   const handletoogleUserEditAccess = (e, u) => {
     
-    socket.emit("toogle_class_role",{user:u,new_role: e.target.value});
+    socket.emit("toogle_class_role",{ user:u,new_role: e.target.value });
   }
 
-const classfilesdownloadlink =  `${host}${CLASSROOM_FILE_DOWNLOAD}${data.classroom_id}`;
+const classfilesdownloadlink =  `${ host }${ CLASSROOM_FILE_DOWNLOAD }${ data.classroom_id }`;
 
   return (
-    <div>
-     <ToastContainer />
-      <Preview previewBtnClicked={handlePreview} classroomid={data.classroom_id}/>
-      {classNotification}
-      <Navigation name={name} downloadLink={classfilesdownloadlink}/>
-<ParticipantModal users={codemarkastate.users} 
-toogleUserEditAccess={handletoogleUserEditAccess}
-owner={owner}
+      <div>
+          <ToastContainer />
+          <Preview previewBtnClicked={ handlePreview } classroomid={ data.classroom_id }/>
+          {classNotification}
+          <Navigation name={ name } downloadLink={ classfilesdownloadlink }/>
+          <ParticipantModal users={ codemarkastate.users } 
+toogleUserEditAccess={ handletoogleUserEditAccess }
+owner={ owner }
 />
-      <div style={{ width: "100%", height: "87vh" }}>
-        <div className="container-fluid ">
-          <div className="row">
-            <div className="col-2 p-0">
-    <Seo title={`${name} :: codemarka classroom`} description={description}/>
-        <Convo
-        typing={codemarkastate.typingState}
-        username={username}
-          inputValue={inputState.value}
-          handleInputChange={handleInputChange}
-          sendMessage={e => handleMessageSubmit(e)}
-          focused={inputState.isFocused}
-          messages={codemarkastate.messages}
-          user={userid}
+          <div style={ { width: "100%", height: "87vh" } }>
+              <div className="container-fluid ">
+                  <div className="row">
+                      <div className="col-2 p-0">
+                          <Seo title={ `${ name } :: codemarka classroom` } description={ description }/>
+                          <Convo
+        typing={ codemarkastate.typingState }
+        username={ username }
+          inputValue={ inputState.value }
+          handleInputChange={ handleInputChange }
+          sendMessage={ e => handleMessageSubmit(e) }
+          focused={ inputState.isFocused }
+          messages={ codemarkastate.messages }
+          user={ userid }
         />
-            </div>
-            <div className="col-10 p-0">
-<Editor
-          readOnly={codemarkastate.editorPriviledge}
-          handleEditorChange={(e, o, v, t) => editorChanged(e, o, v, t)}
-          files={codemarkastate.editors}
+                      </div>
+                      <div className="col-10 p-0">
+                          <Editor
+          readOnly={ codemarkastate.editorPriviledge }
+          handleEditorChange={ (e, o, v, t) => editorChanged(e, o, v, t) }
+          files={ codemarkastate.editors }
         />
-            </div>
+                      </div>
+                  </div>
+              </div>
+        
           </div>
-        </div>
-        
-
-        
       </div>
-    </div>
   );
 };
 

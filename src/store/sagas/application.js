@@ -1,4 +1,4 @@
-import {put} from 'redux-saga/effects';
+import { put } from 'redux-saga/effects';
 
 import * as actions from '../actions/index'
 
@@ -18,7 +18,6 @@ export function* cookieAccepted() {
     }
 
 }
-
 
 export function* tryValidatingCookie() {
     const cookie_token = localStorage.getItem('ctok');

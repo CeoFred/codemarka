@@ -11,15 +11,13 @@ export  function counter(state = 0, action) {
     }
   }
   
-  
-  export  function sayer(state = {what:''}, action) {
+  export  function sayer(state = { what:'' }, action) {
     switch (action.type) {
       case 'INCREMENT_SAYER':
-        return {...state,what:'incremented'}
+        return { ...state,what:'incremented' }
       case 'DECREMENT_SAYER':
-        return {...state,what :'decremented'}
+        return { ...state,what :'decremented' }
       default:
         return state
     }
   }
-  

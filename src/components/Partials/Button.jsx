@@ -2,16 +2,16 @@ import React from "react";
 
 export default function Button(props) {
   return (
-    <button
-      onClick={props.clicked}
-      type={props.type || 'button'}
-      className={`btn btn-${props.color} ${props.block ? `btn-block` : ``}  ${props.animation} btn-${
+      <button
+      onClick={ props.clicked }
+      type={ props.type || 'button' }
+      className={ `btn btn-${ props.color } ${ props.block ? `btn-block` : `` }  ${ props.animation } btn-${
         props.size
-      } ${props.icon || ""}`}
-      disabled={props.disabled || false}
-      style={{ color: `${props.textColor || "inherit"}` }}
+      } ${ props.icon || "" }` }
+      disabled={ props.disabled || false }
+      style={ { color: `${ props.textColor || "inherit" }` } }
     >
-      {props.children}
-    </button>
+          {props.children}
+      </button>
   );
 }

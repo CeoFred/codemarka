@@ -1,8 +1,8 @@
-
+/* eslint-disable camelcase */
 import * as actionTypes from '../actions/Types'
 import * as helper from '../../utility/shared'
 
-let INITIAL_STATE = {
+const INITIAL_STATE = {
     classroom_id:null,
     is_loaded:null,
     errors:null,
@@ -10,8 +10,6 @@ let INITIAL_STATE = {
     classdetails:null,
     validated:false
 }
-
-
 
 const classroomCreationInit = (state,action) => {
     return helper.updateObject(state,{
@@ -41,6 +39,13 @@ const classroomJoined = (state,action) => {
     })
 }
 
+const errorLeavingClass = (state,prevClass,newClass) => {
+    return helper.updateObject(state,{
+        errors:'Failed to leave classroom',
+        classdetails: `${ prevClass } is not same with ${ newClass }`
+    })
+}
+
 const classroomLeft = (state,action) => {
     if(state.classroom_id === action.classroom){
         return helper.updateObject(state,{
@@ -50,20 +55,12 @@ const classroomLeft = (state,action) => {
   return errorLeavingClass(state,state.classroom_id,action.classroom)
 }
 
-const errorLeavingClass = (state,prevClass,newClass) => {
-    return helper.updateObject(state,{
-        errors:"Failed to leave classroom",
-        classdetails: `${prevClass} is not same with ${newClass}`
-    })
-}
-
 const classroomVerifyStart = (state,action) => {
     return helper.updateObject(state,{
         classroom_id:null,
         errors:null
     })
 }
-
 
 const classroomVerified = (state,action) => {
     return helper.updateObject(state,{

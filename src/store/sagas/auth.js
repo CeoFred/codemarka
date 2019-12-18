@@ -4,7 +4,6 @@ import * as actions from '../actions/index';
 import * as actionTypes from '../actions/Types';
 import { resolvePromise } from '../../utility/shared';
 
-
 const host = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test" ? process.env.REACT_APP_REMOTE_API_URL : process.env.REACT_APP_LOCAL_API_URL
 const userTokenAlias = 'wx1298';
 const userIdAlias = 'u342345';
@@ -31,7 +30,7 @@ export function* checkAuthTimeoutSaga(action) {
 export function* authRegisterUserSaga({ email, password, username }) {
     yield put({ type: actionTypes.AUTH_USER_SIGNUP_START });
 
-    let url = `${host}auth/user/signup`;
+    let url = `${ host }auth/user/signup`;
     let myHeaders = yield new Headers()
     myHeaders.append('Content-Type', 'Application/json')
 
@@ -63,16 +62,14 @@ export function* authRegisterUserSaga({ email, password, username }) {
 
             yield put(actions.authRegisterSuccess(resolvedResponse.data));
 
-
         } else if (typeof resolvedResponse.message == 'object') {
 
-            yield put(actions.authRegisterFailed(resolvedResponse.message[0].msg))
+            yield put(actions.authRegisterFailed(resolvedResponse.message[ 0 ].msg))
 
         } else {
             yield put(actions.authRegisterFailed(resolvedResponse.message))
 
         }
-
 
     } catch ({ message }) {
         if(message && message === 'Failed to fetch'){
@@ -83,14 +80,12 @@ export function* authRegisterUserSaga({ email, password, username }) {
             }
     }
 
-
 }
-
 
 export function* authLoginUserSaga({ email, password }) {
     yield put({ type: 'AUTH_USER_LOGIN_START' });
 
-    let url = `${host}auth/user/signin`;
+    let url = `${ host }auth/user/signin`;
     let myHeaders = yield new Headers()
     myHeaders.append('Content-Type', 'Application/json')
 
@@ -107,8 +102,6 @@ export function* authLoginUserSaga({ email, password }) {
         const response = yield fetch(loginRequest)
         const resolvedResponse = yield call(resolvePromise, response.json())
 
-
-
         if (resolvedResponse.status === 1) {
 
             if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
@@ -124,10 +117,9 @@ export function* authLoginUserSaga({ email, password }) {
 
             yield put(actions.authRegisterSuccess(resolvedResponse.data));
 
-
         } else if (typeof resolvedResponse.message == 'object') {
 
-            yield put(actions.authRegisterFailed(resolvedResponse.message[0].msg))
+            yield put(actions.authRegisterFailed(resolvedResponse.message[ 0 ].msg))
 
         } else {
             yield put(actions.authRegisterFailed(resolvedResponse.message))
@@ -143,15 +135,13 @@ export function* authLoginUserSaga({ email, password }) {
             }
     }
 
-
 }
-
 
 export function* autoLoginUserSaga() {
     const _id = localStorage.getItem(userIdAlias);
     const _token = localStorage.getItem(userTokenAlias)
 
-    let url = `${host}auth/user/token/verify`;
+    let url = `${ host }auth/user/token/verify`;
     let myHeaders = yield new Headers()
     myHeaders.append('Content-Type', 'Application/json')
 
@@ -169,7 +159,6 @@ export function* autoLoginUserSaga() {
 
     if (token_v && userid_v) {
 
-
         try {
 
             const response = yield fetch(autoLoginRequest)
@@ -184,7 +173,6 @@ export function* autoLoginUserSaga() {
                 }
                 resolvedResponse.data.token = token_v;
                 yield put(actions.autoAuthSuccess(resolvedResponse.data));
-
 
             } else if (resolvedResponse.message.name === 'JsonWebTokenError') {
 
@@ -210,4 +198,3 @@ export function* autoLoginUserSaga() {
     }
 
 }
-

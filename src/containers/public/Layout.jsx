@@ -11,19 +11,19 @@ import ErrorBoundary from "../../HOC/Error/ErrorBoundary";
 
 import * as actions from "../../store/actions/Types";
 export default function Layout(props) {
-  const [appLoaded, setappLoaded] = useState(false);
-  const [content, setContent] = useState(<Preloader />);
+  const [ appLoaded, setappLoaded ] = useState(false);
+  const [ content, setContent ] = useState(<Preloader />);
   const state = useSelector(state => state);
   const { cookie_token } = state.app;
   const dispatch = useDispatch();
 
   const acceptCookieForUser = () => {
-    dispatch({type:actions.ACCEPT_COOKIE});
+    dispatch({ type:actions.ACCEPT_COOKIE });
   };
   const body = (
-    <div>
-      {!cookie_token ? (
-        <div
+      <div>
+          {!cookie_token ? (
+              <div
           className="modal fade show d-inline-block"
           tabIndex="-1"
           role="dialog"
@@ -32,39 +32,39 @@ export default function Layout(props) {
           aria-labelledby="modal-cookies"
           aria-hidden="false"
         >
-          <div className="modal-dialog modal-dialog-float top-5">
-            <div className="modal-content bg-dark">
-              <div className="modal-body">
-                <p className="text-sm text-white mb-3">
+                  <div className="modal-dialog modal-dialog-float top-5">
+                      <div className="modal-content bg-dark">
+                          <div className="modal-body">
+                              <p className="text-sm text-white mb-3">
                   We use cookies so that our services works just fine for you. By using our
                   website, you agree to our use of cookies.
-                </p>
-                <Link
+                              </p>
+                              <Link
                   to="pages/utility/terms"
                   className="btn btn-sm btn-neutral"
                   target="_blank"
                 >
                   Learn more
-                </Link>
-                <Button
+                              </Link>
+                              <Button
                   color="primary"
                   size="sm"
                   textColor="#fff"
-                  clicked={acceptCookieForUser}
+                  clicked={ acceptCookieForUser }
                 >
                   OK
-                </Button>
+                              </Button>
+                          </div>
+                      </div>
+                  </div>
               </div>
-            </div>
-          </div>
-        </div>
       ) : (
         ""
       )}
-      <NavigationBar />
-      {props.children}
-      <FooterBar/>
-    </div>
+          <NavigationBar />
+          {props.children}
+          <FooterBar/>
+      </div>
   );
   useEffect(() => {
     setTimeout(() => {
@@ -76,11 +76,11 @@ export default function Layout(props) {
         setContent(body);
       }
     };
-  }, [appLoaded, setContent, setappLoaded, props.children, body]);
+  }, [ appLoaded, setContent, setappLoaded, props.children, body ]);
 
   return (
-    <ErrorBoundary>
-      <Suspense fallback={<Preloader/>}>{content}</Suspense>
-    </ErrorBoundary>
+      <ErrorBoundary>
+          <Suspense fallback={ <Preloader/> }>{content}</Suspense>
+      </ErrorBoundary>
   );
 }

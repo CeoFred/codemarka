@@ -1,7 +1,5 @@
-
 import React, { Component } from 'react'
 import { connect } from "react-redux";
-
 
 import { dispatchAppEnvironment } from "../../store/actions/app";
 
@@ -10,7 +8,6 @@ export class classPreviewNewTab extends Component {
   componentWillMount() {
     this.props.onClassroomSwitch('classroom');
   }
-  
 
   componentDidMount() {
      const { match: { params }  } = this.props;
@@ -23,7 +20,7 @@ export class classPreviewNewTab extends Component {
 
     const handlePreviewFileFetch = () => {
 
-    let url = `${host}classroom/preview/${classroomId}`;
+    let url = `${ host }classroom/preview/${ classroomId }`;
         
         let searchClassroomRequest =  new Request(url, {
             method: 'GET',
@@ -47,7 +44,7 @@ export class classPreviewNewTab extends Component {
 
     const getGeneratedPageURL = ({ html, css, js }) => {
   const getBlobURL = (code, type) => {
-    const blob = new Blob([code], { type })
+    const blob = new Blob([ code ], { type })
     return URL.createObjectURL(blob)
   }
 
@@ -62,11 +59,11 @@ export class classPreviewNewTab extends Component {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        ${css && `<link rel="stylesheet" type="text/css" href="${cssURL}" />`}
-        ${js && `<script src="${jsURL}"></script>`}
+        ${ css && `<link rel="stylesheet" type="text/css" href="${ cssURL }" />` }
+        ${ js && `<script src="${ jsURL }"></script>` }
       </head>
       <body>
-        ${html || ''}
+        ${ html || '' }
       </body>
     </html>
   `
@@ -79,7 +76,6 @@ const url = getGeneratedPageURL({
   css:styles,
   js: script
 })
-
 
     if(styles && html && script) {
       previewFrame.src = url
@@ -99,8 +95,8 @@ const url = getGeneratedPageURL({
   render() {
     return (
         <div className="h-100vh w-100">
-      <iframe id="tabpreviewframe" className="w-100 h-100" title='classpreview'></iframe>
-    </div>
+            <iframe id="tabpreviewframe" className="w-100 h-100" title='classpreview'></iframe>
+        </div>
     )
   }
 }

@@ -1,22 +1,21 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { BrowserRouter} from 'react-router-dom';
-import {Provider} from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 
 import store from './store/index';
 
 export const Index = (
-    <Provider store={store}>
-    <BrowserRouter>
-    <App/>
-    </BrowserRouter>
+    <Provider store={ store }>
+        <BrowserRouter>
+            <App/>
+        </BrowserRouter>
     </Provider>
 );
 
-export default {App};
+export default { App };
 
 ReactDOM.render(Index, document.getElementById('root') || document.createElement('div'));
 
