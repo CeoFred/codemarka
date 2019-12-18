@@ -1,21 +1,24 @@
+/* eslint-disable no-undef */
 import React,{ useEffect , useState , useRef } from 'react';
 
-import Preloader from "../Preloader";
+import Preloader from '../Preloader';
 function Trending() {
 
     const [ hasMounted, setHasMounted ] = useState(false);
-const content = useRef(<Preloader />);
+    const content = useRef(<Preloader />);
 
     useEffect(() => {
-        if(!hasMounted){
-            const fetchTrending = () => {
-                const host = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test" ? process.env.REACT_APP_REMOTE_API_URL : process.env.REACT_APP_LOCAL_API_URL
 
-                let url = `${ host }classroom/trending/`;
-                let myHeaders = new Headers()
+        if(!hasMounted){
+            
+            const fetchTrending = () => {
+                const host = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test' ? process.env.REACT_APP_REMOTE_API_URL : process.env.REACT_APP_LOCAL_API_URL
+
+                const url = `${ host }classroom/trending/`;
+                const myHeaders = new Headers()
                 myHeaders.append('Content-Type', 'Application/json')
             
-                let fetchTrendingClassroomsRequest =  new Request(url, {
+                const fetchTrendingClassroomsRequest =  new Request(url, {
                     method: 'GET',
                     cache: 'default',
                     headers: myHeaders,
@@ -44,8 +47,8 @@ const content = useRef(<Preloader />);
                                         </div>
                                         <div class="col text-right text-right">
                                             <div class="actions">
-                                                <a href="/#" class="action-item"><i  class="fa fa-heart mr-1 text-danger"></i> {tr.likes}</a>
-                                                <a href="/#" class="action-item"><i  class=" fa fa-eye mr-1"></i>{tr.visits}</a>
+                                                <a href="/heaerter" onClick={ (e) => e.preventDefault() } class="action-item"><i  class="fa fa-heart mr-1 text-danger"></i> {tr.likes.length}</a>
+                                                <a href="/liker" onClick={ (e) => e.preventDefault() } class="action-item"><i  class=" fa fa-eye mr-1"></i>{tr.visits}</a>
                                             </div>
                                         </div>
                                     </div>

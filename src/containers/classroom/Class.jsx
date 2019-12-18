@@ -31,7 +31,7 @@ toast.configure({
           draggable:true
         });
 
-const MainClassLayout = ({ data, owner, name, description ,username, userid }) => {
+const MainClassLayout = ({ ownerid, data, owner, name, description ,username, userid }) => {
 
   const [ inputState, setInputState ] = useState({
     value: '',
@@ -243,37 +243,52 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
 
       });
 
-      socket.on('newuser_role',(data) => {
-        console.log(data);
+      socket.on('newuser_role',(__d) => {
+        console.log(__d);
         
-        if(String(data.id) === String(userid) && data.role){
+        if(String(__d.id) === String(userid) && __d.role){
           setcodemarkaState(c => {
           const oldUsers = c.users;
           const newUserRole = oldUsers.map(user => {
-            if(user.id === data.id){
-              return { id:user.id,role:data.role,username: user.username }
+            if(user.id === __d.id){
+              return { id:user.id,role:__d.role,username: user.username }
             } else {
               return user;
             }
           });
-          return { ...c,users:newUserRole, editorPriviledge: data.role === '2' ? true: false }
+          return { ...c,users:newUserRole, editorPriviledge: __d.role === '2' ? true: false }
         });
-          if(data.role === '1'){
+          if(__d.role === '1'){
             toast.info('You have been placed on restrictions to modify the Editors');
-          } else if( data.role === '2') {
+          } else if( __d.role === '2') {
             toast.info('You now have access to modify the Editors');
           }
         }
       })
 
       //new like list
-      socket.on('new_favourite_action',(liked) => {
+      socket.on('new_favourite_action',({liked, user }) => {
+       if (user === userid){
         setcodemarkaState(c => {
-          return {...c, favourite: liked} 
-          });
+            return { ...c, favourite: liked }
+        })
+       } 
+       if (owner && liked ) {
+         toast.info('Hurray! New Classroom Favourite')
+       }
+       if (owner && !liked ) {
+         toast.info('Too bad! Lost a Classroom Favourite');
+       }
+      });
+
+      socket.on('user_waved',({ from, to }) => {
+          if(userid === to.id){
+            toast.info(`${ from } waved at you`);
+          }
       });
 
       socket.on('class_favourites',(likedList) => {
+
         setcodemarkaState(c => {
           let liked = false;
             likedList.forEach(list => {
@@ -281,13 +296,14 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
                   liked = true
                 }
             });
-            
+
             if(liked){
               return { ...c, favourite: true}
             } else {
               return { ...c, favourite: false }
                    }
-        })
+        });
+
       });
       //listen to file changes
       socket.on('class_files_updated', ({ id, file, content ,editedBy }) => {
@@ -498,52 +514,80 @@ const url = getGeneratedPageURL({
     socket.emit('add_to_favourite');
   }
 
+  const handlePrivateMessaging = (e,user) => {
+    toast.info('Feature not available for free classrooms');
+  };
+
+  const handleUserBlocking = (e,user) => {
+    socket.emit('block_user',user)
+  }
+
+  const handlewaveAtUser = (e, user) => {
+    console.log('wave initiated');
+    toast.info(`Hey! You just waved at ${ user.username }`);
+    console.log(user)
+    socket.emit('user_waving',user);
+  }
+
 const classfilesdownloadlink =  `${ host }${ CLASSROOM_FILE_DOWNLOAD }${ data.classroom_id }`;
 
   return (
       <div>
           <ToastContainer />
-          <Preview previewBtnClicked={ handlePreview } classroomid={ data.classroom_id }/>
+          <Preview
+              previewBtnClicked={ handlePreview }
+              classroomid={ data.classroom_id }
+          />
           {classNotification}
           <Navigation
-           name={ name }
-          downloadLink={ classfilesdownloadlink }
-          favourite={ addClassToFavourite }
-          isFavourite={ codemarkastate.favourite }
+              name={ name }
+              downloadLink={ classfilesdownloadlink }
+              favourite={ addClassToFavourite }
+              isFavourite={ codemarkastate.favourite }
           />
-          <ParticipantModal users={ codemarkastate.users } 
-toogleUserEditAccess={ handletoogleUserEditAccess }
-owner={ owner }
-/>
+          <ParticipantModal
+              users={ codemarkastate.users }
+              toogleUserEditAccess={ handletoogleUserEditAccess }
+              owner={ owner }
+              ownerid={ ownerid }
+              userid={ userid }
+              sendUserPrivateMessage={ handlePrivateMessaging }
+              blockUser={ handleUserBlocking }
+              waveAtUser={ handlewaveAtUser }
+          />
           <div style={ { width: '100%', height: '87vh' } }>
               <div className="container-fluid ">
                   <div className="row">
                       <div className="col-2 p-0">
-                          <Seo title={ `${ name } :: codemarka classroom` } description={ description }/>
+                          <Seo
+                              title={ `${ name } :: codemarka classroom` }
+                              description={ description }
+                          />
                           <Convo
-        typing={ codemarkastate.typingState }
-        username={ username }
-          inputValue={ inputState.value }
-          handleInputChange={ handleInputChange }
-          sendMessage={ e => handleMessageSubmit(e) }
-          focused={ inputState.isFocused }
-          messages={ codemarkastate.messages }
-          user={ userid }
-        />
+                              typing={ codemarkastate.typingState }
+                              username={ username }
+                              inputValue={ inputState.value }
+                              handleInputChange={ handleInputChange }
+                              sendMessage={ e => handleMessageSubmit(e) }
+                              focused={ inputState.isFocused }
+                              messages={ codemarkastate.messages }
+                              user={ userid }
+                          />
                       </div>
                       <div className="col-10 p-0">
                           <Editor
-          readOnly={ codemarkastate.editorPriviledge }
-          handleEditorChange={ (e, o, v, t) => editorChanged(e, o, v, t) }
-          files={ codemarkastate.editors }
-        />
+                              readOnly={ codemarkastate.editorPriviledge }
+                              handleEditorChange={ (e, o, v, t) =>
+                                  editorChanged(e, o, v, t)
+                              }
+                              files={ codemarkastate.editors }
+                          />
                       </div>
                   </div>
               </div>
-        
           </div>
       </div>
-  );
+  )
 };
 
 export default MainClassLayout;

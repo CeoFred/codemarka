@@ -68,6 +68,7 @@ function Environment(props) {
           username={ props.username }
           userid={ props.userid }
           description={ props.class_description }
+          ownerid= { props.class_owner }
         />
       );
     }

@@ -114,11 +114,11 @@ function NewClassroom(props) {
                             displayValue: 'Select a Location'
                         },
                         {
-                            value: 'NG',
+                            value: 'Nigeria',
                             displayValue: 'Nigeria'
                         },
                         {
-                            value: 'OT',
+                            value: 'Outside Nigeria',
                             displayValue: 'Others'
                         }
                     ]
@@ -212,16 +212,6 @@ function NewClassroom(props) {
                 formData[formElementIdentifier] =
                     state.controls[formElementIdentifier].value
             }
-            //       formData = {
-            //         classType: "Basic Web App",
-            // description: "wwdw",
-            // name: "jhgkdw",
-            // startDate: "2019-11-15",
-            // startTime: "02:03",
-            // topic: "kjnm,swd",
-            // token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGNjOTI2NzdhMjg1ZjA4MzgxOWFkNzQiLCJ0b2tlbiI6IiIsImlhdCI6MTU3NDUyNTY4NiwiZXhwIjoxNTc0NjQ0NDg2fQ.Aom8vObSHTcQakLG7wBYR_3c12V1mOALPYMtO_6yD5c",
-            // visibility: "Public",
-            //       }
             formData.token = props.token;
             const date = formData.startDate;
             const time = formData.startTime;
