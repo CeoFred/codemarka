@@ -1,21 +1,22 @@
-import React, { useState } from "react";
-import io from "socket.io-client";
+/* eslint-disable no-undef */
+import React, { useState } from 'react';
+import io from 'socket.io-client';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import Navigation from "../../components/classroom/UI/NavBar";
-import Convo from "./Conversation";
-import Editor from "../../components/classroom/Editor/Editor";
-import Preview from "../../components/classroom/Editor/Preview";
-import Seo from "../../components/SEO/helmet";
+import Navigation from '../../components/classroom/UI/NavBar';
+import Convo from './Conversation';
+import Editor from '../../components/classroom/Editor/Editor';
+import Preview from '../../components/classroom/Editor/Preview';
+import Seo from '../../components/SEO/helmet';
 
-import ParticipantModal from "../../components/classroom/Participants/Modal";
+import ParticipantModal from '../../components/classroom/Participants/Modal';
 
-import { CLASSROOM_FILE_DOWNLOAD } from "../../config/api_url";
-import "./css/Environment.css";
+import { CLASSROOM_FILE_DOWNLOAD } from '../../config/api_url';
+import './css/Environment.css';
 
 const host =
-  process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test"
+  process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test'
     ? process.env.REACT_APP_REMOTE_API_URL
     : process.env.REACT_APP_LOCAL_API_URL;
 
@@ -33,7 +34,7 @@ toast.configure({
 const MainClassLayout = ({ data, owner, name, description ,username, userid }) => {
 
   const [ inputState, setInputState ] = useState({
-    value: "",
+    value: '',
     isFocused: false,
     lastSentMessage: null
   });
@@ -48,7 +49,8 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
     owner,
     users:[],
     editorPriviledge:owner,
-    typingState:[]
+    typingState:[],
+    favourite:null
   });
 
   const [ inRoom, setInRoom ] = useState(false);
@@ -64,9 +66,9 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
       // set listeners and emitters
 
       //listen for old message
-      socket.on("updateMsg", msg => {
+      socket.on('updateMsg', msg => {
         setcodemarkaState(c => {
-          let oldmsg = c.messages;
+          const oldmsg = c.messages;
           msg.msgs.forEach(element => {
             oldmsg.push(element);
           });
@@ -75,13 +77,13 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
       });
 
       // tell server to add user to class
-      socket.emit("join", requestData);
+      socket.emit('join', requestData);
       setInRoom(true)
       //listen for new members added
-      socket.on("someoneJoined", msg => {
+      socket.on('someoneJoined', msg => {
 
         setcodemarkaState(c => {
-          let oldmsg = c.messages;
+          const oldmsg = c.messages;
 
           oldmsg.push(msg);
 
@@ -105,7 +107,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
          socket.connect();
       }
         
-        toast.warn("Disconnected from classroom",{
+        toast.warn('Disconnected from classroom',{
        position: toast.POSITION.BOTTOM_RIGHT
      });
       })
@@ -119,17 +121,17 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
     });
 
   socket.on('reconnect', (attemptNumber) => {
-      socket.emit("join", requestData);
+      socket.emit('join', requestData);
   toast.success('Welcome back online');
   });
 
       //listen for new messages
-      socket.on("nM", data => {
+      socket.on('nM', data => {
         setcodemarkaState(
           c => {
-            let oldmsg = c.messages;
+            const oldmsg = c.messages;
             oldmsg.push(data);
-            let newuserTypingList = c.typingState.filter(typist => {
+            const newuserTypingList = c.typingState.filter(typist => {
             return  typist.id !== data.by
              
           });
@@ -148,9 +150,9 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
       });
 
       //listen for members leaving
-      socket.on("updatechat_left", (msg) => {
+      socket.on('updatechat_left', (msg) => {
         setcodemarkaState(c => {
-          let oldmsg = c.messages;
+          const oldmsg = c.messages;
           oldmsg.push(msg);
           return { ...c, messages: oldmsg };
         });
@@ -165,7 +167,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
         }
       });
 
-      socket.on("utyping", ({ username, userid }) => {
+      socket.on('utyping', ({ username, userid }) => {
 
         setcodemarkaState(c => {
 
@@ -185,7 +187,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
             return c;
           } else {
             console.log('not found',username)
-            let oldT = c.typingState;
+            const oldT = c.typingState;
             oldT.push({ username,id:userid });
             return { ...c,typingState: oldT };
           }
@@ -193,12 +195,12 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
         })
       })
 
-      socket.on("utyping_cleared", ({ username, userid }) => {
+      socket.on('utyping_cleared', ({ username, userid }) => {
         console.log(username,'cleared input');
         // remove user from typing list;
 
         setcodemarkaState(c => {
-           let newuserTypingList = c.typingState.filter(typist => {
+           const newuserTypingList = c.typingState.filter(typist => {
           return  typist.id !== userid
              
           });
@@ -206,23 +208,23 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
         })
       })
 
-      socket.on("classroom_users",(data) => {
+      socket.on('classroom_users',(data) => {
         setcodemarkaState(c => {
           return { ...c,users:data }
         });
       });
 
       // listen for classroom files
-      socket.on("class_files", (css, html, js) => {
+      socket.on('class_files', (css, html, js) => {
 
         // set editor state
         setcodemarkaState(c => {
           return {
             ...c,
             editors: [
-              { file: "css", ...css },
-              { file: "html", ...html },
-              { file: "js",...js }
+              { file: 'css', ...css },
+              { file: 'html', ...html },
+              { file: 'js',...js }
             ]
           };
         });
@@ -241,31 +243,54 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
 
       });
 
-      socket.on("newuser_role",(data) => {
+      socket.on('newuser_role',(data) => {
         console.log(data);
         
         if(String(data.id) === String(userid) && data.role){
           setcodemarkaState(c => {
-          let oldUsers = c.users;
-          let newUserRole = oldUsers.map(user => {
+          const oldUsers = c.users;
+          const newUserRole = oldUsers.map(user => {
             if(user.id === data.id){
               return { id:user.id,role:data.role,username: user.username }
             } else {
               return user;
             }
           });
-          return { ...c,users:newUserRole, editorPriviledge: data.role === "2" ? true: false }
+          return { ...c,users:newUserRole, editorPriviledge: data.role === '2' ? true: false }
         });
-          if(data.role === "1"){
-            toast.info("You have been placed on restrictions to modify the Editors");
-          } else if( data.role === "2") {
+          if(data.role === '1'){
+            toast.info('You have been placed on restrictions to modify the Editors');
+          } else if( data.role === '2') {
             toast.info('You now have access to modify the Editors');
           }
         }
       })
 
+      //new like list
+      socket.on('new_favourite_action',(liked) => {
+        setcodemarkaState(c => {
+          return {...c, favourite: liked} 
+          });
+      });
+
+      socket.on('class_favourites',(likedList) => {
+        setcodemarkaState(c => {
+          let liked = false;
+            likedList.forEach(list => {
+                if (String(list.id) === String(userid)) {
+                  liked = true
+                }
+            });
+            
+            if(liked){
+              return { ...c, favourite: true}
+            } else {
+              return { ...c, favourite: false }
+                   }
+        })
+      });
       //listen to file changes
-      socket.on("class_files_updated", ({ id, file, content ,editedBy }) => {
+      socket.on('class_files_updated', ({ id, file, content ,editedBy }) => {
         
           setcodemarkaState(c => {
             // check preview states
@@ -292,7 +317,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
 
     return () => {
       if (inRoom) {
-        socket.emit("leave", requestData);
+        socket.emit('leave', requestData);
         setInRoom(false);
       }
     };
@@ -327,7 +352,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
       setInputState({
       ...inputState,
       lastSentMessage: e.target.value,
-      value: ""
+      value: ''
     });
 
     const msg_data = {
@@ -335,7 +360,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
       class: data.classroom_id,
       message: inputState.value
     };
-    socket.emit("newMessage", msg_data);
+    socket.emit('newMessage', msg_data);
     }
     
   };
@@ -367,13 +392,13 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
     
     if(o.origin === '+input'){
       if((o.text[ 0 ]).trim() !== '' && ((o.text[ 0 ]).trim()).length === 1){
-        socket.emit("editorChanged", emitObj);
+        socket.emit('editorChanged', emitObj);
       }
     }
 
     if(o.origin === '+delete'){
-      if((o.removed[ 0 ]).trim() !== ""){
-        socket.emit("editorChanged", emitObj);
+      if((o.removed[ 0 ]).trim() !== ''){
+        socket.emit('editorChanged', emitObj);
       }
     }
 
@@ -392,7 +417,7 @@ const MainClassLayout = ({ data, owner, name, description ,username, userid }) =
   };
 
   const handlePreview = e => {
-    const previewFrame = document.getElementById("preview_iframe");
+    const previewFrame = document.getElementById('preview_iframe');
     // var preview =  previewFrame.contentDocument || previewFrame.contentWindow.document;
     let styles, html , script;
 
@@ -465,7 +490,12 @@ const url = getGeneratedPageURL({
 
   const handletoogleUserEditAccess = (e, u) => {
     
-    socket.emit("toogle_class_role",{ user:u,new_role: e.target.value });
+    socket.emit('toogle_class_role',{ user:u,new_role: e.target.value });
+  }
+
+  const addClassToFavourite = (e) => {
+    e.preventDefault();
+    socket.emit('add_to_favourite');
   }
 
 const classfilesdownloadlink =  `${ host }${ CLASSROOM_FILE_DOWNLOAD }${ data.classroom_id }`;
@@ -475,12 +505,17 @@ const classfilesdownloadlink =  `${ host }${ CLASSROOM_FILE_DOWNLOAD }${ data.cl
           <ToastContainer />
           <Preview previewBtnClicked={ handlePreview } classroomid={ data.classroom_id }/>
           {classNotification}
-          <Navigation name={ name } downloadLink={ classfilesdownloadlink }/>
+          <Navigation
+           name={ name }
+          downloadLink={ classfilesdownloadlink }
+          favourite={ addClassToFavourite }
+          isFavourite={ codemarkastate.favourite }
+          />
           <ParticipantModal users={ codemarkastate.users } 
 toogleUserEditAccess={ handletoogleUserEditAccess }
 owner={ owner }
 />
-          <div style={ { width: "100%", height: "87vh" } }>
+          <div style={ { width: '100%', height: '87vh' } }>
               <div className="container-fluid ">
                   <div className="row">
                       <div className="col-2 p-0">
