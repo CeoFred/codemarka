@@ -572,6 +572,7 @@ const classfilesdownloadlink =  `${ host }${ CLASSROOM_FILE_DOWNLOAD }${ data.cl
                               focused={ inputState.isFocused }
                               messages={ codemarkastate.messages }
                               user={ userid }
+                              owner={ ownerid }
                           />
                       </div>
                       <div className="col-10 p-0">
