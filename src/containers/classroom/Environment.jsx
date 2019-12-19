@@ -1,13 +1,13 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react';
+import { connect } from 'react-redux';
 
-import { Redirect } from "react-router-dom";
-import * as action from "../../store/actions/";
-import { dispatchAppEnvironment } from "../../store/actions/app";
+import { Redirect } from 'react-router-dom';
+import * as action from '../../store/actions/';
+import { dispatchAppEnvironment } from '../../store/actions/app';
 
-import "./css/Environment.css";
-import "../../components/classroom/Editor/editor.css";
-import ColabLayout from "./Class";
+import './css/Environment.css';
+import '../../components/classroom/Editor/editor.css';
+import ColabLayout from './Class';
 
 function Environment(props) {
   const { match: { params }  } = props;
@@ -18,12 +18,12 @@ function Environment(props) {
       <div className="env--content--loading text-center">
           <div
         className="spinner-grow"
-        style={ { width: "3rem", height: "3rem", background: "grey" } }
+        style={ { width: '3rem', height: '3rem', background: 'grey' } }
         role="status"
       >
               <span className="sr-only">Loading...</span>
           </div>
-          <div style={ { marginTop: "5" } }>Checking classroom..</div>
+          <div style={ { marginTop: '5' } }>Checking classroom..</div>
       </div>
   );
 
@@ -37,7 +37,7 @@ function Environment(props) {
   console.log(props);
   const { class_verified, isAuthenticated } = props
   React.useEffect(() => {
-      onClassroomSwitch("classroom")
+      onClassroomSwitch('classroom')
     if(!class_verified && isAuthenticated){
 
       onClassroomVerify(classroomId);
@@ -45,7 +45,7 @@ function Environment(props) {
       }
 
     return () => {
-      onClassroomSwitch("regular");
+      onClassroomSwitch('regular');
     };
   });
 
@@ -69,6 +69,7 @@ function Environment(props) {
           userid={ props.userid }
           description={ props.class_description }
           ownerid= { props.class_owner }
+          topic = { props.class_topic }
         />
       );
     }
@@ -92,7 +93,8 @@ const mapStateToProps = ({ auth, classroom }) => {
     class_name: classroom.name,
     validation_error_message: classroom.validation_error_message,
     class_description: classroom.description,
-    authState: auth.authState
+    authState: auth.authState,
+    class_topic: classroom.topic
 
   };
 };

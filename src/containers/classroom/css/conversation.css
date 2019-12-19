@@ -17,7 +17,7 @@ div.input_container {
     position: absolute;
     bottom: 0;
     left: 0;
-    height: 50px;
+    height: 54px;
 }
 
 div.messages {
@@ -28,7 +28,7 @@ div.messages {
     /* height: 100%; */
     /* margin-bottom: 70px; */
     /* padding-top: 50px; */
-    height: 74vh;
+    height: 71.9vh;
 }
 
 .user-bar .name {
@@ -89,7 +89,7 @@ div.messages {
     padding: 8px;
     position: relative;
     margin: 8px 0;
-    max-width: 85%;
+    max-width: 95%;
     word-wrap: break-word;
     /* z-index: -1; */
 }

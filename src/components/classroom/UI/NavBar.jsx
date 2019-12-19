@@ -47,9 +47,7 @@ function NavBar(props) {
                                 </span>
                             </span>
                         </li>
-                        <li
-                        title="favourite"
-                        className="nav-item">
+                        <li title="favourite" className="nav-item">
                             <a
                                 onClick={ props.favourite }
                                 className="nav-link nav-link-icon"
@@ -64,52 +62,69 @@ function NavBar(props) {
                             </a>
                         </li>
 
-                        <li 
-                        title="Audio Broadcast Info"
-                        className="nav-item">
-                            <a className="nav-link nav-link-icon" href="/w#">
+                        <li
+                            title="Audio Broadcast Info"
+                            data-toggle="modal"
+                            data-target=".audio_recording_modal_cont"
+                            className="nav-item">
+                            <span className="nav-link nav-link-icon">
                                 <i className="fa fa-microphone-slash"></i>
                                 <span className="nav-link-inner--text d-lg-none">
                                     Audio Recording
                                 </span>
-                            </a>
+                            </span>
                         </li>
 
-                        <li 
-                        title="notifications"
-                        className="nav-item">
-                            <a className="nav-link nav-link-icon" href="/">
+                        <li title="Notifications" className="nav-item dropdown">
+                            <span
+                                className="nav-link nav-link-icon"
+                                id="navbar-success_dropdown_1"
+                                role="button"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false">
                                 <i className="fa fa-bell"></i>
                                 <span className="nav-link-inner--text d-lg-none">
                                     Notifications
                                 </span>
-                            </a>
+                            </span>
                             <div
                                 className="dropdown-menu dropdown-menu-right"
                                 aria-labelledby="navbar-success_dropdown_1">
-                                <a
-                                    className="dropdown-item"
-                                    href="/c/classroom/{classsid}/messages">
-                                    New Messages
+                                <a className="dropdown-item" href="/">
+                                    No notifications
                                 </a>
                             </div>
                         </li>
-                        <li 
-                        title="classroom Information"
-                        className="nav-item">
-                            <a className="nav-link nav-link-icon" href="/w#">
+
+                        <li
+                            data-toggle="modal"
+                            data-target=".details_modal_cont"
+                            title="classroom Information"
+                            className="nav-item">
+                            <span className="nav-link nav-link-icon">
                                 <i className="fa fa-info-circle"></i>
                                 <span className="nav-link-inner--text d-lg-none">
                                     Details
                                 </span>
-                            </a>
+                            </span>
                         </li>
-                        <li 
-                        title="Settings"
-                        className="nav-item dropdown">
-                            <a
+
+                        <li
+                            data-toggle="modal"
+                            data-target=".pinned_modal_cont"
+                            title="Pinned Messages"
+                            className="nav-item">
+                            <span className="nav-link nav-link-icon">
+                                <i className="fa fa-pen-nib"></i>
+                                <span className="nav-link-inner--text d-lg-none">
+                                    Pinned Messages
+                                </span>
+                            </span>
+                        </li>
+                        <li title="Settings" className="nav-item dropdown">
+                            <span
                                 className="nav-link nav-link-icon"
-                                href="/w#"
                                 id="navbar-success_dropdown_1"
                                 role="button"
                                 data-toggle="dropdown"
@@ -119,12 +134,12 @@ function NavBar(props) {
                                 <span className="nav-link-inner--text d-lg-none">
                                     Settings
                                 </span>
-                            </a>
+                            </span>
                             <div
                                 className="dropdown-menu dropdown-menu-right"
                                 aria-labelledby="navbar-success_dropdown_1">
                                 <a className="dropdown-item" href="/">
-                                    Leave
+                                    Exit
                                 </a>
                                 <a
                                     className="dropdown-item"

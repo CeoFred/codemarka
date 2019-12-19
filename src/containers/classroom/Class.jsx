@@ -43,7 +43,8 @@ const MainClassLayout = ({
     name,
     description,
     username,
-    userid
+    userid,
+    topic
 }) => {
     const [inputState, setInputState] = useState({
         value: '',
@@ -111,7 +112,8 @@ const MainClassLayout = ({
             })
 
             socket.on('disconnect', reason => {
-                socket.close();
+                                socket.emit('leave', requestData)
+
                 if (reason === 'io server disconnect') {
                     // the disconnection was initiated by the server, you need to reconnect manually
                     socket.connect()
@@ -166,7 +168,11 @@ const MainClassLayout = ({
                 setcodemarkaState(c => {
                     const oldmsg = c.messages
                     oldmsg.push(msg)
-                    return { ...c, messages: oldmsg }
+
+                    const newUserList = c.users.filter(user => {
+                        return String(user.id) !== String(msg.for)
+                    });
+                    return { ...c, messages: oldmsg,users: newUserList }
                 })
                 if (codemarkastate.messages) {
                     const len = codemarkastate.messages.length
@@ -248,15 +254,13 @@ const MainClassLayout = ({
             })
 
             socket.on('newuser_role', __d => {
-                console.log(__d)
-
                 if (String(__d.id) === String(userid) && __d.role) {
                     setcodemarkaState(c => {
                         const oldUsers = c.users
                         const newUserRole = oldUsers.map(user => {
-                            if (user.id === __d.id) {
+                            if (String(user.id) === String(__d.id)) {
                                 return {
-                                    id: user.id,
+                                    id: String(user.id),
                                     role: __d.role,
                                     username: user.username
                                 }
@@ -364,7 +368,8 @@ const MainClassLayout = ({
         userid,
         inRoom,
         codemarkastate.username,
-        codemarkastate.classroom_id
+        codemarkastate.classroom_id,
+        owner
     ])
 
     const handleInputChange = e => {
@@ -446,7 +451,7 @@ const MainClassLayout = ({
             }
         }
 
-        console.log('editor changed')
+        console.log(e);
 
         // if(o.origin === 'cut' && o.removed[0] !== ""){
         //   socket.emit("editorChanged", emitObj);
@@ -576,6 +581,7 @@ const MainClassLayout = ({
                 downloadLink={ classfilesdownloadlink }
                 favourite={ addClassToFavourite }
                 isFavourite={ codemarkastate.favourite }
+                topic = { topic }
             />
 
             <ParticipantModal

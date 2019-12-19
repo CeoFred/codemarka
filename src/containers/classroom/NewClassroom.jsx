@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /** @format */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import isFuture from 'date-fns/isFuture'
@@ -12,6 +12,7 @@ import { checkValidity } from '../../utility/shared'
 import Button from '../../components/Partials/Button'
 import Input from '../../components/Partials/Input/Input'
 import Helmet from '../../components/SEO/helmet'
+import { dispatchAppEnvironment } from '../../store/actions/app'
 
 import Alert from '../../components/Partials/Alert/Alert'
 
@@ -19,6 +20,9 @@ import './newclassroom.css'
 import * as action from '../../store/actions'
 
 function NewClassroom(props) {
+    useEffect(() => {
+        props.onClassroomSwitch('classroom')
+    });
     const [state, setState] = useState({
         controls: {
             name: {
@@ -295,20 +299,19 @@ function NewClassroom(props) {
                                 title="Heads Up!">
                                 {state.formErrorMessage}
                             </Alert>
+                            <div className="pb-5 text-center">
+                                <h6 className="h3 mb-1">
+                                    Create your Free Classroom Today!
+                                </h6>
+                            </div>
+                            <span className="clearfix" />
                             {form}
                         </div>
                     </div>
                     {/* image section */}
 
                     <div className="col-sm-12 col-md-6 col-lg-6 col-xl-6 py-6 py-md-0 side">
-                        <div className="align-content-center justify-content-center ">
-                            <div className="pt-5 text-center">
-                                <h6 className="h3 mb-1">
-                                    Create your Free Classroom Today!
-                                </h6>
-                            </div>
-                            <span className="clearfix" />
-                        </div>
+                        <div className="align-content-center justify-content-center "></div>
                     </div>
                 </div>
             </section>
@@ -328,7 +331,9 @@ const mapDispatchToProps = dispatch => {
     return {
         onCreate: data => dispatch(action.createClassRoomInit(data)),
 
-        onResetAll: () => dispatch(action.classResetAll())
+        onResetAll: () => dispatch(action.classResetAll()),
+
+        onClassroomSwitch: state => dispatch(dispatchAppEnvironment(state))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(NewClassroom)
