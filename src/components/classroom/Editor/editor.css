@@ -3,16 +3,18 @@
 @import './styles/theme/dracula.css';
 
 div.editors__container {
-    height: 100%;
-    /* float: left; */
-    /* width: 80%; */
-    height: 100%;
-    /* position: relative; */
-    /* max-width: 80%; */
+      height: 100%;
+      max-height: 100%;
+      position: relative;
 }
 
 div.CodeMirror {
     height: 87vh;
     padding-left: 0;
-    border-right: 13px solid gray;
+    max-height: 87vh;
+    padding-top:39px;
+}
+
+.CodeMirror-scroll {
+    border-left: 1px solid grey;
 }

@@ -1,11 +1,11 @@
 /* eslint-disable no-undef */
-import React,{ useEffect , useState , useRef } from 'react';
+import React, { useEffect, useState, useRef, Suspense } from 'react'
 
 import Preloader from '../Preloader';
 function Trending() {
 
     const [ hasMounted, setHasMounted ] = useState(false);
-    const content = useRef(<Preloader />);
+    const content = useRef('');
 
     useEffect(() => {
 
@@ -68,7 +68,9 @@ function Trending() {
     return (
         <div className="pt-5 pb-5 text-center">
             <div className="row text-center justify-content-center align-content-center">
-                {content.current}
+                <Suspense fallback={ <Preloader /> }>
+                    {content.current}
+                </Suspense>
             </div>
         </div>
     )

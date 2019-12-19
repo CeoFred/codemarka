@@ -1,9 +1,6 @@
 div.conversation__container {
-    /* max-width: 20%; */
     height: 100%;
-    /* width: 20%; */
     max-height: 100%;
-    /* float: left; */
     position: relative;
 }
 
@@ -24,12 +21,14 @@ div.input_container {
 }
 
 div.messages {
-    position: absolute;
+    position: relative;
     top: 50px;
-    bottom: 0px;
+    /* bottom: 50px; */
     overflow-y: auto;
-    height: 83%;
+    /* height: 100%; */
     /* margin-bottom: 70px; */
+    /* padding-top: 50px; */
+    height: 74vh;
 }
 
 .user-bar .name {
@@ -280,7 +279,7 @@ div.message_content {
 }
 
 div.user-bar {
-    position: relative;
+    position: absolute;
     z-index: 2;
     top: 0;
     width: 100%;

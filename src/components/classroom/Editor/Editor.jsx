@@ -1,12 +1,10 @@
 import React from 'react'
-import { UnControlled as CodeMirror } from "react-codemirror2";
-import "./editor.css";
+import { UnControlled as CodeMirror } from 'react-codemirror2';
+import './editor.css';
 
-require("codemirror/mode/css/css");
-require("codemirror/mode/javascript/javascript");
-require("codemirror/mode/jsx/jsx");
-require("codemirror/mode/htmlmixed/htmlmixed");
-require("codemirror/mode/php/php");
+require('codemirror/mode/css/css');
+require('codemirror/mode/javascript/javascript');
+require('codemirror/mode/htmlmixed/htmlmixed');
 
 export default function Editor(props) {
 
@@ -14,7 +12,7 @@ export default function Editor(props) {
     mode : 'css',
     lineNumbers: true,
     theme: 'dracula',
-    readOnly: props.readOnly ? false : "nocursor" ,
+    readOnly: props.readOnly ? false : 'nocursor' ,
     autofocus:true,
     pollInterval:3000,
     lineWrapping:true
@@ -24,7 +22,7 @@ export default function Editor(props) {
     lineNumbers: true,
     mode : 'htmlmixed',
     theme: 'dracula', 
-    readOnly: props.readOnly ? false : "nocursor" ,
+    readOnly: props.readOnly ? false : 'nocursor' ,
     pollInterval:3000,
     lineWrapping:true
   }
@@ -33,7 +31,7 @@ export default function Editor(props) {
     lineNumbers: true,
     mode : 'javascript',
     theme: 'dracula', 
-    readOnly: props.readOnly ? false : "nocursor" ,
+    readOnly: props.readOnly ? false : 'nocursor' ,
     pollInterval:3000,
     lineWrapping:true
   }
@@ -43,32 +41,58 @@ export default function Editor(props) {
   editors = files.map((f,i) => {
 
     if(f.file === 'css'){
-      return (<div className="col-4 h-100 pl-0 pr-0" key={ i }>
-          <CodeMirror  
-        value={ f.content }
-         options={ cssOptions } 
-        onChange={ (e,ob,v) => props.handleEditorChange(e,ob,v,'css') }/>
-      </div>)
+      return (
+          <div className="col-4 h-100 pl-0 pr-0" key={ i }>
+              <div
+                  style={ { zIndex: 99, width: '100%', position: 'absolute' } }
+                  className="bg-dark-light p-2 m-0 text-white font-weight-bolder">
+                  {f.file.toUpperCase()}
+              </div>
+
+              <CodeMirror
+                  value={ f.content }
+                  options={ cssOptions }
+                  onChange={ (e, ob, v) =>
+                      props.handleEditorChange(e, ob, v, 'css')
+                  }
+              />
+          </div>
+      )
     }
 
     if(f.file === 'html'){
-      return (<div className="col-4 h-100 pl-0 pr-0" key={ i }>
-          <CodeMirror  
-        value={ f.content }
-         options={ htmlOptions } 
-         onChange={ (e,ob,v) => props.handleEditorChange(e,ob,v,'html') }
-         />
-      </div>)
+      return (
+          <div className="col-4 h-100 pl-0 pr-0" key={ i }>
+              <div
+                  style={ { zIndex: 99, width: '100%', position: 'absolute' } }
+                  className="bg-dark-light p-2 m-0 text-white font-weight-bolder">
+                  {f.file.toUpperCase()}
+              </div>
+
+              <CodeMirror
+                  value={ f.content }
+                  options={ htmlOptions }
+                  onChange={ (e, ob, v) =>
+                      props.handleEditorChange(e, ob, v, 'html')
+                  }
+              />
+          </div>
+      )
     }
 
     if(f.file === 'js'){
-      return (<div className="col-4 h-100 pl-0 pr-0" key={ i }>
-          <CodeMirror  
-        value={ f.content }
-         options={ jsOptions } 
-         onChange={ (e,ob,v) => props.handleEditorChange(e,ob,v,'js') }
-         />
-      </div>)
+      return (
+          <div className="col-4 h-100 pl-0 pr-0" key={ i }>
+              <div style={ {zIndex:99,width:'100%',position:'absolute'} } className="bg-dark-light p-2 m-0 text-white font-weight-bolder">{f.file.toUpperCase()}</div>
+              <CodeMirror
+                  value={ f.content }
+                  options={ jsOptions }
+                  onChange={ (e, ob, v) =>
+                      props.handleEditorChange(e, ob, v, 'js')
+                  }
+              />
+          </div>
+      )
     }
     return (<div>No Editor</div>)
   })
