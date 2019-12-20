@@ -310,22 +310,11 @@ const MainClassLayout = ({
 
             socket.on('newuser_role', __d => {
                 if (String(__d.id) === String(userid) && __d.role) {
-                    setcodemarkaState(c => {
-                        const oldUsers = c.users
-                        const newUserRole = oldUsers.map(user => {
-                            if (String(user.id) === String(__d.id)) {
-                                return {
-                                    id: String(user.id),
-                                    role: __d.role,
-                                    username: user.username
-                                }
-                            } else {
-                                return user
-                            }
-                        })
+
+                    setcodemarkaState(c => {             
                         return {
                             ...c,
-                            users: newUserRole,
+                            users: __d.newusers,
                             editorPriviledge: __d.role === '2' ? true : false
                         }
                     })
@@ -335,6 +324,10 @@ const MainClassLayout = ({
                         )
                     } else if (__d.role === '2') {
                         toast.info('You now have access to modify the Editors')
+                    }
+
+                    if(__d.assignedBy === String(userid) || owner) {
+                        toast.info(<div>Heads Up!<hr/> Access granted! </div>)
                     }
                 }
             })
