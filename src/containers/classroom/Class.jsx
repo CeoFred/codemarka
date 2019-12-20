@@ -1,23 +1,31 @@
-/* eslint-disable react/prop-types */
+/**
+ * /* eslint-disable react/prop-types
+ *
+ * @format
+ */
+
 /**
  * /* eslint-disable no-undef
  *
  * @format
  */
 
-import React, { useState , Suspense} from 'react'
+import React, { useState, Suspense } from 'react'
+import { Redirect } from 'react-router-dom'
 import io from 'socket.io-client'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { connect } from 'react-redux'
+import * as action from '../../store/actions/'
 
 import Navigation from '../../components/classroom/UI/NavBar'
 import Convo from './Conversation'
 import Editor from '../../components/classroom/Editor/Editor'
 import Preview from '../../components/classroom/Editor/Preview'
 import Seo from '../../components/SEO/helmet'
-import Modal from '../../components/Partials/Modals/Modal';
-import Input from '../../components/Partials/Input/Input';
-import Spinner from '../../components/Partials/Preloader';
+import Modal from '../../components/Partials/Modals/Modal'
+import Input from '../../components/Partials/Input/Input'
+import Spinner from '../../components/Partials/Preloader'
 import ParticipantModal from '../../components/classroom/Participants/Modal'
 
 import { CLASSROOM_FILE_DOWNLOAD } from '../../config/api_url'
@@ -28,7 +36,7 @@ const host =
         ? process.env.REACT_APP_REMOTE_API_URL
         : process.env.REACT_APP_LOCAL_API_URL
 
-const socket = io(`${ host }classrooms`, {
+const socket = io(`${host}classrooms`, {
     reconnection: true,
     reconnectionDelay: 6000,
     reconnectionDelayMax: 6000,
@@ -47,13 +55,17 @@ const MainClassLayout = ({
     description,
     username,
     userid,
-    topic
+    topic,
+    onClassroomVerify,
+    pinnedMessages,
+    history
 }) => {
     const [inputState, setInputState] = useState({
         value: '',
         isFocused: false,
         lastSentMessage: null
     })
+    console.log(history);
 
     const [codemarkastate, setcodemarkaState] = useState({
         messages: [],
@@ -66,12 +78,14 @@ const MainClassLayout = ({
         users: [],
         editorPriviledge: owner,
         typingState: [],
-        favourite: null
-    });
+        favourite: null,
+        submitted: false,
+        pinnedMessages: []
+    })
 
     const [ClassroomInformation, setClassroomInformation] = useState({
-        cname:{
-            value:name
+        cname: {
+            value: name
         },
         cdesc: {
             value: description
@@ -82,7 +96,26 @@ const MainClassLayout = ({
         submitted: false
     })
 
+    const [
+        ClassroomPinnedInformation,
+        setClassroomPinnedInformation
+    ] = useState({
+        changed: false,
+        value: ''
+    })
+    let redirectComp
+
     const [inRoom, setInRoom] = useState(false)
+
+    const redirectTo = (e, path) => {
+                                        setInRoom(false)
+                                        socket.disconnect()
+
+                                        history.push('/')
+                                    }
+
+    const [starRating, setStarRating] = useState(0);
+
 
     React.useEffect(() => {
         const requestData = {
@@ -101,7 +134,11 @@ const MainClassLayout = ({
                     msg.msgs.forEach(element => {
                         oldmsg.push(element)
                     })
-                    return { ...c, messages: oldmsg }
+                    return {
+                        ...c,
+                        messages: oldmsg,
+                        pinnedMessages: pinnedMessages
+                    }
                 })
             })
 
@@ -117,7 +154,7 @@ const MainClassLayout = ({
 
                     return { ...c, messages: oldmsg, users: msg.newuserslist }
                 })
-                if (codemarkastate.messages) {
+                if (codemarkastate.messages && codemarkastate.messages.length > 0) {
                     const len = codemarkastate.messages.length
                     const lastIndex = len - 1
                     const ele = codemarkastate.messages[lastIndex].msgId
@@ -128,7 +165,7 @@ const MainClassLayout = ({
             })
 
             socket.on('disconnect', reason => {
-                                socket.emit('leave', requestData)
+                socket.emit('leave', requestData)
 
                 if (reason === 'io server disconnect') {
                     // the disconnection was initiated by the server, you need to reconnect manually
@@ -141,7 +178,9 @@ const MainClassLayout = ({
             })
 
             socket.on('reconnecting', attemptNumber => {
-                toast.info('Attempting to reconnect to classroom,please wait...')
+                toast.info(
+                    'Attempting to reconnect to classroom,please wait...'
+                )
             })
 
             socket.on('reconnect_error', error => {
@@ -187,8 +226,8 @@ const MainClassLayout = ({
 
                     const newUserList = c.users.filter(user => {
                         return String(user.id) !== String(msg.for)
-                    });
-                    return { ...c, messages: oldmsg,users: newUserList }
+                    })
+                    return { ...c, messages: oldmsg, users: newUserList }
                 })
                 if (codemarkastate.messages) {
                     const len = codemarkastate.messages.length
@@ -315,14 +354,36 @@ const MainClassLayout = ({
                 }
             })
 
-            socket.on('newClassInformation',(doc) => {
-                toast.success('Class Information updated!');
+            socket.on('newClassInformation', doc => {
+                toast.success('Class Information updated!')
+                setClassroomInformation(c => {
+                    return { ...c, submitted: false }
+                })
+                onClassroomVerify(doc._id)
             })
 
             socket.on('user_waved', ({ from, to }) => {
                 if (userid === to.id) {
-                    toast.info(`${ from } waved at you`)
+                    toast.info(`${from} waved at you`)
                 }
+            });
+
+            socket.on('star_rating_added',(rat) => {
+                toast.success(<div><b>Great!</b><hr/>Your rating was recorded,please wait..</div>);
+                socket.disconnect();
+                setInRoom(false);
+                history.push('/');
+            });
+
+            socket.on('pinned_message_added', pmsg => {
+                setcodemarkaState(c => {
+                    return { ...c, submitted: false, pinnedMessages: pmsg }
+                })
+                toast.info(
+                    <div>
+                        <b>Heads Up!</b> <br /> New Pinned Message!`
+                    </div>
+                )
             })
 
             socket.on('class_favourites', likedList => {
@@ -389,7 +450,9 @@ const MainClassLayout = ({
         inRoom,
         codemarkastate.username,
         codemarkastate.classroom_id,
-        owner
+        owner,
+        pinnedMessages,
+        onClassroomVerify
     ])
 
     const handleInputChange = e => {
@@ -471,7 +534,7 @@ const MainClassLayout = ({
             }
         }
 
-        console.log(e);
+        console.log(e)
 
         // if(o.origin === 'cut' && o.removed[0] !== ""){
         //   socket.emit("editorChanged", emitObj);
@@ -511,11 +574,11 @@ const MainClassLayout = ({
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        ${ css && `<link rel="stylesheet" type="text/css" href="${ cssURL }" />` }
-        ${ js && `<script src="${ jsURL }"></script>` }
+        ${css && `<link rel="stylesheet" type="text/css" href="${cssURL}" />`}
+        ${js && `<script src="${jsURL}"></script>`}
       </head>
       <body>
-        ${ html || '' }
+        ${html || ''}
       </body>
     </html>
   `
@@ -579,7 +642,7 @@ const MainClassLayout = ({
     }
 
     const handlewaveAtUser = (e, user) => {
-        toast.info(`Hey! You just waved at ${ user.username }`)
+        toast.info(`Hey! You just waved at ${user.username}`)
         console.log(user)
         socket.emit('user_waving', user)
     }
@@ -588,34 +651,243 @@ const MainClassLayout = ({
         const v = e.target.value
 
         setClassroomInformation(input => {
-            return { ...input,[inputname]: {value:v} }
+            return { ...input, [inputname]: { value: v } }
         })
     }
 
-    const handleClassInfoUpdate = (e) => {
-        e.preventDefault();
+    const handlePinTextAreaChange = e => {
+        e.preventDefault()
+        const v = e.target.value
 
-        setClassroomInformation(input => {
-            return { ...input,  submitted: true  }
-        });
-        if(owner){
-            socket.emit('classInformationUpdate',ClassroomInformation);
+        setClassroomPinnedInformation(c => {
+            return { ...c, touched: true, value: v }
+        })
+    }
 
-        } else {
-            toast.error('No Access to perfom this action');
+    const handleClassPinnnedSubmit = e => {
+        e.preventDefault()
+
+        if (owner && ClassroomPinnedInformation.value.trim() !== '') {
+            setcodemarkaState(c => {
+                return { ...c, submitted: true }
+            })
+            setClassroomPinnedInformation(c => {
+                return { ...c, touched: false, value: '' }
+            })
+            socket.emit('new_pinned_message', ClassroomPinnedInformation.value)
         }
     }
-    const classfilesdownloadlink = `${ host }${ CLASSROOM_FILE_DOWNLOAD }${ data.classroom_id }`
+
+    const addPinTextArea = (
+        <form onSubmit={handleClassPinnnedSubmit}>
+            <Input
+                name="text__area__msg__pin"
+                elementType="textarea"
+                elementConfig={{
+                    disabled: owner ? false : true,
+                    placeholder: 'Pin Message Here...',
+                    name: 'text__area__msg__pin'
+                }}
+                value={ClassroomPinnedInformation.value}
+                inputType="textarea"
+                changed={handlePinTextAreaChange}
+            />
+            <button
+                type="submit"
+                onClick={handleClassPinnnedSubmit}
+                className="btn btn-sm float-left btn-soft-success">
+                {codemarkastate.submitted ? <Spinner /> : 'Add'}
+            </button>
+        </form>
+    )
+
+    const handleClassInfoUpdate = e => {
+        e.preventDefault()
+
+        setClassroomInformation(input => {
+            return { ...input, submitted: true }
+        })
+        if (owner) {
+            socket.emit('classInformationUpdate', ClassroomInformation)
+        } else {
+            toast.error('No Access to perfom this action')
+        }
+    }
+    const classfilesdownloadlink = `${host}${CLASSROOM_FILE_DOWNLOAD}${data.classroom_id}`
+
+    const getPinnedMessages = () => {
+        const pm = codemarkastate.pinnedMessages.map(msg => {
+            if (msg.content.trim() !== '')
+                return (
+                    <div
+                        key={msg.id}
+                        class="card mt-0 mb-1"
+                        style={{
+                            borderLeft: '2px solid #E91E63',
+                            borderRadius: 0
+                        }}>
+                        <div
+                            class="card-body"
+                            style={{ padding: 10, fontWeight: 'bolder' }}>
+                            <p class="mb-0">{msg.content}</p>
+                        </div>
+                    </div>
+                )
+            else return ''
+        })
+
+        if (pm && Array.isArray(pm) && pm.length > 0) {
+            return pm
+        } else {
+            return 'No Pinned Items!'
+        }
+    }
+
+    const handletestConnection = e => {
+        e.preventDefault()
+        if (socket.connected) {
+            toast.success(
+                <div>
+                    <b>Heads Up!!</b> <br />
+                    You are Connected.
+                </div>
+            )
+        } else {
+            toast.error(
+                <div>
+                    <b>Heads Up!!</b> <br />
+                    You are disconnected!!
+                </div>
+            )
+        }
+    }
+
+    const handleexitClassGracefully = e => {
+        e.preventDefault()
+
+        document.getElementById('exit_grancefully__success_dropdown_1').click()
+    }
+
+    const handleclassReport = e => {
+        e.preventDefault()
+    }
+
+    const handleClassStar = e => {
+        const element = document.getElementById(e.target.id)
+        const starPos = parseInt(element.id)
+        let strId = ''
+        let i = 1
+
+        while (i <= starPos) {
+            strId = i.toString()
+            let gold = document.getElementById(strId)
+            gold.style.color = 'gold'
+            i++
+        }
+
+        while (i <= 5) {
+            strId = i.toString()
+            let white = document.getElementById(strId)
+            white.style.color = 'grey'
+            i++
+        }
+
+        const countYellowStars = () => {
+            debugger
+            let arr = []
+            let stars = document.querySelectorAll('.fa__codemarka__star')
+            for (let i = 0; i < stars.length; i++) {
+                if (stars[i].style.color === 'gold') {
+                    arr.push(stars[i].style.color)
+                }
+            }
+            const rating = arr.length
+            setStarRating(r => {
+                return rating;
+            })
+        }
+
+        countYellowStars()
+    }
+
+    
+
+    const handleClassStarRating = (e) => {
+        e.preventDefault();
+        socket.emit("star_rating",starRating);
+    }
+
+    const addStars = (
+        <div className="mt-3 text-center">
+            <div className="border border-dark p-3 m-3 mb-4">
+                <h3 className="font-weight-900">How was this class session?</h3>
+            </div>
+
+            <div>
+                <span
+                    onClick={handleClassStar}
+                    id="1"
+                    className="fa fa-star fa__codemarka__star fa-2x border-success"></span>
+                <span
+                    onClick={handleClassStar}
+                    id="2"
+                    className="fa fa-star fa-2x fa__codemarka__star border-success"></span>
+                <span
+                    onClick={handleClassStar}
+                    id="3"
+                    className="fa fa-star fa-2x fa__codemarka__star border-success"></span>
+                <span
+                    onClick={handleClassStar}
+                    id="4"
+                    className="fa fa-star fa-2x fa__codemarka__star border-success"></span>
+                <span
+                    id="5"
+                    onClick={handleClassStar}
+                    className="fa fa-star fa-2x fa__codemarka__star border-success"></span>
+            </div>
+
+            <div className="text-center mt-3">
+                <div>
+                    <button
+                        type="button"
+                        onClick={(e) => redirectTo(e,'/')}
+                        class="btn btn-animated  btn-sm btn-outline-success btn-animated-y">
+                        <span class="btn-inner--visible">NOT NOW</span>
+                        <span class="btn-inner--hidden">
+                            <i className="fa fa-pause-circle"></i>
+                        </span>
+                    </button>
+                    <button
+                        type="button"
+                        onClick={handleClassStarRating}
+                        class="btn btn-animated  btn-sm btn-outline-success btn-animated-x">
+                        <span class="btn-inner--visible">SUBMIT</span>
+                        <span class="btn-inner--hidden">
+                            <i className="fa fa-thumbs-up"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
 
     return (
         <div>
             <ToastContainer />
-
+            {redirectComp}
             <Preview
                 previewBtnClicked={handlePreview}
                 classroomid={data.classroom_id}
             />
             {classNotification}
+            <span
+                className="d-none"
+                id="exit_grancefully__success_dropdown_1"
+                role="button"
+                data-toggle="modal"
+                data-target="#exit_class_modal_cont">
+                ;
+            </span>
 
             <Navigation
                 name={name}
@@ -623,7 +895,31 @@ const MainClassLayout = ({
                 favourite={addClassToFavourite}
                 isFavourite={codemarkastate.favourite}
                 topic={topic}
+                exitClassGracefully={handleexitClassGracefully}
+                classroomid={data.classroom_id}
+                testConnection={handletestConnection}
+                classReport={handleclassReport}
             />
+
+            <Modal
+                targetid="exit_class_modal_cont"
+                type="default"
+                size="sm"
+                titleIcon={<i className="fa fa-thumbs-up"></i>}
+                title={'Rate this classroom '}>
+                {addStars}
+            </Modal>
+
+            <Modal
+                targetid="pinned_modal_cont"
+                type="default"
+                size="sm"
+                titleIcon={<i className="fa fa-pen-nib"></i>}
+                title={'Pinned Messages'}>
+                {getPinnedMessages()}
+                {owner ? addPinTextArea : ''}
+            </Modal>
+
             <Modal
                 targetid="details_modal_cont"
                 type="default"
@@ -634,7 +930,11 @@ const MainClassLayout = ({
                             type="submit"
                             onClick={handleClassInfoUpdate}
                             className="btn btn-sm float-left btn-soft-primary">
-                            {ClassroomInformation.submitted ? (<Spinner />) : 'Save' }
+                            {ClassroomInformation.submitted ? (
+                                <Spinner />
+                            ) : (
+                                'Save'
+                            )}
                         </button>
                     ) : (
                         false
@@ -735,4 +1035,10 @@ const MainClassLayout = ({
     )
 }
 
-export default MainClassLayout
+const mapDispatchToProps = dispatch => {
+    return {
+        onClassroomVerify: classroomid =>
+            dispatch(action.classVerify(classroomid))
+    }
+}
+export default connect(null, mapDispatchToProps)(MainClassLayout)

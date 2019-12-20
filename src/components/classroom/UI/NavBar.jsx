@@ -124,7 +124,7 @@ function NavBar(props) {
 
                         <li
                             data-toggle="modal"
-                            data-target=".pinned_modal_cont"
+                            data-target="#pinned_modal_cont"
                             title="Pinned Messages"
                             className="nav-item">
                             <span className="nav-link nav-link-icon">
@@ -150,17 +150,17 @@ function NavBar(props) {
                             <div
                                 className="dropdown-menu dropdown-menu-right"
                                 aria-labelledby="navbar-success_dropdown_1">
-                                <a className="dropdown-item" href="/">
+                                <a className="dropdown-item" onClick={ props.exitClassGracefully }>
                                     Exit
                                 </a>
                                 <a
                                     className="dropdown-item"
-                                    href="/classroom/report/:classid">
+                                   onClick={ props.classReport} >
                                     Report classroom
                                 </a>
                                 <div className="dropdown-divider"></div>
-                                <a className="dropdown-item" href="/">
-                                    Alert Admin
+                                <a className="dropdown-item" onClick={ props.testConnection }>
+                                    Test connection
                                 </a>
                             </div>
                         </li>

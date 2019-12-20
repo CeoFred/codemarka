@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-curly-spacing */
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -10,7 +12,7 @@ import '../../components/classroom/Editor/editor.css';
 import ColabLayout from './Class';
 
 function Environment(props) {
-  const { match: { params }  } = props;
+  const { match: { params } , history } = props;
   const classroomId = params.classroom;
   const { onClassroomVerify, onClassroomSwitch } = props;
 
@@ -62,16 +64,18 @@ function Environment(props) {
     else if(props.isAuthenticated && props.class_verified && props.username && props.userid) {
       return (
           <ColabLayout
-          name={ props.class_name }
-          owner={ props.class_owner === props.userid }
-          data={ colabstate }
-          username={ props.username }
-          userid={ props.userid }
-          description={ props.class_description }
-          ownerid= { props.class_owner }
-          topic = { props.class_topic }
-        />
-      );
+              name={props.class_name}
+              owner={props.class_owner === props.userid}
+              data={colabstate}
+              username={props.username}
+              userid={props.userid}
+              description={props.class_description}
+              ownerid={props.class_owner}
+              topic={props.class_topic}
+              pinnedMessages={props.class_pinnedMessages}
+              history={history}
+          />
+      )
     }
   };
   return (
@@ -84,19 +88,19 @@ function Environment(props) {
 
 const mapStateToProps = ({ auth, classroom }) => {
   return {
-    isAuthenticated: auth.user.token !== null,
-    userid: auth.user.userId,
-    username: auth.user.username,
-    user_t: auth.user.token,
-    class_verified: classroom.validated,
-    class_owner: classroom.owner,
-    class_name: classroom.name,
-    validation_error_message: classroom.validation_error_message,
-    class_description: classroom.description,
-    authState: auth.authState,
-    class_topic: classroom.topic
-
-  };
+      isAuthenticated: auth.user.token !== null,
+      userid: auth.user.userId,
+      username: auth.user.username,
+      user_t: auth.user.token,
+      class_verified: classroom.validated,
+      class_owner: classroom.owner,
+      class_name: classroom.name,
+      validation_error_message: classroom.validation_error_message,
+      class_description: classroom.description,
+      authState: auth.authState,
+      class_topic: classroom.topic,
+      class_pinnedMessages: classroom.pinnedMessages
+  }
 };
 
 const mapDispatchToProps = dispatch => {
