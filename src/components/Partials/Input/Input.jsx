@@ -25,25 +25,33 @@ if(props.elementType === 'input'){
          { ...props.elementConfig }
           className={ InputClasses.join(' ') } 
            value={ props.value }
-            onChange={ props.changed } />
+            onChange={props.changed} />
 
        break;
 
     case('textarea'):
-    inputElement =  <textarea className={ InputClasses.join(' ') }
-      { ...props.elementConfig }
-       value={ props.value } onChange={ props.changed } ></textarea>
+    inputElement = (
+        <textarea
+            className={InputClasses.join(' ')}
+            {...props.elementConfig}
+            value={props.value}
+            onChange={e => props.changed(e, props.name)}></textarea>
+    )
     break;
 
     case('select'):
-    inputElement = (<select onChange={ props.changed }
-    className={ selectClasses.join(' ') }
-      value={ props.value }>
-        {props.elementConfig.options.map(option => (
-            <option value={ option.value } key={ option.value } >
-                {option.displayValue}</option>
-      ))}
-    </select>);
+    inputElement = (
+        <select
+            onChange={e => props.changed(e, props.name)}
+            className={selectClasses.join(' ')}
+            value={props.value}>
+            {props.elementConfig.options.map(option => (
+                <option value={option.value} key={option.value}>
+                    {option.displayValue}
+                </option>
+            ))}
+        </select>
+    )
     break;
 
     default:

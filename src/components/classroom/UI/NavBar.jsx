@@ -61,18 +61,30 @@ function NavBar(props) {
                                 </span>
                             </a>
                         </li>
-
+                        
                         <li
-                            title="Audio Broadcast Info"
-                            data-toggle="modal"
-                            data-target=".audio_recording_modal_cont"
-                            className="nav-item">
-                            <span className="nav-link nav-link-icon">
+                            title="Audio Broadcast"
+                            className="nav-item dropdown">
+                            <span
+                                className="nav-link nav-link-icon"
+                                id="navbar-success_dropdown_1"
+                                role="button"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false">
                                 <i className="fa fa-microphone-slash"></i>
                                 <span className="nav-link-inner--text d-lg-none">
-                                    Audio Recording
+                                    Audio Broadcast
                                 </span>
                             </span>
+                            <div
+                                className="dropdown-menu dropdown-menu-right"
+                                aria-labelledby="navbar-success_dropdown_1">
+                                <span className="dropdown-item">
+                                    Audio Broadcast coming soon and exclusive to
+                                    premuim users!
+                                </span>
+                            </div>
                         </li>
 
                         <li title="Notifications" className="nav-item dropdown">
@@ -91,15 +103,15 @@ function NavBar(props) {
                             <div
                                 className="dropdown-menu dropdown-menu-right"
                                 aria-labelledby="navbar-success_dropdown_1">
-                                <a className="dropdown-item" href="/">
+                                <span className="dropdown-item">
                                     No notifications
-                                </a>
+                                </span>
                             </div>
                         </li>
 
                         <li
                             data-toggle="modal"
-                            data-target=".details_modal_cont"
+                            data-target="#details_modal_cont"
                             title="classroom Information"
                             className="nav-item">
                             <span className="nav-link nav-link-icon">

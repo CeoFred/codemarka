@@ -1,10 +1,11 @@
+/* eslint-disable react/prop-types */
 /**
  * /* eslint-disable no-undef
  *
  * @format
  */
 
-import React, { useState } from 'react'
+import React, { useState , Suspense} from 'react'
 import io from 'socket.io-client'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -14,7 +15,9 @@ import Convo from './Conversation'
 import Editor from '../../components/classroom/Editor/Editor'
 import Preview from '../../components/classroom/Editor/Preview'
 import Seo from '../../components/SEO/helmet'
-
+import Modal from '../../components/Partials/Modals/Modal';
+import Input from '../../components/Partials/Input/Input';
+import Spinner from '../../components/Partials/Preloader';
 import ParticipantModal from '../../components/classroom/Participants/Modal'
 
 import { CLASSROOM_FILE_DOWNLOAD } from '../../config/api_url'
@@ -64,6 +67,19 @@ const MainClassLayout = ({
         editorPriviledge: owner,
         typingState: [],
         favourite: null
+    });
+
+    const [ClassroomInformation, setClassroomInformation] = useState({
+        cname:{
+            value:name
+        },
+        cdesc: {
+            value: description
+        },
+        ctopic: {
+            value: topic
+        },
+        submitted: false
     })
 
     const [inRoom, setInRoom] = useState(false)
@@ -297,6 +313,10 @@ const MainClassLayout = ({
                 if (owner && !liked) {
                     toast.info('Too bad! Lost a Classroom Favourite')
                 }
+            })
+
+            socket.on('newClassInformation',(doc) => {
+                toast.success('Class Information updated!');
             })
 
             socket.on('user_waved', ({ from, to }) => {
@@ -564,6 +584,27 @@ const MainClassLayout = ({
         socket.emit('user_waving', user)
     }
 
+    const handleClassroomInformationInputChange = (e, inputname) => {
+        const v = e.target.value
+
+        setClassroomInformation(input => {
+            return { ...input,[inputname]: {value:v} }
+        })
+    }
+
+    const handleClassInfoUpdate = (e) => {
+        e.preventDefault();
+
+        setClassroomInformation(input => {
+            return { ...input,  submitted: true  }
+        });
+        if(owner){
+            socket.emit('classInformationUpdate',ClassroomInformation);
+
+        } else {
+            toast.error('No Access to perfom this action');
+        }
+    }
     const classfilesdownloadlink = `${ host }${ CLASSROOM_FILE_DOWNLOAD }${ data.classroom_id }`
 
     return (
@@ -571,56 +612,121 @@ const MainClassLayout = ({
             <ToastContainer />
 
             <Preview
-                previewBtnClicked={ handlePreview }
-                classroomid={ data.classroom_id }
+                previewBtnClicked={handlePreview}
+                classroomid={data.classroom_id}
             />
             {classNotification}
 
             <Navigation
-                name={ name }
-                downloadLink={ classfilesdownloadlink }
-                favourite={ addClassToFavourite }
-                isFavourite={ codemarkastate.favourite }
-                topic = { topic }
+                name={name}
+                downloadLink={classfilesdownloadlink}
+                favourite={addClassToFavourite}
+                isFavourite={codemarkastate.favourite}
+                topic={topic}
             />
+            <Modal
+                targetid="details_modal_cont"
+                type="default"
+                size="sm"
+                buttonExtra={
+                    owner ? (
+                        <button
+                            type="submit"
+                            onClick={handleClassInfoUpdate}
+                            className="btn btn-sm float-left btn-soft-primary">
+                            {ClassroomInformation.submitted ? (<Spinner />) : 'Save' }
+                        </button>
+                    ) : (
+                        false
+                    )
+                }
+                title="classroom Information">
+                <form onSubmit={handleClassInfoUpdate}>
+                    <Input
+                        name="cname"
+                        label="Classroom Name"
+                        elementType="input"
+                        elementConfig={{
+                            disabled: owner ? false : true,
+                            placeholder: 'Classroom Name',
+                            name: 'cname'
+                        }}
+                        value={ClassroomInformation.cname.value}
+                        changed={e =>
+                            handleClassroomInformationInputChange(e, 'cname')
+                        }
+                    />
+                    <Input
+                        name="ctopic"
+                        label="Classroom Name"
+                        elementType="input"
+                        elementConfig={{
+                            disabled: owner ? false : true,
+                            placeholder: 'Classroom Name',
+                            name: 'ctopic'
+                        }}
+                        value={ClassroomInformation.ctopic.value}
+                        changed={e =>
+                            handleClassroomInformationInputChange(e, 'ctopic')
+                        }
+                    />
+                    <Input
+                        label="Classroom Description"
+                        elementType="textarea"
+                        elementConfig={{
+                            disabled: owner ? false : true,
+                            placeholder: 'Classroom Name',
+                            name: 'cdesc'
+                        }}
+                        value={ClassroomInformation.cdesc.value}
+                        changed={e =>
+                            handleClassroomInformationInputChange(e, 'cdesc')
+                        }
+                    />
+                </form>
+            </Modal>
 
             <ParticipantModal
-                users={ codemarkastate.users }
-                toogleUserEditAccess={ handletoogleUserEditAccess }
-                owner={ owner }
-                ownerid={ ownerid }
-                userid={ userid }
-                sendUserPrivateMessage={ handlePrivateMessaging }
-                blockUser={ handleUserBlocking }
-                waveAtUser={ handlewaveAtUser }
+                users={codemarkastate.users}
+                toogleUserEditAccess={handletoogleUserEditAccess}
+                owner={owner}
+                ownerid={ownerid}
+                userid={userid}
+                sendUserPrivateMessage={handlePrivateMessaging}
+                blockUser={handleUserBlocking}
+                waveAtUser={handlewaveAtUser}
             />
 
-            <div style={ { width: '100%', height: '87vh' } }>
+            <div style={{ width: '100%', height: '87vh' }}>
                 <div className="container-fluid ">
                     <div className="row">
                         <div className="col-2 p-0">
                             <Seo
-                                title={ `${ name } :: codemarka classroom` }
-                                description={ description }
+                                title={`${name} :: codemarka classroom`}
+                                description={description}
                             />
-                            <Convo
-                                typing={ codemarkastate.typingState }
-                                username={ username }
-                                inputValue={ inputState.value }
-                                handleInputChange={ handleInputChange }
-                                sendMessage={ handleMessageSubmit }
-                                focused={ inputState.isFocused }
-                                messages={ codemarkastate.messages }
-                                user={ userid }
-                                owner={ ownerid }
-                            />
+                            <Suspense fallback={<Spinner />}>
+                                <Convo
+                                    typing={codemarkastate.typingState}
+                                    username={username}
+                                    inputValue={inputState.value}
+                                    handleInputChange={handleInputChange}
+                                    sendMessage={handleMessageSubmit}
+                                    focused={inputState.isFocused}
+                                    messages={codemarkastate.messages}
+                                    user={userid}
+                                    owner={ownerid}
+                                />
+                            </Suspense>
                         </div>
                         <div className="col-10 p-0">
-                            <Editor
-                                readOnly={ codemarkastate.editorPriviledge }
-                                handleEditorChange={ editorChanged }
-                                files={ codemarkastate.editors }
-                            />
+                            <Suspense fallback={<Spinner />}>
+                                <Editor
+                                    readOnly={codemarkastate.editorPriviledge}
+                                    handleEditorChange={editorChanged}
+                                    files={codemarkastate.editors}
+                                />
+                            </Suspense>
                         </div>
                     </div>
                 </div>

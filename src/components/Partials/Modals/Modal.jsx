@@ -3,11 +3,12 @@ import React from 'react'
 export default function Modal(props) {
     return (
         <div>
-            <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#modal">
-  Launch demo modal
-            </button>
-
-            <div className={ `modal fade modal-${ props.type } docs-example-modal-${ props.size || 'sm' }` } id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className={ `modal fade modal-${ props.type } docs-example-modal-${ props.size || 'sm' }` } 
+            id={ props.targetid }
+             tabindex="-1"
+              role="dialog"
+               aria-labelledby="exampleModalLabel" 
+               aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered" role="document">
                     <div className="modal-content">
                         <div className="modal-header">

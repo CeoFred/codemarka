@@ -1,7 +1,6 @@
 import React from 'react'
 
 export default function Preview(props) {
-    console.log(props);
     return (
         <div>
             <button type="button" onClick={ props.previewBtnClicked }  data-toggle="modal" data-target="#modal_1" className="preview_btn" >
