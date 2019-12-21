@@ -80,7 +80,7 @@ export default function Home() {
               </div>
           </div>
 
-          <section class="slice slice-xl bg-primary">
+          <section class="slice slice-xl bg-primary" id="features">
               <div class="container">
                   <div class="row justify-content-center mb-6">
                       <div class="col-lg-7 text-center">
@@ -374,7 +374,7 @@ export default function Home() {
                           </div>
                       </div>
                   </div>
-                  <div class="row justify-content-center">
+                  <div class="row justify-content-center" id="pricing">
                       <div class="col-lg-4 col-md">
                           <div class="card card-pricing text-center px-3 shadow hover-scale-110">
                               <div class="card-header py-5 border-0 delimiter-bottom">
@@ -400,7 +400,7 @@ export default function Home() {
                                       <li>3 language Support</li>
                                   </ul>
                                   <a
-                                      href="/"
+                                      href="/auth/signup?ref=home&auth=falseup"
                                       class="btn btn-sm btn-warning hover-translate-y-n3 hover-shadow-lg mb-3"
                                       target="_blank">
                                       Get started

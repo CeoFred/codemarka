@@ -281,6 +281,16 @@ function NewClassroom(props) {
 
     return (
         <div>
+            <button
+                className="zindex-100 btn btn-outline-info fixed-left position-md-absolute position-absolute
+                         rounded-circle btn-icon-only mt-3 float-left ml-3">
+                <a href="/">
+                    {' '}
+                    <span class="btn-inner--icon">
+                        <i className="fa fa-home"></i>
+                    </span>
+                </a>
+            </button>
             <Helmet
                 title="Create a classroom || codemarka.inc"
                 metaDescription=""></Helmet>

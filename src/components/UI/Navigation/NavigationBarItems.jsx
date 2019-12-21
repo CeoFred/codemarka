@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux"
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux'
 
 import * as url from '../../../config/url';
 function NavigationBarItems(props) {
@@ -42,14 +42,14 @@ function NavigationBarItems(props) {
                   </Link>
               </li>
               <li className="nav-item ">
-                  <Link className="nav-link" to={ url.ABOUT }>
-            About
-                  </Link>
+                  <a className="nav-link" href='/#features'>
+            Features
+                  </a>
               </li>
               <li className="nav-item ">
-                  <Link className="nav-link" to={ url.CONTACT }>
-            Support
-                  </Link>
+                  <a className="nav-link" href='/#pricing'>
+            Pricing
+                  </a>
               </li>
 
               <li className="nav-item ">

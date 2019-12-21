@@ -1,4 +1,4 @@
-import React,{ useEffect } from "react";
+import React,{ useEffect } from 'react';
 import { connect } from 'react-redux'
 import { Switch,withRouter,Route, Redirect } from 'react-router-dom';
 
@@ -27,20 +27,38 @@ const Routes = (props) => {
     }
   }, [ props ])
     let routes = (
-        <Switch>  
+        <Switch>
             <Route exact component={ logout } path={ url.AUTH_LOGOUT } />
             <Route exact component={ Home } path={ url.HOME } />
             <Route exact component={ Login } path={ url.AUTH_SIGN_IN } />
             <Route exact component={ Register } path={ url.AUTH_SIGN_UP } />
-            <Route exact component={ ForgotPassword } path={ url.AUTH_FORGOT_PASSWORD } />
+            <Route
+                exact
+                component={ ForgotPassword }
+                path={ url.AUTH_FORGOT_PASSWORD }
+            />
             <Redirect from={ url.CLASSROOMS } to={ url.AUTH_SIGN_IN } />
-            <Route exact component={ ClassRoomPreview } path={ url.PROTECTED_CLASSROOM_PREVIEW }/>
+            <Route
+                exact
+                component={ ClassRoomPreview }
+                path={ url.PROTECTED_CLASSROOM_PREVIEW }
+            />
             <Route exact component={ classrooom } path={ url.CLASSROOM } />
-            <Route exact component={ classPreviewNewTab } path={ url.CLASSROOM_PREVIEW_NEW_TAB }/>
-            <Route component={ NotFound } />
+            <Route
+                exact
+                component={ classPreviewNewTab }
+                path={ url.CLASSROOM_PREVIEW_NEW_TAB }
+            />
+            <Route exact component={ newclassroom } path={ url.CLASSROOM_NEW } />
+            <Route
+                exact
+                component={ ChangePassword }
+                path={ url.AUTH_CHANGE_PASSWORD }
+            />
 
+            <Route component={ NotFound } />
         </Switch>
-      );
+    )
   
       if(props.isAutheticated){
         routes = (
