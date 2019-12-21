@@ -158,6 +158,7 @@ if(props.isAuthenticated){
                   label="password"
                   isLoginPasswordInput
                   initialPrepend
+                  forgotPassword={false}
                   initialPrependsvg={ initialPrependsvg }
                   value={ state.controls.password.value }
                   finalAppend={ false }
@@ -173,20 +174,6 @@ if(props.isAuthenticated){
                                   </Button>
                               </div>
                           </form>
-                          <div className="py-3 text-center">
-                              <span className="text-xs text-uppercase">or</span>
-                          </div>
-                          <div className="row">
-                              <div className="col-sm-6">
-                                  {/* github action button */}
-                                  <Github link="github.com/oauth/" />
-                                  {/* github action button */}
-                              </div>
-
-                              <div className="col-sm-6">
-                                  <Google link="https://www.google.com/oauth" />
-                              </div>
-                          </div>
                           <div className="mt-4 text-center">
                               <small>Not registered?</small>
                               <Link to="/auth/signup" className="small font-weight-bold ml-1">

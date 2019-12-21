@@ -218,6 +218,7 @@ if(props.isAuthenticated){
                   type="password"
                   placeholder="Secret password"
                   label="password"
+                 
                   isLoginPasswordInput={ false }
                   initialPrepend
                   initialPrependsvg={ initialPrependsvg }
@@ -231,7 +232,7 @@ if(props.isAuthenticated){
                 selected={ state.controls.checkbox.value }
                 clicked={ (e) => handleInputChange(e,'checkbox') }>
                   I agree to the{" "}
-                                  <Link to="/public/terms">terms and conditions</Link>
+                                  terms and conditions
                               </Input>
 
                               <div className="mt-4">
@@ -244,20 +245,7 @@ if(props.isAuthenticated){
                                   </Button>
                               </div>
                           </form>
-                          <div className="py-3 text-center">
-                              <span className="text-xs text-uppercase">or</span>
-                          </div>
-                          <div className="row">
-                              <div className="col-sm-6">
-                                  {/* github action button */}
-                                  <Github link={ url.GITHUB_AUTH_URL } />
-                                  {/* github action button */}
-                              </div>
-
-                              <div className="col-sm-6">
-                                  <Google link={ url.GOOGLE_AUTH_URL } />
-                              </div>
-                          </div>
+                        
                           <div className="mt-4 text-center">
                               <small>Already have an account?</small>
                               <Link to={ url.AUTH_SIGN_IN } className="small font-weight-bold">

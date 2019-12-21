@@ -8,53 +8,53 @@ export default function Input(props) {
               <div>
                   <label className="form-control-label">{props.label}</label>
               </div>
-              {props.isLoginPasswordInput ? (
+              {props.isLoginPasswordInput && props.forgotPassword ? (
                   <div className="mb-2">
                       <Link
-              to="/auth/recover"
-              className="small text-muted text-underline--dashed border-primary"
-            >
-              Lost password?
+                          to="/auth/recover"
+                          className="small text-muted text-underline--dashed border-primary">
+                          Lost password?
                       </Link>
                   </div>
-        ) : (
-          ""
-        )}
+              ) : (
+                  ''
+              )}
           </div>
           <div className="input-group input-group-merge">
               {props.initialPrepend ? (
                   <div className="input-group-prepend">
-                      <span className="input-group-text">{props.initialPrependsvg}</span>
+                      <span className="input-group-text">
+                          {props.initialPrependsvg}
+                      </span>
                   </div>
-        ) : (
-          ""
-        )}
+              ) : (
+                  ''
+              )}
               <input
-          type={ props.type }
-          className="form-control"
-          id={ props.id || "" }
-          placeholder={ props.placeholder }
-          onChange={ props.changed }
-          value={ props.value }
-        />
+                  type={props.type}
+                  className="form-control"
+                  id={props.id || ''}
+                  placeholder={props.placeholder}
+                  onChange={props.changed}
+                  value={props.value}
+              />
               {props.finalAppend ? (
                   <div className="input-group-append">
                       <span className="input-group-text">
                           <a
-                href="/#"
-                data-toggle="password-text"
-                data-target="#input-password"
-              >
+                              href="/#"
+                              data-toggle="password-text"
+                              data-target="#input-password">
                               {props.finalAppendsvg}
                           </a>
                       </span>
                   </div>
-        ) : (
-          ""
-        )}
+              ) : (
+                  ''
+              )}
           </div>
       </div>
-  );
+  )
   const checkbox = (
       <div className="my-4">
           <div className="custom-control custom-checkbox mb-3">
