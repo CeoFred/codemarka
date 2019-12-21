@@ -36,7 +36,7 @@ const host =
         ? process.env.REACT_APP_REMOTE_API_URL
         : process.env.REACT_APP_LOCAL_API_URL
 
-const socket = io(`${host}classrooms`, {
+const socket = io(`${ host }classrooms`, {
     reconnection: true,
     reconnectionDelay: 6000,
     reconnectionDelayMax: 6000,
@@ -65,7 +65,6 @@ const MainClassLayout = ({
         isFocused: false,
         lastSentMessage: null
     })
-    console.log(history);
 
     const [codemarkastate, setcodemarkaState] = useState({
         messages: [],
@@ -80,8 +79,10 @@ const MainClassLayout = ({
         typingState: [],
         favourite: null,
         submitted: false,
-        pinnedMessages: []
-    })
+        pinnedMessages: [],
+        redirect: false,
+        starRated: null
+    });
 
     const [ClassroomInformation, setClassroomInformation] = useState({
         cname: {
@@ -108,14 +109,11 @@ const MainClassLayout = ({
     const [inRoom, setInRoom] = useState(false)
 
     const redirectTo = (e, path) => {
-                                        setInRoom(false)
-                                        socket.disconnect()
 
-                                        history.push('/')
-                                    }
+        window.location.href = window.location.origin;
+    }
 
     const [starRating, setStarRating] = useState(0);
-
 
     React.useEffect(() => {
         const requestData = {
@@ -154,7 +152,10 @@ const MainClassLayout = ({
 
                     return { ...c, messages: oldmsg, users: msg.newuserslist }
                 })
-                if (codemarkastate.messages && codemarkastate.messages.length > 0) {
+                if (
+                    codemarkastate.messages &&
+                    codemarkastate.messages.length > 0
+                ) {
                     const len = codemarkastate.messages.length
                     const lastIndex = len - 1
                     const ele = codemarkastate.messages[lastIndex].msgId
@@ -166,25 +167,37 @@ const MainClassLayout = ({
 
             socket.on('disconnect', reason => {
                 socket.emit('leave', requestData)
-
-                if (reason === 'io server disconnect') {
+                
+                
+                    if (reason === 'io server disconnect') {
                     // the disconnection was initiated by the server, you need to reconnect manually
                     socket.connect()
                 }
+                    toast.warn('Disconnected from classroom', {
+                        position: toast.POSITION.BOTTOM_RIGHT
+                    })
+                
+                
+            });
 
-                toast.warn('Disconnected from classroom', {
-                    position: toast.POSITION.BOTTOM_RIGHT
-                })
-            })
+            socket.on('rated_class', rated => {
+                setcodemarkaState(s => {
+                    return {...s, starRated: rated}
+                });
+            });
 
             socket.on('reconnecting', attemptNumber => {
                 toast.info(
                     'Attempting to reconnect to classroom,please wait...'
                 )
+            });
+
+            socket.on('star_rating_failed',reason => {
+                toast.warning(<div>Heads Up!<br/>Rating failed,{reason}</div>);
             })
 
             socket.on('reconnect_error', error => {
-                toast.warn('Reconnection failed, try refreshing this window')
+                toast.warn('Reconnection failed, try refreshing this window');
             })
 
             socket.on('reconnect', attemptNumber => {
@@ -310,8 +323,7 @@ const MainClassLayout = ({
 
             socket.on('newuser_role', __d => {
                 if (String(__d.id) === String(userid) && __d.role) {
-
-                    setcodemarkaState(c => {             
+                    setcodemarkaState(c => {
                         return {
                             ...c,
                             users: __d.newusers,
@@ -326,8 +338,13 @@ const MainClassLayout = ({
                         toast.info('You now have access to modify the Editors')
                     }
 
-                    if(__d.assignedBy === String(userid) || owner) {
-                        toast.info(<div>Heads Up!<hr/> Access granted! </div>)
+                    if (__d.assignedBy === String(userid) || owner) {
+                        toast.info(
+                            <div>
+                                Heads Up!
+                                <hr /> Access granted!{' '}
+                            </div>
+                        )
                     }
                 }
             })
@@ -357,16 +374,19 @@ const MainClassLayout = ({
 
             socket.on('user_waved', ({ from, to }) => {
                 if (userid === to.id) {
-                    toast.info(`${from} waved at you`)
+                    toast.info(`${ from } waved at you`)
                 }
-            });
+            })
 
-            socket.on('star_rating_added',(rat) => {
-                toast.success(<div><b>Great!</b><hr/>Your rating was recorded,please wait..</div>);
-                socket.disconnect();
-                setInRoom(false);
-                history.push('/');
-            });
+            socket.on('star_rating_added', rat => {
+                toast.success(
+                    <div>
+                        <b>Great!</b>
+                        Your rating was recorded,please wait..
+                    </div>
+                )
+                window.location.href = window.location.origin;
+            })
 
             socket.on('pinned_message_added', pmsg => {
                 setcodemarkaState(c => {
@@ -567,11 +587,11 @@ const MainClassLayout = ({
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        ${css && `<link rel="stylesheet" type="text/css" href="${cssURL}" />`}
-        ${js && `<script src="${jsURL}"></script>`}
+        ${ css && `<link rel="stylesheet" type="text/css" href="${ cssURL }" />` }
+        ${ js && `<script src="${ jsURL }"></script>` }
       </head>
       <body>
-        ${html || ''}
+        ${ html || '' }
       </body>
     </html>
   `
@@ -635,7 +655,7 @@ const MainClassLayout = ({
     }
 
     const handlewaveAtUser = (e, user) => {
-        toast.info(`Hey! You just waved at ${user.username}`)
+        toast.info(`Hey! You just waved at ${ user.username }`)
         console.log(user)
         socket.emit('user_waving', user)
     }
@@ -672,22 +692,22 @@ const MainClassLayout = ({
     }
 
     const addPinTextArea = (
-        <form onSubmit={handleClassPinnnedSubmit}>
+        <form onSubmit={ handleClassPinnnedSubmit }>
             <Input
                 name="text__area__msg__pin"
                 elementType="textarea"
-                elementConfig={{
+                elementConfig={ {
                     disabled: owner ? false : true,
                     placeholder: 'Pin Message Here...',
                     name: 'text__area__msg__pin'
-                }}
-                value={ClassroomPinnedInformation.value}
+                } }
+                value={ ClassroomPinnedInformation.value }
                 inputType="textarea"
-                changed={handlePinTextAreaChange}
+                changed={ handlePinTextAreaChange }
             />
             <button
                 type="submit"
-                onClick={handleClassPinnnedSubmit}
+                onClick={ handleClassPinnnedSubmit }
                 className="btn btn-sm float-left btn-soft-success">
                 {codemarkastate.submitted ? <Spinner /> : 'Add'}
             </button>
@@ -706,22 +726,22 @@ const MainClassLayout = ({
             toast.error('No Access to perfom this action')
         }
     }
-    const classfilesdownloadlink = `${host}${CLASSROOM_FILE_DOWNLOAD}${data.classroom_id}`
+    const classfilesdownloadlink = `${ host }${ CLASSROOM_FILE_DOWNLOAD }${ data.classroom_id }`
 
     const getPinnedMessages = () => {
         const pm = codemarkastate.pinnedMessages.map(msg => {
             if (msg.content.trim() !== '')
                 return (
                     <div
-                        key={msg.id}
+                        key={ msg.id }
                         class="card mt-0 mb-1"
-                        style={{
+                        style={ {
                             borderLeft: '2px solid #E91E63',
                             borderRadius: 0
-                        }}>
+                        } }>
                         <div
                             class="card-body"
-                            style={{ padding: 10, fontWeight: 'bolder' }}>
+                            style={ { padding: 10, fontWeight: 'bolder' } }>
                             <p class="mb-0">{msg.content}</p>
                         </div>
                     </div>
@@ -757,8 +777,13 @@ const MainClassLayout = ({
 
     const handleexitClassGracefully = e => {
         e.preventDefault()
-
-        document.getElementById('exit_grancefully__success_dropdown_1').click()
+        if(codemarkastate.starRated){
+            window.location.href = window.location.origin
+        } else {
+                   document
+                       .getElementById('exit_grancefully__success_dropdown_1')
+                       .click()
+               }
     }
 
     const handleclassReport = e => {
@@ -773,22 +798,21 @@ const MainClassLayout = ({
 
         while (i <= starPos) {
             strId = i.toString()
-            let gold = document.getElementById(strId)
+            const gold = document.getElementById(strId)
             gold.style.color = 'gold'
             i++
         }
 
         while (i <= 5) {
             strId = i.toString()
-            let white = document.getElementById(strId)
+            const white = document.getElementById(strId)
             white.style.color = 'grey'
             i++
         }
 
         const countYellowStars = () => {
-            debugger
-            let arr = []
-            let stars = document.querySelectorAll('.fa__codemarka__star')
+            const arr = []
+            const stars = document.querySelectorAll('.fa__codemarka__star')
             for (let i = 0; i < stars.length; i++) {
                 if (stars[i].style.color === 'gold') {
                     arr.push(stars[i].style.color)
@@ -796,18 +820,16 @@ const MainClassLayout = ({
             }
             const rating = arr.length
             setStarRating(r => {
-                return rating;
+                return rating
             })
         }
 
         countYellowStars()
     }
 
-    
-
-    const handleClassStarRating = (e) => {
-        e.preventDefault();
-        socket.emit("star_rating",starRating);
+    const handleClassStarRating = e => {
+        e.preventDefault()
+        socket.emit('star_rating', starRating)
     }
 
     const addStars = (
@@ -818,24 +840,24 @@ const MainClassLayout = ({
 
             <div>
                 <span
-                    onClick={handleClassStar}
+                    onClick={ handleClassStar }
                     id="1"
                     className="fa fa-star fa__codemarka__star fa-2x border-success"></span>
                 <span
-                    onClick={handleClassStar}
+                    onClick={ handleClassStar }
                     id="2"
                     className="fa fa-star fa-2x fa__codemarka__star border-success"></span>
                 <span
-                    onClick={handleClassStar}
+                    onClick={ handleClassStar }
                     id="3"
                     className="fa fa-star fa-2x fa__codemarka__star border-success"></span>
                 <span
-                    onClick={handleClassStar}
+                    onClick={ handleClassStar }
                     id="4"
                     className="fa fa-star fa-2x fa__codemarka__star border-success"></span>
                 <span
                     id="5"
-                    onClick={handleClassStar}
+                    onClick={ handleClassStar }
                     className="fa fa-star fa-2x fa__codemarka__star border-success"></span>
             </div>
 
@@ -843,7 +865,7 @@ const MainClassLayout = ({
                 <div>
                     <button
                         type="button"
-                        onClick={(e) => redirectTo(e,'/')}
+                        onClick={ e => redirectTo(e, '/') }
                         class="btn btn-animated  btn-sm btn-outline-success btn-animated-y">
                         <span class="btn-inner--visible">NOT NOW</span>
                         <span class="btn-inner--hidden">
@@ -852,7 +874,7 @@ const MainClassLayout = ({
                     </button>
                     <button
                         type="button"
-                        onClick={handleClassStarRating}
+                        onClick={ handleClassStarRating }
                         class="btn btn-animated  btn-sm btn-outline-success btn-animated-x">
                         <span class="btn-inner--visible">SUBMIT</span>
                         <span class="btn-inner--hidden">
@@ -864,13 +886,17 @@ const MainClassLayout = ({
         </div>
     )
 
+    if (codemarkastate.redirect) {
+        return <Redirect to={ codemarkastate.redirect } />
+    }
+
     return (
         <div>
             <ToastContainer />
             {redirectComp}
             <Preview
-                previewBtnClicked={handlePreview}
-                classroomid={data.classroom_id}
+                previewBtnClicked={ handlePreview }
+                classroomid={ data.classroom_id }
             />
             {classNotification}
             <span
@@ -883,23 +909,23 @@ const MainClassLayout = ({
             </span>
 
             <Navigation
-                name={name}
-                downloadLink={classfilesdownloadlink}
-                favourite={addClassToFavourite}
-                isFavourite={codemarkastate.favourite}
-                topic={topic}
-                exitClassGracefully={handleexitClassGracefully}
-                classroomid={data.classroom_id}
-                testConnection={handletestConnection}
-                classReport={handleclassReport}
+                name={ name }
+                downloadLink={ classfilesdownloadlink }
+                favourite={ addClassToFavourite }
+                isFavourite={ codemarkastate.favourite }
+                topic={ topic }
+                exitClassGracefully={ handleexitClassGracefully }
+                classroomid={ data.classroom_id }
+                testConnection={ handletestConnection }
+                classReport={ handleclassReport }
             />
 
             <Modal
                 targetid="exit_class_modal_cont"
                 type="default"
                 size="sm"
-                titleIcon={<i className="fa fa-thumbs-up"></i>}
-                title={'Rate this classroom '}>
+                titleIcon={ <i className="fa fa-thumbs-up"></i> }
+                title={ 'Rate this classroom ' }>
                 {addStars}
             </Modal>
 
@@ -907,8 +933,8 @@ const MainClassLayout = ({
                 targetid="pinned_modal_cont"
                 type="default"
                 size="sm"
-                titleIcon={<i className="fa fa-pen-nib"></i>}
-                title={'Pinned Messages'}>
+                titleIcon={ <i className="fa fa-pen-nib"></i> }
+                title={ 'Pinned Messages' }>
                 {getPinnedMessages()}
                 {owner ? addPinTextArea : ''}
             </Modal>
@@ -921,7 +947,7 @@ const MainClassLayout = ({
                     owner ? (
                         <button
                             type="submit"
-                            onClick={handleClassInfoUpdate}
+                            onClick={ handleClassInfoUpdate }
                             className="btn btn-sm float-left btn-soft-primary">
                             {ClassroomInformation.submitted ? (
                                 <Spinner />
@@ -934,18 +960,18 @@ const MainClassLayout = ({
                     )
                 }
                 title="classroom Information">
-                <form onSubmit={handleClassInfoUpdate}>
+                <form onSubmit={ handleClassInfoUpdate }>
                     <Input
                         name="cname"
                         label="Classroom Name"
                         elementType="input"
-                        elementConfig={{
+                        elementConfig={ {
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'cname'
-                        }}
-                        value={ClassroomInformation.cname.value}
-                        changed={e =>
+                        } }
+                        value={ ClassroomInformation.cname.value }
+                        changed={ e =>
                             handleClassroomInformationInputChange(e, 'cname')
                         }
                     />
@@ -953,26 +979,26 @@ const MainClassLayout = ({
                         name="ctopic"
                         label="Classroom Name"
                         elementType="input"
-                        elementConfig={{
+                        elementConfig={ {
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'ctopic'
-                        }}
-                        value={ClassroomInformation.ctopic.value}
-                        changed={e =>
+                        } }
+                        value={ ClassroomInformation.ctopic.value }
+                        changed={ e =>
                             handleClassroomInformationInputChange(e, 'ctopic')
                         }
                     />
                     <Input
                         label="Classroom Description"
                         elementType="textarea"
-                        elementConfig={{
+                        elementConfig={ {
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'cdesc'
-                        }}
-                        value={ClassroomInformation.cdesc.value}
-                        changed={e =>
+                        } }
+                        value={ ClassroomInformation.cdesc.value }
+                        changed={ e =>
                             handleClassroomInformationInputChange(e, 'cdesc')
                         }
                     />
@@ -980,44 +1006,44 @@ const MainClassLayout = ({
             </Modal>
 
             <ParticipantModal
-                users={codemarkastate.users}
-                toogleUserEditAccess={handletoogleUserEditAccess}
-                owner={owner}
-                ownerid={ownerid}
-                userid={userid}
-                sendUserPrivateMessage={handlePrivateMessaging}
-                blockUser={handleUserBlocking}
-                waveAtUser={handlewaveAtUser}
+                users={ codemarkastate.users }
+                toogleUserEditAccess={ handletoogleUserEditAccess }
+                owner={ owner }
+                ownerid={ ownerid }
+                userid={ userid }
+                sendUserPrivateMessage={ handlePrivateMessaging }
+                blockUser={ handleUserBlocking }
+                waveAtUser={ handlewaveAtUser }
             />
 
-            <div style={{ width: '100%', height: '87vh' }}>
+            <div style={ { width: '100%', height: '87vh' } }>
                 <div className="container-fluid ">
                     <div className="row">
                         <div className="col-2 p-0">
                             <Seo
-                                title={`${name} :: codemarka classroom`}
-                                description={description}
+                                title={ `${ name } :: codemarka classroom` }
+                                description={ description }
                             />
-                            <Suspense fallback={<Spinner />}>
+                            <Suspense fallback={ <Spinner /> }>
                                 <Convo
-                                    typing={codemarkastate.typingState}
-                                    username={username}
-                                    inputValue={inputState.value}
-                                    handleInputChange={handleInputChange}
-                                    sendMessage={handleMessageSubmit}
-                                    focused={inputState.isFocused}
-                                    messages={codemarkastate.messages}
-                                    user={userid}
-                                    owner={ownerid}
+                                    typing={ codemarkastate.typingState }
+                                    username={ username }
+                                    inputValue={ inputState.value }
+                                    handleInputChange={ handleInputChange }
+                                    sendMessage={ handleMessageSubmit }
+                                    focused={ inputState.isFocused }
+                                    messages={ codemarkastate.messages }
+                                    user={ userid }
+                                    owner={ ownerid }
                                 />
                             </Suspense>
                         </div>
                         <div className="col-10 p-0">
-                            <Suspense fallback={<Spinner />}>
+                            <Suspense fallback={ <Spinner /> }>
                                 <Editor
-                                    readOnly={codemarkastate.editorPriviledge}
-                                    handleEditorChange={editorChanged}
-                                    files={codemarkastate.editors}
+                                    readOnly={ codemarkastate.editorPriviledge }
+                                    handleEditorChange={ editorChanged }
+                                    files={ codemarkastate.editors }
                                 />
                             </Suspense>
                         </div>
