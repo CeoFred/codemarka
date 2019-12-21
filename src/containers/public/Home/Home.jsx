@@ -1,10 +1,10 @@
-import React from "react";
-import Button from "../../../components/Partials/Button";
-import { Link } from "react-router-dom";
-import Macbook from "../../../media/images/svg/devices/macbook.svg";
+import React from 'react';
+import Button from '../../../components/Partials/Button';
+import { Link } from 'react-router-dom';
+import Macbook from '../../../media/images/svg/devices/macbook.svg';
 
-import "../styles.css";
-import * as url from "../../../config/url";
+import '../styles.css';
+import * as url from '../../../config/url';
 import laptopImg from '../../../media/images/Screenshot(68).png';
 
 export default function Home() {
@@ -18,21 +18,24 @@ export default function Home() {
                           <div className="row row-grid align-items-center">
                               <div className="col-lg-8 text-center text-lg-left">
                                   <h1 className="text-white mb-4">
-                    We've helped bring together teams to solve their coding
-                    problems from different parts of the world in realtime.
+                                      We've helped bring together teams to solve
+                                      their coding problems from different parts
+                                      of the world in realtime.
                                   </h1>
                                   <p className="lead text-white opacity-8">
-                    Built for the community ,by the community. Feeling left out
-                    already?
+                                      Built for the community ,by the community.
+                                      Feeling left out already?
                                   </p>
                                   <div className="mt-5">
                                       <Link
-                      to={ url.AUTH_SIGN_UP }
-                      className="btn-inner--text text-white"
-                    >
-                                          <Button color="warning" size="md" icon="btn-icon">
+                                          to={ url.AUTH_SIGN_UP }
+                                          className="btn-inner--text text-white">
+                                          <Button
+                                              color="warning"
+                                              size="md"
+                                              icon="btn-icon">
                                               <span className="btn-inner--icon" />
-                        Join
+                                              Join
                                           </Button>
                                       </Link>
                                   </div>
@@ -46,25 +49,31 @@ export default function Home() {
               <div class="row row-grid align-items-center justify-content-between">
                   <div class="col-lg-5 col-md-6 order-md-2">
                       <div class="pr-md-4">
-                          <h3 class="h2 mt-4">Change the way you build websites</h3>
+                          <h3 class="h2 mt-4">
+                              Change the way you build websites
+                          </h3>
                           <p class="lead my-4 lh-190">
-                You can combine the power of real time programming and
-                communication, linting and deployments.
+                              You can combine the power of real time programming
+                              and communication, linting and deployments.
                           </p>
                           <strong class="text-warning text-underline--dashed">
-                Modularity at its best
+                              Modularity at its best
                           </strong>
                       </div>
                   </div>
                   <div class="col-md-6 col-lg-7 order-md-1">
                       <div class="frame-laptop">
-                          <img alt="Macbook" src={ Macbook } className="img-fluid" />
+                          <img
+                              alt="Macbook"
+                              src={ Macbook }
+                              className="img-fluid"
+                          />
                           <div class="frame-inner">
                               <img
-                  alt="placeholder"
-                  src={ laptopImg }
-                  className="img-fluid"
-                />
+                                  alt="placeholder"
+                                  src={ laptopImg }
+                                  className="img-fluid"
+                              />
                           </div>
                       </div>
                   </div>
@@ -75,40 +84,44 @@ export default function Home() {
               <div class="container">
                   <div class="row justify-content-center mb-6">
                       <div class="col-lg-7 text-center">
-                          <h1 class="mb-4 text-white">Features that you really need</h1>
+                          <h1 class="mb-4 text-white">
+                              Features that you really need
+                          </h1>
                           <p class="lh-190 text-white opacity-8">
-                With an intuitive markup, powerful and lightning fast build
-                tools, codemarka has everything you need to turn your ideas into
-                incredible products.
+                              With an intuitive markup, powerful and lightning
+                              fast build tools, codemarka has everything you
+                              need to turn your ideas into incredible products.
                           </p>
                       </div>
                   </div>
                   <div class="row mx-lg-n4">
-
                       <div class="col-lg-4 col-md-6 px-lg-4">
                           <div class="card shadow-none">
                               <div class="p-3 d-flex">
                                   <div>
                                       <div class="icon icon-shape rounded-circle bg-warning text-white mr-4">
                                           <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="1em"
-                        height="1em"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="feather feather-check"
-                      >
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="1em"
+                                              height="1em"
+                                              viewBox="0 0 24 24"
+                                              fill="none"
+                                              stroke="currentColor"
+                                              stroke-width="2"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              class="feather feather-check">
                                               <polyline points="20 6 9 17 4 12" />
                                           </svg>
                                       </div>
                                   </div>
                                   <div>
-                                      <span class="h6">Real Time Communication</span>
-                                      <p class="text-sm text-muted mb-0">Time is precious</p>
+                                      <span class="h6">
+                                          Real Time Communication
+                                      </span>
+                                      <p class="text-sm text-muted mb-0">
+                                          Time is precious
+                                      </p>
                                   </div>
                               </div>
                           </div>
@@ -117,24 +130,25 @@ export default function Home() {
                                   <div>
                                       <div class="icon icon-shape rounded-circle bg-primary text-white mr-4">
                                           <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="1em"
-                        height="1em"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="feather feather-check"
-                      >
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="1em"
+                                              height="1em"
+                                              viewBox="0 0 24 24"
+                                              fill="none"
+                                              stroke="currentColor"
+                                              stroke-width="2"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              class="feather feather-check">
                                               <polyline points="20 6 9 17 4 12" />
                                           </svg>
                                       </div>
                                   </div>
                                   <div>
                                       <span class="h6">Code Liniting</span>
-                                      <p class="text-sm text-muted mb-0">Faster build time.</p>
+                                      <p class="text-sm text-muted mb-0">
+                                          Faster build time.
+                                      </p>
                                   </div>
                               </div>
                           </div>
@@ -143,17 +157,16 @@ export default function Home() {
                                   <div>
                                       <div class="icon icon-shape rounded-circle bg-danger text-white mr-4">
                                           <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="1em"
-                        height="1em"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="feather feather-check"
-                      >
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="1em"
+                                              height="1em"
+                                              viewBox="0 0 24 24"
+                                              fill="none"
+                                              stroke="currentColor"
+                                              stroke-width="2"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              class="feather feather-check">
                                               <polyline points="20 6 9 17 4 12" />
                                           </svg>
                                       </div>
@@ -161,7 +174,7 @@ export default function Home() {
                                   <div>
                                       <span class="h6">Live Preview</span>
                                       <p class="text-sm text-muted mb-0">
-                      Bringing your project to life.
+                                          Bringing your project to life.
                                       </p>
                                   </div>
                               </div>
@@ -174,24 +187,27 @@ export default function Home() {
                                   <div>
                                       <div class="icon icon-shape rounded-circle bg-warning text-white mr-4">
                                           <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="1em"
-                        height="1em"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="feather feather-check"
-                      >
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="1em"
+                                              height="1em"
+                                              viewBox="0 0 24 24"
+                                              fill="none"
+                                              stroke="currentColor"
+                                              stroke-width="2"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              class="feather feather-check">
                                               <polyline points="20 6 9 17 4 12" />
                                           </svg>
                                       </div>
                                   </div>
                                   <div>
-                                      <span class="h6">Classroom monitoring</span>
-                                      <p class="text-sm text-muted mb-0">Know when, why and how it happened.</p>
+                                      <span class="h6">
+                                          Classroom monitoring
+                                      </span>
+                                      <p class="text-sm text-muted mb-0">
+                                          Know when, why and how it happened.
+                                      </p>
                                   </div>
                               </div>
                           </div>
@@ -200,24 +216,25 @@ export default function Home() {
                                   <div>
                                       <div class="icon icon-shape rounded-circle bg-primary text-white mr-4">
                                           <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="1em"
-                        height="1em"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="feather feather-check"
-                      >
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="1em"
+                                              height="1em"
+                                              viewBox="0 0 24 24"
+                                              fill="none"
+                                              stroke="currentColor"
+                                              stroke-width="2"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              class="feather feather-check">
                                               <polyline points="20 6 9 17 4 12" />
                                           </svg>
                                       </div>
                                   </div>
                                   <div>
                                       <span class="h6">Github Integration</span>
-                                      <p class="text-sm text-muted mb-0">Export class files to github.</p>
+                                      <p class="text-sm text-muted mb-0">
+                                          Export class files to github.
+                                      </p>
                                   </div>
                               </div>
                           </div>
@@ -227,17 +244,16 @@ export default function Home() {
                                   <div>
                                       <div class="icon icon-shape rounded-circle bg-danger text-white mr-4">
                                           <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="1em"
-                        height="1em"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="feather feather-check"
-                      >
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="1em"
+                                              height="1em"
+                                              viewBox="0 0 24 24"
+                                              fill="none"
+                                              stroke="currentColor"
+                                              stroke-width="2"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              class="feather feather-check">
                                               <polyline points="20 6 9 17 4 12" />
                                           </svg>
                                       </div>
@@ -245,7 +261,7 @@ export default function Home() {
                                   <div>
                                       <span class="h6">Audio Broadcast</span>
                                       <p class="text-sm text-muted mb-0">
-                      If texts don't hit hard,voices might.
+                                          If texts don't hit hard,voices might.
                                       </p>
                                   </div>
                               </div>
@@ -258,24 +274,27 @@ export default function Home() {
                                   <div>
                                       <div class="icon icon-shape rounded-circle bg-success text-white mr-4">
                                           <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="1em"
-                        height="1em"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="feather feather-check"
-                      >
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="1em"
+                                              height="1em"
+                                              viewBox="0 0 24 24"
+                                              fill="none"
+                                              stroke="currentColor"
+                                              stroke-width="2"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              class="feather feather-check">
                                               <polyline points="20 6 9 17 4 12" />
                                           </svg>
                                       </div>
                                   </div>
                                   <div>
-                                      <span class="h6">20+ Language Support</span>
-                                      <p class="text-sm text-muted mb-0">Built for everyone.</p>
+                                      <span class="h6">
+                                          20+ Language Support
+                                      </span>
+                                      <p class="text-sm text-muted mb-0">
+                                          Built for everyone.
+                                      </p>
                                   </div>
                               </div>
                           </div>
@@ -285,17 +304,16 @@ export default function Home() {
                                   <div>
                                       <div class="icon icon-shape rounded-circle bg-info text-white mr-4">
                                           <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="feather feather-check"
-                      >
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="24"
+                                              height="24"
+                                              viewBox="0 0 24 24"
+                                              fill="none"
+                                              stroke="currentColor"
+                                              stroke-width="2"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              class="feather feather-check">
                                               <polyline points="20 6 9 17 4 12" />
                                           </svg>
                                       </div>
@@ -303,7 +321,7 @@ export default function Home() {
                                   <div>
                                       <span class="h6">Cool widgets</span>
                                       <p class="text-sm text-muted mb-0">
-                      A boost to your project.
+                                          A boost to your project.
                                       </p>
                                   </div>
                               </div>
@@ -314,17 +332,16 @@ export default function Home() {
                                   <div>
                                       <div class="icon icon-shape rounded-circle bg-warning text-white mr-4">
                                           <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="1em"
-                        height="1em"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="feather feather-check"
-                      >
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="1em"
+                                              height="1em"
+                                              viewBox="0 0 24 24"
+                                              fill="none"
+                                              stroke="currentColor"
+                                              stroke-width="2"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              class="feather feather-check">
                                               <polyline points="20 6 9 17 4 12" />
                                           </svg>
                                       </div>
@@ -332,16 +349,132 @@ export default function Home() {
                                   <div>
                                       <span class="h6">Beautiful Layout</span>
                                       <p class="text-sm text-muted mb-0">
-                      Interface Matters to us.
+                                          Interface Matters to us.
                                       </p>
                                   </div>
                               </div>
                           </div>
-
                       </div>
                   </div>
               </div>
           </section>
+
+          <section class="slice slice-lg bg-section-secondary">
+              <div class="container">
+                  <div class="row mb-6 justify-content-center text-center">
+                      <div class="col-lg-8 col-md-10">
+                          <h2 class="mt-4">Simple, Straight Pricing</h2>
+                          <div class="mt-3">
+                              <p class="lead lh-180">
+                                  Thousands of developers and communities around
+                                  the world have already made codemarka the main
+                                  tool for collaboration and learning while
+                                  building semantic websites.
+                              </p>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row justify-content-center">
+                      <div class="col-lg-4 col-md">
+                          <div class="card card-pricing text-center px-3 shadow hover-scale-110">
+                              <div class="card-header py-5 border-0 delimiter-bottom">
+                                  <div class="h1 text-center mb-0">
+                                      $
+                                      <span class="price font-weight-bolder">
+                                          0
+                                      </span>
+                                  </div>
+                                  <span class="h6 text-muted">
+                                      Personal Account
+                                  </span>
+                              </div>
+                              <div class="card-body">
+                                  <ul class="list-unstyled text-sm mb-4">
+                                      <li>30 classrooms Max</li>
+                                      <li>Use for personal or a comunity</li>
+                                      <li>100 Max classroom students</li>
+                                      <li>Code Linting</li>
+                                      <li>Download Files</li>
+                                      <li>Audio Broadcast</li>
+                                      <li>Text-to-speech</li>
+                                      <li>3 language Support</li>
+                                  </ul>
+                                  <a
+                                      href="/"
+                                      class="btn btn-sm btn-warning hover-translate-y-n3 hover-shadow-lg mb-3"
+                                      target="_blank">
+                                      Get started
+                                  </a>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-lg-4 col-md">
+                          <div class="card card-pricing bg-primary text-center px-3 shadow hover-scale-110">
+                              <div class="card-header py-5 border-0 delimiter-bottom">
+                                  <div class="h1 text-white text-center mb-0">
+                                      $
+                                      <span class="price font-weight-bolder">
+                                          50 / month
+                                      </span>
+                                  </div>
+                                  <span class="h6 text-white">
+                                      Community License
+                                  </span>
+                              </div>
+                              <div class="card-body">
+                                  <ul class="list-unstyled text-white text-sm opacity-8 mb-4">
+                                      <li>100 classrooms Max</li>
+                                      <li>Use for personal or a comunity</li>
+                                      <li>400 Max classroom students</li>
+                                      <li>Code Linting</li>
+                                      <li>Download Files</li>
+                                      <li>Audio Broadcast</li>
+                                      <li>Text-to-speech</li>
+                                      <li>Record class session</li>
+                                      <li>Custom Domain</li>
+                                      <li>Quiz</li>
+                                      <li>Github Export</li>
+                                      <li>Screen sharing</li>
+                                      <li>Codermarka bot</li>
+                                  </ul>
+                                  <a
+                                      
+                                      class="btn btn-sm btn-white hover-translate-y-n3 hover-shadow-lg mb-3"
+                                      target="_blank">
+                                      Coming soon
+                                  </a>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="mt-5 text-center">
+                      <p className="mb-2"><i className="fa fa-info-circle"></i> codemarka is still in development mode, not every feature for free accounts 
+                     are availble, once this features are available they would be enabled for your respective account types.
+                      </p>
+                      <p class="mb-2">
+                          Both pricings contains all 6 months free support. Need
+                          more?
+                      </p>
+                      <a href="#" class="text-primary text-underline--dashed">
+                          Contact us
+                          <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="1em"
+                              height="1em"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="feather feather-arrow-right ml-2">
+                              <line x1="5" y1="12" x2="19" y2="12"></line>
+                              <polyline points="12 5 19 12 12 19"></polyline>
+                          </svg>
+                      </a>
+                  </div>
+              </div>
+          </section>
       </>
-  );
+  )
 }
