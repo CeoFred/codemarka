@@ -171,10 +171,15 @@ useEffect(() => {
 let redct;
 
 if(props.isAuthenticated){
-  // setTimeout(() => {
-  // },1500);
-  redct = <Redirect to='/'/>
 
+const host = window.location.href
+let url = new URLSearchParams(host)
+let redirectPath = url.get('redir')
+if (redirectPath) {
+    redct = <Redirect to={`${redirectPath}`} />
+} else {
+    redct = <Redirect to="/?auth_rdir=r" />
+}
 }
   return (
       <div>
@@ -182,74 +187,83 @@ if(props.isAuthenticated){
           {redct}
           <section>
               <div className="mt-3 row align-items-center justify-content-center min-vh-100">
-                  <div className="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
+                  <div className="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0 registration-container">
                       <div>
                           <div className="mb-5 text-center">
                               <h6 className="h3 mb-1">Create your account</h6>
-                              <p className="text-muted mb-0">Made with love for developers</p>
+                              <p className="text-muted mb-0">
+                                  Made with love for developers
+                              </p>
                               {alert}
                           </div>
                           <span className="clearfix" />
-                          <form onSubmit={ submitHandler }>
+                          <form onSubmit={submitHandler}>
                               {/* username input */}
                               <Input
-                  type="text"
-                  placeholder="superuser"
-                  label="username"
-                  initialPrepend
-                  initialPrependsvg={ userIconSvg }
-                  value={ state.controls.username.value }
-                  changed={ (e) => handleInputChange(e,'username') }
-                />
+                                  type="text"
+                                  placeholder="superuser"
+                                  label="username"
+                                  initialPrepend
+                                  initialPrependsvg={userIconSvg}
+                                  value={state.controls.username.value}
+                                  changed={e =>
+                                      handleInputChange(e, 'username')
+                                  }
+                              />
 
                               {/* email input */}
                               <Input
-                  type="email"
-                  placeholder="someone@someserver.com"
-                  label="Email address"
-                  initialPrepend
-                  initialPrependsvg={ emailIconSvg }
-                  value={ state.controls.email.value }
-                  changed={ (e) => handleInputChange(e,'email') }
-                  
-                />
+                                  type="email"
+                                  placeholder="someone@someserver.com"
+                                  label="Email address"
+                                  initialPrepend
+                                  initialPrependsvg={emailIconSvg}
+                                  value={state.controls.email.value}
+                                  changed={e => handleInputChange(e, 'email')}
+                              />
                               {/* pasword input */}
                               <Input
-                  type="password"
-                  placeholder="Secret password"
-                  label="password"
-                 
-                  isLoginPasswordInput={ false }
-                  initialPrepend
-                  initialPrependsvg={ initialPrependsvg }
-                  value={ state.controls.password.value }
-                  changed={ (e) => handleInputChange(e,'password') }
-
-                />
+                                  type="password"
+                                  placeholder="Secret password"
+                                  label="password"
+                                  isLoginPasswordInput={false}
+                                  initialPrepend
+                                  initialPrependsvg={initialPrependsvg}
+                                  value={state.controls.password.value}
+                                  changed={e =>
+                                      handleInputChange(e, 'password')
+                                  }
+                              />
 
                               {/* checkbox */}
-                              <Input fieldtype="checkbox"
-                selected={ state.controls.checkbox.value }
-                clicked={ (e) => handleInputChange(e,'checkbox') }>
-                  I agree to the{" "}
-                                  terms and conditions
+                              <Input
+                                  fieldtype="checkbox"
+                                  selected={state.controls.checkbox.value}
+                                  clicked={e =>
+                                      handleInputChange(e, 'checkbox')
+                                  }>
+                                  I agree to the terms and conditions
                               </Input>
 
                               <div className="mt-4">
-                                  <Button type="button"
-                   clicked={ submitHandler } 
-                  disabled={ props.loading }
-                   textColor="#fff" 
-                   block color="primary">
-                                      {props.loading ? <Spinner/> : 'Sign In'}
+                                  <Button
+                                      type="button"
+                                      clicked={submitHandler}
+                                      disabled={props.loading}
+                                      textColor="#fff"
+                                      block
+                                      color="primary">
+                                      {props.loading ? <Spinner /> : 'Sign In'}
                                   </Button>
                               </div>
                           </form>
-                        
+
                           <div className="mt-4 text-center">
                               <small>Already have an account?</small>
-                              <Link to={ url.AUTH_SIGN_IN } className="small font-weight-bold">
-                  signin
+                              <Link
+                                  to={url.AUTH_SIGN_IN}
+                                  className="small font-weight-bold">
+                                  signin
                               </Link>
                           </div>
                       </div>
@@ -257,7 +271,7 @@ if(props.isAuthenticated){
               </div>
           </section>
       </div>
-  );
+  )
 }
 
 const mapStateToProps = state => {

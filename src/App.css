@@ -9,3 +9,27 @@
 .bg-gold {
   color: gold;
 }
+
+@media screen and (max-width:320px){
+  .login-container {
+    margin:20px;
+  }
+}
+
+@media screen and (max-width:749px) {
+  .registration-container {
+    margin: 20px;
+  }
+  .registration-container.p-7{
+    padding:0;
+  }
+  .side {
+    display:none;
+  }
+  .conversation__container {
+    display:none;
+  }
+  .vp-dead {
+    display: block;
+  }
+}

@@ -297,15 +297,15 @@ function NewClassroom(props) {
 
             <section>
                 <div className="row min-vh-100">
-                    <div className="col-md-6 col-lg-6 col-xl-6 p-7 pl-3 pr-3 py-6 py-md-0 mb-3">
+                    <div className="col-md-6 col-lg-6 col-xl-6 p-7 pl-3 pr-3 py-6 py-md-0 mb-3 registration-container">
                         <div>
                             <div className="mb-5 mt-2 text-center">
                                 <b className="text-muted mb-0"></b>
                             </div>
                             <span className="clearfix" />
                             <Alert
-                                type={ state.alertType }
-                                display={ state.formErrorMessage }
+                                type={state.alertType}
+                                display={state.formErrorMessage}
                                 title="Heads Up!">
                                 {state.formErrorMessage}
                             </Alert>

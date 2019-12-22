@@ -39,7 +39,11 @@ function Environment(props) {
   console.log(props);
   const { class_verified, isAuthenticated } = props
   React.useEffect(() => {
-      onClassroomSwitch('classroom')
+      onClassroomSwitch('classroom');
+
+      if(window.innerWidth < 750){
+        console.log('too small')
+      }
     if(!class_verified && isAuthenticated){
 
       onClassroomVerify(classroomId);

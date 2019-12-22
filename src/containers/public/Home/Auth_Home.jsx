@@ -12,6 +12,36 @@ function Auth_Home() {
     const [ searchInput, setSearchInput ] = useState({ touched: false,value:'' });
     const [ results, setResults ] = useState({ result:null });
 
+    const searchInit = (e) => {
+
+        if(searchInput.value !== ''){
+            
+    const url = `${ host }classroom/search/${ searchInput.value }`
+
+    const searchClassroomRequest = new Request(url, {
+        method: 'GET',
+        cache: 'default',
+        headers: myHeaders,
+        mode: 'cors'
+    })
+
+    fetch(searchClassroomRequest)
+        .then(d => d.json())
+        .then(m => {
+            if (m.data && m.data.length >= 1) {
+                setResults({ result: m.data })
+            } else {
+                setResults({ result: null })
+            }
+            console.log(m)
+        })
+        .catch(err => {
+            setResults({ result: 'Opps! Something went wrong' })
+            console.log(err)
+        })
+        }
+
+    }
     const handleSearchInputChange = (e) => {
         e.preventDefault();
         setSearchInput({ touched:true,value:e.target.value });
@@ -33,10 +63,8 @@ function Auth_Home() {
             } else {
                 setResults({ result:null });
             }
-             console.log(m);
         }).catch(err => {
              setResults({ result:'Opps! Something went wrong' });
-             console.log(err);
         });
 
     } else {
@@ -48,7 +76,7 @@ function Auth_Home() {
         <div className="colab__container">
             {/* start search container */}
             <div className="search__container row">
-                <div className="search__input__container">
+                <div className="search__input__container p-md-0">
                     <div className="card border-0 shadow-lg rounded-lg card-dark bg-translucent-white">
                         <div className="card-body">
                             <form
@@ -69,7 +97,8 @@ function Auth_Home() {
                                         />
                                         <div className="input-group-append">
                                             <button
-                                                type="submit"
+                                                onClick={ searchInit }
+                                                type="button"
                                                 className="btn btn-success"
                                                 id="basic-addon2">
                                                 <i className="fa fa-search"></i>

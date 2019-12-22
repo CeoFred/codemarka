@@ -129,7 +129,7 @@ if(props.isAuthenticated){
           {redct}
           <section>
               <div className="row align-items-center justify-content-center min-vh-100">
-                  <div className="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
+                  <div className="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0 login-container">
                       <div>
                           <div className="mb-5 text-center">
                               <h6 className="h3 mb-1">Login</h6>
