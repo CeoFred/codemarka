@@ -5,7 +5,7 @@ import Macbook from '../../../media/images/svg/devices/macbook.svg';
 
 import '../styles.css';
 import * as url from '../../../config/url';
-import laptopImg from '../../../media/images/Screenshot(68).png';
+import laptopImg from '../../../media/images/ss.png';
 
 export default function Home() {
   return (
@@ -18,7 +18,7 @@ export default function Home() {
                           <div className="row row-grid align-items-center">
                               <div className="col-lg-8 text-center text-lg-left">
                                   <h1 className="text-white mb-4">
-                                      We've helped bring together teams to solve
+                                      We're helping to bring together teams to solve
                                       their coding problems from different parts
                                       of the world in realtime.
                                   </h1>
@@ -35,7 +35,7 @@ export default function Home() {
                                               size="md"
                                               icon="btn-icon">
                                               <span className="btn-inner--icon" />
-                                              Join
+                                              Create an account
                                           </Button>
                                       </Link>
                                   </div>
@@ -50,11 +50,11 @@ export default function Home() {
                   <div class="col-lg-5 col-md-6 order-md-2">
                       <div class="pr-md-4">
                           <h3 class="h2 mt-4">
-                              Change the way you build websites
+                              Change the way you build softwares.
                           </h3>
                           <p class="lead my-4 lh-190">
                               You can combine the power of real time programming
-                              and communication, linting and deployments.
+                              and communication, linting, deployments and more.
                           </p>
                           <strong class="text-warning text-underline--dashed">
                               Modularity at its best
@@ -70,6 +70,7 @@ export default function Home() {
                           />
                           <div class="frame-inner">
                               <img
+                                    style={ {height:'90%'} }
                                   alt="placeholder"
                                   src={ laptopImg }
                                   className="img-fluid"

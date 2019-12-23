@@ -1,19 +1,19 @@
-import React,{ useState, useEffect } from "react";
-import { Redirect } from "react-router-dom"
-import { Link } from "react-router-dom";
-import { connect } from "react-redux"
+import React,{ useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux'
 
-import Github from "../../components/Partials/Auth/Button/Github";
-import Google from "../../components/Partials/Auth/Button/Google";
+import Github from '../../components/Partials/Auth/Button/Github';
+import Google from '../../components/Partials/Auth/Button/Google';
 
-import Button from "../../components/Partials/Button";
-import Input from "../../components/Partials/Input";
-import Helmet from "../../components/SEO/helmet";
+import Button from '../../components/Partials/Button';
+import Input from '../../components/Partials/Input';
+import Helmet from '../../components/SEO/helmet';
 import Spinner from '../../components/Partials/Preloader';
 import Alert from '../../components/Partials/Alert/Alert';
 
-import * as url from '../../config/url';
-import * as action from "../../store/actions";
+import * as URLS from '../../config/url';
+import * as action from '../../store/actions';
 import { updateObject } from '../../utility/shared';
 
 const emailIconSvg = (
@@ -123,9 +123,9 @@ useEffect(() => {
   const submitHandler = event => {
     event.preventDefault();
 
-    let formSubmitted = true;
+    const formSubmitted = true;
     setState(updateObject(state,formSubmitted));
-    let formData = {};
+    const formData = {};
 
     if (formSubmitted) {
       
@@ -133,7 +133,7 @@ useEffect(() => {
         setState({ ...state,alertMessage:'You have agreed' })
       }
 
-      for (let formElementIdentifier in state.controls) {
+      for (const formElementIdentifier in state.controls) {
         formData[ formElementIdentifier ] =
           state.controls[ formElementIdentifier ].value;
       }
@@ -144,10 +144,10 @@ useEffect(() => {
 
       setState({
         ...state,
-        alertType: "error",
+        alertType: 'error',
         formErrored: true,
         formErrorMessage:
-          "Form Validation Failed, please check inputs and try again"
+          'Form Validation Failed, please check inputs and try again'
       });
       return false;
     }
@@ -159,7 +159,7 @@ useEffect(() => {
       props.onAlertClose()
   }
 
-  let alert = (
+  const alert = (
       <Alert 
               display={ props.message }
               clicked={ handleAlertClick }
@@ -173,10 +173,10 @@ let redct;
 if(props.isAuthenticated){
 
 const host = window.location.href
-let url = new URLSearchParams(host)
-let redirectPath = url.get('redir')
+const url = new URLSearchParams(host)
+const redirectPath = url.get('redir')
 if (redirectPath) {
-    redct = <Redirect to={`${redirectPath}`} />
+    redct = <Redirect to={ `${ redirectPath }` } />
 } else {
     redct = <Redirect to="/?auth_rdir=r" />
 }
@@ -197,16 +197,16 @@ if (redirectPath) {
                               {alert}
                           </div>
                           <span className="clearfix" />
-                          <form onSubmit={submitHandler}>
+                          <form onSubmit={ submitHandler }>
                               {/* username input */}
                               <Input
                                   type="text"
                                   placeholder="superuser"
                                   label="username"
                                   initialPrepend
-                                  initialPrependsvg={userIconSvg}
-                                  value={state.controls.username.value}
-                                  changed={e =>
+                                  initialPrependsvg={ userIconSvg }
+                                  value={ state.controls.username.value }
+                                  changed={ e =>
                                       handleInputChange(e, 'username')
                                   }
                               />
@@ -217,20 +217,20 @@ if (redirectPath) {
                                   placeholder="someone@someserver.com"
                                   label="Email address"
                                   initialPrepend
-                                  initialPrependsvg={emailIconSvg}
-                                  value={state.controls.email.value}
-                                  changed={e => handleInputChange(e, 'email')}
+                                  initialPrependsvg={ emailIconSvg }
+                                  value={ state.controls.email.value }
+                                  changed={ e => handleInputChange(e, 'email') }
                               />
                               {/* pasword input */}
                               <Input
                                   type="password"
                                   placeholder="Secret password"
                                   label="password"
-                                  isLoginPasswordInput={false}
+                                  isLoginPasswordInput={ false }
                                   initialPrepend
-                                  initialPrependsvg={initialPrependsvg}
-                                  value={state.controls.password.value}
-                                  changed={e =>
+                                  initialPrependsvg={ initialPrependsvg }
+                                  value={ state.controls.password.value }
+                                  changed={ e =>
                                       handleInputChange(e, 'password')
                                   }
                               />
@@ -238,8 +238,8 @@ if (redirectPath) {
                               {/* checkbox */}
                               <Input
                                   fieldtype="checkbox"
-                                  selected={state.controls.checkbox.value}
-                                  clicked={e =>
+                                  selected={ state.controls.checkbox.value }
+                                  clicked={ e =>
                                       handleInputChange(e, 'checkbox')
                                   }>
                                   I agree to the terms and conditions
@@ -248,8 +248,8 @@ if (redirectPath) {
                               <div className="mt-4">
                                   <Button
                                       type="button"
-                                      clicked={submitHandler}
-                                      disabled={props.loading}
+                                      clicked={ submitHandler }
+                                      disabled={ props.loading }
                                       textColor="#fff"
                                       block
                                       color="primary">
@@ -261,7 +261,7 @@ if (redirectPath) {
                           <div className="mt-4 text-center">
                               <small>Already have an account?</small>
                               <Link
-                                  to={url.AUTH_SIGN_IN}
+                                  to={ URLS.AUTH_SIGN_IN }
                                   className="small font-weight-bold">
                                   signin
                               </Link>

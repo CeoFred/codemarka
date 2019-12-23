@@ -3,7 +3,7 @@
 * {
   padding: 0;
   margin: 0;
-  font-family: 'Nunito','Ubuntu';
+  font-family: 'Ubuntu','Nunito';
 }
 
 .bg-gold {
@@ -22,6 +22,7 @@
   }
   .registration-container.p-7{
     padding:0;
+    margin:20px;
   }
   .side {
     display:none;
