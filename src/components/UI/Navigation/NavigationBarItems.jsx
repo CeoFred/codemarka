@@ -5,30 +5,40 @@ import { connect } from 'react-redux'
 import * as url from '../../../config/url';
 function NavigationBarItems(props) {
     if(props.isAuthenticated){
-      return(
+      return (
           <div className="collapse navbar-collapse" id="navbar-primary">
               <ul className="navbar-nav ml-lg-auto">
                   <li className="nav-item">
-                      <Link className="nav-link" to={ url.HOME }>
-            Home
+                      <Link
+                          className="nav-link"
+                          style={ { fontWeight: 'normal' } }
+                          to={ url.HOME }>
+                          Home
                       </Link>
                   </li>
 
                   <li className="nav-item ">
-                      <Link className="nav-link" to={ url.CLASSROOM_NEW }>
-            Create
+                      <Link
+                          className="nav-link"
+                          style={ { fontWeight: 'normal' } }
+                          to={ url.CLASSROOM_NEW }>
+                          Create
                       </Link>
                   </li>
 
                   <li className="nav-item">
-                      <span className="nav-link">Welcome, {props.username}</span>
+                      <span
+                          className="nav-link"
+                          style={ { fontWeight: 'normal' } }>
+                          Welcome, {props.username} {' !'}
+                      </span>
                   </li>
 
-                  <li className="nav-item">
+                  <li className="nav-item" style={ { fontWeight: 'normal' } }>
                       <Link to={ url.AUTH_LOGOUT } className="nav-link">
-        logout</Link>
+                          logout
+                      </Link>
                   </li>
-
               </ul>
           </div>
       )
@@ -37,30 +47,41 @@ function NavigationBarItems(props) {
       <div className="collapse navbar-collapse" id="navbar-primary">
           <ul className="navbar-nav ml-lg-auto">
               <li className="nav-item">
-                  <Link className="nav-link" to={ url.HOME }>
-            Home
+                  <Link
+                      className="nav-link"
+                      style={ { fontWeight: 'normal' } }
+                      to={ url.HOME }>
+                      Home
                   </Link>
               </li>
               <li className="nav-item ">
-                  <a className="nav-link" href='/#features'>
-            Features
+                  <a
+                      className="nav-link"
+                      style={ { fontWeight: 'normal' } }
+                      href="/#features">
+                      Features
                   </a>
               </li>
               <li className="nav-item ">
-                  <a className="nav-link" href='/#pricing'>
-            Pricing
+                  <a
+                      className="nav-link"
+                      style={ { fontWeight: 'normal' } }
+                      href="/#pricing">
+                      Pricing
                   </a>
               </li>
 
               <li className="nav-item ">
-                  <Link className="nav-link" to={ url.AUTH_SIGN_IN }>
-            Login
+                  <Link
+                      className="nav-link"
+                      style={ { fontWeight: 'normal' } }
+                      to={ url.AUTH_SIGN_IN }>
+                      Login
                   </Link>
               </li>
-
           </ul>
       </div>
-  );
+  )
     }
 }
 

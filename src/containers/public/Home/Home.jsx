@@ -449,8 +449,8 @@ export default function Home() {
                       </div>
                   </div>
                   <div class="mt-5 text-center">
-                      <p className="mb-2"><i className="fa fa-info-circle"></i> codemarka is still in development mode, not every feature for free accounts 
-                     are availble, once this features are available they would be enabled for your respective account types.
+                      <p className="mb-2"><i className="fa fa-info-circle"></i> codemarka is still in development mode, not every feature for free or paid accounts 
+                     are available, once this features are deployed they would be enabled for your respective account types.
                       </p>
                       <p class="mb-2">
                           Both pricings contains all 6 months free support. Need

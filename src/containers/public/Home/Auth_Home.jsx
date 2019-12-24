@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom';
 
 import TrendingClassrooms from '../../../components/Partials/HomePage/Trending';
 import SearchContainer from '../../../components/Partials/SearchContainer';
@@ -120,6 +121,25 @@ function Auth_Home() {
 
             <div className="all__classrooms__container">
                 <div className="row mr-3 ml-3">
+                    <div
+                        class="bg-dark w-100  p-3 text-center mt-4"
+                        style={ {
+                            borderRadius: '15px',
+                            backgroundImage:
+                                'linear-gradient(45deg, #a06060, transparent)'
+                        } }>
+                        <div>
+                            <div class="text-white">
+                                Want to host a session? Create a Free classroom
+                                today! It's Quick and easy
+                            </div>
+                            <Link to='/'>
+                                <button class="btn mt-2 btn-success">
+                                    Get Started
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
                     <div className="trending__container w-100 pt-4">
                         <div className="trending__title mb-3 text-center ">
                             <h3 className="font-weight-700 text-capitalize d-inline pr-3">
@@ -128,7 +148,6 @@ function Auth_Home() {
                             <i className="fa fa-fire fa-4x"></i>
                         </div>
                         <TrendingClassrooms />
-                       
                     </div>
                 </div>
             </div>
