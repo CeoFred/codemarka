@@ -1,16 +1,18 @@
-import React, { useState, useEffect, Suspense } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import Preloader from "../../components/Partials/Preloader";
-import NavigationBar from "../../components/UI/Navigation/NavigationBar";
-import FooterBar from "../../components/UI/Footer/FooterBar";
+import Preloader from '../../components/Partials/Preloader';
+import NavigationBar from '../../components/UI/Navigation/NavigationBar';
+import FooterBar from '../../components/UI/Footer/FooterBar';
 
-import Button from "../../components/Partials/Button";
-import ErrorBoundary from "../../HOC/Error/ErrorBoundary";
+import Button from '../../components/Partials/Button';
+import ErrorBoundary from '../../HOC/Error/ErrorBoundary';
 
-import * as actions from "../../store/actions/Types";
+import * as actions from '../../store/actions/Types';
+
 export default function Layout(props) {
+
   const [ appLoaded, setappLoaded ] = useState(false);
   const [ content, setContent ] = useState(<Preloader />);
   const state = useSelector(state => state);
@@ -20,6 +22,7 @@ export default function Layout(props) {
   const acceptCookieForUser = () => {
     dispatch({ type:actions.ACCEPT_COOKIE });
   };
+
   const body = (
       <div>
           {!cookie_token ? (
@@ -59,7 +62,7 @@ export default function Layout(props) {
                   </div>
               </div>
       ) : (
-        ""
+        ''
       )}
           <NavigationBar />
           {props.children}
@@ -78,9 +81,16 @@ export default function Layout(props) {
     };
   }, [ appLoaded, setContent, setappLoaded, props.children, body ]);
 
+  const preloaderjsx = (
+      <div style={ { position:'absolute',top:'50%',textAlign:'center',left:'50%' } }>
+          <Preloader />
+      </div>
+  )
   return (
       <ErrorBoundary>
-          <Suspense fallback={ <Preloader/> }>{content}</Suspense>
+          <Suspense fallback={ preloaderjsx }>
+              {content}
+          </Suspense>
       </ErrorBoundary>
   );
 }
