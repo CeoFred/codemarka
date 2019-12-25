@@ -285,8 +285,8 @@ function NewClassroom(props) {
                 </a>
             </button>
             <Helmet
-                title="Create a classroom || codemarka.inc"
-                metaDescription=""></Helmet>
+                title="Create a classroom | codemarka"
+                metaDescription="Collaborte, build and learn in real time when you create a classroom for free."></Helmet>
 
             <section>
                 <div className="row min-vh-100">

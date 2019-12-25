@@ -31,13 +31,16 @@ function Index(props) {
         }
         if (!props.isAuthenticated && props.authState === 'done') {
             setState(s => {
-                return  (
+                return (
                     <div>
-                        <Helment title="Codemarka.dev - colaboration and learning in real time" />
+                        <Helment
+                            metaDescription="Learn , build , debug and collaborate in real time. Change the way you build softwares."
+                            title="Home - Codemarka"
+                        />
 
                         <Home />
                     </div>
-            )
+                )
             });
 
         } else if (props.isAuthenticated && props.authState === 'done') {
@@ -45,7 +48,10 @@ function Index(props) {
                setState(s => {
                 return (
                     <div>
-                        <Helment title="Codemarka.dev - colaboration and learning in real time" />
+                        <Helment 
+                        title=" Home - Codemarka"
+                        metaDescription="Learn , build , debug and collaborate in real time. Change the way you build softwares."
+                        />
                         <AuthHome />
                     </div>
                 )

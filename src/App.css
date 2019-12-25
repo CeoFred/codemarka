@@ -33,4 +33,7 @@
   .vp-dead {
     display: block;
   }
+  .login-container {
+    margin:20px;
+  }
 }
