@@ -168,7 +168,6 @@ const MainClassLayout = ({
             socket.on('disconnect', reason => {
                 socket.emit('leave', requestData)
                 
-                
                     if (reason === 'io server disconnect') {
                     // the disconnection was initiated by the server, you need to reconnect manually
                     socket.connect()
@@ -176,7 +175,6 @@ const MainClassLayout = ({
                     toast.warn('Disconnected from classroom', {
                         position: toast.POSITION.BOTTOM_RIGHT
                     })
-                
                 
             });
 

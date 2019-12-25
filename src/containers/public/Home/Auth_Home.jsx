@@ -1,11 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { dispatchAppEnvironment } from '../../../store/actions/app'
 
 import TrendingClassrooms from '../../../components/Partials/HomePage/Trending';
 import SearchContainer from '../../../components/Partials/SearchContainer';
 import './auth.css';
 
-function Auth_Home() {
+function Auth_Home(props) {
+
+    useEffect(() => {
+        props.onEnvSwtich('app');
+        
+    });
+
     const host = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test' ? process.env.REACT_APP_REMOTE_API_URL : process.env.REACT_APP_LOCAL_API_URL
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'Application/json')
@@ -155,4 +164,9 @@ function Auth_Home() {
     )
 }
 
-export default Auth_Home;
+const mapDispatchToProps = dispatch => {
+    return {
+        onEnvSwtich: state => dispatch(dispatchAppEnvironment(state))
+    }
+}
+export default connect(null, mapDispatchToProps)(Auth_Home)

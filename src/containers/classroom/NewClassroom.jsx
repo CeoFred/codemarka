@@ -14,6 +14,8 @@ import Input from '../../components/Partials/Input/Input'
 import Helmet from '../../components/SEO/helmet'
 import { dispatchAppEnvironment } from '../../store/actions/app'
 
+import countyJson from '../../utility/country.json';
+
 import Alert from '../../components/Partials/Alert/Alert'
 
 import './newclassroom.css'
@@ -22,6 +24,10 @@ import * as action from '../../store/actions'
 function NewClassroom(props) {
     useEffect(() => {
         props.onClassroomSwitch('classroom')
+    });
+    
+    const mappedCountry = countyJson.map((country) => {
+        return {value:`${ country.code }`, displayValue: `${ country.name }`}
     });
     const [state, setState] = useState({
         controls: {
@@ -112,20 +118,7 @@ function NewClassroom(props) {
                 label: 'location',
                 elementType: 'select',
                 elementConfig: {
-                    options: [
-                        {
-                            value: '',
-                            displayValue: 'Select a Location'
-                        },
-                        {
-                            value: 'Nigeria',
-                            displayValue: 'Nigeria'
-                        },
-                        {
-                            value: 'Outside Nigeria',
-                            displayValue: 'Others'
-                        }
-                    ]
+                    options: mappedCountry
                 },
                 value: '',
                 validation: {
@@ -297,15 +290,15 @@ function NewClassroom(props) {
 
             <section>
                 <div className="row min-vh-100">
-                    <div className="col-md-6 col-lg-6 col-xl-6 p-7 pl-3 pr-3 py-6 py-md-0 mb-3 registration-container">
+                    <div className="col-md-6 col-lg-6 col-xl-6 p-sm-2 p-lg-4 p-md-2 p-3 py-6 py-md-0 mb-3 registration-container">
                         <div>
                             <div className="mb-5 mt-2 text-center">
                                 <b className="text-muted mb-0"></b>
                             </div>
                             <span className="clearfix" />
                             <Alert
-                                type={state.alertType}
-                                display={state.formErrorMessage}
+                                type={ state.alertType }
+                                display={ state.formErrorMessage }
                                 title="Heads Up!">
                                 {state.formErrorMessage}
                             </Alert>
