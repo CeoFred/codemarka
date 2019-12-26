@@ -1,3 +1,6 @@
+/* eslint-disable no-shadow */
+/* eslint-disable no-undef */
+/* eslint-disable react/prop-types */
 /**
  * /* eslint-disable react/prop-types
  *
@@ -58,7 +61,6 @@ const MainClassLayout = ({
     topic,
     onClassroomVerify,
     pinnedMessages,
-    history
 }) => {
     const [inputState, setInputState] = useState({
         value: '',
@@ -81,7 +83,8 @@ const MainClassLayout = ({
         submitted: false,
         pinnedMessages: [],
         redirect: false,
-        starRated: null
+        starRated: null,
+        blocked: false
     });
 
     const [ClassroomInformation, setClassroomInformation] = useState({
@@ -105,8 +108,8 @@ const MainClassLayout = ({
         value: ''
     })
     let redirectComp
-
-    const [inRoom, setInRoom] = useState(false)
+    let connAttempts = 0;
+    const [inRoom, setInRoom] = useState(null)
 
     const redirectTo = (e, path) => {
 
@@ -122,7 +125,7 @@ const MainClassLayout = ({
             username
         }
 
-        if (inRoom !== true && inRoom !== null) {
+        if (inRoom !== true && inRoom === null && !codemarkastate.blocked) {
             // set listeners and emitters
 
             //listen for old message
@@ -136,6 +139,17 @@ const MainClassLayout = ({
                         ...c,
                         messages: oldmsg,
                         pinnedMessages: pinnedMessages
+                    }
+                })
+            })
+
+            socket.on('rejoin_updateMsg',msg => {
+                toast.info("Updating messages");
+                setcodemarkaState(c => {
+                    
+                    return {
+                        ...c,
+                        messages: msg.msgs
                     }
                 })
             })
@@ -168,7 +182,7 @@ const MainClassLayout = ({
             socket.on('disconnect', reason => {
                 socket.emit('leave', requestData)
                 
-                    if (reason === 'io server disconnect') {
+                if (reason === 'io server disconnect') {
                     // the disconnection was initiated by the server, you need to reconnect manually
                     socket.connect()
                 }
@@ -185,9 +199,13 @@ const MainClassLayout = ({
             });
 
             socket.on('reconnecting', attemptNumber => {
-                toast.info(
-                    'Attempting to reconnect to classroom,please wait...'
-                )
+                connAttempts++;
+                if(attemptNumber > 3){
+                    toast.info(
+                        'Attempting to reconnect to classroom,please wait...'
+                    )
+                }
+                
             });
 
             socket.on('star_rating_failed',reason => {
@@ -195,11 +213,13 @@ const MainClassLayout = ({
             })
 
             socket.on('reconnect_error', error => {
-                toast.warn('Reconnection failed, try refreshing this window');
+                if(connAttempts > 4){
+                    toast.warn('Reconnection failed, try refreshing this window');
+                }
             })
 
             socket.on('reconnect', attemptNumber => {
-                socket.emit('join', requestData)
+                socket.emit('re_join', requestData)
                 toast.success('Welcome back online!')
             })
 
@@ -370,6 +390,40 @@ const MainClassLayout = ({
                 onClassroomVerify(doc._id)
             })
 
+            socket.on('blocking_user_success',({user,by,newStudents}) => {
+                
+                setcodemarkaState(s => {
+                    return {
+                        ...s,
+                        users: newStudents,
+                        blocked: userid === user.id
+                    }
+                })
+                if (userid === user.id) {
+
+                setInRoom(r => false);
+
+                    toast.info(<div>Heads Up!<br/> You were kicked out from the classroom.</div>);                  
+                }
+
+                if (owner) {
+                    toast.info(<div>Heads Up! <br/>{user.username} was kicked out.</div>);
+                }
+
+            });
+
+            socket.on('blocking_user_failed',({user,reason}) => {
+                const bfailedUsername = user.username;
+
+                toast.info(
+                    <div>
+                        Heads Up!
+                        <br />
+                        Failed to block {bfailedUsername}, because {reason}{' '}
+                    </div>
+                )
+            });
+
             socket.on('user_waved', ({ from, to }) => {
                 if (userid === to.id) {
                     toast.info(`${ from } waved at you`)
@@ -444,14 +498,10 @@ const MainClassLayout = ({
                     })
                 }
             )
+        } else if(codemarkastate.blocked && inRoom === false) {
+            socket.disconnect();
         }
 
-        return () => {
-            if (inRoom) {
-                socket.emit('leave', requestData)
-                setInRoom(false)
-            }
-        }
     }, [
         codemarkastate.owner,
         codemarkastate.messages,

@@ -24,50 +24,54 @@ const Modal = ({
                                     '' +
                                     u.username.toUpperCase()[1]}
                             </span>
-                            <a
-                                href={ `/user/profile/${ u.id }?ref=classroom` }
-                                className="text-dark font-weight-900 pl-3">
-                                {u.username} {ownerid === u.id ? '(Admin)' : ''}
-                            </a>
-                            {owner ? (
-                                <div className="ml-5">
-                                    <i
-                                        style={ { cursor: 'pointer' } }
-                                        onClick={ (e, user = u) =>
-                                            sendUserPrivateMessage(e, user)
-                                        }
-                                        className="fa fa-2x fa-envelope-open-text text-info p-1"></i>
+                            <span>
+                                <a
+                                    href={ `/user/profile/${ u.id }?ref=classroom` }
+                                    className="text-dark font-weight-normal pl-3 text-uppercase">
+                                    {u.username}{' '}
+                                    {ownerid === u.id ? '(Admin)' : ''}
+                                </a>
+                                <br />
+                                {owner ? (
+                                    <div className="ml-5">
+                                        <b
+                                            style={ { cursor: 'pointer' } }
+                                            onClick={ (e, user = u) =>
+                                                sendUserPrivateMessage(e, user)
+                                            }
+                                            className="text-info p-1">message </b>
 
-                                    <i
-                                        onClick={ (e, user = u) =>
-                                            waveAtUser(e, user)
-                                        }
-                                        style={ { cursor: 'pointer' } }
-                                        className="fa fa-2x fa-hand-peace text-dark p-1"></i>
+                                        <b
+                                            onClick={ (e, user = u) =>
+                                                waveAtUser(e, user)
+                                            }
+                                            style={ { cursor: 'pointer' } }
+                                            className="text-dark p-1">wave</b>
 
-                                    <i
-                                        onClick={ (e, user = u) =>
-                                            blockUser(e, user)
-                                        }
-                                        style={ { cursor: 'pointer' } }
-                                        className="fa fa-2x fa-ban text-danger p-1"></i>
-                                </div>
-                            ) : (
-                                <div className="ml-5">
-                                    <i
-                                        onClick={ (e, user = u) =>
-                                            sendUserPrivateMessage(e, user)
-                                        }
-                                        style={ { cursor: 'pointer' } }
-                                        className="fa fa-2x fa-envelope-open-text text-info p-1"></i>
-                                    <i
-                                        onClick={ (e, user = u) =>
-                                            waveAtUser(e, user)
-                                        }
-                                        style={ { cursor: 'pointer' } }
-                                        className="fa fa-2x fa-hand-peace text-dark p-1"></i>
-                                </div>
-                            )}
+                                        <b
+                                            onClick={ (e, user = u) =>
+                                                blockUser(e, user)
+                                            }
+                                            style={ { cursor: 'pointer' } }
+                                            className="text-danger p-1">block</b>
+                                    </div>
+                                ) : (
+                                    <div className="ml-5">
+                                        <a
+                                            onClick={ (e, user = u) =>
+                                                sendUserPrivateMessage(e, user)
+                                            }
+                                            style={ { cursor: 'pointer' } }
+                                            className="text-info p-1">message</a>
+                                        <a
+                                            onClick={ (e, user = u) =>
+                                                waveAtUser(e, user)
+                                            }
+                                            style={ { cursor: 'pointer' } }
+                                            className="text-dark p-1">wave</a>
+                                    </div>
+                                )}
+                            </span>
                         </div>
                         {owner ? (
                             <span className="float-right">
@@ -108,7 +112,6 @@ const Modal = ({
     ) {
         users__ = 'No one has joined yet'
     }
-    console.log(users__)
     return (
         <div>
             <div
