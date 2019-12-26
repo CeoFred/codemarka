@@ -161,7 +161,7 @@ useEffect(() => {
       props.onAlertClose()
   }
 
-  const alert = (
+  let alert = (
       <Alert 
               display={ props.message }
               clicked={ handleAlertClick }
@@ -182,6 +182,14 @@ if (redirectPath) {
 } else {
     redct = <Redirect to="/?auth_rdir=r" />
 }
+}
+
+if (props.authRegistrationSuccess) {
+    alert = (
+        <Alert display={true} type="success">
+            {props.message ? `${props.message}` : ''}
+        </Alert>
+    )
 }
   return (
       <div>
@@ -288,10 +296,11 @@ if (redirectPath) {
 
 const mapStateToProps = state => {
   return {
-    loading: state.auth.loading,
-    error: state.auth.error,
-    isAuthenticated: state.auth.user.token !== null,
-    message: state.auth.message
+      loading: state.auth.loading,
+      error: state.auth.error,
+      isAuthenticated: state.auth.user.token !== null,
+      message: state.auth.message,
+      authRegistrationSuccess: state.auth.Registrationsuccess
   }
 }
 

@@ -62,10 +62,10 @@ export const authRegisterFailed = (error) => {
     }
 }
 
-export const authRegisterSuccess = (data) => {
+export const authRegisterSuccess = (msg) => {
     return {
         type: actionTypes.AUTH_USER_SIGNUP_SUCCESS,
-        ...data
+        message:msg
     }
 }
 /**

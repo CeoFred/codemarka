@@ -48,21 +48,11 @@ export function* authRegisterUserSaga({ email, password, username }) {
     try {
         const response = yield fetch(loginRequest)
         const resolvedResponse = yield call(resolvePromise, response.json())
+            console.log(resolvedResponse)
 
         if (resolvedResponse.status === 1) {
 
-            if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
-                yield localStorage.removeItem(userIdAlias);
-                yield localStorage.removeItem(userTokenAlias);
-                yield localStorage.setItem(userTokenAlias, resolvedResponse.data.token)
-                yield localStorage.setItem(userIdAlias, resolvedResponse.data._id)
-
-            } else {
-                yield localStorage.setItem(userTokenAlias, resolvedResponse.data.token)
-                yield localStorage.setItem(userIdAlias, resolvedResponse.data._id)
-            }
-
-            yield put(actions.authRegisterSuccess(resolvedResponse.data));
+            yield put(actions.authRegisterSuccess(resolvedResponse.message));
 
         } else if (typeof resolvedResponse.message == 'object') {
 
@@ -74,6 +64,7 @@ export function* authRegisterUserSaga({ email, password, username }) {
         }
 
     } catch ({ message }) {
+        console.log(message);
         if(message && message === 'Failed to fetch'){
             yield put(actions.authRegisterFailed('Whoops! Newtwork error!'))
         } else {
@@ -103,9 +94,10 @@ export function* authLoginUserSaga({ email, password }) {
     try {
         const response = yield fetch(loginRequest)
         const resolvedResponse = yield call(resolvePromise, response.json())
+            console.log(resolvedResponse)
 
         if (resolvedResponse.status === 1) {
-
+            
             if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
                 yield localStorage.removeItem(userIdAlias);
                 yield localStorage.removeItem(userTokenAlias);
@@ -121,14 +113,16 @@ export function* authLoginUserSaga({ email, password }) {
 
         } else if (typeof resolvedResponse.message == 'object') {
 
-            yield put(actions.authRegisterFailed(resolvedResponse.message[ 0 ].msg))
+            yield put(actions.authLoginFailed(resolvedResponse.message[ 0 ].msg))
 
         } else {
-            yield put(actions.authRegisterFailed(resolvedResponse.message))
+            yield put(actions.authLoginFailed(resolvedResponse.message))
 
         }
 
     } catch ({ message }) {
+        console.log(message);
+
         if(message && message === 'Failed to fetch'){
             yield put(actions.authLoginFailed('Whoops! Newtwork error!'))
         } else {

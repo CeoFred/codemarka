@@ -7,8 +7,8 @@ export const CLASSROOM_VERIFY_URL = `${ host }classroom/verify/`;
 export const CLASSROOM_CREATE = `${ host }classroom/create`;
 export const CLASSROOM_FILE_DOWNLOAD = `${ host }classroom/download/`;
 
-export const USER_SIGN_UP = `${ host }user/auth/signup`;
-export const USER_SIGN_IN = `${ host }user/auth/signin`;
+export const USER_SIGN_UP = `${ host }auth/user/signup`;
+export const USER_SIGN_IN = `${ host }auth/user/signin`;
 export const AUTO_LOGIN_USER = `${ host }auth/user/token/verify`
 // Oauth
 

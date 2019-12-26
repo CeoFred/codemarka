@@ -1,7 +1,7 @@
 import * as actionTypes from '../actions/Types'
 import * as helper from '../../utility/shared'
 
-let INITIAL_STATE = {
+const INITIAL_STATE = {
     
     error:false,
     loading:false,
@@ -93,18 +93,11 @@ const setAuthRedirectPat = (state,action) => {
 
 const authRegistrationSuccess = (state,action) => {
     return helper.updateObject(state,{
-            user: {
-                ...state.user,
-                token:action.token,
-                email: action.email,
-                username: action.username,
-                userId: action._id
-            },
-            authenticated:true,
             loading:false,
-            message:'User registration Success',
+            message:action.message,
             error:false,
-            authState:'done'        
+            authState:'done',
+            Registrationsuccess:true        
     })
 }
 

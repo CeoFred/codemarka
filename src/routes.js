@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React,{ useEffect } from 'react';
 import { connect } from 'react-redux'
 import { Switch,withRouter,Route, Redirect } from 'react-router-dom';
@@ -17,8 +18,11 @@ const ForgotPassword = React.lazy(() => import('./containers/auth/ForgotPassword
 const ChangePassword = React.lazy(() => import('./containers/auth/ChangePassword'));
 const NotFound = React.lazy(() => import('./containers/public/404'));
 const About = React.lazy(() => import('./containers/public/About'));
-
+const oauthSuccess = React.lazy(() => import('./containers/auth/OauthSuccess'));
 const classPreviewNewTab = React.lazy(() => import('./containers/classroom/classPreviewNewTab'))
+const EmalVerification = React.lazy(() =>
+    import('./containers/auth/EmalVerification')
+)
 
 const ClassRoomPreview = React.lazy(() => import('./containers/classroom/ClassroomPreview'));
 const Routes = (props) => {
@@ -34,6 +38,12 @@ const Routes = (props) => {
             <Route exact component={ Login } path={ url.AUTH_SIGN_IN } />
             <Route exact component={ Register } path={ url.AUTH_SIGN_UP } />
             <Route exact component={ About } path={ url.ABOUT } />
+            <Route exact component={ oauthSuccess } path={ url.OAUTH_URL } />
+            <Route
+                exact
+                component={ EmalVerification }
+                path={ url.EMAIL_VERIFICATION }
+            />
             <Route
                 exact
                 component={ ForgotPassword }
@@ -67,6 +77,7 @@ const Routes = (props) => {
             <Switch>
                 <Route exact component={ Home } path={ url.HOME } />
                 <Route exact component={ About } path={ url.ABOUT } />
+                <Route exact component={ oauthSuccess } path={ url.OAUTH_URL } />
 
                 <Route
                     exact

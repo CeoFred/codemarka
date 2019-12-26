@@ -21,3 +21,5 @@ export const AUTH_SIGN_UP  = '/auth/signup';
 export const AUTH_FORGOT_PASSWORD = '/auth/account/recovery';
 export const AUTH_CHANGE_PASSWORD = '/auth/user/account/password/change';
 export const AUTH_LOGOUT  = '/auth/user/logout';
+export const OAUTH_URL = '/auth/user/oauth/success/:token/:user'
+export const EMAIL_VERIFICATION = '/account/confirmed/:verified/'
