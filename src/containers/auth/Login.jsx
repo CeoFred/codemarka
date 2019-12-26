@@ -122,8 +122,8 @@ if(props.isAuthenticated){
   if(redirectPath){
     redct = <Redirect to={ `${ redirectPath }` }/>
   } else {
-    redct = <Redirect to='/'/>
-  }
+          window.location.href = window.location.origin
+         }
 }
 
   return (

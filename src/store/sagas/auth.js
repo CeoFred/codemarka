@@ -109,7 +109,7 @@ export function* authLoginUserSaga({ email, password }) {
                 yield localStorage.setItem(userIdAlias, resolvedResponse.data._id)
             }
 
-            yield put(actions.authRegisterSuccess(resolvedResponse.data));
+            yield put(actions.authLoginSuccess(resolvedResponse.data));
 
         } else if (typeof resolvedResponse.message == 'object') {
 
