@@ -1,16 +1,19 @@
-import React,{ useState , useEffect } from "react";
-import { connect } from "react-redux"
-import { Link, Redirect } from "react-router-dom";
+/* eslint-disable no-undef */
+/* eslint-disable react/prop-types */
+import React,{ useState , useEffect } from 'react';
+import { connect } from 'react-redux'
+import { Link, Redirect } from 'react-router-dom';
 
-import Github from "../../components/Partials/Auth/Button/Github";
-import Google from "../../components/Partials/Auth/Button/Google";
-import Button from "../../components/Partials/Button";
-import Input from "../../components/Partials/Input";
+import Github from '../../components/Partials/Auth/Button/Github';
+import Google from '../../components/Partials/Auth/Button/Google';
+import Button from '../../components/Partials/Button';
+import Input from '../../components/Partials/Input';
 import Helmet from '../../components/SEO/helmet';
 import Spinner from '../../components/Partials/Preloader';
 import Alert from '../../components/Partials/Alert/Alert';
 
-import * as action from "../../store/actions";
+import * as action from '../../store/actions';
+import * as APIURLS from '../../config/api_url';
 import { updateObject } from '../../utility/shared';
 
 const initialPrependsvg = (
@@ -77,13 +80,13 @@ function Login(props) {
   const submitHandler = event => {
     event.preventDefault();
 
-    let formSubmitted = true;
+    const formSubmitted = true;
     setState(updateObject(state,formSubmitted));
-    let formData = {};
+    const formData = {};
 
     if (formSubmitted) {
       
-      for (let formElementIdentifier in state.controls) {
+      for (const formElementIdentifier in state.controls) {
         formData[ formElementIdentifier ] =
           state.controls[ formElementIdentifier ].value;
       }
@@ -94,15 +97,15 @@ function Login(props) {
 
       setState({
         ...state,
-        alertType: "error",
+        alertType: 'error',
         formErrored: true,
         formErrorMessage:
-          "Form Validation Failed, please check inputs and try again"
+          'Form Validation Failed, please check inputs and try again'
       });
       return false;
     }
   };
-  let alert = (
+  const alert = (
       <Alert 
     display={ props.message }
     type={ state.alertType }
@@ -114,8 +117,8 @@ let redct;
 
 if(props.isAuthenticated){
   const host = window.location.href;
-  let url = new URLSearchParams(host);
-  let redirectPath = url.get("redir");
+  const url = new URLSearchParams(host);
+  const redirectPath = url.get('redir');
   if(redirectPath){
     redct = <Redirect to={ `${ redirectPath }` }/>
   } else {
@@ -125,59 +128,83 @@ if(props.isAuthenticated){
 
   return (
       <div>
-          <Helmet title="Sign Into your account" metaDescription="Return back to learn or host classrooms in real time" />
+          <Helmet
+              title="Sign Into your account"
+              metaDescription="Return back to learn or host classrooms in real time"
+          />
           {redct}
-          <section>
+          <section className="mt-5">
               <div className="row align-items-center justify-content-center min-vh-100">
                   <div className="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0 login-container">
                       <div>
                           <div className="mb-5 text-center">
-                              <h6 className="h3 mb-1">Login</h6>
+                              <h6 className="h3 mb-1">Welcome back!</h6>
                               <p className="text-muted mb-0">
-                  Sign in to your account to continue.
+                                  Sign in to your account to continue.
                               </p>
                           </div>
                           <span className="clearfix" />
                           {alert}
                           <form onSubmit={ submitHandler }>
-                              <Input 
-                type="email"
-                id="emailinput"
-                placeholder="someone@someserver.com"
-                label="Email address"
-                initialPrepend
-                initialPrependsvg={ emailIconSvg }
-                value={ state.controls.email.value }
-                changed={ event => handleInputChange(event,'email') }
-                />
+                              <Input
+                                  type="email"
+                                  id="emailinput"
+                                  placeholder="someone@someserver.com"
+                                  label="Email address"
+                                  initialPrepend
+                                  initialPrependsvg={ emailIconSvg }
+                                  value={ state.controls.email.value }
+                                  changed={ event =>
+                                      handleInputChange(event, 'email')
+                                  }
+                              />
                               {/* pasword input */}
                               <Input
-                  type="password"
-                  id="passwordinput"
-                  placeholder="Secret password"
-                  label="password"
-                  isLoginPasswordInput
-                  initialPrepend
-                  forgotPassword={false}
-                  initialPrependsvg={ initialPrependsvg }
-                  value={ state.controls.password.value }
-                  finalAppend={ false }
-                  changed={ event => handleInputChange(event,'password') }
-                />
+                                  type="password"
+                                  id="passwordinput"
+                                  placeholder="Secret password"
+                                  label="password"
+                                  isLoginPasswordInput
+                                  initialPrepend
+                                  forgotPassword={ false }
+                                  initialPrependsvg={ initialPrependsvg }
+                                  value={ state.controls.password.value }
+                                  finalAppend={ false }
+                                  changed={ event =>
+                                      handleInputChange(event, 'password')
+                                  }
+                              />
                               <div className="mt-4">
-                                  <Button type="button"
-                   clicked={ submitHandler } 
-                  disabled={ props.loading }
-                   textColor="#fff" 
-                   block color="primary">
-                                      {props.loading ? <Spinner/> : 'Sign In'}
+                                  <Button
+                                      type="button"
+                                      clicked={ submitHandler }
+                                      disabled={ props.loading }
+                                      textColor="#fff"
+                                      block
+                                      color="primary">
+                                      {props.loading ? <Spinner /> : 'Sign In'}
                                   </Button>
                               </div>
                           </form>
+
+                          <div className="py-3 text-center">
+                              <span className="text-xs text-uppercase">or</span>
+                          </div>
+
+                          <div className="row">
+                              <div className="col-sm-6">
+                                  <Github link={ APIURLS.GITHUB_AUTH_URL } />
+                              </div>
+                              <div className="col-sm-6">
+                                  <Google link={ APIURLS.GOOGLE_AUTH_URL } />
+                              </div>
+                          </div>
                           <div className="mt-4 text-center">
                               <small>Not registered?</small>
-                              <Link to="/auth/signup" className="small font-weight-bold ml-1">
-                  Create account
+                              <Link
+                                  to="/auth/signup"
+                                  className="small font-weight-bold ml-1">
+                                  Create account
                               </Link>
                           </div>
                       </div>
@@ -185,7 +212,7 @@ if(props.isAuthenticated){
               </div>
           </section>
       </div>
-  );
+  )
 }
 
 const mapStateToProps = state => {

@@ -1,10 +1,12 @@
+/* eslint-disable no-undef */
 import { put, delay, call } from 'redux-saga/effects';
 
 import * as actions from '../actions/index';
 import * as actionTypes from '../actions/Types';
 import { resolvePromise } from '../../utility/shared';
 
-const host = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test" ? process.env.REACT_APP_REMOTE_API_URL : process.env.REACT_APP_LOCAL_API_URL
+import * as APIURLS from '../../config/api_url';
+
 const userTokenAlias = 'wx1298';
 const userIdAlias = 'u342345';
 
@@ -30,11 +32,11 @@ export function* checkAuthTimeoutSaga(action) {
 export function* authRegisterUserSaga({ email, password, username }) {
     yield put({ type: actionTypes.AUTH_USER_SIGNUP_START });
 
-    let url = `${ host }auth/user/signup`;
-    let myHeaders = yield new Headers()
+    const url = APIURLS.USER_SIGN_UP
+    const myHeaders = yield new Headers()
     myHeaders.append('Content-Type', 'Application/json')
 
-    let loginRequest = yield new Request(url, {
+    const loginRequest = yield new Request(url, {
         method: 'POST',
         cache: 'default',
         headers: myHeaders,
@@ -85,11 +87,11 @@ export function* authRegisterUserSaga({ email, password, username }) {
 export function* authLoginUserSaga({ email, password }) {
     yield put({ type: 'AUTH_USER_LOGIN_START' });
 
-    let url = `${ host }auth/user/signin`;
-    let myHeaders = yield new Headers()
+    const url = APIURLS.USER_SIGN_IN;
+    const myHeaders = yield new Headers()
     myHeaders.append('Content-Type', 'Application/json')
 
-    let loginRequest = yield new Request(url, {
+    const loginRequest = yield new Request(url, {
         method: 'POST',
         cache: 'default',
         headers: myHeaders,
@@ -141,11 +143,11 @@ export function* autoLoginUserSaga() {
     const _id = localStorage.getItem(userIdAlias);
     const _token = localStorage.getItem(userTokenAlias)
 
-    let url = `${ host }auth/user/token/verify`;
-    let myHeaders = yield new Headers()
+    const url = APIURLS.AUTO_LOGIN_USER;
+    const myHeaders = yield new Headers()
     myHeaders.append('Content-Type', 'Application/json')
 
-    let autoLoginRequest = yield new Request(url, {
+    const autoLoginRequest = yield new Request(url, {
         method: 'POST',
         cache: 'default',
         headers: myHeaders,
@@ -154,10 +156,10 @@ export function* autoLoginUserSaga() {
 
     });
 
-    const token_v = yield localStorage.getItem(userTokenAlias);
-    const userid_v = yield localStorage.getItem(userIdAlias);
+    const tokenV = yield localStorage.getItem(userTokenAlias);
+    const useridV = yield localStorage.getItem(userIdAlias);
 
-    if (token_v && userid_v) {
+    if (tokenV && useridV) {
 
         try {
 
@@ -165,13 +167,13 @@ export function* autoLoginUserSaga() {
             const resolvedResponse = yield call(resolvePromise, response.json())
             if (resolvedResponse.status === 1) {
 
-                if (token_v && userid_v) {
+                if (tokenV && useridV) {
 
-                    yield localStorage.setItem(userTokenAlias, token_v)
-                    yield localStorage.setItem(userIdAlias, userid_v)
+                    yield localStorage.setItem(userTokenAlias, tokenV)
+                    yield localStorage.setItem(userIdAlias, useridV)
 
                 }
-                resolvedResponse.data.token = token_v;
+                resolvedResponse.data.token = tokenV;
                 yield put(actions.autoAuthSuccess(resolvedResponse.data));
 
             } else if (resolvedResponse.message.name === 'JsonWebTokenError') {

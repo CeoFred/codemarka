@@ -1,9 +1,11 @@
 //app pages
 
 export const HOME = '/';
-export const ABOUT = '/about-us'
-export const CONTACT = '/contact-us'
-export const TERMS_AND_CONDITIONS = '/terms-and-condition'
+export const ABOUT = '/public/about-us';
+export const CONTACT = '/public/contact-us';
+export const TERMS_AND_CONDITIONS = '/public/terms-and-condition';
+export const PRIVACY_POLICY = '/public/privacy-policy';
+export const OAUTH_FAILED = '/auth/oauth/error';
 
 //classroom
 export const CLASSROOMS = '/classrooms/locale/all'
@@ -19,5 +21,3 @@ export const AUTH_SIGN_UP  = '/auth/signup';
 export const AUTH_FORGOT_PASSWORD = '/auth/account/recovery';
 export const AUTH_CHANGE_PASSWORD = '/auth/user/account/password/change';
 export const AUTH_LOGOUT  = '/auth/user/logout';
-export const GITHUB_AUTH_URL = 'https://www.github.com/';
-export const GOOGLE_AUTH_URL = 'https://www.google.com/'

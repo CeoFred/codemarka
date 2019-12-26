@@ -142,7 +142,7 @@ function Auth_Home(props) {
                                 Want to host a session? Create a Free classroom
                                 today! It's Quick and easy
                             </div>
-                            <Link to='/'>
+                            <Link to='/classroom/create?ref=btn'>
                                 <button class="btn mt-2 btn-success">
                                     Get Started
                                 </button>

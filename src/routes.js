@@ -16,6 +16,7 @@ const Register = React.lazy(() => import('./containers/auth/Register'));
 const ForgotPassword = React.lazy(() => import('./containers/auth/ForgotPassword'));
 const ChangePassword = React.lazy(() => import('./containers/auth/ChangePassword'));
 const NotFound = React.lazy(() => import('./containers/public/404'));
+const About = React.lazy(() => import('./containers/public/About'));
 
 const classPreviewNewTab = React.lazy(() => import('./containers/classroom/classPreviewNewTab'))
 
@@ -32,6 +33,7 @@ const Routes = (props) => {
             <Route exact component={ Home } path={ url.HOME } />
             <Route exact component={ Login } path={ url.AUTH_SIGN_IN } />
             <Route exact component={ Register } path={ url.AUTH_SIGN_UP } />
+            <Route exact component={ About } path={ url.ABOUT } />
             <Route
                 exact
                 component={ ForgotPassword }
@@ -64,15 +66,33 @@ const Routes = (props) => {
         routes = (
             <Switch>
                 <Route exact component={ Home } path={ url.HOME } />
-                <Route exact component={ ChangePassword } path={ url.AUTH_CHANGE_PASSWORD } />
+                <Route exact component={ About } path={ url.ABOUT } />
+
+                <Route
+                    exact
+                    component={ ChangePassword }
+                    path={ url.AUTH_CHANGE_PASSWORD }
+                />
                 <Route exact component={ logout } path={ url.AUTH_LOGOUT } />
-                <Route exact component={ newclassroom } path={ url.CLASSROOM_NEW }/>
+                <Route
+                    exact
+                    component={ newclassroom }
+                    path={ url.CLASSROOM_NEW }
+                />
                 <Route exact component={ classrooom } path={ url.CLASSROOM } />
                 <Redirect from={ url.CLASSROOMS } to={ url.AUTH_SIGN_IN } />
                 <Route exact component={ Login } path={ url.AUTH_SIGN_IN } />
                 <Route exact component={ Register } path={ url.AUTH_SIGN_UP } />
-                <Route exact component={ ClassRoomPreview } path={ url.PROTECTED_CLASSROOM_PREVIEW }/>
-                <Route exact component={ classPreviewNewTab } path={ url.CLASSROOM_PREVIEW_NEW_TAB }/>
+                <Route
+                    exact
+                    component={ ClassRoomPreview }
+                    path={ url.PROTECTED_CLASSROOM_PREVIEW }
+                />
+                <Route
+                    exact
+                    component={ classPreviewNewTab }
+                    path={ url.CLASSROOM_PREVIEW_NEW_TAB }
+                />
                 <Route component={ NotFound } />
             </Switch>
         )

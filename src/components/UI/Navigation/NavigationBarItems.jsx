@@ -55,12 +55,12 @@ function NavigationBarItems(props) {
                   </Link>
               </li>
               <li className="nav-item ">
-                  <a
+                  <Link
                       className="nav-link"
                       style={ { fontWeight: 'normal' } }
-                      href="/#features">
-                      Features
-                  </a>
+                      to={ url.ABOUT }>
+                      About
+                  </Link>
               </li>
               <li className="nav-item ">
                   <a

@@ -13,6 +13,8 @@ import Spinner from '../../components/Partials/Preloader';
 import Alert from '../../components/Partials/Alert/Alert';
 
 import * as URLS from '../../config/url';
+import * as APIURLS from '../../config/api_url';
+
 import * as action from '../../store/actions';
 import { updateObject } from '../../utility/shared';
 
@@ -185,12 +187,12 @@ if (redirectPath) {
       <div>
           <Helmet title="Signup to codemarka" metaDescription="" />
           {redct}
-          <section>
+          <section className="mt-5 mt-lg-6 mt-md-7 mt-sm-5 mb-3">
               <div className="mt-3 row align-items-center justify-content-center min-vh-100">
                   <div className="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0 registration-container">
                       <div>
                           <div className="mb-5 text-center">
-                              <h6 className="h3 mb-1">Create your account</h6>
+                              <h6 className="h3 mb-1 mt-3">Create your account</h6>
                               <p className="text-muted mb-0">
                                   Made with love for developers
                               </p>
@@ -257,9 +259,19 @@ if (redirectPath) {
                                   </Button>
                               </div>
                           </form>
+                          <div className="py-3 text-center">
+                              <span className="text-xs text-uppercase">or</span>
+                          </div>
 
+                          <div className="row">
+                              <div className="col-sm-6">
+                                  <Github link={ APIURLS.GITHUB_AUTH_URL }/>
+                              </div>
+                              <div className="col-sm-6">
+                                  <Google link={ APIURLS.GOOGLE_AUTH_URL }/>
+                              </div></div>
                           <div className="mt-4 text-center">
-                              <small>Already have an account?</small>
+                              <small>Already have an account?</small>{' '}
                               <Link
                                   to={ URLS.AUTH_SIGN_IN }
                                   className="small font-weight-bold">
