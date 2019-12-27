@@ -3,7 +3,7 @@
 import React from 'react'
 import Helmet from 'react-helmet'
 
-export default function helmet({lang,title,metaDescription,pathname,image,children}) {
+export default function helmet({follow = true,lang,title,metaDescription,pathname,image,children}) {
     return (
         <Helmet
             htmlAttributes={ {
