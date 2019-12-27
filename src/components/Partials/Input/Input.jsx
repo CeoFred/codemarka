@@ -42,11 +42,11 @@ if(props.elementType === 'input'){
     case('select'):
     inputElement = (
         <select
-            onChange={ e => props.changed(e, props.name) }
+            onChange={props.changed }
             className={ selectClasses.join(' ') }
             value={ props.value }>
             {props.elementConfig.options.map(option => (
-                <option value={ option.value } key={ option.value }>
+                <option selected={ option.selected || false } value={ option.value } key={ option.value }>
                     {option.displayValue}
                 </option>
             ))}

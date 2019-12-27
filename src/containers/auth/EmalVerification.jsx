@@ -60,17 +60,17 @@ const Emailverification = props => {
     const [state, setState] = useState('')
     useEffect(() => {
         const {
-            match: { params },
-            history
+            match: { params }
+            
         } = props
         const v = params.verified
 
-        if(v == 'true'){
+        if(String(v) === 'true'){
         setState(vSuccessJsx);
         } else {
           setState(vFailedJsx);
         }
-    })
+    },[props]);
     return <div>{state}</div>
 }
 

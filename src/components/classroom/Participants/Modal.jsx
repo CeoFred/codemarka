@@ -19,16 +19,19 @@ const Modal = ({
                 return (
                     <li className="list-group-item" key={ u.id }>
                         <div className="d-inline float-left">
-                            <span className="avatar bg-primary text-white rounded-circle avatar-sm ">
-                                {u.username.toUpperCase()[0] +
+                            <img
+                                alt={
+                                    u.username.toUpperCase()[0] +
                                     '' +
-                                    u.username.toUpperCase()[1]}
-                            </span>
+                                    u.username.toUpperCase()[1]
+                                }
+                                src={ u.avatar }
+                                class="avatar  rounded-circle avatar-sm"/>
                             <span>
                                 <a
                                     href={ `/user/profile/${ u.id }?ref=classroom` }
                                     className="text-dark font-weight-normal pl-3 text-uppercase">
-                                    {u.username}{' '}
+                                    @{u.username}{' '}
                                     {ownerid === u.id ? '(Admin)' : ''}
                                 </a>
                                 <br />
@@ -39,21 +42,27 @@ const Modal = ({
                                             onClick={ (e, user = u) =>
                                                 sendUserPrivateMessage(e, user)
                                             }
-                                            className="text-info p-1">message </b>
+                                            className="text-info p-1">
+                                            message{' '}
+                                        </b>
 
                                         <b
                                             onClick={ (e, user = u) =>
                                                 waveAtUser(e, user)
                                             }
                                             style={ { cursor: 'pointer' } }
-                                            className="text-dark p-1">wave</b>
+                                            className="text-dark p-1">
+                                            wave
+                                        </b>
 
                                         <b
                                             onClick={ (e, user = u) =>
                                                 blockUser(e, user)
                                             }
                                             style={ { cursor: 'pointer' } }
-                                            className="text-danger p-1">block</b>
+                                            className="text-danger p-1">
+                                            block
+                                        </b>
                                     </div>
                                 ) : (
                                     <div className="ml-5">
@@ -62,13 +71,17 @@ const Modal = ({
                                                 sendUserPrivateMessage(e, user)
                                             }
                                             style={ { cursor: 'pointer' } }
-                                            className="text-info p-1">message</a>
+                                            className="text-info p-1">
+                                            message
+                                        </a>
                                         <a
                                             onClick={ (e, user = u) =>
                                                 waveAtUser(e, user)
                                             }
                                             style={ { cursor: 'pointer' } }
-                                            className="text-dark p-1">wave</a>
+                                            className="text-dark p-1">
+                                            wave
+                                        </a>
                                     </div>
                                 )}
                             </span>

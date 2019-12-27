@@ -1,9 +1,9 @@
+/* eslint-disable no-undef */
 import { put,call } from 'redux-saga/effects';
 import * as APIURLS from '../../config/api_url'
 
 import * as actionTypes from '../actions/Types';
 import * as actions from '../actions/index'
-import { CLASSROOM_CREATE,CLASSROOM_VERIFY_URL } from '../../config/api_url'
 import { resolvePromise } from '../../utility/shared';
 
 const delay = (ms) => new Promise(res => setTimeout(res, ms))

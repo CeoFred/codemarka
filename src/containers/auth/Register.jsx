@@ -8,6 +8,7 @@ import Google from '../../components/Partials/Auth/Button/Google';
 
 import Button from '../../components/Partials/Button';
 import Input from '../../components/Partials/Input';
+import Select from '../../components/Partials/Input/Input';
 import Helmet from '../../components/SEO/helmet';
 import Spinner from '../../components/Partials/Preloader';
 import Alert from '../../components/Partials/Alert/Alert';
@@ -100,6 +101,11 @@ useEffect(() => {
         isTouched: false,
         isValid: false
       },
+      techStack: {
+        value: '',
+        isTouched: false,
+        isValid: false
+      },
       checkbox:{
         value:false,
         isTouched:false
@@ -139,6 +145,7 @@ useEffect(() => {
         formData[ formElementIdentifier ] =
           state.controls[ formElementIdentifier ].value;
       }
+      console.log(formData);
       props.onAuth({ ...formData })
 
     } else {
@@ -186,8 +193,8 @@ if (redirectPath) {
 
 if (props.authRegistrationSuccess) {
     alert = (
-        <Alert display={true} type="success">
-            {props.message ? `${props.message}` : ''}
+        <Alert display={ true } type="success">
+            {props.message ? `${ props.message }` : ''}
         </Alert>
     )
 }
@@ -200,7 +207,9 @@ if (props.authRegistrationSuccess) {
                   <div className="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0 registration-container">
                       <div>
                           <div className="mb-5 text-center">
-                              <h6 className="h3 mb-1 mt-3">Create your account</h6>
+                              <h6 className="h3 mb-1 mt-3">
+                                  Create your account
+                              </h6>
                               <p className="text-muted mb-0">
                                   Made with love for developers
                               </p>
@@ -245,6 +254,40 @@ if (props.authRegistrationSuccess) {
                                   }
                               />
 
+                              <Select
+                                  elementType="select"
+                                  changed={ e => {
+                                      handleInputChange(e, 'techStack')
+                                  } }
+                                  elementConfig={ {
+                                      options: [
+                                          {
+                                            value:'',
+                                            displayValue: 'What do you do?',
+                                            selected: true
+                                          },
+                                          {
+                                              value: 'FE',
+                                              displayValue:
+                                                  'Front End Developer'
+                                          },
+                                          {
+                                              value: 'BE',
+                                              displayValue: 'Back End Developer'
+                                          },
+                                          {
+                                              value: 'AI',
+                                              displayValue:
+                                                  'Machine Learning'
+                                          },
+                                          {
+                                            value: 'FS',
+                                            displayValue: 'Fullstack'
+                                          }
+                                      ]
+                                  } }
+                              />
+
                               {/* checkbox */}
                               <Input
                                   fieldtype="checkbox"
@@ -273,11 +316,12 @@ if (props.authRegistrationSuccess) {
 
                           <div className="row">
                               <div className="col-sm-6">
-                                  <Github link={ APIURLS.GITHUB_AUTH_URL }/>
+                                  <Github link={ APIURLS.GITHUB_AUTH_URL } />
                               </div>
                               <div className="col-sm-6">
-                                  <Google link={ APIURLS.GOOGLE_AUTH_URL }/>
-                              </div></div>
+                                  <Google link={ APIURLS.GOOGLE_AUTH_URL } />
+                              </div>
+                          </div>
                           <div className="mt-4 text-center">
                               <small>Already have an account?</small>{' '}
                               <Link
@@ -306,7 +350,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-      onAuth: ( email, password,username ) => dispatch( action.authRegisterUser( email, password,username ) ),
+      onAuth: ( email, password,username,techStack ) => dispatch( action.authRegisterUser( email, password,username,techStack ) ),
       onAlertClose: () => dispatch(action.ClearMessage()),
       onResetAll: () => dispatch(action.authResetAll())
   };

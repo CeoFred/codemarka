@@ -41,7 +41,11 @@ function NavBar(props) {
                             data-toggle="modal"
                             data-target=".participants_modal_cont">
                             <span className="nav-link nav-link-icon">
-                                <i className="fa fa-users"></i>
+                                <i className="fa fa-users">
+                                    <span class="badge badge-danger badge-circle badge-sm badge-floating border-white">
+                                        { props.number }
+                                    </span>
+                                </i>
                                 <span className="nav-link-inner--text d-lg-none">
                                     Participants
                                 </span>
@@ -61,7 +65,7 @@ function NavBar(props) {
                                 </span>
                             </a>
                         </li>
-                        
+
                         <li
                             title="Audio Broadcast"
                             className="nav-item dropdown">
@@ -150,16 +154,20 @@ function NavBar(props) {
                             <div
                                 className="dropdown-menu dropdown-menu-right"
                                 aria-labelledby="navbar-success_dropdown_1">
-                                <a className="dropdown-item" onClick={ props.exitClassGracefully }>
+                                <a
+                                    className="dropdown-item"
+                                    onClick={ props.exitClassGracefully }>
                                     Exit
                                 </a>
                                 <a
                                     className="dropdown-item"
-                                   onClick={ props.classReport} >
+                                    onClick={ props.classReport }>
                                     Report classroom
                                 </a>
                                 <div className="dropdown-divider"></div>
-                                <a className="dropdown-item" onClick={ props.testConnection }>
+                                <a
+                                    className="dropdown-item"
+                                    onClick={ props.testConnection }>
                                     Test connection
                                 </a>
                             </div>

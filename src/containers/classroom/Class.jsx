@@ -165,18 +165,22 @@ const MainClassLayout = ({
                     oldmsg.push(msg)
 
                     return { ...c, messages: oldmsg, users: msg.newuserslist }
-                })
-                if (
-                    codemarkastate.messages &&
-                    codemarkastate.messages.length > 0
-                ) {
-                    const len = codemarkastate.messages.length
-                    const lastIndex = len - 1
-                    const ele = codemarkastate.messages[lastIndex].msgId
-                    const lelem = document.getElementById(ele)
+                });
+                setcodemarkaState(c => {
+                    if (
+                        c.messages &&
+                        c.messages.length > 0
+                    ) {
+                        const len = c.messages.length
+                        const lastIndex = len - 1
+                        const ele = c.messages[lastIndex].msgId
+                        const lelem = document.getElementById(ele)
 
-                    lelem.scrollIntoView(false)
-                }
+                        lelem.scrollIntoView(false)
+                    }
+                    return c;
+                })
+                
             })
 
             socket.on('disconnect', reason => {
@@ -220,6 +224,7 @@ const MainClassLayout = ({
 
             socket.on('reconnect', attemptNumber => {
                 socket.emit('re_join', requestData)
+                connAttempts = 0;
                 toast.success('Welcome back online!')
             })
 
@@ -237,16 +242,20 @@ const MainClassLayout = ({
                         typingState: newuserTypingList
                     }
                 })
-
-                if (codemarkastate.messages) {
-                    const len = codemarkastate.messages.length
+                setcodemarkaState(c => {
+                    
+                if (c.messages) {
+                    const len = c.messages.length
                     const lastIndex = len - 1
 
-                    const ele = codemarkastate.messages[lastIndex].msgId
+                    const ele = c.messages[lastIndex].msgId
                     const lelem = document.getElementById(ele)
 
                     lelem.scrollIntoView(false)
                 }
+                    return c;
+                })
+
             })
 
             //listen for members leaving
@@ -259,16 +268,23 @@ const MainClassLayout = ({
                         return String(user.id) !== String(msg.for)
                     })
                     return { ...c, messages: oldmsg, users: newUserList }
-                })
-                if (codemarkastate.messages) {
-                    const len = codemarkastate.messages.length
+                });
+
+                setcodemarkaState(c => {
+                    if (c.messages) {
+                    const len = c.messages.length
                     const lastIndex = len - 1
 
-                    const ele = codemarkastate.messages[lastIndex].msgId
+                    const ele = c.messages[lastIndex].msgId
+                   console.log(ele);
+                   console.log(c.messages);
                     const lelem = document.getElementById(ele)
 
                     lelem.scrollIntoView(false)
-                }
+                     }
+                     return c;
+                })
+                
             })
 
             socket.on('utyping', ({ username, userid }) => {
@@ -499,7 +515,7 @@ const MainClassLayout = ({
                 }
             )
         } else if(codemarkastate.blocked && inRoom === false) {
-            socket.disconnect();
+            socket.close();
         }
 
     }, [
@@ -966,6 +982,7 @@ const MainClassLayout = ({
                 classroomid={ data.classroom_id }
                 testConnection={ handletestConnection }
                 classReport={ handleclassReport }
+                number = { codemarkastate.users.length }
             />
 
             <Modal
