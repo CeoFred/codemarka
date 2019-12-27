@@ -43,7 +43,7 @@ function NavBar(props) {
                             <span className="nav-link nav-link-icon">
                                 <i className="fa fa-users">
                                     <span class="badge badge-danger badge-circle badge-sm badge-floating border-white">
-                                        { props.number }
+                                        {props.number}
                                     </span>
                                 </i>
                                 <span className="nav-link-inner--text d-lg-none">
@@ -85,8 +85,7 @@ function NavBar(props) {
                                 className="dropdown-menu dropdown-menu-right"
                                 aria-labelledby="navbar-success_dropdown_1">
                                 <span className="dropdown-item">
-                                    Audio Broadcast coming soon and exclusive to
-                                    premuim users!
+                                    Audio Broadcast coming soon.
                                 </span>
                             </div>
                         </li>
@@ -170,6 +169,15 @@ function NavBar(props) {
                                     onClick={ props.testConnection }>
                                     Test connection
                                 </a>
+                                {props.owner ? (
+                                    <a
+                                        className="dropdown-item text-danger"
+                                        onClick={ props.endClass }>
+                                        End Class
+                                    </a>
+                                ) : (
+                                    ''
+                                )}
                             </div>
                         </li>
                     </ul>

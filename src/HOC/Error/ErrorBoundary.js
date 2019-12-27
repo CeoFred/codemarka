@@ -1,5 +1,5 @@
 import React from 'react';
-import failedImg from '../media/images/vectors/rush-14.png';
+import failedImg from '../../media/images/vectors/rush-14.png';
 
 export default class ErrorBoundary extends React.Component {
     constructor(props) {
@@ -32,7 +32,6 @@ export default class ErrorBoundary extends React.Component {
                         <span className="text-dark">
                             Something went wrong, it's not you. Try refreshing, it 
                             might scratch the itch.{' '}
-                            {props.class_name}!
                         </span>
                         <br />
                         return{' '}

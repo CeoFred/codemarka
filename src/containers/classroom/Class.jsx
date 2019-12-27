@@ -84,8 +84,32 @@ const MainClassLayout = ({
         pinnedMessages: [],
         redirect: false,
         starRated: null,
-        blocked: false
+        blocked: false,
+        numberInClass:0,
+        sdemitted: null,
+        countDownTime:5,
+        ended:false
     });
+
+    const startCountDonwTimer = () => {
+        let t = 5;
+        const updateCounter = (ct) => {
+           
+            setcodemarkaState(s => {
+                t--;
+                return {...s,countDownTime: (ct - 1) }
+            })
+        }
+    const inter = setInterval(() => {
+            if(t !== 0){
+            updateCounter(t);
+
+            } else {
+                clearInterval(inter)
+            }
+
+        }, 1000);
+    }
 
     const [ClassroomInformation, setClassroomInformation] = useState({
         cname: {
@@ -144,7 +168,7 @@ const MainClassLayout = ({
             })
 
             socket.on('rejoin_updateMsg',msg => {
-                toast.info("Updating messages");
+                toast.info('Updating messages');
                 setcodemarkaState(c => {
                     
                     return {
@@ -163,8 +187,10 @@ const MainClassLayout = ({
                     const oldmsg = c.messages
 
                     oldmsg.push(msg)
-
-                    return { ...c, messages: oldmsg, users: msg.newuserslist }
+                    const nnc = msg.newuserslist.filter(u => {
+                        return u.id !== userid
+                    })
+                    return { ...c, messages: oldmsg, users: msg.newuserslist, numberInClass: nnc.length }
                 });
                 setcodemarkaState(c => {
                     if (
@@ -264,10 +290,13 @@ const MainClassLayout = ({
                     const oldmsg = c.messages
                     oldmsg.push(msg)
 
-                    const newUserList = c.users.filter(user => {
+                    let newUserList = c.users.filter(user => {
                         return String(user.id) !== String(msg.for)
+                    });
+                    newUserList = newUserList.filter(u => {
+                        return String(u.id) !== String(userid);
                     })
-                    return { ...c, messages: oldmsg, users: newUserList }
+                    return { ...c, messages: oldmsg, users: newUserList , numberInClass:newUserList.length}
                 });
 
                 setcodemarkaState(c => {
@@ -276,8 +305,7 @@ const MainClassLayout = ({
                     const lastIndex = len - 1
 
                     const ele = c.messages[lastIndex].msgId
-                   console.log(ele);
-                   console.log(c.messages);
+                 
                     const lelem = document.getElementById(ele)
 
                     lelem.scrollIntoView(false)
@@ -310,6 +338,26 @@ const MainClassLayout = ({
                 })
             })
 
+            socket.on('shut_down_emitted',({by}) => {
+                if(by !== userid){
+                    document.querySelector('#shutdownemitionbtn').click();
+                    startCountDonwTimer()
+                } else {
+                    setcodemarkaState(s => {
+                        return {...s,sdemitted: true}
+                    })
+                }
+            });
+
+            socket.on('shut_down_now',() => {
+               setcodemarkaState(s => {
+                        return {...s,ended: true}
+                });
+                if(!owner){
+                    socket.close();
+                }
+            })
+
             socket.on('utyping_cleared', ({ username, userid }) => {
                 console.log(username, 'cleared input')
                 // remove user from typing list;
@@ -324,7 +372,10 @@ const MainClassLayout = ({
 
             socket.on('classroom_users', data => {
                 setcodemarkaState(c => {
-                    return { ...c, users: data }
+                  const uwt =  data.filter(u => {
+                      return  u.id !== userid
+                    })
+                    return { ...c, users: data,numberInClass: uwt.length }
                 })
             })
 
@@ -790,7 +841,7 @@ const MainClassLayout = ({
             toast.error('No Access to perfom this action')
         }
     }
-    const classfilesdownloadlink = `${ host }${ CLASSROOM_FILE_DOWNLOAD }${ data.classroom_id }`
+    const classfilesdownloadlink = `${ CLASSROOM_FILE_DOWNLOAD }${ data.classroom_id }`
 
     const getPinnedMessages = () => {
         const pm = codemarkastate.pinnedMessages.map(msg => {
@@ -954,6 +1005,18 @@ const MainClassLayout = ({
         return <Redirect to={ codemarkastate.redirect } />
     }
 
+    const handleEndClass = (e) => {
+        e.preventDefault();
+        document.querySelector('#exitbtn').click();
+    }
+
+    const HandleClassShutdown = (e) => {
+        e.preventDefault();
+        if(owner){
+            socket.emit('shutdown_classroom');
+        }
+    }
+
     return (
         <div>
             <ToastContainer />
@@ -982,8 +1045,139 @@ const MainClassLayout = ({
                 classroomid={ data.classroom_id }
                 testConnection={ handletestConnection }
                 classReport={ handleclassReport }
-                number = { codemarkastate.users.length }
+                number={ codemarkastate.numberInClass }
+                owner={ owner }
+                endClass={ handleEndClass }
             />
+
+            <button
+                id="shutdownemitionbtn"
+                type="button"
+                class="btn btn-danger d-none"
+                data-toggle="modal"
+                data-target="#shutdownSignalModal">
+                shutting down..
+            </button>
+            <div
+                class="modal modal-info fade"
+                id="shutdownSignalModal"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="shutdownSignalModal"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            
+                            <button
+                                type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="py-3 text-center">
+                                <b class="fas fa-4x">
+                                    {codemarkastate.ended ? (
+                                        <h1>The End!</h1>
+                                ) : codemarkastate.countDownTime }
+                                </b>
+                                {!codemarkastate.ended ? ( 
+                                    <div>
+                                        <h5 class="heading h4 mt-4">
+                                    Shutting down classroom!
+                                        </h5>
+                                        <p>
+                                We recieved a signal to end this session, if this should not be, please
+                                contect the admin. Meanwhile you can still download files for this classroom
+                                before you exit.
+                                        </p>
+                                    </div>
+                               ):'' }
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a
+                                class="btn btn-sm btn-primary"
+                                href={ classfilesdownloadlink }>
+                                Download Files
+                            </a>
+                            <a class="btn btn-sm btn-white" href="/">
+                                Leave now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button
+                id="exitbtn"
+                type="button"
+                class="btn btn-danger d-none"
+                data-toggle="modal"
+                data-target="#exitClass">
+                Exit
+            </button>
+            <div
+                class={ `modal ${ codemarkastate.ended ? 'modal-success' : 'modal-danger' } fade` }
+                id="exitClass"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="exitClass"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title h6" id="modal_title_6">
+                                This is way to dangerous
+                            </h5>
+                            <button
+                                type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            {codemarkastate.sdemitted ? 'Processing,please wait...' : (<div class="py-3 text-center">
+                                <i class="fas fa-exclamation-circle fa-4x"></i>
+                                {codemarkastate.ended ? (<h2 className="heading h1">Done!</h2>) : (
+                                    <div>
+                                        <h5 class="heading h4 mt-4">
+                                    Should we stop now?
+                                        </h5>
+                                        <p>
+                                    Once you end this classroom, it's no longer
+                                    visible to anyone and request to join would
+                                    fail, but can be restored from your
+                                    dashboard.
+                                        </p>
+                                    </div>
+                                )
+                            }
+                            </div>)}
+                        </div>
+                        {!codemarkastate.sdemitted ?
+                        (<div class="modal-footer">
+                            <button
+                                type="button "
+                                class="btn btn-sm btn-white"
+                                data-dismiss="modal">
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-sm btn-white"
+                                onClick={ HandleClassShutdown }>
+                                End now
+                            </button>
+                        </div>):''}
+                    </div>
+                </div>
+            </div>
 
             <Modal
                 targetid="exit_class_modal_cont"
