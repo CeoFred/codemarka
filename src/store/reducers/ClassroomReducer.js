@@ -8,7 +8,8 @@ const INITIAL_STATE = {
     errors:null,
     loading:false,
     classdetails:null,
-    validated:false
+    validated:false,
+    status:null
 }
 
 const classroomCreationInit = (state,action) => {
@@ -63,10 +64,28 @@ const classroomVerifyStart = (state,action) => {
 }
 
 const classroomVerified = (state,action) => {
-    return helper.updateObject(state,{
-        validated: true,
-        ...action.classroom
-    })
+    console.log(action);
+    if(action.classroom._id){
+        return helper.updateObject(state, {
+            validated: true,
+            ...action.classroom,
+            status: 2
+        })
+    } else if(action.classroom === 'Class has ended!') {
+        return helper.updateObject(state, {
+            validated: true,
+            validation_error_message: action.classroom,
+            status: 3
+        })
+    }   else if(action.classroom.msg) {
+        return helper.updateObject(state, {
+            validated: true,
+            validation_error_message: action.classroom.msg,
+            status: 1,
+            startTimeFull: action.classroom.startTimeFull,
+            ...action.classroom.cdata
+        })
+    }
 }
 
 const classroomVerificationFailed = (state, action) => {
@@ -74,6 +93,12 @@ const classroomVerificationFailed = (state, action) => {
         validated:false,
         validation_error_message : action.message
     })
+}
+
+const resetClassRoomData = (state, action) => {
+    return helper.updateObject(state, {
+        ...INITIAL_STATE
+    });
 }
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -86,7 +111,7 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.CLASSROOM_VERIFICATION_INIT): return classroomVerifyStart(state,action) 
         case(actionTypes.CLASSROOM_VERIFICATION_SUCCESS): return classroomVerified(state,action)
         case(actionTypes.CLASSROOM_VERIFICATION_FAILED): return classroomVerificationFailed(state,action)
-
+        case(actionTypes.CLASSROOM_RESET): return resetClassRoomData(state,action)
         default: return state;
     }
 }

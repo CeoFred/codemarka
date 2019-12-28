@@ -28,34 +28,68 @@ function Trending() {
                return fetch(fetchTrendingClassroomsRequest)
             }
             fetchTrending().then(d => d.json()).then(rd => {
-                console.log(rd);
                 content.current = rd.data.map(tr => {
                     return (
                         <div className="col-md-4" key={ tr._id }>
                             <div class="card bg-section-dark text-white hover-translate-y-n3 hover-shadow-lg overflow-hidden">
-    
                                 <div class="card-body py-4">
-                                    <small class="d-block text-sm mb-2">{tr.name.toUpperCase()}</small>
-                                    <a href={ `c/classroom/${ tr._id }` } class="h5 stretched-link lh-150">{tr.topic}</a>
-                                    <p class="mt-3 mb-0 lh-170">{tr.description}</p>
+                                    <small class="d-block text-sm mb-2">
+                                        {tr.name.toUpperCase()} {' '}
+                                      (
+                                        {tr.classVisibility === 'Public' ? (
+                                            <i className="fa fa-unlock"></i>
+                                        ) : (
+                                            <i className="fa fa-lock"></i>
+                                        )}
+                                        )
+                                    </small>
+                                    <a
+                                        href={ `c/classroom/${ tr._id }` }
+                                        class="h5 stretched-link lh-150">
+                                        {tr.topic}
+                                    </a>
+                                    <p class="mt-3 mb-0 lh-170">
+                                        {tr.description}
+                                    </p>
                                 </div>
                                 <div class="card-footer border-0 delimiter-top">
                                     <div class="row align-items-center">
                                         <div class="col-auto">
-                                            <span class="avatar avatar-sm bg-success rounded-circle">NG</span>
-                                            <span class="text-sm mb-0 avatar-content">{tr.location}</span>
+                                            <span class="avatar avatar-sm bg-success rounded-circle">
+                                                {tr.location}
+                                            </span>
+                                            <span class="text-sm mb-0 avatar-content">
+                                                <i className="fas fa-users"></i>{' '}
+                                                {tr.students.length}
+                                            </span>
                                         </div>
                                         <div class="col text-right text-right">
                                             <div class="actions">
-                                                <a href="/heaerter" onClick={ (e) => e.preventDefault() } class="action-item"><i  class="fa fa-heart mr-1 text-danger"></i> {tr.likes.length}</a>
-                                                <a href="/liker" onClick={ (e) => e.preventDefault() } class="action-item"><i  class=" fa fa-eye mr-1"></i>{tr.visits}</a>
+                                                <a
+                                                    href="/heaerter"
+                                                    onClick={ e =>
+                                                        e.preventDefault()
+                                                    }
+                                                    class="action-item">
+                                                    <i class="fa fa-heart mr-1 text-danger"></i>{' '}
+                                                    {tr.likes.length}
+                                                </a>
+                                                <a
+                                                    href="/liker"
+                                                    onClick={ e =>
+                                                        e.preventDefault()
+                                                    }
+                                                    class="action-item">
+                                                    <i class=" fa fa-eye mr-1"></i>
+                                                    {tr.visits}
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    );
+                    )
                 })
                 setHasMounted(true);
             }).catch(err => {

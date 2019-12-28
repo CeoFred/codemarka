@@ -68,10 +68,17 @@ export function* verifyClassRoom({ classId }){
  try {
     const response = yield fetch(request)
     const resolvedResponse =  yield call(resolvePromise,response.json());
+    console.log(resolvedResponse)
     if(resolvedResponse.status !== 1){
         yield put(actions.classVerifyFailed(resolvedResponse.message));
     } else {
-        yield put(actions.classVerifySuccess(resolvedResponse.data));
+        if(resolvedResponse.data){
+            yield put(actions.classVerifySuccess(resolvedResponse.data));
+
+        } else {
+        yield put(actions.classVerifySuccess(resolvedResponse.message));
+
+        }
     }
 } catch (e) {
     yield put(actions.classVerifyFailed('Failed to verify classroom status'));

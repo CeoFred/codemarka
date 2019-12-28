@@ -102,7 +102,11 @@ function NewClassroom(props) {
                         },
                         {
                             value: 'Public',
-                            displayValue: 'Anyone can Join'
+                            displayValue: 'Public'
+                        },
+                        {
+                            value: 'Private',
+                            displayValue: 'Private'
                         }
                     ]
                 },
@@ -139,7 +143,7 @@ function NewClassroom(props) {
                         },
                         {
                             value: 'Basic Web App',
-                            displayValue: 'Basic Web App'
+                            displayValue: 'Basic Web App(HTML,CSS AND JS)'
                         }
                     ]
                 },

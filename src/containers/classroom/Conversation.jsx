@@ -3,6 +3,17 @@ import React from "react";
 import "./css/conversation.css";
 
 export default function Conversation(props) {
+
+    const getRandomColor = () => {
+     let letters = "012345678ABCD";
+     let color = '#';
+     
+     for (let i = 0; i < 6 ; i++) {
+        color += letters[(Math.floor(Math.random() * 16))];
+     }
+     return color;
+    }
+
  const inputKeyDown = (event) => {
     if (event.keyCode === 13) {
         // Cancel the default action, if needed

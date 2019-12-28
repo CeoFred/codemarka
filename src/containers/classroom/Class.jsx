@@ -61,6 +61,8 @@ const MainClassLayout = ({
     topic,
     onClassroomVerify,
     pinnedMessages,
+    started,
+    cid
 }) => {
     const [inputState, setInputState] = useState({
         value: '',
@@ -88,7 +90,9 @@ const MainClassLayout = ({
         numberInClass:0,
         sdemitted: null,
         countDownTime:5,
-        ended:false
+        ended:false,
+        started: null,
+        starting: null
     });
 
     const startCountDonwTimer = () => {
@@ -144,9 +148,13 @@ const MainClassLayout = ({
 
     React.useEffect(() => {
         const requestData = {
-            classroom_id: data.classroom_id,
+            classroom_id:cid || data.classroom_id,
             userId: userid,
             username
+        }
+
+        if(inRoom && owner && !started){
+            document.querySelector('#dialogueToStart').click();
         }
 
         if (inRoom !== true && inRoom === null && !codemarkastate.blocked) {
@@ -178,6 +186,12 @@ const MainClassLayout = ({
                 })
             })
 
+            socket.on('started_class',() => {
+                setcodemarkaState(s => {
+                    return {...s, started: true,starting: null}
+                })
+                toast.success(<div>Heads Up!<br/>Classroom session has started! </div>);
+            });
             // tell server to add user to class
             socket.emit('join', requestData)
             setInRoom(true)
@@ -382,6 +396,7 @@ const MainClassLayout = ({
             // listen for classroom files
             socket.on('class_files', (css, html, js) => {
                 // set editor state
+                console.log('class files arrives',css,html,js);
                 setcodemarkaState(c => {
                     return {
                         ...c,
@@ -1017,13 +1032,23 @@ const MainClassLayout = ({
         }
     }
 
+    const handlestartClass = (e) => {
+        e.preventDefault();
+        if(owner){
+            socket.emit('start_class',userid);
+            setcodemarkaState(s => {
+                return {...s, starting: true}
+            })
+        }
+    }
+
     return (
         <div>
             <ToastContainer />
             {redirectComp}
             <Preview
-                previewBtnClicked={ handlePreview }
-                classroomid={ data.classroom_id }
+                previewBtnClicked={handlePreview}
+                classroomid={data.classroom_id}
             />
             {classNotification}
             <span
@@ -1036,19 +1061,101 @@ const MainClassLayout = ({
             </span>
 
             <Navigation
-                name={ name }
-                downloadLink={ classfilesdownloadlink }
-                favourite={ addClassToFavourite }
-                isFavourite={ codemarkastate.favourite }
-                topic={ topic }
-                exitClassGracefully={ handleexitClassGracefully }
-                classroomid={ data.classroom_id }
-                testConnection={ handletestConnection }
-                classReport={ handleclassReport }
-                number={ codemarkastate.numberInClass }
-                owner={ owner }
-                endClass={ handleEndClass }
+                name={name}
+                downloadLink={classfilesdownloadlink}
+                favourite={addClassToFavourite}
+                isFavourite={codemarkastate.favourite}
+                topic={topic}
+                exitClassGracefully={handleexitClassGracefully}
+                classroomid={data.classroom_id}
+                testConnection={handletestConnection}
+                classReport={handleclassReport}
+                number={codemarkastate.numberInClass}
+                owner={owner}
+                endClass={handleEndClass}
+                startClass={handlestartClass}
             />
+
+            <button
+                id="dialogueToStart"
+                type="button"
+                class="btn btn-danger d-none"
+                data-toggle="modal"
+                data-target="#startclassModal"></button>
+            <div
+                class="modal modal-white fade"
+                id="startclassModal"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="startclassModal"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button
+                                type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="py-3 text-center">
+                                {codemarkastate.started === null ? (
+                                    <div>
+                                        {codemarkastate.starting === true ? (
+                                            <div>
+                                                <h5 class="heading h4 mt-4">
+                                                    Starting...
+                                                </h5>
+                                                <Spinner />
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                <h5 class="heading h4 mt-4">
+                                                    Hi there!
+                                                </h5>
+                                                <p>
+                                                    Your classroom session is
+                                                    yet to begin, click on start
+                                                    now and open the doors. You
+                                                    can still start this
+                                                    classroom later by clicking
+                                                    the settings icon and locate
+                                                    the actions button.
+                                                </p>
+                                                <div class="modal-footer">
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-sm btn-success"
+                                                        onClick={
+                                                            handlestartClass
+                                                        }>
+                                                        Start Now
+                                                    </button>
+                                                    <button
+                                                        type="button "
+                                                        class="btn btn-sm btn-white"
+                                                        data-dismiss="modal">
+                                                        Later
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <h5 className="heading h4 mt-4">
+                                            You are all set!
+                                        </h5>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <button
                 id="shutdownemitionbtn"
@@ -1068,7 +1175,6 @@ const MainClassLayout = ({
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            
                             <button
                                 type="button"
                                 class="close"
@@ -1082,29 +1188,35 @@ const MainClassLayout = ({
                                 <b class="fas fa-4x">
                                     {codemarkastate.ended ? (
                                         <h1>The End!</h1>
-                                ) : codemarkastate.countDownTime }
+                                    ) : (
+                                        codemarkastate.countDownTime
+                                    )}
                                 </b>
-                                {!codemarkastate.ended ? ( 
+                                {!codemarkastate.ended ? (
                                     <div>
                                         <h5 class="heading h4 mt-4">
-                                    Shutting down classroom!
+                                            Shutting down classroom!
                                         </h5>
                                         <p>
-                                We recieved a signal to end this session, if this should not be, please
-                                contect the admin. Meanwhile you can still download files for this classroom
-                                before you exit.
+                                            We recieved a signal to end this
+                                            session, if this should not be,
+                                            please contect the admin. Meanwhile
+                                            you can still download files for
+                                            this classroom before you exit.
                                         </p>
                                     </div>
-                               ):'' }
+                                ) : (
+                                    ''
+                                )}
                             </div>
                         </div>
                         <div class="modal-footer">
                             <a
                                 class="btn btn-sm btn-primary"
-                                href={ classfilesdownloadlink }>
+                                href={classfilesdownloadlink}>
                                 Download Files
                             </a>
-                            <a class="btn btn-sm btn-white" href="/">
+                            <a class="btn btn-sm btn-white" href="/?#">
                                 Leave now
                             </a>
                         </div>
@@ -1121,7 +1233,7 @@ const MainClassLayout = ({
                 Exit
             </button>
             <div
-                class={ `modal ${ codemarkastate.ended ? 'modal-success' : 'modal-danger' } fade` }
+                class={'modal modal-danger fade'}
                 id="exitClass"
                 tabindex="-1"
                 role="dialog"
@@ -1142,39 +1254,52 @@ const MainClassLayout = ({
                             </button>
                         </div>
                         <div class="modal-body">
-                            {codemarkastate.sdemitted ? 'Processing,please wait...' : (<div class="py-3 text-center">
-                                <i class="fas fa-exclamation-circle fa-4x"></i>
-                                {codemarkastate.ended ? (<h2 className="heading h1">Done!</h2>) : (
-                                    <div>
-                                        <h5 class="heading h4 mt-4">
-                                    Should we stop now?
-                                        </h5>
-                                        <p>
-                                    Once you end this classroom, it's no longer
-                                    visible to anyone and request to join would
-                                    fail, but can be restored from your
-                                    dashboard.
-                                        </p>
-                                    </div>
-                                )
-                            }
-                            </div>)}
+                            {codemarkastate.sdemitted &&
+                            !codemarkastate.ended ? (
+                                <div className="text-center">
+                                    Processing,please wait...
+                                    <br /> <Spinner />{' '}
+                                </div>
+                            ) : (
+                                <div class="py-3 text-center">
+                                    <i class="fas fa-exclamation-circle fa-4x"></i>
+                                    {codemarkastate.ended ? (
+                                        <h2 className="heading h1">Done!</h2>
+                                    ) : (
+                                        <div>
+                                            <h5 class="heading h4 mt-4">
+                                                Should we stop now?
+                                            </h5>
+                                            <p>
+                                                Once you end this classroom,
+                                                it's no longer visible to anyone
+                                                and request to join would fail,
+                                                but can be restored from your
+                                                dashboard.
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
-                        {!codemarkastate.sdemitted ?
-                        (<div class="modal-footer">
-                            <button
-                                type="button "
-                                class="btn btn-sm btn-white"
-                                data-dismiss="modal">
-                                Cancel
-                            </button>
-                            <button
-                                type="button"
-                                class="btn btn-sm btn-white"
-                                onClick={ HandleClassShutdown }>
-                                End now
-                            </button>
-                        </div>):''}
+                        {!codemarkastate.sdemitted ? (
+                            <div class="modal-footer">
+                                <button
+                                    type="button "
+                                    class="btn btn-sm btn-white"
+                                    data-dismiss="modal">
+                                    Cancel
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-white"
+                                    onClick={HandleClassShutdown}>
+                                    End now
+                                </button>
+                            </div>
+                        ) : (
+                            ''
+                        )}
                     </div>
                 </div>
             </div>
@@ -1183,8 +1308,8 @@ const MainClassLayout = ({
                 targetid="exit_class_modal_cont"
                 type="default"
                 size="sm"
-                titleIcon={ <i className="fa fa-thumbs-up"></i> }
-                title={ 'Rate this classroom ' }>
+                titleIcon={<i className="fa fa-thumbs-up"></i>}
+                title={' Rate this classroom '}>
                 {addStars}
             </Modal>
 
@@ -1192,8 +1317,8 @@ const MainClassLayout = ({
                 targetid="pinned_modal_cont"
                 type="default"
                 size="sm"
-                titleIcon={ <i className="fa fa-pen-nib"></i> }
-                title={ 'Pinned Messages' }>
+                titleIcon={<i className="fa fa-pen-nib"></i>}
+                title={'Pinned Messages'}>
                 {getPinnedMessages()}
                 {owner ? addPinTextArea : ''}
             </Modal>
@@ -1206,7 +1331,7 @@ const MainClassLayout = ({
                     owner ? (
                         <button
                             type="submit"
-                            onClick={ handleClassInfoUpdate }
+                            onClick={handleClassInfoUpdate}
                             className="btn btn-sm float-left btn-soft-primary">
                             {ClassroomInformation.submitted ? (
                                 <Spinner />
@@ -1219,45 +1344,45 @@ const MainClassLayout = ({
                     )
                 }
                 title="classroom Information">
-                <form onSubmit={ handleClassInfoUpdate }>
+                <form onSubmit={handleClassInfoUpdate}>
                     <Input
                         name="cname"
                         label="Classroom Name"
                         elementType="input"
-                        elementConfig={ {
+                        elementConfig={{
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'cname'
-                        } }
-                        value={ ClassroomInformation.cname.value }
-                        changed={ e =>
+                        }}
+                        value={ClassroomInformation.cname.value}
+                        changed={e =>
                             handleClassroomInformationInputChange(e, 'cname')
                         }
                     />
                     <Input
                         name="ctopic"
-                        label="Classroom Name"
+                        label="Classroom Topic"
                         elementType="input"
-                        elementConfig={ {
+                        elementConfig={{
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'ctopic'
-                        } }
-                        value={ ClassroomInformation.ctopic.value }
-                        changed={ e =>
+                        }}
+                        value={ClassroomInformation.ctopic.value}
+                        changed={e =>
                             handleClassroomInformationInputChange(e, 'ctopic')
                         }
                     />
                     <Input
                         label="Classroom Description"
                         elementType="textarea"
-                        elementConfig={ {
+                        elementConfig={{
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'cdesc'
-                        } }
-                        value={ ClassroomInformation.cdesc.value }
-                        changed={ e =>
+                        }}
+                        value={ClassroomInformation.cdesc.value}
+                        changed={e =>
                             handleClassroomInformationInputChange(e, 'cdesc')
                         }
                     />
@@ -1265,44 +1390,44 @@ const MainClassLayout = ({
             </Modal>
 
             <ParticipantModal
-                users={ codemarkastate.users }
-                toogleUserEditAccess={ handletoogleUserEditAccess }
-                owner={ owner }
-                ownerid={ ownerid }
-                userid={ userid }
-                sendUserPrivateMessage={ handlePrivateMessaging }
-                blockUser={ handleUserBlocking }
-                waveAtUser={ handlewaveAtUser }
+                users={codemarkastate.users}
+                toogleUserEditAccess={handletoogleUserEditAccess}
+                owner={owner}
+                ownerid={ownerid}
+                userid={userid}
+                sendUserPrivateMessage={handlePrivateMessaging}
+                blockUser={handleUserBlocking}
+                waveAtUser={handlewaveAtUser}
             />
 
-            <div style={ { width: '100%', height: '87vh' } }>
+            <div style={{ width: '100%', height: '87vh' }}>
                 <div className="container-fluid ">
                     <div className="row">
                         <div className="col-2 p-0">
                             <Seo
-                                title={ `${ name } :: codemarka classroom` }
-                                description={ description }
+                                title={`${name} :: codemarka classroom`}
+                                description={description}
                             />
-                            <Suspense fallback={ <Spinner /> }>
+                            <Suspense fallback={<Spinner />}>
                                 <Convo
-                                    typing={ codemarkastate.typingState }
-                                    username={ username }
-                                    inputValue={ inputState.value }
-                                    handleInputChange={ handleInputChange }
-                                    sendMessage={ handleMessageSubmit }
-                                    focused={ inputState.isFocused }
-                                    messages={ codemarkastate.messages }
-                                    user={ userid }
-                                    owner={ ownerid }
+                                    typing={codemarkastate.typingState}
+                                    username={username}
+                                    inputValue={inputState.value}
+                                    handleInputChange={handleInputChange}
+                                    sendMessage={handleMessageSubmit}
+                                    focused={inputState.isFocused}
+                                    messages={codemarkastate.messages}
+                                    user={userid}
+                                    owner={ownerid}
                                 />
                             </Suspense>
                         </div>
                         <div className="col-10 p-0">
-                            <Suspense fallback={ <Spinner /> }>
+                            <Suspense fallback={<Spinner />}>
                                 <Editor
-                                    readOnly={ codemarkastate.editorPriviledge }
-                                    handleEditorChange={ editorChanged }
-                                    files={ codemarkastate.editors }
+                                    readOnly={codemarkastate.editorPriviledge}
+                                    handleEditorChange={editorChanged}
+                                    files={codemarkastate.editors}
                                 />
                             </Suspense>
                         </div>

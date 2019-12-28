@@ -16,14 +16,14 @@ export function classVerifySuccess(classroom){
 
 export function classResetAll(){
     return {
-        type: 'CLASSROO_RESET'
+        type: 'CLASSROOM_RESET'
     }
 }
 
-export function classVerifyFailed(classroom){
+export function classVerifyFailed(msg){
     return {
         type: actionTypes.CLASSROOM_VERIFICATION_FAILED,
-        message:classroom
+        message:msg
     }
 }
 export const createClassRoomInit = (data) => {
