@@ -96,6 +96,10 @@ function Trending() {
                 console.error(err);
             })   
         }
+
+        return () => {
+                         setHasMounted(false)
+                     }
          
     },[ hasMounted ]);
 
