@@ -6,6 +6,7 @@ import Macbook from '../../../media/images/svg/devices/macbook.svg';
 import '../styles.css';
 import * as url from '../../../config/url';
 import laptopImg from '../../../media/images/ss.png';
+import './home.css';
 
 export default function Home() {
   return (
@@ -18,9 +19,9 @@ export default function Home() {
                           <div className="row row-grid align-items-center">
                               <div className="col-lg-8 text-center text-lg-left">
                                   <h1 className="text-white mb-4">
-                                      We're helping to bring together teams to solve
-                                      their coding problems from different parts
-                                      of the world in realtime.
+                                      We're helping to bring together teams to
+                                      solve their coding problems from different
+                                      parts of the world in realtime.
                                   </h1>
                                   <p className="lead text-white opacity-8">
                                       Built for the community ,by the community.
@@ -70,7 +71,7 @@ export default function Home() {
                           />
                           <div class="frame-inner">
                               <img
-                                    style={ {height:'90%'} }
+                                  style={ { height: '90%' } }
                                   alt="placeholder"
                                   src={ laptopImg }
                                   className="img-fluid"
@@ -360,6 +361,52 @@ export default function Home() {
               </div>
           </section>
 
+          <section className="slice slice-md bg-secondary">
+              <div className="container-fluid">
+                  <div className="row justify-content-center text-center">
+                      <div className="mt-2 mb-4 col-12">
+                          <h2 className="heading how_it_works_header">
+                              How It works?
+                          </h2>
+                      </div>
+                      <div className="col-md-4 mb-sm-4 col-sm-12">
+                          <div className="icon_container how_it_works">
+                              <span className="font-weight-bold mt-2 mb-2">
+                                  <i className="fas how_it_works_icono fa-fingerprint mb-3 mt-3 fa-3x"></i>
+                              </span>
+                              <p className="lead lh-120">
+                                  Create an account, with your email, google or
+                                  github account.
+                              </p>
+                          </div>
+                      </div>
+
+                      <div className="col-md-4 col-sm-12">
+                          <div className="icon_container how_it_works">
+                              <span className="font-weight-bold mt-2 mb-2">
+                                  <i className="fab how_it_works_icono fa-wpforms mb-3 mt-3 fa-3x"></i>
+                              </span>
+                              <p className="lead lh-120">
+                                  Get a free public or private classroom by
+                                  filling a simple form.
+                              </p>
+                          </div>
+                      </div>
+
+                      <div className="col-md-4 col-sm-12">
+                          <div className="icon_container how_it_works">
+                              <span className="font-weight-bold mt-2 mb-2">
+                                  <i className="fas how_it_works_icono fa-users mt-3 mb-3 fa-3x"></i>
+                              </span>
+                              <p className="lead lh-120">
+                                  Start the session ,Invite people to your class
+                                  session and end whenever.
+                              </p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </section>
           <section class="slice slice-lg bg-section-secondary">
               <div class="container">
                   <div class="row mb-6 justify-content-center text-center">
@@ -415,7 +462,7 @@ export default function Home() {
                                   <div class="h1 text-white text-center mb-0">
                                       $
                                       <span class="price font-weight-bolder">
-                                          50 / month
+                                          10 / month
                                       </span>
                                   </div>
                                   <span class="h6 text-white">
@@ -439,7 +486,6 @@ export default function Home() {
                                       <li>Codermarka bot</li>
                                   </ul>
                                   <a
-                                      
                                       class="btn btn-sm btn-white hover-translate-y-n3 hover-shadow-lg mb-3"
                                       target="_blank">
                                       Coming soon
@@ -449,14 +495,18 @@ export default function Home() {
                       </div>
                   </div>
                   <div class="mt-5 text-center">
-                      <p className="mb-2"><i className="fa fa-info-circle"></i> codemarka is still in development mode, not every feature for free or paid accounts 
-                     are available, once this features are deployed they would be enabled for your respective account types.
+                      <p className="mb-2">
+                          <i className="fa fa-info-circle"></i> codemarka is
+                          still in development mode, not every feature for free
+                          or paid accounts are available, once this features are
+                          deployed they would be enabled for your respective
+                          account types.
                       </p>
                       <p class="mb-2">
                           Both pricings contains all 6 months free support. Need
                           more?
                       </p>
-                      <a href="#" class="text-primary text-underline--dashed">
+                      <Link to="/public/contact-us" class="text-primary text-underline--dashed">
                           Contact us
                           <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -472,7 +522,7 @@ export default function Home() {
                               <line x1="5" y1="12" x2="19" y2="12"></line>
                               <polyline points="12 5 19 12 12 19"></polyline>
                           </svg>
-                      </a>
+                      </Link>
                   </div>
               </div>
           </section>

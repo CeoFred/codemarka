@@ -10,21 +10,24 @@ export default function helmet({follow = true,lang,title,metaDescription,pathnam
                 lang: lang || 'en'
             } }
             title={
-                title ||
-                'Codemarka - Learning, Building and collaboration in real time.'
+                title
+                    ? title
+                    : 'Codemarka - Learning, Building and collaboration in real time.'
             }
-            titleTemplate={ `%s | ${ title ||
+            titleTemplate={ `${ title ? title :
                 'Codemarka - Learning, Building and collaboration in real time.' }` }
             meta={ [
                 {
                     name: 'description',
                     content:
-                        metaDescription ||
+                        metaDescription  ? metaDescription :
                         'An online real time code editor for learning, building and collaborating with multi language support.'
                 },
                 {
                     property: 'og:title',
                     content: title
+                        ? title
+                        : 'Codemarka - Learning, Building and collaboration in real time.'
                 },
                 {
                     property: 'og:url',
@@ -34,8 +37,8 @@ export default function helmet({follow = true,lang,title,metaDescription,pathnam
                 {
                     property: 'og:description',
                     content:
-                        metaDescription ||
-                        'An online real time code editor for learning, building and collaborating with multi language support.'
+                        metaDescription ? metaDescription :
+                                               'An online real time code editor for learning, building and collaborating with multi language support.'
                 },
                 {
                     property: 'og:type',
@@ -52,6 +55,8 @@ export default function helmet({follow = true,lang,title,metaDescription,pathnam
                 {
                     name: 'twitter:title',
                     content: title
+                        ? title
+                        : 'Codemarka - Learning, Building and collaboration in real time.'
                 },
                 {
                     name: 'og:site_name',
@@ -70,7 +75,7 @@ export default function helmet({follow = true,lang,title,metaDescription,pathnam
                 {
                     name: 'twitter:description',
                     content:
-                        metaDescription ||
+                        metaDescription ? metaDescription : 
                         'An online real time code editor for learning, building and collaborating with multi language support.'
                 }
             ] }>

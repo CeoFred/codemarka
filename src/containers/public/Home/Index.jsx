@@ -17,10 +17,10 @@ function Index(props) {
   const preloaderjsx = (
       <div
           style={ {
-              position: 'absolute',
-              top: '50%',
+              position: 'relative',
+              marginTop: '20%',
               textAlign: 'center',
-              left: '50%'
+              marginBottom:'20%'
           } }>
           <Preloader />
       </div>
@@ -33,11 +33,6 @@ function Index(props) {
             setState(s => {
                 return (
                     <div>
-                        <Helment
-                            metaDescription="Learn , build , debug and collaborate in real time. Change the way you build softwares."
-                            title="Home - Codemarka"
-                        />
-
                         <Home />
                     </div>
                 )
@@ -48,19 +43,21 @@ function Index(props) {
                setState(s => {
                 return (
                     <div>
-                        <Helment 
-                        title=" Home - Codemarka"
-                        metaDescription="Learn , build , debug and collaborate in real time. Change the way you build softwares."
-                        />
+                        
                         <AuthHome />
                     </div>
                 )
                })    
                }
     }, [props.isAuthenticated, props.authState])
-    return (<div>
-        {state}
-    </div>
+    return (
+        <div>
+            <Helment
+                title=" Home - Codemarka"
+                metaDescription="Learn , build , debug and collaborate in real time. Change the way you build softwares."
+            />
+            {state}
+        </div>
     )
 }
 

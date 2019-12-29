@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { useSelector } from 'react-redux'
-
+import { Link } from 'react-router-dom'
 export default function FooterBar() {
     const { app } = useSelector(state => state)
     let display
@@ -21,10 +21,11 @@ export default function FooterBar() {
                 <div className="footer footer-dark">
                     <div className="container">
                         <div class="row pt-md">
-                            <div class="col-lg-4 mb-5 mb-lg-0">
-                                <div class="card bg-dark">
+                            <div class="col-lg-3 mb-5 mb-lg-0">
+                                <div
+                                    class="card bg-dark border-none"
+                                    style={ { border: 'none' } }>
                                     <div class="card-body">
-                                        
                                         <p class="text-sm mb-2">
                                             Build , learn and collaborate with
                                             codemarka. This tool comes with
@@ -36,21 +37,25 @@ export default function FooterBar() {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-6 col-sm-4 mb-5 mb-lg-0">
+                            <div class="col-lg-3 col-4 col-sm-4 mb-5 mb-lg-0">
                                 <h6 class="heading mb-3">About</h6>
                                 <ul class="list-unstyled text-small">
                                     <li>
-                                        <a href="#">Services</a>
+                                        <Link to="/public/about-us">
+                                            Services
+                                        </Link>
                                     </li>
                                     <li>
-                                        <a href="#">Contact</a>
+                                        <Link to="/public/contact-us">
+                                            Contact
+                                        </Link>
                                     </li>
                                     <li>
                                         <a href="#">Careers</a>
                                     </li>
                                 </ul>
                             </div>
-                            <div class="col-lg-4 col-sm-4 mb-5 mb-lg-0">
+                            <div class="col-lg-3 col-sm-12 mb-5 mb-lg-0">
                                 <h6 class="heading mb-3">Company</h6>
                                 <ul class="list-unstyled">
                                     <li>
@@ -60,7 +65,22 @@ export default function FooterBar() {
                                         <a href="#">Privacy</a>
                                     </li>
                                     <li>
-                                        <a href="#">Support</a>
+                                        <a href="/public/contact-us">Support</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-12 mb-5 mb-lg-0">
+                                <h6 class="heading mb-3">Socials</h6>
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="https://twitter.com/codemarka">Twitter</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Facebook</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Instagram</a>
                                     </li>
                                 </ul>
                             </div>
@@ -81,11 +101,12 @@ export default function FooterBar() {
                             </div>
                             <div className="col-md-6">
                                 <ul className="nav align-items-center justify-content-center justify-content-md-end">
-                           
                                     <li className="nav-item">
-                                        <a className="nav-link" href="//#">
+                                        <Link
+                                            className="nav-link"
+                                            href="/public/about-us">
                                             Support
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li className="nav-item">
                                         <a className="nav-link" href="/#">

@@ -23,6 +23,7 @@ const classPreviewNewTab = React.lazy(() => import('./containers/classroom/class
 const EmalVerification = React.lazy(() =>
     import('./containers/auth/EmalVerification')
 )
+const contactUs = React.lazy(() => import('./containers/public/Contact'));
 
 const ClassRoomPreview = React.lazy(() => import('./containers/classroom/ClassroomPreview'));
 const Routes = (props) => {
@@ -39,6 +40,8 @@ const Routes = (props) => {
             <Route exact component={ Register } path={ url.AUTH_SIGN_UP } />
             <Route exact component={ About } path={ url.ABOUT } />
             <Route exact component={ oauthSuccess } path={ url.OAUTH_URL } />
+            <Route exact component={ contactUs } path={ url.CONTACT } />
+
             <Route
                 exact
                 component={ EmalVerification }
@@ -78,6 +81,7 @@ const Routes = (props) => {
                 <Route exact component={ Home } path={ url.HOME } />
                 <Route exact component={ About } path={ url.ABOUT } />
                 <Route exact component={ oauthSuccess } path={ url.OAUTH_URL } />
+                <Route exact component={ contactUs } path={ url.CONTACT } />
 
                 <Route
                     exact
