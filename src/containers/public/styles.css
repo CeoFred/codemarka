@@ -21,3 +21,10 @@ img.target_icon {
     height: 50px;
     width: 50px;
 }
+.tal-sm {
+    text-align: left;
+}
+
+.bg-size--cover {
+    background-image: url('../../media/images/vectors/eastwood-order-completed.png');
+}

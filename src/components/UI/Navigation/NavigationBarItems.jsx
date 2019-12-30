@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 
 import * as url from '../../../config/url';
@@ -8,35 +7,35 @@ function NavigationBarItems(props) {
       return (
           <ul className="navbar-nav ml-auto">
               <li className="nav-item">
-                  <Link
+                  <a
                           className="nav-link"
                           style={ { fontWeight: 'normal' } }
-                          to={ url.HOME }>
+                          href={ url.HOME }>
                           Home
-                  </Link>
+                  </a>
               </li>
 
               <li className="nav-item ">
-                  <Link
+                  <a
                           className="nav-link"
                           style={ { fontWeight: 'normal' } }
-                          to={ url.CLASSROOM_NEW }>
+                          href={ url.CLASSROOM_NEW }>
                           Create
-                  </Link>
+                  </a>
               </li>
 
               <li className="nav-item">
                   <span
                           className="nav-link"
                           style={ { fontWeight: 'normal' } }>
-                          Welcome, {props.username} {' !'}
+                          Welcome Back, {props.username} {' !'}
                   </span>
               </li>
 
               <li className="nav-item" style={ { fontWeight: 'normal' } }>
-                  <Link to={ url.AUTH_LOGOUT } className="nav-link">
+                  <a href={ url.AUTH_LOGOUT } className="nav-link">
                           logout
-                  </Link>
+                  </a>
               </li>
           </ul>
       )
@@ -44,20 +43,20 @@ function NavigationBarItems(props) {
   return (
       <ul className="navbar-nav ml-auto">
           <li className="nav-item">
-              <Link
+              <a
                       className="nav-link"
                       style={ { fontWeight: 'normal' } }
-                      to={ url.HOME }>
+                      href={ url.HOME }>
                       Home
-              </Link>
+              </a>
           </li>
           <li className="nav-item ">
-              <Link
+              <a
                       className="nav-link"
                       style={ { fontWeight: 'normal' } }
-                      to={ url.ABOUT }>
+                      href={ url.ABOUT }>
                       About
-              </Link>
+              </a>
           </li>
           <li className="nav-item ">
               <a
@@ -69,12 +68,12 @@ function NavigationBarItems(props) {
           </li>
 
           <li className="nav-item ">
-              <Link
+              <a
                       className="nav-link"
                       style={ { fontWeight: 'normal' } }
-                      to={ url.AUTH_SIGN_IN }>
+                      href={ url.AUTH_SIGN_IN }>
                       Login
-              </Link>
+              </a>
           </li>
       </ul>
   )

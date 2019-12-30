@@ -1,18 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import "./css/conversation.css";
+import './css/conversation.css';
 
 export default function Conversation(props) {
-
-    const getRandomColor = () => {
-     let letters = "012345678ABCD";
-     let color = '#';
-     
-     for (let i = 0; i < 6 ; i++) {
-        color += letters[(Math.floor(Math.random() * 16))];
-     }
-     return color;
-    }
 
  const inputKeyDown = (event) => {
     if (event.keyCode === 13) {
@@ -24,7 +14,7 @@ export default function Conversation(props) {
  
 //  let lastIndex;
 
- let messages = props.messages.map((m,i) => {
+ const messages = props.messages.map((m,i) => {
    if((m.by).toLowerCase() === 'server' && m.type ){
      if(m.for === props.user){
        return (
@@ -44,12 +34,14 @@ export default function Conversation(props) {
    } else if(m.by === 'server' && m.type === 'oldMsgUpdate'){
       return (
           <div
-              className={`message ${m.by === props.user ? 'sent' : 'received'}`}
-              key={m.msgId}
-              id={m.msgId}>
-              <div className="font-weight-800 text-success">
+              className={ `message ${ m.by === props.user ? 'sent' : 'received' }` }
+              key={ m.msgId }
+              id={ m.msgId }>
+              <div
+                  style={ { color: `${ m.color ? m.color : 'white' }` } }
+                  className="font-weight-800">
                   {m.by !== props.user
-                      ? m.name + `${props.owner === m.by ? '(Admin)' : ''}`
+                      ? m.name + `${ props.owner === m.by ? '(Admin)' : '' }`
                       : ''}
               </div>
               {m.msg}
@@ -79,32 +71,48 @@ export default function Conversation(props) {
    
    else {
     return (
-        <div className={ `message ${ m.by === props.user ? 'sent' : 'received' }` } key={ m.msgId } id={ m.msgId }>
-            <div className="font-weight-800 text-success">
-                {m.by !== props.user ? m.name + `${ props.owner === m.by ? '(Admin)' : '' }` : ''}
+        <div
+            className={ `message ${ m.by === props.user ? 'sent' : 'received' }` }
+            key={ m.msgId }
+            id={ m.msgId }>
+            <div
+                style={ { color: `${ m.color ? m.color : 'white' }` } }
+                className="font-weight-800">
+                {m.by !== props.user
+                    ? m.name + `${ props.owner === m.by ? '(Admin)' : '' }`
+                    : ''}
             </div>
             {m.msg}
-
             <span class="metadata">
                 <span class="time">{m.timeSent}</span>
-                     
-                {m.by === props.user ?  <span class="tick">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" id="msg-dblcheck-ack" x="2063" y="2076">
-                        <path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.88a.32.32 0 0 1-.484.032l-.358-.325a.32.32 0 0 0-.484.032l-.378.48a.418.418 0 0 0 .036.54l1.32 1.267a.32.32 0 0 0 .484-.034l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.88a.32.32 0 0 1-.484.032L1.892 7.77a.366.366 0 0 0-.516.005l-.423.433a.364.364 0 0 0 .006.514l3.255 3.185a.32.32 0 0 0 .484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z" fill="#4fc3f7"></path>
-                    </svg>
-                </span>
-: ''}
+
+                {m.by === props.user ? (
+                    <span class="tick">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="15"
+                            id="msg-dblcheck-ack"
+                            x="2063"
+                            y="2076">
+                            <path
+                                d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.88a.32.32 0 0 1-.484.032l-.358-.325a.32.32 0 0 0-.484.032l-.378.48a.418.418 0 0 0 .036.54l1.32 1.267a.32.32 0 0 0 .484-.034l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.88a.32.32 0 0 1-.484.032L1.892 7.77a.366.366 0 0 0-.516.005l-.423.433a.364.364 0 0 0 .006.514l3.255 3.185a.32.32 0 0 0 .484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"
+                                fill="#4fc3f7"></path>
+                        </svg>
+                    </span>
+                ) : (
+                    ''
+                )}
             </span>
         </div>
-
-     )
+    )
    }
       
  })
 
  const getTyping = () => {
 
-   let whoIsTypingArray = props.typing.filter(utypist => {
+   const whoIsTypingArray = props.typing.filter(utypist => {
      return utypist.id !== props.user
    });
 

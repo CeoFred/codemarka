@@ -18,21 +18,21 @@ export default function Home() {
                       <div className="col px-0">
                           <div className="row row-grid align-items-center">
                               <div className="col-lg-8 text-center text-lg-left">
-                                  <h1 className="text-white mb-4">
+                                  <h1 className="text-white mb-4 text-left">
                                       We're helping to bring together teams to
                                       solve their coding problems from different
                                       parts of the world in realtime.
                                   </h1>
-                                  <p className="lead text-white opacity-8">
+                                  <p className="lead text-white opacity-8 text-left">
                                       Built for the community ,by the community.
                                       Feeling left out already?
                                   </p>
                                   <div className="mt-5">
                                       <Link
-                                          to={ url.AUTH_SIGN_UP }
+                                          to={url.AUTH_SIGN_UP}
                                           className="btn-inner--text text-white">
                                           <Button
-                                              color="warning"
+                                              color="primary"
                                               size="md"
                                               icon="btn-icon">
                                               <span className="btn-inner--icon" />
@@ -66,14 +66,14 @@ export default function Home() {
                       <div class="frame-laptop">
                           <img
                               alt="Macbook"
-                              src={ Macbook }
+                              src={Macbook}
                               className="img-fluid"
                           />
                           <div class="frame-inner">
                               <img
-                                  style={ { height: '90%' } }
+                                  style={{ height: '90%' }}
                                   alt="placeholder"
-                                  src={ laptopImg }
+                                  src={laptopImg}
                                   className="img-fluid"
                               />
                           </div>
@@ -506,7 +506,9 @@ export default function Home() {
                           Both pricings contains all 6 months free support. Need
                           more?
                       </p>
-                      <Link to="/public/contact-us" class="text-primary text-underline--dashed">
+                      <Link
+                          to="/public/contact-us"
+                          class="text-primary text-underline--dashed">
                           Contact us
                           <svg
                               xmlns="http://www.w3.org/2000/svg"

@@ -200,7 +200,7 @@ if (props.authRegistrationSuccess) {
 }
   return (
       <div>
-          <Helmet title="Signup to codemarka" metaDescription="" />
+          <Helmet title="Signup to codemarka" metaDescription="Get started today by creating a free account on codemarka." />
           {redct}
           <section className="mt-5 mt-lg-6 mt-md-7 mt-sm-5 mb-3">
               <div className="mt-3 row align-items-center justify-content-center min-vh-100">

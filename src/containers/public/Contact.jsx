@@ -52,20 +52,18 @@ export default function Contact() {
                                     <div class="client-group col">
                                         <div class="row">
                                             <div class="client col-3 py-3">
-                                                Developer Student Clubs
+                                                <img
+                                                    src="../../media/images/gd_dsc_lockup_vertical_white.png"
+                                                    alt="developer students club"
+                                                />
                                             </div>
-                                            <div class="client col-3 py-3">
-                                                Ingressive Community
-                                            </div>
+                                            <div class="client col-3 py-3"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="shape-container shape-line shape-position-bottom">
-                    <img alt="Image placeholder" src="" class="svg-inject" />
                 </div>
             </section>
 
@@ -97,7 +95,7 @@ export default function Contact() {
                                 data-lat="25.7617"
                                 data-lng="-80.1918"
                                 data-color="#0c66ff"
-                                style={ {height:'600px'} }></div>
+                                style={ { height: '600px' } }></div>
                         </div>
                     </div>
                 </div>

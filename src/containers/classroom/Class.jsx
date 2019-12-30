@@ -178,10 +178,14 @@ const MainClassLayout = ({
             socket.on('rejoin_updateMsg',msg => {
                 toast.info('Updating messages');
                 setcodemarkaState(c => {
-                    
+                    const nnc = msg.newuserslist.filter(u => {
+                        return u.id !== userid
+                    })
                     return {
                         ...c,
-                        messages: msg.msgs
+                        messages: msg.msgs, 
+                        users: msg.newuserslist,
+                        numberInClass: nnc.length
                     }
                 })
             })
@@ -310,7 +314,11 @@ const MainClassLayout = ({
                     newUserList = newUserList.filter(u => {
                         return String(u.id) !== String(userid);
                     })
-                    return { ...c, messages: oldmsg, users: newUserList , numberInClass:newUserList.length}
+                  const newTypingState = c.typingState.filter(user => {
+                        return String(user.userid) !== String(msg.for);
+                    });
+
+                    return { ...c, messages: oldmsg, users: newUserList , numberInClass:newUserList.length, typingState: newTypingState}
                 });
 
                 setcodemarkaState(c => {
@@ -620,7 +628,19 @@ const MainClassLayout = ({
 
     const handleMessageSubmit = e => {
         e.preventDefault()
-
+        const getRandomColor = () => {
+     let letters = [
+         'rgb(188, 190, 219)',
+         '#b99286',
+         '#a4cc99',
+         '#7f82bb',
+         '#b3cc6e'
+     ]
+     let color;
+     
+        color = letters[(Math.floor(Math.random() * 5))];
+     return color;
+    }
         if (inputState.value !== '') {
             setInputState({
                 ...inputState,
@@ -631,7 +651,9 @@ const MainClassLayout = ({
             const msg_data = {
                 user: userid,
                 class: data.classroom_id,
-                message: inputState.value
+                message: inputState.value,
+                time: new Date(),
+                messageColor: getRandomColor()
             }
             socket.emit('newMessage', msg_data)
         }
