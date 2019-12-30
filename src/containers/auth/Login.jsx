@@ -192,10 +192,10 @@ if(props.isAuthenticated){
                           </div>
 
                           <div className="row">
-                              <div className="col-sm-6">
+                              <div className="d-none">
                                   <Github link={ APIURLS.GITHUB_AUTH_URL } />
                               </div>
-                              <div className="col-sm-6">
+                              <div className="col-12">
                                   <Google link={ APIURLS.GOOGLE_AUTH_URL } />
                               </div>
                           </div>

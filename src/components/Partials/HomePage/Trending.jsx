@@ -1,13 +1,11 @@
 /* eslint-disable no-undef */
-import React, { useEffect, useState, useRef, Suspense } from 'react'
+import React, { useState, useRef, Suspense } from 'react'
 
 import Preloader from '../Preloader';
 function Trending() {
 
     const [ hasMounted, setHasMounted ] = useState(false);
     const content = useRef('');
-
-    useEffect(() => {
 
         if(!hasMounted){
             
@@ -96,12 +94,6 @@ function Trending() {
                 console.error(err);
             })   
         }
-
-        return () => {
-                         setHasMounted(false)
-                     }
-         
-    },[ hasMounted ]);
 
     return (
         <div className="pt-5 pb-5 text-center">

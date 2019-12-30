@@ -55,7 +55,7 @@ const authLoginSuccess = (state,action) => {
         user:{
             token: action.response.token,
             userId:action.response._id,
-            username: action.response.username
+            username: action.response.username || action.response.profile.name
         },
         authState:'done'
     })

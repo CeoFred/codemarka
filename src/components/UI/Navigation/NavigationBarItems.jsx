@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
+import {Link} from 'react-router-dom'
 
 import * as url from '../../../config/url';
 function NavigationBarItems(props) {
@@ -33,9 +34,9 @@ function NavigationBarItems(props) {
               </li>
 
               <li className="nav-item" style={ { fontWeight: 'normal' } }>
-                  <a href={ url.AUTH_LOGOUT } className="nav-link">
+                  <Link to={ url.AUTH_LOGOUT } className="nav-link">
                           logout
-                  </a>
+                  </Link>
               </li>
           </ul>
       )
