@@ -25,13 +25,13 @@ export default function FooterBar() {
                                 <div
                                     class="card bg-dark border-none"
                                     style={ { border: 'none' } }>
-                                    <div class="card-body">
+                                    <div class="card-body p-0">
                                         <p class="text-sm mb-2">
                                             Build , learn and collaborate with
                                             codemarka. This tool comes with
                                             variety of functionalities you'll
                                             need to be productive during
-                                            software developemtn by liveraging
+                                            software developement by leaveraging
                                             on real time technology.
                                         </p>
                                     </div>

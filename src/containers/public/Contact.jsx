@@ -115,7 +115,7 @@ export default function Contact() {
                     </div>
                     <div class="row justify-content-center">
                         <div class="col-lg-6">
-                            <form id="form-contact">
+                            <form id="form-contact" onSubmit={ alert('This service is not available') }>
                                 <div class="form-group">
                                     <input
                                         class="form-control form-control-lg"
@@ -136,7 +136,7 @@ export default function Contact() {
                                     <input
                                         class="form-control form-control-lg"
                                         type="text"
-                                        placeholder="+40-745-234-567"
+                                        placeholder="+(***) *** **"
                                         required=""
                                     />
                                 </div>
@@ -153,7 +153,7 @@ export default function Contact() {
                                         type="reset"
                                         class="btn-reset d-none"></button>{' '}
                                     <button
-                                        type="submit"
+                                        type="button"
                                         class="btn btn-block btn-lg btn-primary mt-4">
                                         Send your message
                                     </button>
