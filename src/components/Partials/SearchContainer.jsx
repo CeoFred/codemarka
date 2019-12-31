@@ -3,7 +3,7 @@ import React from 'react';
 function SearchContainer({ results, display }) {
   let res;
 
-  if (results && results !== undefined && results !== null) {
+  if (results && results !== undefined && results !== null && Array.isArray(results) && results.length > 0) {
     res = results.map(r => {
       return (
           <div className="list p-0" key={ r._id }>
