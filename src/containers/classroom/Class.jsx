@@ -434,7 +434,6 @@ const MainClassLayout = ({
                     setcodemarkaState(c => {
                         return {
                             ...c,
-                            users: __d.newusers,
                             editorPriviledge: __d.role === '2' ? true : false
                         }
                     })
