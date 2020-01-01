@@ -303,7 +303,7 @@ if (props.authRegistrationSuccess) {
                                       textColor="#fff"
                                       block
                                       color="primary">
-                                      {props.loading ? <Spinner /> : 'Sign In'}
+                                      {props.loading ? <Spinner /> : 'Create my account'}
                                   </Button>
                               </div>
                           </form>

@@ -13,6 +13,7 @@ import ColabLayout from './Class';
 import failedImg from '../../media/images/vectors/flame-1.png'
 import endedImg from '../../media/images/vectors/hugo-unsubscribed.png';
 import notStartedImg from '../../media/images/vectors/pluto-coming-soon-1.png';
+import notSupportedImg from '../../media/images/vectors/page-under-construction-1.png';
 
 function Environment(props) {
   const { match: { params } , history } = props;
@@ -32,35 +33,79 @@ function Environment(props) {
       </div>
   );
 
-  const [ colabstate ] = React.useState({
+  const [ colabstate, setty ] = React.useState({
     user_id: props.userid,
     classroom_id: classroomId,
     username: props.username,
-    class_name: props.class_name
+    class_name: props.class_name,
+    isSmallScreen: null,
+    in: false
   });
 
   const { class_verified, isAuthenticated } = props
+
   React.useEffect(() => {
-      onClassroomSwitch('classroom');
+      if (!colabstate.in) {
+          onClassroomSwitch('classroom')
 
-      if(window.innerWidth < 750){
+          if (window.innerWidth < 750) {
+              setty(s => {
+                  return { ...s, isSmallScreen: true }
+              })
+          }
+          if (!class_verified && isAuthenticated) {
+              onClassroomVerify(classroomId)
+          }
+          setty(s => {
+              return {...s,in: true}
+          })
       }
-    if(!class_verified && isAuthenticated){
-
-      onClassroomVerify(classroomId);
-
-      }
-
-    return () => {
-      onClassroomSwitch('regular');
-    };
-  });
+      
+  },[colabstate]);
 
   const getContent = () => {
     if(!props.isAuthenticated && props.authState === 'done' ){
         clearClassRoomData();
 
         return (<Redirect to={ `/auth/signin?authCheck=failed&redir=/c/classroom/${ classroomId }` }/>)
+      }
+      if(colabstate.isSmallScreen){
+          return (
+              <div>
+                  <div
+                      style={{ height: '100vh' }}
+                      className="bg-warning pt-7 text-center justify-content-center">
+                      <div className="m-auto">
+                          <h1 className="text-white">Heads Up!</h1>
+                          <p className="p-3 text-white">
+                              {' '}
+                              <span className="text-white">
+                                  Unfortunately, classrooms are not yet
+                                  supported for your device size, we are working
+                                  on getting support for your screen, please switch
+                                  to a larger screen to continue.
+                              </span>
+                              <br />
+                              return{' '}
+                              <a
+                                  href="/"
+                                  className="text-dark text-uppercase font-weight-bold">
+                                  Home
+                              </a>
+                          </p>
+                          <hr className="divider" />
+                          <div className="m-3">
+                              <img
+                                  style={{ height: '300px' }}
+                                  src={notSupportedImg}
+                                  alt="failed"
+                                  className="img-fluid"
+                              />
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          )
       }
     if (!props.class_verified && !props.validation_error_message) {
       
