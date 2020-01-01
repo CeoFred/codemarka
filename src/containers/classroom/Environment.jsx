@@ -65,7 +65,6 @@ function Environment(props) {
         return (<Redirect to={ `/auth/signin?authCheck=failed&redir=/c/classroom/${ classroomId }` }/>)
       }
     if (!props.class_verified && !props.validation_error_message) {
-        clearClassRoomData();
       
       return checking;
     } else if (props.validation_error_message && !props.class_verified) {
@@ -173,6 +172,7 @@ function Environment(props) {
                 topic={props.class_topic}
                 pinnedMessages={props.class_pinnedMessages}
                 history={history}
+                cd = {props.c}
             />
         )
       } else {

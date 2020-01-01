@@ -67,7 +67,8 @@ const MainClassLayout = ({
     onClassroomVerify,
     pinnedMessages,
     started,
-    cid
+    cid,
+    cd
 }) => {
     const [inputState, setInputState] = useState({
         value: '',
@@ -160,6 +161,7 @@ const MainClassLayout = ({
 
         if (inRoom !== true && inRoom === null && !codemarkastate.blocked) {
             // set listeners and emitters
+            setInRoom(true)
 
             //listen for old message
             socket.on('updateMsg', msg => {
@@ -177,10 +179,9 @@ const MainClassLayout = ({
             })
 
             socket.on('rejoin_updateMsg', msg => {
-                toast.info('Updating messages')
                 setcodemarkaState(c => {
                     const nnc = msg.newuserslist.filter(u => {
-                        return u.id !== userid
+                        return String(u.id) !== String(userid)
                     })
                     return {
                         ...c,
@@ -204,8 +205,8 @@ const MainClassLayout = ({
                 )
             })
             // tell server to add user to class
-            socket.emit('join', requestData)
-            setInRoom(true)
+            socket.emit('join', requestData);
+
             //listen for new members added
             socket.on('someoneJoined', msg => {
                 setcodemarkaState(c => {
@@ -237,7 +238,8 @@ const MainClassLayout = ({
 
             socket.on('disconnect', reason => {
                 socket.emit('leave', requestData)
-
+                
+                console.log(reason)
                 if (reason === 'io server disconnect') {
                     // the disconnection was initiated by the server, you need to reconnect manually
                     socket.connect()
@@ -331,7 +333,7 @@ const MainClassLayout = ({
                         return String(u.id) !== String(userid)
                     })
                     const newTypingState = c.typingState.filter(user => {
-                        return String(user.userid) !== String(msg.for)
+                        return String(user.id) !== String(msg.for)
                     })
 
                     return {
@@ -369,11 +371,9 @@ const MainClassLayout = ({
                     })
 
                     if (found) {
-                        console.log('found', username)
                         // user has typed and was recorded, don't do anything
                         return c
                     } else {
-                        console.log('not found', username)
                         const oldT = c.typingState
                         oldT.push({ username, id: userid })
                         return { ...c, typingState: oldT }
@@ -402,7 +402,6 @@ const MainClassLayout = ({
             })
 
             socket.on('utyping_cleared', ({ username, userid }) => {
-                console.log(username, 'cleared input')
                 // remove user from typing list;
 
                 setcodemarkaState(c => {
@@ -425,7 +424,6 @@ const MainClassLayout = ({
             // listen for classroom files
             socket.on('class_files', (css, html, js) => {
                 // set editor state
-                console.log('class files arrives', css, html, js)
                 setcodemarkaState(c => {
                     return {
                         ...c,
@@ -724,9 +722,6 @@ const MainClassLayout = ({
                 socket.emit('editorChanged', emitObj)
             }
         }
-
-        console.log(e)
-
         // if(o.origin === 'cut' && o.removed[0] !== ""){
         //   socket.emit("editorChanged", emitObj);
         // }
@@ -789,31 +784,7 @@ const MainClassLayout = ({
     }
 
     let classNotification
-    if (!owner && !codemarkastate.editorPriviledge) {
-        classNotification = (
-            <div
-                class="alert alert-group alert-info alert-icon fixed-bottom w-25 left-10"
-                role="alert">
-                <div class="alert-group-prepend">
-                    <span class="alert-group-icon text-white">
-                        <i className="fa fa-info-circle"></i>
-                    </span>
-                </div>
-                <div class="alert-content">
-                    <strong>Heads up!</strong> You cannot format the editors.
-                </div>
-                <div class="alert-action">
-                    <button
-                        type="button"
-                        class="close"
-                        data-dismiss="alert"
-                        aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            </div>
-        )
-    }
+    
 
     const handletoogleUserEditAccess = (e, u) => {
         socket.emit('toogle_class_role', { user: u, new_role: e.target.value })
@@ -834,7 +805,6 @@ const MainClassLayout = ({
 
     const handlewaveAtUser = (e, user) => {
         toast.info(`Hey! You just waved at ${ user.username }`)
-        console.log(user)
         socket.emit('user_waving', user)
     }
 
