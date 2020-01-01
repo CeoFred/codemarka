@@ -64,7 +64,6 @@ const classroomVerifyStart = (state,action) => {
 }
 
 const classroomVerified = (state,action) => {
-    console.log(action);
     if(action.classroom._id){
         return helper.updateObject(state, {
             validated: true,

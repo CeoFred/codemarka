@@ -48,7 +48,6 @@ export function* authRegisterUserSaga({ email, password, username, techStack }) 
     try {
         const response = yield fetch(loginRequest)
         const resolvedResponse = yield call(resolvePromise, response.json())
-            console.log(resolvedResponse)
 
         if (resolvedResponse.status === 1) {
 
@@ -64,7 +63,6 @@ export function* authRegisterUserSaga({ email, password, username, techStack }) 
         }
 
     } catch ({ message }) {
-        console.log(message);
         if(message && message === 'Failed to fetch'){
             yield put(actions.authRegisterFailed('Whoops! Newtwork error!'))
         } else {
@@ -94,7 +92,6 @@ export function* authLoginUserSaga({ email, password }) {
     try {
         const response = yield fetch(loginRequest)
         const resolvedResponse = yield call(resolvePromise, response.json())
-            console.log(resolvedResponse)
 
         if (resolvedResponse.status === 1) {
             
@@ -121,7 +118,6 @@ export function* authLoginUserSaga({ email, password }) {
         }
 
     } catch ({ message }) {
-        console.log(message);
 
         if(message && message === 'Failed to fetch'){
             yield put(actions.authLoginFailed('Whoops! Newtwork error!'))

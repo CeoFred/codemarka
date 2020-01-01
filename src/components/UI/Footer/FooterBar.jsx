@@ -31,7 +31,7 @@ export default function FooterBar() {
                                             codemarka. This tool comes with
                                             variety of functionalities you'll
                                             need to be productive during
-                                            software developement by leaveraging
+                                            software development by leveraging
                                             on real time technology.
                                         </p>
                                     </div>

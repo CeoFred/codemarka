@@ -68,7 +68,6 @@ export function* verifyClassRoom({ classId }){
  try {
     const response = yield fetch(request)
     const resolvedResponse =  yield call(resolvePromise,response.json());
-    console.log(resolvedResponse)
     if(resolvedResponse.status !== 1){
         yield put(actions.classVerifyFailed(resolvedResponse.message));
     } else {

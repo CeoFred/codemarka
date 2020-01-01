@@ -239,7 +239,6 @@ const MainClassLayout = ({
             socket.on('disconnect', reason => {
                 socket.emit('leave', requestData)
                 
-                console.log(reason)
                 if (reason === 'io server disconnect') {
                     // the disconnection was initiated by the server, you need to reconnect manually
                     socket.connect()
@@ -785,7 +784,6 @@ const MainClassLayout = ({
 
     let classNotification
     
-
     const handletoogleUserEditAccess = (e, u) => {
         socket.emit('toogle_class_role', { user: u, new_role: e.target.value })
     }

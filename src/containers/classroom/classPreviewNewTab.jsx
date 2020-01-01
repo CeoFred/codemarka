@@ -16,7 +16,6 @@ export class classPreviewNewTab extends Component {
     const host = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test" ? process.env.REACT_APP_REMOTE_API_URL : process.env.REACT_APP_LOCAL_API_URL
     let myHeaders = new Headers()
     myHeaders.append('Content-Type', 'Application/json')
-    console.log(classroomId)
 
     const handlePreviewFileFetch = () => {
 
@@ -34,7 +33,6 @@ export class classPreviewNewTab extends Component {
       }
   
       handlePreviewFileFetch().then(d => d.json()).then(files => {
-        console.log(files)
          const previewFrame = document.getElementById("tabpreviewframe");
     let styles, html , script;
 

@@ -145,11 +145,9 @@ useEffect(() => {
         formData[ formElementIdentifier ] =
           state.controls[ formElementIdentifier ].value;
       }
-      console.log(formData);
       props.onAuth({ ...formData })
 
     } else {
-      console.log('error,not submitted')
 
       setState({
         ...state,
@@ -164,7 +162,6 @@ useEffect(() => {
 
   const handleAlertClick = (e) => {
        e.preventDefault();
-       console.log('clicked')
       props.onAlertClose()
   }
 

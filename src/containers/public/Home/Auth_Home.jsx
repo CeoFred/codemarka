@@ -43,11 +43,10 @@ function Auth_Home(props) {
             } else {
                 setResults({ result: null })
             }
-            console.log(m)
         })
         .catch(err => {
             setResults({ result: 'Opps! Something went wrong' })
-            console.log(err)
+            console.error(err)
         })
         }
 

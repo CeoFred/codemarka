@@ -46,7 +46,6 @@ const authLoginFailed = (state,{ message }) => {
 }
 
 const authLoginSuccess = (state,action) => {
-    console.log(action)
     return helper.updateObject(state,{
         loading:false,
         error:false,
