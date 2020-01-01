@@ -438,9 +438,9 @@ export default function Home() {
                               </div>
                               <div class="card-body">
                                   <ul class="list-unstyled text-sm mb-4">
-                                      <li>30 classrooms Max</li>
+                                      <li>10 classrooms Max</li>
                                       <li>Use for personal or a comunity</li>
-                                      <li>100 Max classroom students</li>
+                                      <li>35 Max classroom students</li>
                                       <li>Code Linting</li>
                                       <li>Download Files</li>
                                       <li>Audio Broadcast</li>
@@ -473,7 +473,7 @@ export default function Home() {
                                   <ul class="list-unstyled text-white text-sm opacity-8 mb-4">
                                       <li>100 classrooms Max</li>
                                       <li>Use for personal or a comunity</li>
-                                      <li>400 Max classroom students</li>
+                                      <li>300 Max classroom students</li>
                                       <li>Code Linting</li>
                                       <li>Download Files</li>
                                       <li>Audio Broadcast</li>

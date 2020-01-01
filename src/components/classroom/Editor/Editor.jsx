@@ -120,64 +120,74 @@ export default function Editor(props) {
   let editors ;
 
   const { files } = props;
-  editors = files.map((f,i) => {
 
-    if(f.file === 'css'){
-      return (
-          <div className="col-4 h-100 pl-0 pr-0" key={ i }>
-              <div
-                  style={ { zIndex: 99, width: '100%', position: 'absolute' } }
-                  className="bg-dark-light p-2 m-0 text-white font-weight-bolder">
-                  {f.file.toUpperCase()}
-              </div>
+  if(files){
 
-              <CodeMirror
-                  value={ f.content }
-                  options={ cssOptions }
-                  onChange={ (e, ob, v) =>
-                      props.handleEditorChange(e, ob, v, 'css')
-                  }
-              />
-          </div>
-      )
-    }
+ editors = files.map((f, i) => {
+     
+     if (f.file === 'css') {
+         return (
+             <div className="col-4 h-100 pl-0 pr-0" key={ i }>
+                 <div
+                     style={ { zIndex: 99, width: '100%', position: 'absolute' } }
+                     className="bg-dark-light p-2 m-0 text-white font-weight-bolder">
+                     {f.file.toUpperCase()}
+                 </div>
 
-    if(f.file === 'html'){
-      return (
-          <div className="col-4 h-100 pl-0 pr-0" key={ i }>
-              <div
-                  style={ { zIndex: 99, width: '100%', position: 'absolute' } }
-                  className="bg-dark-light p-2 m-0 text-white font-weight-bolder">
-                  {f.file.toUpperCase()}
-              </div>
+                 <CodeMirror
+                     value={ f.content }
+                     options={ cssOptions }
+                     onChange={ (e, ob, v) =>
+                         props.handleEditorChange(e, ob, v, 'css')
+                     }
+                 />
+             </div>
+         )
+     }
 
-              <CodeMirror
-                  value={ f.content }
-                  options={ htmlOptions }
-                  onChange={ (e, ob, v) =>
-                      props.handleEditorChange(e, ob, v, 'html')
-                  }
-              />
-          </div>
-      )
-    }
+     if (f.file === 'html') {
+         return (
+             <div className="col-4 h-100 pl-0 pr-0" key={ i }>
+                 <div
+                     style={ { zIndex: 99, width: '100%', position: 'absolute' } }
+                     className="bg-dark-light p-2 m-0 text-white font-weight-bolder">
+                     {f.file.toUpperCase()}
+                 </div>
 
-    if(f.file === 'js'){
-      return (
-          <div className="col-4 h-100 pl-0 pr-0" key={ i }>
-              <div style={ {zIndex:99,width:'100%',position:'absolute'} } className="bg-dark-light p-2 m-0 text-white font-weight-bolder">{f.file.toUpperCase()}</div>
-              <CodeMirror
-                  value={ f.content }
-                  options={ jsOptions }
-                  onChange={ (e, ob, v) =>
-                      props.handleEditorChange(e, ob, v, 'js')
-                  }
-              />
-          </div>
-      )
-    }
-    return (<div>No Editor</div>)
-  })
+                 <CodeMirror
+                     value={ f.content }
+                     options={ htmlOptions }
+                     onChange={ (e, ob, v) =>
+                         props.handleEditorChange(e, ob, v, 'html')
+                     }
+                 />
+             </div>
+         )
+     }
+
+     if (f.file === 'js') {
+         return (
+             <div className="col-4 h-100 pl-0 pr-0" key={ i }>
+                 <div
+                     style={ { zIndex: 99, width: '100%', position: 'absolute' } }
+                     className="bg-dark-light p-2 m-0 text-white font-weight-bolder">
+                     {f.file.toUpperCase()}
+                 </div>
+                 <CodeMirror
+                     value={ f.content }
+                     options={ jsOptions }
+                     onChange={ (e, ob, v) =>
+                         props.handleEditorChange(e, ob, v, 'js')
+                     }
+                 />
+             </div>
+         )
+     }
+     return <div>No Editor</div>
+ })
+
+  }
+ 
     return (
         <div className="editors__container">
             <div className="row h-100 p-0 m-0">

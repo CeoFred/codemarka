@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
-import { dispatchAppEnvironment } from "../../store/actions/app";
+import { dispatchAppEnvironment } from '../../store/actions/app';
 
 export class classPreviewNewTab extends Component {
 
@@ -13,15 +13,15 @@ export class classPreviewNewTab extends Component {
      const { match: { params }  } = this.props;
   const classroomId = params.classroomId;
 
-    const host = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test" ? process.env.REACT_APP_REMOTE_API_URL : process.env.REACT_APP_LOCAL_API_URL
-    let myHeaders = new Headers()
+    const host = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test' ? process.env.REACT_APP_REMOTE_API_URL : process.env.REACT_APP_LOCAL_API_URL
+    const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'Application/json')
 
     const handlePreviewFileFetch = () => {
 
-    let url = `${ host }classroom/preview/${ classroomId }`;
+    const url = `${ host }classroom/preview/${ classroomId }`;
         
-        let searchClassroomRequest =  new Request(url, {
+        const searchClassroomRequest =  new Request(url, {
             method: 'GET',
             cache: 'default',
             headers: myHeaders,
@@ -33,7 +33,7 @@ export class classPreviewNewTab extends Component {
       }
   
       handlePreviewFileFetch().then(d => d.json()).then(files => {
-         const previewFrame = document.getElementById("tabpreviewframe");
+         const previewFrame = document.getElementById('tabpreviewframe');
     let styles, html , script;
 
     styles = files.data.cs.content;
@@ -50,10 +50,9 @@ export class classPreviewNewTab extends Component {
   const jsURL = getBlobURL(js, 'text/javascript')
 
   const source = `
-    <html>
-      <head>
-<html lang="en">
-      
+  <!DOCTYPE html>
+    <html lang="en">
+      <head>      
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
