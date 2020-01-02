@@ -88,12 +88,11 @@ export default function FooterBar() {
                         <div className="row align-items-center justify-content-md-between py-4 mt-4 border-top mx-0">
                             <div className="col-md-6 mb-3 mb-md-0">
                                 <div className="copyright text-sm font-weight-bold text-center text-md-left">
-                                    © {new Date().getFullYear()}{' '}
+                                    © 2020{' '}
                                     <a
                                         href={ window.location.origin }
                                         className="font-weight-bold"
-                                        target="_blank"
-                                        rel="noopener noreferrer">
+                                        >
                                         codemarka{' '}
                                     </a>
                                     . All rights reserved.

@@ -11,7 +11,7 @@ const Modal = ({
     waveAtUser,
     blockUser
 }) => {
-    let users__ = 'Loading...'
+    let users__ = 'Waiting for people to join...'
 
     if (users && users.length > 0) {
         users__ = users.map(u => {

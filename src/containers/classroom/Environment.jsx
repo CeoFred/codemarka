@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable react/jsx-curly-spacing */
 /* eslint-disable react/prop-types */
 import React from 'react';
@@ -45,23 +46,26 @@ function Environment(props) {
   const { class_verified, isAuthenticated } = props
 
   React.useEffect(() => {
+
       if (!colabstate.in) {
           onClassroomSwitch('classroom')
 
           if (window.innerWidth < 750) {
+              
               setty(s => {
                   return { ...s, isSmallScreen: true }
-              })
+              });
           }
-          if (!class_verified && isAuthenticated) {
-              onClassroomVerify(classroomId)
-          }
+          
           setty(s => {
-              return {...s,in: true}
-          })
+              return { ...s, in: true }
+          });
       }
-      
-  },[colabstate]);
+
+      if (!class_verified && isAuthenticated) {
+          onClassroomVerify(classroomId)
+      }
+  }, [class_verified, isAuthenticated, colabstate.in])
 
   const getContent = () => {
     if(!props.isAuthenticated && props.authState === 'done' ){
