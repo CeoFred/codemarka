@@ -38,7 +38,7 @@ function Environment(props) {
     user_id: props.userid,
     classroom_id: classroomId,
     username: props.username,
-    class_name: props.class_name,
+    className: props.className,
     isSmallScreen: null,
     in: false
   });
@@ -121,7 +121,7 @@ function Environment(props) {
     else if(props.isAuthenticated && status && props.class_verified && props.username && props.userid) {
       let blocked = false;
 
-      if(String(props.class_owner) !== String(props.userid)){
+      if(String(props.classOwner) !== String(props.userid)){
 
          if (status === 3) {
              return (
@@ -209,14 +209,14 @@ function Environment(props) {
             <ColabLayout
                 started={props.status === 2}
                 cid={props.cid}
-                name={props.class_name}
-                owner={props.class_owner === props.userid}
+                name={props.className}
+                owner={props.classOwner === props.userid}
                 data={colabstate}
                 username={props.username}
                 userid={props.userid}
                 description={props.class_description}
-                ownerid={props.class_owner}
-                topic={props.class_topic}
+                ownerid={props.classOwner}
+                topic={props.classTopic}
                 pinnedMessages={props.class_pinnedMessages}
                 history={history}
                 cd = {props.c}
@@ -235,7 +235,7 @@ function Environment(props) {
                                  {' '}
                                  <span className="text-white">
                                      Whoops! Seems you have been blocked from
-                                     joining {props.class_name}!
+                                     joining {props.className}!
                                  </span>
                                  <br />
                                  return{' '}
@@ -276,12 +276,12 @@ const mapStateToProps = ({ auth, classroom }) => {
       username: auth.user.username,
       user_t: auth.user.token,
       class_verified: classroom.validated,
-      class_owner: classroom.owner,
-      class_name: classroom.name,
+      classOwner: classroom.owner,
+      className: classroom.name,
       validation_error_message: classroom.validation_error_message,
       class_description: classroom.description,
       authState: auth.authState,
-      class_topic: classroom.topic,
+      classTopic: classroom.topic,
       class_pinnedMessages: classroom.pinnedMessages,
       blocked: classroom.blocked,
       status: classroom.status,
