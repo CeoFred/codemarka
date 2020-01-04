@@ -1,8 +1,10 @@
 import React from 'react';
+import { formatToTimeZone } from 'date-fns-timezone';
 
 import './css/conversation.css';
 
 export default function Conversation(props) {
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
  const inputKeyDown = (event) => {
     if (event.keyCode === 13) {
@@ -15,6 +17,9 @@ export default function Conversation(props) {
 //  let lastIndex;
 
  const messages = props.messages.map((m,i) => {
+     const date = new Date(m.oTime);   
+     const time = formatToTimeZone(date,'h:mm a',{timeZone});
+
    if((m.by).toLowerCase() === 'server' && m.type ){
      if(m.for === props.user){
        return (
@@ -46,7 +51,7 @@ export default function Conversation(props) {
               </div>
               {m.msg}
               <span class="metadata">
-                  <span class="time">{m.timeSent}</span>
+                  <span class="time">{time}</span>
                   {m.by === props.user ? (
                       <span class="tick">
                           <svg
@@ -84,7 +89,7 @@ export default function Conversation(props) {
             </div>
             {m.msg}
             <span class="metadata">
-                <span class="time">{m.timeSent}</span>
+                <span class="time">{time}</span>
 
                 {m.by === props.user ? (
                     <span class="tick">
