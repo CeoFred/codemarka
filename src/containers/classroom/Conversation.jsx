@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { formatToTimeZone } from 'date-fns-timezone';
 
@@ -13,107 +14,112 @@ const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         props.sendMessage(event);
       }
  }
- 
+ let messages;
 //  let lastIndex;
+if(props.messages && props.messages.length > 0) {
 
- const messages = props.messages.map((m,i) => {
-     const date = new Date(m.oTime);   
-     const time = formatToTimeZone(date,'h:mm a',{timeZone});
+      messages = props.messages.map((m, i) => {
+          
+         const date = new Date(m.oTime)
+         const time = formatToTimeZone(date, 'h:mm a', { timeZone })
 
-   if((m.by).toLowerCase() === 'server' && m.type ){
-     if(m.for === props.user){
-       return (
-         
-           <div className="message_extra" key={ m.msgId } id={ m.msgId }>
-     You
-               {m.type === 'sLeft' ? ' left' : ' Joined'}
-           </div>
-       )
-     }
-     return (
-         <div className="message_extra" key={ m.msgId } id={ m.msgId }>
-             {m.name}
-             {m.type === 'sLeft' ? ' left' : ' Joined'}
-         </div>
-     )
-   } else if(m.by === 'server' && m.type === 'oldMsgUpdate'){
-      return (
-          <div
-              className={ `message ${ m.by === props.user ? 'sent' : 'received' }` }
-              key={ m.msgId }
-              id={ m.msgId }>
-              <div
-                  style={ { color: `${ m.color ? m.color : 'white' }` } }
-                  className="font-weight-800">
-                  {m.by !== props.user
-                      ? m.name + `${ props.owner === m.by ? '(Admin)' : '' }`
-                      : ''}
-              </div>
-              {m.msg}
-              <span class="metadata">
-                  <span class="time">{time}</span>
-                  {m.by === props.user ? (
-                      <span class="tick">
-                          <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="15"
-                              id="msg-dblcheck-ack"
-                              x="2063"
-                              y="2076">
-                              <path
-                                  d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.88a.32.32 0 0 1-.484.032l-.358-.325a.32.32 0 0 0-.484.032l-.378.48a.418.418 0 0 0 .036.54l1.32 1.267a.32.32 0 0 0 .484-.034l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.88a.32.32 0 0 1-.484.032L1.892 7.77a.366.366 0 0 0-.516.005l-.423.433a.364.364 0 0 0 .006.514l3.255 3.185a.32.32 0 0 0 .484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"
-                                  fill="#4fc3f7"></path>
-                          </svg>
-                      </span>
-                  ) : (
-                      ''
-                  )}
-              </span>
-          </div>
-      )
-   }
-   
-   else {
-    return (
-        <div
-            className={ `message ${ m.by === props.user ? 'sent' : 'received' }` }
-            key={ m.msgId }
-            id={ m.msgId }>
-            <div
-                style={ { color: `${ m.color ? m.color : 'white' }` } }
-                className="font-weight-800">
-                {m.by !== props.user
-                    ? m.name + `${ props.owner === m.by ? '(Admin)' : '' }`
-                    : ''}
-            </div>
-            {m.msg}
-            <span class="metadata">
-                <span class="time">{time}</span>
+         if (m.by.toLowerCase() === 'server' && m.type) {
+             if (m.for === props.user) {
+                 return (
+                     <div className="message_extra" key={ m.msgId } id={ m.msgId }>
+                         You
+                         {m.type === 'sLeft' ? ' left' : ' Joined'}
+                     </div>
+                 )
+             }
+             return (
+                 <div className="message_extra" key={ m.msgId } id={ m.msgId }>
+                     {m.name}
+                     {m.type === 'sLeft' ? ' left' : ' Joined'}
+                 </div>
+             )
+         } else if (m.by === 'server' && m.type === 'oldMsgUpdate') {
+             return (
+                 <div
+                     className={ `message ${
+                         m.by === props.user ? 'sent' : 'received'
+                     }` }
+                     key={ m.msgId }
+                     id={ m.msgId }>
+                     <div
+                         style={ { color: `${ m.color ? m.color : 'white' }` } }
+                         className="font-weight-800">
+                         {m.by !== props.user
+                             ? m.name +
+                               `${ props.owner === m.by ? '(Admin)' : '' }`
+                             : ''}
+                     </div>
+                     {m.msg}
+                     <span class="metadata">
+                         <span class="time">{time}</span>
+                         {m.by === props.user ? (
+                             <span class="tick">
+                                 <svg
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     width="16"
+                                     height="15"
+                                     id="msg-dblcheck-ack"
+                                     x="2063"
+                                     y="2076">
+                                     <path
+                                         d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.88a.32.32 0 0 1-.484.032l-.358-.325a.32.32 0 0 0-.484.032l-.378.48a.418.418 0 0 0 .036.54l1.32 1.267a.32.32 0 0 0 .484-.034l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.88a.32.32 0 0 1-.484.032L1.892 7.77a.366.366 0 0 0-.516.005l-.423.433a.364.364 0 0 0 .006.514l3.255 3.185a.32.32 0 0 0 .484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"
+                                         fill="#4fc3f7"></path>
+                                 </svg>
+                             </span>
+                         ) : (
+                             ''
+                         )}
+                     </span>
+                 </div>
+             )
+         } else {
+             return (
+                 <div
+                     className={ `message ${
+                         m.by === props.user ? 'sent' : 'received'
+                     }` }
+                     key={ m.msgId }
+                     id={ m.msgId }>
+                     <div
+                         style={ { color: `${ m.color ? m.color : 'white' }` } }
+                         className="font-weight-800">
+                         {m.by !== props.user
+                             ? m.name +
+                               `${ props.owner === m.by ? '(Admin)' : '' }`
+                             : ''}
+                     </div>
+                     {m.msg}
+                     <span class="metadata">
+                         <span class="time">{time}</span>
 
-                {m.by === props.user ? (
-                    <span class="tick">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="15"
-                            id="msg-dblcheck-ack"
-                            x="2063"
-                            y="2076">
-                            <path
-                                d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.88a.32.32 0 0 1-.484.032l-.358-.325a.32.32 0 0 0-.484.032l-.378.48a.418.418 0 0 0 .036.54l1.32 1.267a.32.32 0 0 0 .484-.034l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.88a.32.32 0 0 1-.484.032L1.892 7.77a.366.366 0 0 0-.516.005l-.423.433a.364.364 0 0 0 .006.514l3.255 3.185a.32.32 0 0 0 .484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"
-                                fill="#4fc3f7"></path>
-                        </svg>
-                    </span>
-                ) : (
-                    ''
-                )}
-            </span>
-        </div>
-    )
-   }
-      
- })
+                         {m.by === props.user ? (
+                             <span class="tick">
+                                 <svg
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     width="16"
+                                     height="15"
+                                     id="msg-dblcheck-ack"
+                                     x="2063"
+                                     y="2076">
+                                     <path
+                                         d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.88a.32.32 0 0 1-.484.032l-.358-.325a.32.32 0 0 0-.484.032l-.378.48a.418.418 0 0 0 .036.54l1.32 1.267a.32.32 0 0 0 .484-.034l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.88a.32.32 0 0 1-.484.032L1.892 7.77a.366.366 0 0 0-.516.005l-.423.433a.364.364 0 0 0 .006.514l3.255 3.185a.32.32 0 0 0 .484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"
+                                         fill="#4fc3f7"></path>
+                                 </svg>
+                             </span>
+                         ) : (
+                             ''
+                         )}
+                     </span>
+                 </div>
+             )
+         }
+     })
+}
 
  const getTyping = () => {
 
@@ -127,12 +133,14 @@ const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
      
      if(usersTyping > 0){
        if(usersTyping === 1){
-          return (<span>{whoIsTypingArray[ 0 ].username} is typing...</span>)
+          return (<span className="m-auto">{whoIsTypingArray[0].username} is typing...</span>)
         } else if(usersTyping === 2){
-          return (<span>{whoIsTypingArray[ 0 ].username} and {whoIsTypingArray[ 1 ].username} are typing</span>)
-       } else if (usersTyping === 3){
-          return (<span>{whoIsTypingArray[ 0 ].username},{whoIsTypingArray[ 1 ].username} and {whoIsTypingArray[ 2 ].username} are typing</span>)
-
+          return (
+              <span className="m-auto">
+                  {whoIsTypingArray[0].username} and{' '}
+                  {whoIsTypingArray[1].username} are typing ...
+              </span>
+          )
        }
      } else {
        return '';
