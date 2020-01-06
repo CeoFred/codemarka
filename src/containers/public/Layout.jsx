@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 // import { Link } from 'react-router-dom';
 
 import Preloader from '../../components/Partials/Preloader';
@@ -9,7 +9,7 @@ import FooterBar from '../../components/UI/Footer/FooterBar';
 // import Button from '../../components/Partials/Button';
 import ErrorBoundary from '../../HOC/Error/ErrorBoundary';
 
-import * as actions from '../../store/actions/Types';
+// import * as actions from '../../store/actions/Types';
 
 export default function Layout(props) {
 
@@ -17,11 +17,11 @@ export default function Layout(props) {
   const [ content, setContent ] = useState(<Preloader />);
   const state = useSelector(state => state);
   const { cookie_token } = state.app;
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const acceptCookieForUser = () => {
-    dispatch({ type:actions.ACCEPT_COOKIE });
-  };
+  // const acceptCookieForUser = () => {
+  //   dispatch({ type:actions.ACCEPT_COOKIE });
+  // };
 
   const body = (
       <div>

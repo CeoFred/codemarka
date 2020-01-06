@@ -29,7 +29,7 @@ export default function Home() {
                                   </p>
                                   <div className="mt-5">
                                       <Link
-                                          to={url.AUTH_SIGN_UP}
+                                          to={ url.AUTH_SIGN_UP }
                                           className="btn-inner--text text-white">
                                           <Button
                                               color="primary"
@@ -66,14 +66,14 @@ export default function Home() {
                       <div class="frame-laptop">
                           <img
                               alt="Macbook"
-                              src={Macbook}
+                              src={ Macbook }
                               className="img-fluid"
                           />
                           <div class="frame-inner">
                               <img
-                                  style={{ height: '90%' }}
+                                  style={ { height: '90%' } }
                                   alt="placeholder"
-                                  src={laptopImg}
+                                  src={ laptopImg }
                                   className="img-fluid"
                               />
                           </div>
@@ -407,13 +407,13 @@ export default function Home() {
                   </div>
               </div>
           </section>
-          <section class="slice slice-lg bg-section-secondary">
-              <div class="container">
-                  <div class="row mb-6 justify-content-center text-center">
-                      <div class="col-lg-8 col-md-10">
-                          <h2 class="mt-4">Simple, Straight Pricing</h2>
-                          <div class="mt-3">
-                              <p class="lead lh-180">
+          <section className="slice slice-lg bg-section-secondary">
+              <div className="container">
+                  <div className="row mb-6 justify-content-center text-center">
+                      <div className="col-lg-8 col-md-10">
+                          <h2 className="mt-4">Simple, Straight Pricing</h2>
+                          <div className="mt-3">
+                              <p className="lead lh-180">
                                   Thousands of developers and communities around
                                   the world have already made codemarka the main
                                   tool for collaboration and learning while
@@ -422,22 +422,22 @@ export default function Home() {
                           </div>
                       </div>
                   </div>
-                  <div class="row justify-content-center" id="pricing">
-                      <div class="col-lg-4 col-md">
-                          <div class="card card-pricing text-center px-3 shadow hover-scale-110">
-                              <div class="card-header py-5 border-0 delimiter-bottom">
-                                  <div class="h1 text-center mb-0">
+                  <div className="row justify-content-center" id="pricing">
+                      <div className="col-lg-4 col-md">
+                          <div className="card card-pricing text-center px-3 shadow hover-scale-110">
+                              <div className="card-header py-5 border-0 delimiter-bottom">
+                                  <div className="h1 text-center mb-0">
                                       $
-                                      <span class="price font-weight-bolder">
+                                      <span className="price font-weight-bolder">
                                           0
                                       </span>
                                   </div>
-                                  <span class="h6 text-muted">
+                                  <span className="h6 text-muted">
                                       Personal Account
                                   </span>
                               </div>
-                              <div class="card-body">
-                                  <ul class="list-unstyled text-sm mb-4">
+                              <div className="card-body">
+                                  <ul className="list-unstyled text-sm mb-4">
                                       <li>10 classrooms Max</li>
                                       <li>Use for personal or a comunity</li>
                                       <li>35 Max classroom students</li>
@@ -449,28 +449,28 @@ export default function Home() {
                                   </ul>
                                   <a
                                       href="/auth/signup?ref=home&auth=falseup"
-                                      class="btn btn-sm btn-warning hover-translate-y-n3 hover-shadow-lg mb-3"
+                                      className="btn btn-sm btn-warning hover-translate-y-n3 hover-shadow-lg mb-3"
                                       target="_blank">
                                       Get started
                                   </a>
                               </div>
                           </div>
                       </div>
-                      <div class="col-lg-4 col-md">
-                          <div class="card card-pricing bg-primary text-center px-3 shadow hover-scale-110">
-                              <div class="card-header py-5 border-0 delimiter-bottom">
-                                  <div class="h1 text-white text-center mb-0">
+                      <div className="col-lg-4 col-md">
+                          <div className="card card-pricing bg-primary text-center px-3 shadow hover-scale-110">
+                              <div className="card-header py-5 border-0 delimiter-bottom">
+                                  <div className="h1 text-white text-center mb-0">
                                       $
-                                      <span class="price font-weight-bolder">
+                                      <span className="price font-weight-bolder">
                                           10 / month
                                       </span>
                                   </div>
-                                  <span class="h6 text-white">
+                                  <span className="h6 text-white">
                                       Community License
                                   </span>
                               </div>
-                              <div class="card-body">
-                                  <ul class="list-unstyled text-white text-sm opacity-8 mb-4">
+                              <div className="card-body">
+                                  <ul className="list-unstyled text-white text-sm opacity-8 mb-4">
                                       <li>100 classrooms Max</li>
                                       <li>Use for personal or a comunity</li>
                                       <li>300 Max classroom students</li>
@@ -485,8 +485,8 @@ export default function Home() {
                                       <li>Screen sharing</li>
                                       <li>Codermarka bot</li>
                                   </ul>
-                                  <a
-                                      class="btn btn-sm btn-white hover-translate-y-n3 hover-shadow-lg mb-3"
+                                  <a  href='/#'
+                                      className="btn btn-sm btn-white hover-translate-y-n3 hover-shadow-lg mb-3"
                                       target="_blank">
                                       Coming soon
                                   </a>
@@ -494,7 +494,7 @@ export default function Home() {
                           </div>
                       </div>
                   </div>
-                  <div class="mt-5 text-center">
+                  <div className="mt-5 text-center">
                       <p className="mb-2">
                           <i className="fa fa-info-circle"></i> codemarka is
                           still in development mode, not every feature for free
@@ -502,13 +502,13 @@ export default function Home() {
                           deployed they would be enabled for your respective
                           account types.
                       </p>
-                      <p class="mb-2">
+                      <p className="mb-2">
                           Both pricings contains all 6 months free support. Need
                           more?
                       </p>
                       <Link
                           to="/public/contact-us"
-                          class="text-primary text-underline--dashed">
+                          className="text-primary text-underline--dashed">
                           Contact us
                           <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -517,10 +517,10 @@ export default function Home() {
                               viewBox="0 0 24 24"
                               fill="none"
                               stroke="currentColor"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              class="feather feather-arrow-right ml-2">
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="feather feather-arrow-right ml-2">
                               <line x1="5" y1="12" x2="19" y2="12"></line>
                               <polyline points="12 5 19 12 12 19"></polyline>
                           </svg>

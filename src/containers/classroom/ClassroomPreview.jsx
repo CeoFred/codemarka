@@ -1,37 +1,24 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react';
+import { connect } from 'react-redux';
 
 // import { Redirect } from "react-router-dom";
 // import * as action from "../../store/actions/";
-import { dispatchAppEnvironment } from "../../store/actions/app";
+import { dispatchAppEnvironment } from '../../store/actions/app';
 
-import ColabClassPreviewLayout from "./ColabClassPreviewLayout.jsx";
+import ColabClassPreviewLayout from './ColabClassPreviewLayout.jsx';
 
-import "./css/preview.css";
+import './css/preview.css';
 
  const ClassroomPreview = (props) => {
     //  const { match: { params }  } = props;
   // const classroomId = params.classroom;
   const { onClassroomSwitch } = props;
 
-  const checking = (
-      <div className="env--content--loading text-center">
-          <div
-        className="spinner-grow"
-        style={ { width: "3rem", height: "3rem", background: "grey" } }
-        role="status"
-      >
-              <span className="sr-only">Loading...</span>
-          </div>
-          <div style={ { marginTop: "5" } }>Two Seconds..</div>
-      </div>
-  );
-
   React.useEffect(() => {
-      onClassroomSwitch("classroom")
+      onClassroomSwitch('classroom')
 
     return () => {
-      onClassroomSwitch("regular");
+      onClassroomSwitch('regular');
     };
   });
   

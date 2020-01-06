@@ -130,19 +130,19 @@ function Auth_Home(props) {
             <div className="all__classrooms__container">
                 <div className="row mr-3 ml-3">
                     <div
-                        class="bg-dark w-100  p-3 text-center mt-4"
+                        className="bg-dark w-100  p-3 text-center mt-4"
                         style={ {
                             borderRadius: '15px',
                             backgroundImage:
                                 'linear-gradient(45deg, #a06060, transparent)'
                         } }>
                         <div>
-                            <div class="text-white">
+                            <div className="text-white">
                                 Want to host a session? Create a Free classroom
                                 today! It's Quick and easy
                             </div>
                             <Link to='/classroom/create?ref=btn'>
-                                <button class="btn mt-2 btn-success">
+                                <button className="btn mt-2 btn-success">
                                     Get Started
                                 </button>
                             </Link>

@@ -53,7 +53,7 @@ function Index(props) {
     return (
         <div>
             <Helment
-                title=" Home - Codemarka"
+                title="Codemarka"
                 metaDescription="Learn , build , debug and collaborate in real time. Change the way you build softwares."
             />
             {state}

@@ -70,6 +70,7 @@ const Modal = ({
                                             onClick={ (e, user = u) =>
                                                 sendUserPrivateMessage(e, user)
                                             }
+                                            href='/#'
                                             style={ { cursor: 'pointer' } }
                                             className="text-info p-1">
                                             message
@@ -78,6 +79,7 @@ const Modal = ({
                                             onClick={ (e, user = u) =>
                                                 waveAtUser(e, user)
                                             }
+                                            href='/#'
                                             style={ { cursor: 'pointer' } }
                                             className="text-dark p-1">
                                             wave

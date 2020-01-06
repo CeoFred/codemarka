@@ -20,13 +20,13 @@ export default function FooterBar() {
                 style={ { display: display ? 'block' : 'none' } }>
                 <div className="footer footer-dark">
                     <div className="container">
-                        <div class="row pt-md">
-                            <div class="col-lg-3 mb-5 mb-lg-0">
+                        <div className="row pt-md">
+                            <div className="col-lg-3 mb-5 mb-lg-0">
                                 <div
-                                    class="card bg-dark border-none"
+                                    className="card bg-dark border-none"
                                     style={ { border: 'none' } }>
-                                    <div class="card-body p-0">
-                                        <p class="text-sm mb-2">
+                                    <div className="card-body p-0">
+                                        <p className="text-sm mb-2">
                                             Build , learn and collaborate with
                                             codemarka. This tool comes with
                                             variety of functionalities you'll
@@ -37,9 +37,9 @@ export default function FooterBar() {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-4 col-sm-4 mb-5 mb-lg-0">
-                                <h6 class="heading mb-3">About</h6>
-                                <ul class="list-unstyled text-small">
+                            <div className="col-lg-3 col-4 col-sm-4 mb-5 mb-lg-0">
+                                <h6 className="heading mb-3">About</h6>
+                                <ul className="list-unstyled text-small">
                                     <li>
                                         <Link to="/public/about-us">
                                             Services
@@ -51,18 +51,18 @@ export default function FooterBar() {
                                         </Link>
                                     </li>
                                     <li>
-                                        <a href="#">Careers</a>
+                                        <a href="/#">Careers</a>
                                     </li>
                                 </ul>
                             </div>
-                            <div class="col-lg-3 col-sm-12 mb-5 mb-lg-0">
-                                <h6 class="heading mb-3">Company</h6>
-                                <ul class="list-unstyled">
+                            <div className="col-lg-3 col-sm-12 mb-5 mb-lg-0">
+                                <h6 className="heading mb-3">Company</h6>
+                                <ul className="list-unstyled">
                                     <li>
-                                        <a href="#">Terms</a>
+                                        <a href="/#">Terms</a>
                                     </li>
                                     <li>
-                                        <a href="#">Privacy</a>
+                                        <a href="/#">Privacy</a>
                                     </li>
                                     <li>
                                         <a href="/public/contact-us">Support</a>
@@ -70,17 +70,17 @@ export default function FooterBar() {
                                 </ul>
                             </div>
 
-                            <div class="col-lg-3 col-sm-12 mb-5 mb-lg-0">
-                                <h6 class="heading mb-3">Socials</h6>
-                                <ul class="list-unstyled">
+                            <div className="col-lg-3 col-sm-12 mb-5 mb-lg-0">
+                                <h6 className="heading mb-3">Socials</h6>
+                                <ul className="list-unstyled">
                                     <li>
                                         <a href="https://twitter.com/codemarka">Twitter</a>
                                     </li>
                                     <li>
-                                        <a href="#">Facebook</a>
+                                        <a href="/#">Facebook</a>
                                     </li>
                                     <li>
-                                        <a href="#">Instagram</a>
+                                        <a href="/#">Instagram</a>
                                     </li>
                                 </ul>
                             </div>
@@ -103,7 +103,7 @@ export default function FooterBar() {
                                     <li className="nav-item">
                                         <Link
                                             className="nav-link"
-                                            href="/public/about-us">
+                                            to="/public/about-us">
                                             Support
                                         </Link>
                                     </li>

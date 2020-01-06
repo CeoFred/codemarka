@@ -65,7 +65,7 @@ function Environment(props) {
       if (!class_verified && isAuthenticated) {
           onClassroomVerify(classroomId)
       }
-  }, [class_verified, isAuthenticated, colabstate.in])
+  }, [class_verified, isAuthenticated, colabstate.in,classroomId, onClassroomSwitch, onClassroomVerify])
 
   const getContent = () => {
     if(!props.isAuthenticated && props.authState === 'done' ){

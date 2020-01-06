@@ -1422,8 +1422,13 @@ const MainClassLayout = ({
                         <div className="col-2 p-0">
                             <Seo
                                 title={ `${ name } :: codemarka classroom` }
-                                description={ description }
-                            />
+                                metaDescription={ description }
+                            >
+                                <script src="https://unpkg.com/jshint@2.9.6/dist/jshint.js"></script>
+                                <script src = "https://unpkg.com/jsonlint@1.6.3/web/jsonlint.js" >
+                                </script>
+                                <script src="https://unpkg.com/csslint@1.0.5/dist/csslint.js"></script>
+                            </Seo>
                             <Suspense fallback={ <Spinner /> }>
                                 <Convo
                                     typing={ codemarkastate.typingState }

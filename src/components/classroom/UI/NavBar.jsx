@@ -6,10 +6,10 @@ function NavBar(props) {
     return (
         <nav
             className="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-dark"
-            style={{ height: '13vh' }}>
+            style={ { height: '13vh' } }>
             <div className="container-fluid">
                 <a className="navbar-brand" href="/">
-                    <img height="30px" src={logo} alt="codemarka_logo" />
+                    <img height="30px" src={ logo } alt="codemarka_logo" />
                 </a>
                 <span className="navbar-brand">
                     {props.topic}
@@ -31,7 +31,7 @@ function NavBar(props) {
                         <li className="nav-item" title="download files">
                             <a
                                 className="nav-link nav-link-icon"
-                                href={props.downloadLink}>
+                                href={ props.downloadLink }>
                                 <i className="fa fa-file-download"></i>
                             </a>
                         </li>
@@ -53,13 +53,13 @@ function NavBar(props) {
                         </li>
                         <li title="favourite" className="nav-item">
                             <a
-                                onClick={props.favourite}
+                                onClick={ props.favourite }
                                 className="nav-link nav-link-icon"
                                 href="/#">
                                 <i
-                                    className={`fa fa-star ${
+                                    className={ `fa fa-star ${
                                         props.isFavourite ? 'bg-gold' : ''
-                                    }`}></i>
+                                    }` }></i>
                                 <span className="nav-link-inner--text d-lg-none">
                                     Favorite
                                 </span>
@@ -154,31 +154,35 @@ function NavBar(props) {
                                 className="dropdown-menu dropdown-menu-right"
                                 aria-labelledby="navbar-success_dropdown_1">
                                 <a
-                                    style={{ cursor: 'pointer' }}
+                                    style={ { cursor: 'pointer' } }
                                     className="dropdown-item"
-                                    onClick={props.exitClassGracefully}>
+                                    href="/#"
+                                    onClick={ props.exitClassGracefully }>
                                     Exit
                                 </a>
 
                                 <div className="dropdown-divider"></div>
                                 <a
-                                    style={{ cursor: 'pointer' }}
+                                    style={ { cursor: 'pointer' } }
                                     className="dropdown-item"
-                                    onClick={props.testConnection}>
+                                    href="/#"
+                                    onClick={ props.testConnection }>
                                     Test connection
                                 </a>
                                 {props.owner ? (
                                     <div>
                                         <a
-                                            style={{ cursor: 'pointer' }}
-                                            onClick={props.startClass}
+                                            style={ { cursor: 'pointer' } }
+                                            onClick={ props.startClass }
+                                            href="/#"
                                             className="dropdown-item text-success">
                                             Start Class
                                         </a>
                                         <a
-                                            style={{ cursor: 'pointer' }}
+                                            style={ { cursor: 'pointer' } }
                                             className="dropdown-item text-danger"
-                                            onClick={props.endClass}>
+                                            href="/#"
+                                            onClick={ props.endClass }>
                                             End Class
                                         </a>
                                     </div>

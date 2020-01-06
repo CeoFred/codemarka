@@ -29,9 +29,9 @@ function Trending() {
                 content.current = rd.data.map(tr => {
                     return (
                         <div className="col-md-4" key={ tr._id }>
-                            <div class="card bg-section-dark text-white hover-translate-y-n3 hover-shadow-lg overflow-hidden">
-                                <div class="card-body py-4">
-                                    <small class="d-block text-sm mb-2">
+                            <div className="card bg-section-dark text-white hover-translate-y-n3 hover-shadow-lg overflow-hidden">
+                                <div className="card-body py-4">
+                                    <small className="d-block text-sm mb-2">
                                         {tr.name.toUpperCase()} {' '}
                                       (
                                         {tr.classVisibility === 'Public' ? (
@@ -43,33 +43,33 @@ function Trending() {
                                     </small>
                                     <a
                                         href={ `c/classroom/${ tr._id }` }
-                                        class="h5 stretched-link lh-150">
+                                        className="h5 stretched-link lh-150">
                                         {tr.topic}
                                     </a>
-                                    <p class="mt-3 mb-0 lh-170">
+                                    <p className="mt-3 mb-0 lh-170">
                                         {tr.description}
                                     </p>
                                 </div>
-                                <div class="card-footer border-0 delimiter-top">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <span class="avatar avatar-sm bg-success rounded-circle">
+                                <div className="card-footer border-0 delimiter-top">
+                                    <div className="row align-items-center">
+                                        <div className="col-auto">
+                                            <span className="avatar avatar-sm bg-success rounded-circle">
                                                 {tr.location}
                                             </span>
-                                            <span class="text-sm mb-0 avatar-content">
+                                            <span className="text-sm mb-0 avatar-content">
                                                 <i className="fas fa-users"></i>{' '}
                                                 {tr.students.length}
                                             </span>
                                         </div>
-                                        <div class="col text-right text-right">
-                                            <div class="actions">
+                                        <div className="col text-right text-right">
+                                            <div className="actions">
                                                 <a
                                                     href="/heaerter"
                                                     onClick={ e =>
                                                         e.preventDefault()
                                                     }
-                                                    class="action-item">
-                                                    <i class="fa fa-heart mr-1 text-danger"></i>{' '}
+                                                    className="action-item">
+                                                    <i className="fa fa-heart mr-1 text-danger"></i>{' '}
                                                     {tr.likes.length}
                                                 </a>
                                                 <a
@@ -77,8 +77,8 @@ function Trending() {
                                                     onClick={ e =>
                                                         e.preventDefault()
                                                     }
-                                                    class="action-item">
-                                                    <i class=" fa fa-eye mr-1"></i>
+                                                    className="action-item">
+                                                    <i className=" fa fa-eye mr-1"></i>
                                                     {tr.visits}
                                                 </a>
                                             </div>

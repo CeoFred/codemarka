@@ -1,7 +1,6 @@
 /** @format */
 
 import React from 'react'
-import { Link } from 'react-router-dom'
 import NavigationBarItems from './NavigationBarItems'
 import { useSelector } from 'react-redux'
 
@@ -18,10 +17,10 @@ export default function NavigationBar() {
     return (
         <div style={ {display:display ? 'block':'none'} }>
             <nav
-                class="navbar navbar-main navbar-expand-lg navbar-sticky navbar-dark bg-dark"
+                className="navbar navbar-main navbar-expand-lg navbar-sticky navbar-dark bg-dark"
                 id="navbar-main">
-                <div class="container">
-                    <a class="navbar-brand" href="/">
+                <div className="container">
+                    <a className="navbar-brand" href="/">
                         <img
                             style={ { height: '20px', width: '130px' } }
                             alt="codemarka"
@@ -30,21 +29,21 @@ export default function NavigationBar() {
                         />{' '}
                     </a>
                     <button
-                        class="navbar-toggler collapsed"
+                        className="navbar-toggler collapsed"
                         type="button"
                         data-toggle="collapse"
                         data-target="#navbar-main-collapse"
                         aria-controls="navbar-main-collapse"
                         aria-expanded="false"
                         aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                        <span className="navbar-toggler-icon"></span>
                     </button>
                     <div
-                        class="navbar-collapse navbar-collapse-overlay collapse"
+                        className="navbar-collapse navbar-collapse-overlay collapse"
                         id="navbar-main-collapse">
-                        <div class="collapse-header align-items-center">
-                            <div class="col-6">
-                                <a class="navbar-brand" href="/">
+                        <div className="collapse-header align-items-center">
+                            <div className="col-6">
+                                <a className="navbar-brand" href="/">
                                     <img
                                         style={ {
                                             height: '20px',
@@ -55,9 +54,9 @@ export default function NavigationBar() {
                                     />{' '}
                                 </a>{' '}
                             </div>{' '}
-                            <div class="col-6 text-right">
+                            <div className="col-6 text-right">
                                 <button
-                                    class="navbar-toggler collapsed"
+                                    className="navbar-toggler collapsed"
                                     type="button"
                                     data-toggle="collapse"
                                     data-target="#navbar-main-collapse"
@@ -71,10 +70,10 @@ export default function NavigationBar() {
                                         viewBox="0 0 24 24"
                                         fill="none"
                                         stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        class="feather feather-x">
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        className="feather feather-x">
                                         <line
                                             x1="18"
                                             y1="6"
