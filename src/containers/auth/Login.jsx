@@ -42,7 +42,9 @@ const emailIconSvg = (
 );
 
 function Login(props) {
+
   const { onResetAll } = props;
+
   useEffect(() => {
   
     return () => {
@@ -50,6 +52,15 @@ function Login(props) {
     };
   }, [ onResetAll ]);
   
+  useEffect(() => {
+    document.addEventListener('keydown',(event) => {
+      const { keyCode, target } = event;
+      if(keyCode === 13) {
+        const form = target.form;
+
+      }
+    })
+  })
   const [ state, setState ] = useState({ controls:{
     email: {
       value:''
