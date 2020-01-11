@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * /* eslint-disable no-undef
  *
@@ -128,8 +129,8 @@ function Login(props) {
         }
     }
     const alert = (
-        <Alert display={props.message} type={state.alertType}>
-            {props.message ? `${props.message}` : ''}
+        <Alert display={ props.message } type={ state.alertType }>
+            {props.message ? `${ props.message }` : ''}
         </Alert>
     )
     let redct
@@ -139,7 +140,7 @@ function Login(props) {
         const url = new URLSearchParams(host)
         const redirectPath = url.get('redir')
         if (redirectPath) {
-            redct = <Redirect to={`${redirectPath}`} />
+            redct = <Redirect to={ `${ redirectPath }` } />
         } else {
             window.location.href = window.location.origin
         }
@@ -164,16 +165,16 @@ function Login(props) {
                             </div>
                             <span className="clearfix" />
                             {alert}
-                            <form onSubmit={submitHandler}>
+                            <form onSubmit={ submitHandler }>
                                 <Input
                                     type="email"
                                     id="emailinput"
                                     placeholder="someone@someserver.com"
                                     label="Email address"
                                     initialPrepend
-                                    initialPrependsvg={emailIconSvg}
-                                    value={state.controls.email.value}
-                                    changed={event =>
+                                    initialPrependsvg={ emailIconSvg }
+                                    value={ state.controls.email.value }
+                                    changed={ event =>
                                         handleInputChange(event, 'email')
                                     }
                                 />
@@ -185,19 +186,19 @@ function Login(props) {
                                     label="password"
                                     isLoginPasswordInput
                                     initialPrepend
-                                    forgotPassword={false}
-                                    initialPrependsvg={initialPrependsvg}
-                                    value={state.controls.password.value}
-                                    finalAppend={false}
-                                    changed={event =>
+                                    forgotPassword={ false }
+                                    initialPrependsvg={ initialPrependsvg }
+                                    value={ state.controls.password.value }
+                                    finalAppend={ false }
+                                    changed={ event =>
                                         handleInputChange(event, 'password')
                                     }
                                 />
                                 <div className="mt-4">
                                     <Button
                                         type="button"
-                                        clicked={submitHandler}
-                                        disabled={props.loading}
+                                        clicked={ submitHandler }
+                                        disabled={ props.loading }
                                         textColor="#fff"
                                         block
                                         color="primary">
@@ -218,10 +219,10 @@ function Login(props) {
 
                             <div className="row">
                                 <div className="d-none">
-                                    <Github link={APIURLS.GITHUB_AUTH_URL} />
+                                    <Github link={ APIURLS.GITHUB_AUTH_URL } />
                                 </div>
                                 <div className="col-12">
-                                    <Google link={APIURLS.GOOGLE_AUTH_URL} />
+                                    <Google link={ APIURLS.GOOGLE_AUTH_URL } />
                                 </div>
                             </div>
                             <div className="mt-4 text-center">
