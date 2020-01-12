@@ -1,6 +1,8 @@
 /* eslint-disable no-undef */
 import React from 'react'
 import { UnControlled as CodeMirror } from 'react-codemirror2';
+import DropDown from './DropDown';
+
 import './editor.css';
   require('codemirror/addon/fold/foldgutter.css');
  require('codemirror/addon/fold/foldcode.js');
@@ -128,17 +130,32 @@ export default function Editor(props) {
      
      if (f.file === 'css') {
          return (
-             <div className="col-4 h-100 pl-0 pr-0" key={ i }>
+             <div className="col-4 h-100 pl-0 pr-0" key={i}>
                  <div
-                     style={ { zIndex: 99, width: '100%', position: 'absolute' } }
+                     style={{ zIndex: 99, width: '100%', position: 'absolute' }}
                      className="bg-dark-light p-2 m-0 text-white font-weight-bolder">
-                     {f.file.toUpperCase()}
+                     <span className="float-left">
+                         {f.file.toUpperCase()}
+                         <DropDown
+                             selected={props.dropDownSelect}
+                             list={[
+                                 { name: 'CSS', value: 'css' },
+                                 { name: 'SCSS', value: 'scss' },
+                                 { name: 'LESS', value: 'less' }
+                             ]}
+                             for={f.file}
+                         />
+                     </span>
+
+                     <span className="float-right">
+                         <i className="fas fa-plus-square"></i>
+                     </span>
                  </div>
 
                  <CodeMirror
-                     value={ f.content }
-                     options={ cssOptions }
-                     onChange={ (e, ob, v) =>
+                     value={f.content}
+                     options={cssOptions}
+                     onChange={(e, ob, v) =>
                          props.handleEditorChange(e, ob, v, 'css')
                      }
                  />
@@ -148,17 +165,31 @@ export default function Editor(props) {
 
      if (f.file === 'html') {
          return (
-             <div className="col-4 h-100 pl-0 pr-0" key={ i }>
+             <div className="col-4 h-100 pl-0 pr-0" key={i}>
                  <div
-                     style={ { zIndex: 99, width: '100%', position: 'absolute' } }
+                     style={{ zIndex: 99, width: '100%', position: 'absolute' }}
                      className="bg-dark-light p-2 m-0 text-white font-weight-bolder">
-                     {f.file.toUpperCase()}
+                     <span className="float-left">
+                         {f.file.toUpperCase()}
+                         <DropDown
+                             selected={props.dropDownSelect}
+                             list={[
+                                 { name: 'HTML', value: 'html' },
+                                 { name: 'Markdown', value: 'md' }
+                             ]}
+                             for={f.file}
+                         />
+                     </span>
+
+                     <span className="float-right">
+                         <i className="fas fa-plus-square"></i>
+                     </span>
                  </div>
 
                  <CodeMirror
-                     value={ f.content }
-                     options={ htmlOptions }
-                     onChange={ (e, ob, v) =>
+                     value={f.content}
+                     options={htmlOptions}
+                     onChange={(e, ob, v) =>
                          props.handleEditorChange(e, ob, v, 'html')
                      }
                  />
@@ -168,16 +199,31 @@ export default function Editor(props) {
 
      if (f.file === 'js') {
          return (
-             <div className="col-4 h-100 pl-0 pr-0" key={ i }>
+             <div className="col-4 h-100 pl-0 pr-0" key={i}>
                  <div
-                     style={ { zIndex: 99, width: '100%', position: 'absolute' } }
+                     style={{ zIndex: 99, width: '100%', position: 'absolute' }}
                      className="bg-dark-light p-2 m-0 text-white font-weight-bolder">
-                     {f.file.toUpperCase()}
+                     <span className="float-left">
+                         {f.file.toUpperCase()}
+                         <DropDown
+                             selected={props.dropDownSelect}
+                             list={[
+                                 { name: 'Javascript', value: 'JS' },
+                                 { name: 'Typescript', value: 'TS' },
+                                 { name: 'Coffee Script', value: 'CS' }
+                             ]}
+                             for={f.file}
+                         />
+                     </span>
+
+                     <span className="float-right">
+                         <i className="fas fa-plus-square"></i>
+                     </span>
                  </div>
                  <CodeMirror
-                     value={ f.content }
-                     options={ jsOptions }
-                     onChange={ (e, ob, v) =>
+                     value={f.content}
+                     options={jsOptions}
+                     onChange={(e, ob, v) =>
                          props.handleEditorChange(e, ob, v, 'js')
                      }
                  />

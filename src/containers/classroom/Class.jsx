@@ -1057,6 +1057,10 @@ const MainClassLayout = ({
         }
     }
 
+    const handledropDownSelect = (event,value,editor) => {
+        console.log(event,value,editor);
+    }
+
     return (
         <div>
             <Seo
@@ -1445,6 +1449,7 @@ const MainClassLayout = ({
                                     readOnly={codemarkastate.editorPriviledge}
                                     handleEditorChange={editorChanged}
                                     files={codemarkastate.editors}
+                                    dropDownSelect={handledropDownSelect}
                                 />
                             </Suspense>
                         </div>
