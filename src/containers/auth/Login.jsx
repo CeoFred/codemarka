@@ -64,14 +64,9 @@ function Login(props) {
         }
     }, [onResetAll])
 
-    useEffect(() => {
-        document.addEventListener('keydown', event => {
-            const { keyCode, target } = event
-            if (keyCode === 13) {
-                const form = target.form
-            }
-        })
-    })
+    // useEffect(() => {
+    //     document.getElementsByTagName('form')[0].onkeydown = e => console.log(e);
+    // })
     const [state, setState] = useState({
         controls: {
             email: {
@@ -196,7 +191,7 @@ function Login(props) {
                                 />
                                 <div className="mt-4">
                                     <Button
-                                        type="button"
+                                        type="submit"
                                         clicked={ submitHandler }
                                         disabled={ props.loading }
                                         textColor="#fff"

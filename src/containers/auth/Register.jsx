@@ -297,7 +297,7 @@ if (props.authRegistrationSuccess) {
 
                               <div className="mt-4">
                                   <Button
-                                      type="button"
+                                      type="submit"
                                       clicked={ submitHandler }
                                       disabled={ props.loading }
                                       textColor="#fff"
