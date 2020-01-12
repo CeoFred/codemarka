@@ -3,7 +3,7 @@ import React from 'react'
 export default function Preview(props) {
     return (
         <div>
-            <button type="button" onClick={ props.previewBtnClicked }  data-toggle="modal" data-target="#modal_1" className="preview_btn" >
+            <button title="Preview" type="button" onClick={ props.previewBtnClicked }  data-toggle="modal" data-target="#modal_1" className="preview_btn" >
                 <i className="fa fa-play-circle fa-3x"></i>
             </button>
       
@@ -20,7 +20,7 @@ export default function Preview(props) {
                     </div>
                 </div>
     
-                <a target='_blank' rel="noopener noreferrer" href={ `/c/classroom/preview/${ props.classroomid }` }  className="open_new_tab_btn" >
+                <a target='_blank' title="Open new tab" rel="noopener noreferrer" href={ `/c/classroom/preview/${ props.classroomid }` }  className="open_new_tab_btn" >
                     <i className="fa fa-external-link-square-alt fa-3x"></i>
                 </a>
             </div>

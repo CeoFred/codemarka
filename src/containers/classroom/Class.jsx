@@ -138,7 +138,6 @@ const MainClassLayout = ({
         changed: false,
         value: ''
     })
-    let redirectComp
     let connAttempts = 0
     const [inRoom, setInRoom] = useState(null)
 
@@ -1060,11 +1059,17 @@ const MainClassLayout = ({
 
     return (
         <div>
+            <Seo
+                title={`${name} :: codemarka classroom`}
+                metaDescription={description}>
+                <script src="https://unpkg.com/jshint@2.9.6/dist/jshint.js"></script>
+                <script src="https://unpkg.com/jsonlint@1.6.3/web/jsonlint.js"></script>
+                <script src="https://unpkg.com/csslint@1.0.5/dist/csslint.js"></script>
+            </Seo>
             <ToastContainer />
-            {redirectComp}
             <Preview
-                previewBtnClicked={ handlePreview }
-                classroomid={ data.classroom_id }
+                previewBtnClicked={handlePreview}
+                classroomid={data.classroom_id}
             />
             {classNotification}
             <span
@@ -1077,19 +1082,19 @@ const MainClassLayout = ({
             </span>
 
             <Navigation
-                name={ name }
-                downloadLink={ classfilesdownloadlink }
-                favourite={ addClassToFavourite }
-                isFavourite={ codemarkastate.favourite }
-                topic={ topic }
-                exitClassGracefully={ handleexitClassGracefully }
-                classroomid={ data.classroom_id }
-                testConnection={ handletestConnection }
-                classReport={ handleclassReport }
-                number={ codemarkastate.numberInClass }
-                owner={ owner }
-                endClass={ handleEndClass }
-                startClass={ handlestartClass }
+                name={name}
+                downloadLink={classfilesdownloadlink}
+                favourite={addClassToFavourite}
+                isFavourite={codemarkastate.favourite}
+                topic={topic}
+                exitClassGracefully={handleexitClassGracefully}
+                classroomid={data.classroom_id}
+                testConnection={handletestConnection}
+                classReport={handleclassReport}
+                number={codemarkastate.numberInClass}
+                owner={owner}
+                endClass={handleEndClass}
+                startClass={handlestartClass}
             />
 
             <button
@@ -1229,7 +1234,7 @@ const MainClassLayout = ({
                         <div class="modal-footer">
                             <a
                                 class="btn btn-sm btn-primary"
-                                href={ classfilesdownloadlink }>
+                                href={classfilesdownloadlink}>
                                 Download Files
                             </a>
                             <a class="btn btn-sm btn-white" href="/?#">
@@ -1249,7 +1254,7 @@ const MainClassLayout = ({
                 Exit
             </button>
             <div
-                class={ 'modal modal-danger fade' }
+                class={'modal modal-danger fade'}
                 id="exitClass"
                 tabindex="-1"
                 role="dialog"
@@ -1309,7 +1314,7 @@ const MainClassLayout = ({
                                 <button
                                     type="button"
                                     class="btn btn-sm btn-white"
-                                    onClick={ HandleClassShutdown }>
+                                    onClick={HandleClassShutdown}>
                                     End now
                                 </button>
                             </div>
@@ -1324,8 +1329,8 @@ const MainClassLayout = ({
                 targetid="exit_class_modal_cont"
                 type="default"
                 size="sm"
-                titleIcon={ <i className="fa fa-thumbs-up"></i> }
-                title={ ' Rate this classroom ' }>
+                titleIcon={<i className="fa fa-thumbs-up"></i>}
+                title={' Rate this classroom '}>
                 {addStars}
             </Modal>
 
@@ -1333,8 +1338,8 @@ const MainClassLayout = ({
                 targetid="pinned_modal_cont"
                 type="default"
                 size="sm"
-                titleIcon={ <i className="fa fa-pen-nib"></i> }
-                title={ 'Pinned Messages' }>
+                titleIcon={<i className="fa fa-pen-nib"></i>}
+                title={'Pinned Messages'}>
                 {getPinnedMessages()}
                 {owner ? addPinTextArea : ''}
             </Modal>
@@ -1347,7 +1352,7 @@ const MainClassLayout = ({
                     owner ? (
                         <button
                             type="submit"
-                            onClick={ handleClassInfoUpdate }
+                            onClick={handleClassInfoUpdate}
                             className="btn btn-sm float-left btn-soft-primary">
                             {ClassroomInformation.submitted ? (
                                 <Spinner />
@@ -1360,18 +1365,18 @@ const MainClassLayout = ({
                     )
                 }
                 title="classroom Information">
-                <form onSubmit={ handleClassInfoUpdate }>
+                <form onSubmit={handleClassInfoUpdate}>
                     <Input
                         name="cname"
                         label="Classroom Name"
                         elementType="input"
-                        elementConfig={ {
+                        elementConfig={{
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'cname'
-                        } }
-                        value={ ClassroomInformation.cname.value }
-                        changed={ e =>
+                        }}
+                        value={ClassroomInformation.cname.value}
+                        changed={e =>
                             handleClassroomInformationInputChange(e, 'cname')
                         }
                     />
@@ -1379,26 +1384,26 @@ const MainClassLayout = ({
                         name="ctopic"
                         label="Classroom Topic"
                         elementType="input"
-                        elementConfig={ {
+                        elementConfig={{
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'ctopic'
-                        } }
-                        value={ ClassroomInformation.ctopic.value }
-                        changed={ e =>
+                        }}
+                        value={ClassroomInformation.ctopic.value}
+                        changed={e =>
                             handleClassroomInformationInputChange(e, 'ctopic')
                         }
                     />
                     <Input
                         label="Classroom Description"
                         elementType="textarea"
-                        elementConfig={ {
+                        elementConfig={{
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'cdesc'
-                        } }
-                        value={ ClassroomInformation.cdesc.value }
-                        changed={ e =>
+                        }}
+                        value={ClassroomInformation.cdesc.value}
+                        changed={e =>
                             handleClassroomInformationInputChange(e, 'cdesc')
                         }
                     />
@@ -1406,49 +1411,40 @@ const MainClassLayout = ({
             </Modal>
 
             <ParticipantModal
-                users={ codemarkastate.users }
-                toogleUserEditAccess={ handletoogleUserEditAccess }
-                owner={ owner }
-                ownerid={ ownerid }
-                userid={ userid }
-                sendUserPrivateMessage={ handlePrivateMessaging }
-                blockUser={ handleUserBlocking }
-                waveAtUser={ handlewaveAtUser }
+                users={codemarkastate.users}
+                toogleUserEditAccess={handletoogleUserEditAccess}
+                owner={owner}
+                ownerid={ownerid}
+                userid={userid}
+                sendUserPrivateMessage={handlePrivateMessaging}
+                blockUser={handleUserBlocking}
+                waveAtUser={handlewaveAtUser}
             />
 
-            <div style={ { width: '100%', height: '87vh' } }>
+            <div style={{ width: '100%', height: '87vh' }}>
                 <div className="container-fluid ">
                     <div className="row">
                         <div className="col-2 p-0">
-                            <Seo
-                                title={ `${ name } :: codemarka classroom` }
-                                metaDescription={ description }
-                            >
-                                <script src="https://unpkg.com/jshint@2.9.6/dist/jshint.js"></script>
-                                <script src = "https://unpkg.com/jsonlint@1.6.3/web/jsonlint.js" >
-                                </script>
-                                <script src="https://unpkg.com/csslint@1.0.5/dist/csslint.js"></script>
-                            </Seo>
-                            <Suspense fallback={ <Spinner /> }>
+                            <Suspense fallback={<Spinner />}>
                                 <Convo
-                                    typing={ codemarkastate.typingState }
-                                    username={ username }
-                                    inputValue={ inputState.value }
-                                    handleInputChange={ handleInputChange }
-                                    sendMessage={ handleMessageSubmit }
-                                    focused={ inputState.isFocused }
-                                    messages={ codemarkastate.messages }
-                                    user={ userid }
-                                    owner={ ownerid }
+                                    typing={codemarkastate.typingState}
+                                    username={username}
+                                    inputValue={inputState.value}
+                                    handleInputChange={handleInputChange}
+                                    sendMessage={handleMessageSubmit}
+                                    focused={inputState.isFocused}
+                                    messages={codemarkastate.messages}
+                                    user={userid}
+                                    owner={ownerid}
                                 />
                             </Suspense>
                         </div>
                         <div className="col-10 p-0">
-                            <Suspense fallback={ <Spinner /> }>
+                            <Suspense fallback={<Spinner />}>
                                 <Editor
-                                    readOnly={ codemarkastate.editorPriviledge }
-                                    handleEditorChange={ editorChanged }
-                                    files={ codemarkastate.editors }
+                                    readOnly={codemarkastate.editorPriviledge}
+                                    handleEditorChange={editorChanged}
+                                    files={codemarkastate.editors}
                                 />
                             </Suspense>
                         </div>
