@@ -879,15 +879,15 @@ const MainClassLayout = ({
                 return (
                     <div
                         key={ msg.id }
-                        class="card mt-0 mb-1"
+                        className="card mt-0 mb-1"
                         style={ {
                             borderLeft: '2px solid #E91E63',
                             borderRadius: 0
                         } }>
                         <div
-                            class="card-body"
+                            className="card-body"
                             style={ { padding: 10, fontWeight: 'bolder' } }>
-                            <p class="mb-0">{msg.content}</p>
+                            <p className="mb-0">{msg.content}</p>
                         </div>
                     </div>
                 )
@@ -1011,18 +1011,18 @@ const MainClassLayout = ({
                     <button
                         type="button"
                         onClick={ e => redirectTo(e, '/') }
-                        class="btn btn-animated  btn-sm btn-outline-success btn-animated-y">
-                        <span class="btn-inner--visible">NOT NOW</span>
-                        <span class="btn-inner--hidden">
+                        className="btn btn-animated  btn-sm btn-outline-success btn-animated-y">
+                        <span className="btn-inner--visible">NOT NOW</span>
+                        <span className="btn-inner--hidden">
                             <i className="fa fa-pause-circle"></i>
                         </span>
                     </button>
                     <button
                         type="button"
                         onClick={ handleClassStarRating }
-                        class="btn btn-animated  btn-sm btn-outline-success btn-animated-x">
-                        <span class="btn-inner--visible">SUBMIT</span>
-                        <span class="btn-inner--hidden">
+                        className="btn btn-animated  btn-sm btn-outline-success btn-animated-x">
+                        <span className="btn-inner--visible">SUBMIT</span>
+                        <span className="btn-inner--hidden">
                             <i className="fa fa-thumbs-up"></i>
                         </span>
                     </button>
@@ -1097,48 +1097,48 @@ const MainClassLayout = ({
                 classReport={handleclassReport}
                 number={codemarkastate.numberInClass}
                 owner={owner}
-                endClass={handleEndClass}
-                startClass={handlestartClass}
+                endClassName={handleEndClass}
+                startClassName={handlestartClass}
             />
 
             <button
                 id="dialogueToStart"
                 type="button"
-                class="btn btn-danger d-none"
+                className="btn btn-danger d-none"
                 data-toggle="modal"
                 data-target="#startclassModal"></button>
             <div
-                class="modal modal-white fade"
+                className="modal modal-white fade"
                 id="startclassModal"
-                tabindex="-1"
+                tabIndex="-1"
                 role="dialog"
                 aria-labelledby="startclassModal"
                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
+                <div className="modal-dialog modal-dialog-centered" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
                             <button
                                 type="button"
-                                class="close"
+                                className="close"
                                 data-dismiss="modal"
                                 aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
-                            <div class="py-3 text-center">
+                        <div className="modal-body">
+                            <div className="py-3 text-center">
                                 {codemarkastate.started === null ? (
                                     <div>
                                         {codemarkastate.starting === true ? (
                                             <div>
-                                                <h5 class="heading h4 mt-4">
+                                                <h5 className="heading h4 mt-4">
                                                     Starting...
                                                 </h5>
                                                 <Spinner />
                                             </div>
                                         ) : (
                                             <div>
-                                                <h5 class="heading h4 mt-4">
+                                                <h5 className="heading h4 mt-4">
                                                     Hi there!
                                                 </h5>
                                                 <p>
@@ -1150,10 +1150,10 @@ const MainClassLayout = ({
                                                     the settings icon and locate
                                                     the actions button.
                                                 </p>
-                                                <div class="modal-footer">
+                                                <div className="modal-footer">
                                                     <button
                                                         type="button"
-                                                        class="btn btn-sm btn-success"
+                                                        className="btn btn-sm btn-success"
                                                         onClick={
                                                             handlestartClass
                                                         }>
@@ -1161,7 +1161,7 @@ const MainClassLayout = ({
                                                     </button>
                                                     <button
                                                         type="button "
-                                                        class="btn btn-sm btn-white"
+                                                        className="btn btn-sm btn-white"
                                                         data-dismiss="modal">
                                                         Later
                                                     </button>
@@ -1185,32 +1185,32 @@ const MainClassLayout = ({
             <button
                 id="shutdownemitionbtn"
                 type="button"
-                class="btn btn-danger d-none"
+                className="btn btn-danger d-none"
                 data-toggle="modal"
                 data-target="#shutdownSignalModal">
                 shutting down..
             </button>
             <div
-                class="modal modal-info fade"
+                className="modal modal-info fade"
                 id="shutdownSignalModal"
-                tabindex="-1"
+                tabIndex="-1"
                 role="dialog"
                 aria-labelledby="shutdownSignalModal"
                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
+                <div className="modal-dialog modal-dialog-centered" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
                             <button
                                 type="button"
-                                class="close"
+                                className="close"
                                 data-dismiss="modal"
                                 aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
-                            <div class="py-3 text-center">
-                                <b class="fas fa-4x">
+                        <div className="modal-body">
+                            <div className="py-3 text-center">
+                                <b className="fas fa-4x">
                                     {codemarkastate.ended ? (
                                         <h1>The End!</h1>
                                     ) : (
@@ -1219,7 +1219,7 @@ const MainClassLayout = ({
                                 </b>
                                 {!codemarkastate.ended ? (
                                     <div>
-                                        <h5 class="heading h4 mt-4">
+                                        <h5 className="heading h4 mt-4">
                                             Shutting down classroom!
                                         </h5>
                                         <p>
@@ -1235,13 +1235,13 @@ const MainClassLayout = ({
                                 )}
                             </div>
                         </div>
-                        <div class="modal-footer">
+                        <div className="modal-footer">
                             <a
-                                class="btn btn-sm btn-primary"
+                                className="btn btn-sm btn-primary"
                                 href={classfilesdownloadlink}>
                                 Download Files
                             </a>
-                            <a class="btn btn-sm btn-white" href="/?#">
+                            <a className="btn btn-sm btn-white" href="/?#">
                                 Leave now
                             </a>
                         </div>
@@ -1252,33 +1252,33 @@ const MainClassLayout = ({
             <button
                 id="exitbtn"
                 type="button"
-                class="btn btn-danger d-none"
+                className="btn btn-danger d-none"
                 data-toggle="modal"
                 data-target="#exitClass">
                 Exit
             </button>
             <div
-                class={'modal modal-danger fade'}
+                className={'modal modal-danger fade'}
                 id="exitClass"
-                tabindex="-1"
+                tabIndex="-1"
                 role="dialog"
                 aria-labelledby="exitClass"
                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title h6" id="modal_title_6">
+                <div className="modal-dialog modal-dialog-centered" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title h6" id="modal_title_6">
                                 This is way to dangerous
                             </h5>
                             <button
                                 type="button"
-                                class="close"
+                                className="close"
                                 data-dismiss="modal"
                                 aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
+                        <div className="modal-body">
                             {codemarkastate.sdemitted &&
                             !codemarkastate.ended ? (
                                 <div className="text-center">
@@ -1286,13 +1286,13 @@ const MainClassLayout = ({
                                     <br /> <Spinner />{' '}
                                 </div>
                             ) : (
-                                <div class="py-3 text-center">
-                                    <i class="fas fa-exclamation-circle fa-4x"></i>
+                                <div className="py-3 text-center">
+                                    <i className="fas fa-exclamation-circle fa-4x"></i>
                                     {codemarkastate.ended ? (
                                         <h2 className="heading h1">Done!</h2>
                                     ) : (
                                         <div>
-                                            <h5 class="heading h4 mt-4">
+                                            <h5 className="heading h4 mt-4">
                                                 Should we stop now?
                                             </h5>
                                             <p>
@@ -1308,16 +1308,16 @@ const MainClassLayout = ({
                             )}
                         </div>
                         {!codemarkastate.sdemitted ? (
-                            <div class="modal-footer">
+                            <div className="modal-footer">
                                 <button
                                     type="button "
-                                    class="btn btn-sm btn-white"
+                                    className="btn btn-sm btn-white"
                                     data-dismiss="modal">
                                     Cancel
                                 </button>
                                 <button
                                     type="button"
-                                    class="btn btn-sm btn-white"
+                                    className="btn btn-sm btn-white"
                                     onClick={HandleClassShutdown}>
                                     End now
                                 </button>

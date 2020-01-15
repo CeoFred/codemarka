@@ -55,10 +55,10 @@ if(props.messages && props.messages.length > 0) {
                              : ''}
                      </div>
                      {m.msg}
-                     <span class="metadata">
-                         <span class="time">{time}</span>
+                     <span className="metadata">
+                         <span className="time">{time}</span>
                          {m.by === props.user ? (
-                             <span class="tick">
+                             <span className="tick">
                                  <svg
                                      xmlns="http://www.w3.org/2000/svg"
                                      width="16"
@@ -94,11 +94,11 @@ if(props.messages && props.messages.length > 0) {
                              : ''}
                      </div>
                      {m.msg}
-                     <span class="metadata">
-                         <span class="time">{time}</span>
+                     <span className="metadata">
+                         <span className="time">{time}</span>
 
                          {m.by === props.user ? (
-                             <span class="tick">
+                             <span className="tick">
                                  <svg
                                      xmlns="http://www.w3.org/2000/svg"
                                      width="16"
@@ -152,7 +152,7 @@ if(props.messages && props.messages.length > 0) {
       <div className="conversation__container d-block">
           <div className="user-bar">
                
-              <span class="name">
+              <span className="name">
        
                   <span>{ props.username }</span>
               </span>

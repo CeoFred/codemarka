@@ -148,6 +148,7 @@ function Environment(props) {
             let blocked = false
 
             if (String(props.classOwner) !== String(props.userid)) {
+                
                 if (status === 3) {
                     return (
                         <div>
