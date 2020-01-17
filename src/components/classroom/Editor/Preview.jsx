@@ -7,7 +7,7 @@ export default function Preview(props) {
                 <i className="fa fa-play-circle fa-3x"></i>
             </button>
       
-            <div className="modal modal-fluid fade" id="modal_1" tabIndex="-1" role="dialog" aria-labelledby="modal_1" aria-hidden="true">
+            <div className="modal modal-fluid fade" id="modal_1" tabindex="-1" role="dialog" aria-labelledby="modal_1" aria-hidden="true">
                 <div className="modal-dialog modal-lg h-100vh" role="document">
                     <div className="modal-content h-100vh">
                         <div className="modal-body">
