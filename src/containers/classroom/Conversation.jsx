@@ -4,24 +4,7 @@ import { formatToTimeZone } from 'date-fns-timezone';
 
 import './css/conversation.css';
 
-const BotMessage = ({ m, time }) => {
-    return (
-        <div
-            className="message received"
-            key={m.msgId}
-            id={m.msgId}>
-            <div
-                style={{ color: `#ED7BCA` }}
-                className="font-weight-800">
-                Codemarka Bot
-            </div>
-            Hello {m.name} from the bot
-            <span className="metadata">
-                <span className="time">{time}</span>
-            </span>
-        </div>
-    )
-}
+
 
 export default function Conversation(props) {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -38,21 +21,38 @@ export default function Conversation(props) {
     if (props.messages && props.messages.length > 0) {
 
         messages = props.messages.map((m, i) => {
-
             const date = new Date(m.oTime)
             const time = formatToTimeZone(date, 'h:mm a', { timeZone })
+
+            const BotMessage = () => {
+                return (
+                    <div
+                        className="message bot"
+                        key={m.msgId}
+                        id={m.msgId}>
+                        <div
+                            style={{ color: `#ED7BCA` }}
+                            className="font-weight-800">
+                            Codemarka Bot
+                        </div>
+                        Hello {m.name} from the bot
+                    </div>
+                )
+            }
+
+
 
             if (m.by.toLowerCase() === 'server' && m.type) {
                 if (m.for === props.user) {
                     return (
-                        <div>
+                        <div key = {i}>
                             <div className="message_extra" key={m.msgId} id={m.msgId}>
                                 You
                          {m.type === 'sLeft' ? ' left' : ' Joined'}
                             </div>
                             <div>
                                 {
-                                    m.type === 'sLeft' ? '' : <BotMessage m={m} time={time} />
+                                    m.type === 'sLeft' ? '' : <BotMessage m={m} />
                                 }
                             </div>
                         </div>

@@ -114,6 +114,17 @@ div.messages {
     top: 0;
     left: -10px;
 }
+.message.bot {
+    background: orangered;
+    border-radius: 0px 5px 5px 5px;
+    float: left;
+}
+.message.bot:after {
+    border-width: 0px 10px 10px 0;
+    border-color: transparent orangered transparent transparent;
+    top: 0;
+    left: -10px;
+}
 
 .message.sent {
     background: #5b6a7d;

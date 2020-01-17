@@ -101,8 +101,6 @@ const MainClassLayout = ({
         starting: null
     });
 
-    const [userSpecificMessages, setUserSpecificMessages] = useState([]);
-
     const startCountDonwTimer = () => {
         let t = 5
         const updateCounter = ct => {
@@ -209,24 +207,11 @@ const MainClassLayout = ({
             socket.emit('join', requestData);
 
             //listen for bot messaage
-            socket.on('botWelcome', msg => {
-                setUserSpecificMessages(c => [...c, msg])
-            })
 
             //listen for new members added
             socket.on('someoneJoined', msg => {
-                console.log(msg)
                 setcodemarkaState(c => {
                     const oldmsg = c.messages;
-                //     oldmsg.push({
-                //     by: "bot",
-                //     msg: "Welcome 5e1f641d8c9dad37545fb9c1",
-                //     for: "5e1f641d8c9dad37545fb9c1",
-                //     name: "Vicradon",
-                //     type: "sJoin",
-                //     msgId: "cbd1d2d0-cad6-47b7-b57e-9f64000cc0af",
-                //     // newuserslist: [{…}]
-                // })
                     oldmsg.push(msg)
                     const nnc = msg.newuserslist.filter(u => {
                         return u.id !== userid
@@ -632,8 +617,7 @@ const MainClassLayout = ({
         }
     }, [
         codemarkastate.owner,
-        codemarkastate.messages,
-        userSpecificMessages,
+        codemarkastate.messages
         username,
         data.classroom_id,
         userid,
@@ -1455,7 +1439,6 @@ const MainClassLayout = ({
                                     sendMessage={handleMessageSubmit}
                                     focused={inputState.isFocused}
                                     messages={codemarkastate.messages}
-                                    userSpecificMessages = {userSpecificMessages}
                                     user={userid}
                                     owner={ownerid}
                                 />
