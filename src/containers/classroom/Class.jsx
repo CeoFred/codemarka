@@ -617,7 +617,7 @@ const MainClassLayout = ({
         }
     }, [
         codemarkastate.owner,
-        codemarkastate.messages
+        codemarkastate.messages,
         username,
         data.classroom_id,
         userid,
