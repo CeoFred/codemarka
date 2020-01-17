@@ -42,7 +42,7 @@ function NavBar(props) {
                             data-target=".participants_modal_cont">
                             <span className="nav-link nav-link-icon">
                                 <i className="fa fa-users">
-                                    <span class="badge badge-danger badge-circle badge-sm badge-floating border-white">
+                                    <span className="badge badge-danger badge-circle badge-sm badge-floating border-white">
                                         {props.number}
                                     </span>
                                 </i>
