@@ -1,11 +1,22 @@
 /** @format */
 
-import React,{ useState } from 'react'
+import React,{ useState, useRef } from 'react'
 import './editor.css'
 
 export default function DropDown(props) {
 
   const [dropDownItem, setdropDownItem] = useState({ visible: false });
+
+  const dropDownRef = useRef(null);
+
+  window.onclick = event => {
+    // if (!event.target.matches('.fa-caret-down')) {
+    if (event.target !== dropDownRef.current) {
+      if (dropDownItem) {
+        setdropDownItem(false);
+      }
+    }
+  }
 
   const dropDownItemSelected = (e,value,_for) => {
     setdropDownItem(v => {
@@ -22,10 +33,12 @@ export default function DropDown(props) {
 
     const dropDownIcon = props.icon ? (
         <i
+            ref = {dropDownRef}
             className={ `fas fa-${ props.icon }` }
             onClick={ toogleDropDownVisibility }></i>
     ) : (
         <i
+            ref = {dropDownRef}
             className="fas fa-caret-down pl-2"
             onClick={ toogleDropDownVisibility }></i>
     )
