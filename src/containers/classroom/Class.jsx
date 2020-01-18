@@ -35,6 +35,7 @@ import Modal from '../../components/Partials/Modals/Modal'
 import Input from '../../components/Partials/Input/Input'
 import Spinner from '../../components/Partials/Preloader'
 import ParticipantModal from '../../components/classroom/Participants/Modal'
+import AudioBroadcast from '../../components/classroom/Audio/Audio';
 
 import { CLASSROOM_FILE_DOWNLOAD } from '../../config/api_url'
 import './css/Environment.css'
@@ -1092,6 +1093,7 @@ const MainClassLayout = ({
                 previewBtnClicked={handlePreview}
                 classroomid={data.classroom_id}
             />
+            <AudioBroadcast socket={ socket }/>
             {classNotification}
             <span
                 className="d-none"
