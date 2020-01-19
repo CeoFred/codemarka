@@ -414,6 +414,19 @@ const MainClassLayout = ({
                 if (!owner) {
                     socket.close()
                 }
+            });
+
+            socket.on('audio_buffer',arr => {
+                var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                // var source = audioCtx.createBufferSource();
+                // source.buffer = arr;
+                // source.connect(audioCtx.destination);
+                // source.start();
+
+                // source.onended = () => {
+                //     console.log('broadcast ended');
+                // }
+                console.log(arr);
             })
 
             socket.on('utyping_cleared', ({ username, userid }) => {
@@ -1079,6 +1092,10 @@ const MainClassLayout = ({
         console.log(event,value,editor);
     }
 
+    const handleAuidoBroadCastAlert = (message) => {
+        toast.info(<div>Heads Up!! <br/> {message} </div>)
+    }
+
     return (
         <div>
             <Seo
@@ -1093,7 +1110,7 @@ const MainClassLayout = ({
                 previewBtnClicked={handlePreview}
                 classroomid={data.classroom_id}
             />
-            <AudioBroadcast socket={ socket }/>
+            <AudioBroadcast socket={ socket } onAlert={handleAuidoBroadCastAlert}/>
             {classNotification}
             <span
                 className="d-none"

@@ -4,40 +4,26 @@ import './index.css';
 
 import { stopBroadcast, startBroadcast } from './Functions';
 
-export default function Audio({socket}) {
+export default function Audio({socket,onAlert}) {
 
   const [isBroadCasting, setIsBroadCasting] = useState(false);
 
   const handleBroadcast = () => {
     
     if(!isBroadCasting){
-      function hasGetUserMedia() {
-          return !!(
-              navigator.mediaDevices && navigator.mediaDevices.getUserMedia
-          )
-      }
-
-      if (hasGetUserMedia()) {
-          console.log('Good to go!');
-          const constraints = {
-              video: false,
-              audio: true
-          }
-          navigator.mediaDevices.getUserMedia(constraints).then(stream => {
-              console.log(stream)
-          }).catch(err => {
-            console.log(err);
-          })
-      } else {
-          alert('getUserMedia() is not supported by your browser')
-      }
+        startBroadcast(socket) 
+        onAlert('Audio Broadcast Has started');
+    } else {
+        stopBroadcast();
+        onAlert('Audio Broadcast Has Ended');
     }
-    setIsBroadCasting(br => !br);
 
+    setIsBroadCasting(br => !br);
   }
 
   return (
       <div>
+          <a id="download" className="d-none">Download</a>
           <button
               type="button"
               onClick={ handleBroadcast }
