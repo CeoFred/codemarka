@@ -27,7 +27,7 @@ export default function Conversation(props) {
             const BotMessage = () => {
                 return (
                     <div
-                        className="message bot"
+                        className="bot"
                         key={m.msgId}
                         id={m.msgId}>
                         <div

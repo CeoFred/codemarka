@@ -115,15 +115,15 @@ div.messages {
     left: -10px;
 }
 .bot {
-    background: orangered;
-    border-radius: 0px 5px 5px 5px;
-    float: left;
-}
-.bot:after {
-    border-width: 0px 10px 10px 0;
-    border-color: transparent orangered transparent transparent;
-    top: 0;
-    left: -10px;
+    color: #fff;
+    clear: both;
+    font-size: 15px;
+    padding: 45px 16px;
+    position: relative;
+    margin: 8px 0;
+    word-wrap: break-word;
+    background: #5b6a7d;
+    clip-path: polygon(0% 15%, 15% 15%, 23% 8%, 80% 8%, 85% 15%, 100% 15%, 100% 85%, 85% 85%, 77% 91%, 22% 92%, 15% 85%, 0% 85%);
 }
 
 .message.sent {
