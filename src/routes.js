@@ -23,6 +23,7 @@ const classPreviewNewTab = React.lazy(() => import('./containers/classroom/class
 const EmalVerification = React.lazy(() =>
     import('./containers/auth/EmalVerification')
 )
+
 const contactUs = React.lazy(() => import('./containers/public/Contact'));
 
 const ClassRoomPreview = React.lazy(() => import('./containers/classroom/ClassroomPreview'));
