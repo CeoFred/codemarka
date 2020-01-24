@@ -11,10 +11,11 @@ function hasGetUserMedia() {
       }
 
       if (hasGetUserMedia()) {
+        const { RTCPeerConnection, RTCSessionDescription } = window;
           console.log('Good to go!');
           
           const constraints = {
-              video: false,
+              video: true,
               audio: true
           }
 
