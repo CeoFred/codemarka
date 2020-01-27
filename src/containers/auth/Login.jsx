@@ -203,6 +203,11 @@ function Login(props) {
                                             'Sign In'
                                         )}
                                     </Button>
+                                    <small className="mt-4 text-primary">
+                                        <Link to="/auth/account/recovery">
+                                            forgot password?
+                                        </Link>
+                                    </small>
                                 </div>
                             </form>
 

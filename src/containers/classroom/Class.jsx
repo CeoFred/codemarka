@@ -18,7 +18,7 @@
  * @format
  */
 
-import React, { useState, Suspense } from 'react'
+import React, { useState, Suspense, useRef } from 'react'
 import { Redirect } from 'react-router-dom'
 import io from 'socket.io-client'
 import { ToastContainer, toast } from 'react-toastify'
@@ -55,6 +55,8 @@ toast.configure({
     autoClose: 6000,
     draggable: true
 })
+
+const localVideoRef = useRef(null);
 
 const MainClassLayout = ({
     ownerid,
@@ -1110,7 +1112,10 @@ const MainClassLayout = ({
                 previewBtnClicked={handlePreview}
                 classroomid={data.classroom_id}
             />
-            <AudioBroadcast socket={ socket } onAlert={handleAuidoBroadCastAlert}/>
+            <AudioBroadcast
+                socket={socket}
+                onAlert={handleAuidoBroadCastAlert}
+            />
             {classNotification}
             <span
                 className="d-none"
@@ -1137,6 +1142,9 @@ const MainClassLayout = ({
                 startClass={handlestartClass}
             />
 
+            <video autoplay class="remote-video" id="remote-video"></video>
+            <video autoplay muted class="local-video" ref={localVideoRef} id="local-video"></video>
+
             <button
                 id="dialogueToStart"
                 type="button"
@@ -1150,7 +1158,9 @@ const MainClassLayout = ({
                 role="dialog"
                 aria-labelledby="startclassModal"
                 aria-hidden="true">
-                <div className="modal-dialog modal-dialog-centered" role="document">
+                <div
+                    className="modal-dialog modal-dialog-centered"
+                    role="document">
                     <div className="modal-content">
                         <div className="modal-header">
                             <button
@@ -1233,7 +1243,9 @@ const MainClassLayout = ({
                 role="dialog"
                 aria-labelledby="shutdownSignalModal"
                 aria-hidden="true">
-                <div className="modal-dialog modal-dialog-centered" role="document">
+                <div
+                    className="modal-dialog modal-dialog-centered"
+                    role="document">
                     <div className="modal-content">
                         <div className="modal-header">
                             <button
@@ -1300,7 +1312,9 @@ const MainClassLayout = ({
                 role="dialog"
                 aria-labelledby="exitClass"
                 aria-hidden="true">
-                <div className="modal-dialog modal-dialog-centered" role="document">
+                <div
+                    className="modal-dialog modal-dialog-centered"
+                    role="document">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title h6" id="modal_title_6">
@@ -1474,7 +1488,7 @@ const MainClassLayout = ({
                                     sendMessage={handleMessageSubmit}
                                     focused={inputState.isFocused}
                                     messages={codemarkastate.messages}
-                                    userSpecificMessages = {userSpecificMessages}
+                                    userSpecificMessages={userSpecificMessages}
                                     user={userid}
                                     owner={ownerid}
                                 />
