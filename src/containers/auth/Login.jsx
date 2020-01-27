@@ -181,7 +181,7 @@ function Login(props) {
                                     label="password"
                                     isLoginPasswordInput
                                     initialPrepend
-                                    forgotPassword={ false }
+                                    forgotPassword={ true }
                                     initialPrependsvg={ initialPrependsvg }
                                     value={ state.controls.password.value }
                                     finalAppend={ false }
@@ -203,11 +203,6 @@ function Login(props) {
                                             'Sign In'
                                         )}
                                     </Button>
-                                    <small className="mt-4 text-primary">
-                                        <Link to="/auth/account/recovery">
-                                            forgot password?
-                                        </Link>
-                                    </small>
                                 </div>
                             </form>
 
