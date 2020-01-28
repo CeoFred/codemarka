@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Button from "../../components/Partials/Button";
 import Input from "../../components/Partials/Input";
@@ -13,41 +13,56 @@ const emailIconSvg = (
 )
 
 export default function ForgotPassword() {
-  return (
-      <div>
-          <Helmet title="Account Recovery || codemarka.io " metaDescription="" />
+    const [email, setEmail] = useState('');
 
-          <section>
-              <div class="row align-items-center justify-content-center min-vh-100">
-                  <div class="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
-                      <div>
-                          <div class="mb-5 text-center">
-                              <h6 class="h3 mb-1">Account Recovery</h6>
-                              <p class="text-muted mb-0">
-                We would help you recover your account if you know the email associated with your account.
+    return (
+        <div>
+            <style>
+                {`
+                    .width-limit {
+                        max-width:450px;
+                    }
+                    @media(max-width:460px){
+                        .width-limit {
+                            max-width:300px;
+                        }
+                    }
+                `}
+            </style>
+            <Helmet title="Account Recovery || codemarka.io " metaDescription="" />
+
+            <section>
+                <div class="row align-items-center justify-content-center min-vh-100">
+                    <div class="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0 width-limit">
+                        <div>
+                            <div class="mb-5 text-center">
+                                <h6 class="h3 mb-1">Account Recovery</h6>
+                                <p class="text-muted mb-0">
+                                    We would help you recover your account if you know the email associated with your account.
                               </p>
-                          </div>
-                          <span class="clearfix" />
-                          <form>
-                              <Input 
-                type="email"
-                placeholder="someone@someserver.com"
-                label="Email address"
-                initialPrepend
-                initialPrependsvg={ emailIconSvg }
-                value=""
-                />
-                
-                              <div class="mt-4">
-                                  <Button type="button" textColor="#fff" block color="primary">
-                    Go
+                            </div>
+                            <span class="clearfix" />
+                            <form>
+                                <Input
+                                    type="email"
+                                    placeholder="someone@someserver.com"
+                                    label="Email address"
+                                    initialPrepend
+                                    initialPrependsvg={emailIconSvg}
+                                    value={email}
+                                    changed = {event => setEmail(event.target.value)}
+                                />
+
+                                <div class="mt-4">
+                                    <Button type="button" textColor="#fff" block color="primary">
+                                        Go
                                   </Button>
-                              </div>
-                          </form>
-                      </div>
-                  </div>
-              </div>
-          </section>
-      </div>
-  );
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    );
 }

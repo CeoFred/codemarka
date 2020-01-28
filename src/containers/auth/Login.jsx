@@ -228,6 +228,14 @@ function Login(props) {
                                     Create account
                                 </Link>
                             </div>
+                            <div className="mt-1 text-center">
+                                <small>Forgot Password?</small>
+                                <Link
+                                    to="/auth/account/recovery"
+                                    className="small font-weight-bold ml-1">
+                                    Reset it
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>
