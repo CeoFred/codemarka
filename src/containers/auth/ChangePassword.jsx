@@ -1,7 +1,7 @@
-import React from "react";
+import React,{ useState, useEffect } from 'react';
 
-import Button from "../../components/Partials/Button";
-import Input from "../../components/Partials/Input";
+import Button from '../../components/Partials/Button';
+import Input from '../../components/Partials/Input';
 import Helmet from '../../components/SEO/helmet';
 
 const initialPrependsvg = (
@@ -40,9 +40,43 @@ const finalAppendsvg = (
 );
 
 export default function ChangePassword() {
+   
+    const [passwordResetControls, setPasswordReset] = useState({controls:{
+        p1: {
+            value: '',
+            touched: false
+        },
+        p2: {
+            value: '',
+            touched: false
+        }
+    }
+    });
+
+    const handleInputChange = (event,controlName) => {
+        event.preventDefault();
+        
+        const value = event.target.value
+        const updatedControls = {
+            ...passwordResetControls.controls,
+            [controlName]: {
+                ...passwordResetControls.controls[controlName],
+                value
+            }
+        }
+        setPasswordReset({
+            ...passwordResetControls,
+            controls: updatedControls
+        })
+    }
+
+    const handlePasswordReset = (e) => {
+        e.preventDefault();
+    }
+
   return (
       <div>
-          <Helmet title="Sign Into your account" metaDescription="" />
+          <Helmet title="Set a new password" metaDescription="" />
 
           <section>
               <div class="row align-items-center justify-content-center min-vh-100">
@@ -51,39 +85,50 @@ export default function ChangePassword() {
                           <div class="mb-5 text-center">
                               <h6 class="h3 mb-1">Password Reset</h6>
                               <p class="text-muted mb-0">
-                    Hey! You can now set a new password for your account.
+                                  Hey! You can now set a new password for your
+                                  account.
                               </p>
                           </div>
                           <span class="clearfix" />
-                          <form>
-                
+                          <form onSubmit={ handlePasswordReset }>
                               {/* pasword input */}
                               <Input
-                  type="password"
-                  placeholder="New password"
-                  label="password"
-                  isLoginPasswordInput
-                  initialPrepend
-                  initialPrependsvg={ initialPrependsvg }
-                  value=""
-                  finalAppend
-                  finalAppendsvg={ finalAppendsvg }
-                />
+                                  type="password"
+                                  placeholder="New password"
+                                  label="password"
+                                  isLoginPasswordInput
+                                  initialPrepend
+                                  initialPrependsvg={ initialPrependsvg }
+                                  value={
+                                      passwordResetControls.controls.p1.value
+                                  }
+                                  changed={ e => handleInputChange(e, 'p1') }
+                                  //   finalAppend
+                                  //   finalAppendsvg={ finalAppendsvg }
+                              />
                               {/* pasword input */}
                               <Input
-                  type="password"
-                  placeholder="Confirm password"
-                  label="password again"
-                  isLoginPasswordInput
-                  initialPrepend
-                  initialPrependsvg={ initialPrependsvg }
-                  value=""
-                  finalAppend
-                  finalAppendsvg={ finalAppendsvg }
-                />
+                                  type="password"
+                                  placeholder="Confirm password"
+                                  label="password again"
+                                  isLoginPasswordInput
+                                  initialPrepend
+                                  initialPrependsvg={ initialPrependsvg }
+                                  value={
+                                      passwordResetControls.controls.p2.value
+                                  }
+                                  changed={ e => handleInputChange(e, 'p2') }
+                                  //   finalAppend
+                                  //   finalAppendsvg={ finalAppendsvg }
+                              />
                               <div class="mt-4">
-                                  <Button type="button" textColor="#fff" block color="success">
-                    Reset
+                                  <Button
+                                      type="button"
+                                      textColor="#fff"
+                                      block
+                                      onClick={ handlePasswordReset }
+                                      color="success">
+                                      Reset
                                   </Button>
                               </div>
                           </form>
@@ -92,5 +137,5 @@ export default function ChangePassword() {
               </div>
           </section>
       </div>
-  );
+  )
 }

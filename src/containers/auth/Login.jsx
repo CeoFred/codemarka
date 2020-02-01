@@ -181,7 +181,7 @@ function Login(props) {
                                     label="password"
                                     isLoginPasswordInput
                                     initialPrepend
-                                    forgotPassword={ false }
+                                    forgotPassword={ true }
                                     initialPrependsvg={ initialPrependsvg }
                                     value={ state.controls.password.value }
                                     finalAppend={ false }

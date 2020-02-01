@@ -1,38 +1,55 @@
-/* eslint-disable react/prop-types */
-import React,{ useEffect } from 'react';
+/**
+ * /* eslint-disable react/prop-types
+ *
+ * @format
+ */
+
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { Switch,withRouter,Route, Redirect } from 'react-router-dom';
+import { Switch, withRouter, Route, Redirect } from 'react-router-dom'
 
-import * as actionType from './store/actions/Types';
-import * as url from './config/url';
+import * as actionType from './store/actions/Types'
+import * as url from './config/url'
 
-const classrooom = React.lazy(() => import('./containers/classroom/Environment'));
-const newclassroom = React.lazy(() => import('./containers/classroom/NewClassroom'));
+const classrooom = React.lazy(() =>
+    import('./containers/classroom/Environment')
+)
+const newclassroom = React.lazy(() =>
+    import('./containers/classroom/NewClassroom')
+)
 
-const logout = React.lazy(() => import('./containers/auth/Logout'));
-const Home = React.lazy(() => import('./containers/public/Home/Index'));
+const logout = React.lazy(() => import('./containers/auth/Logout'))
+const Home = React.lazy(() => import('./containers/public/Home/Index'))
 
-const Login = React.lazy(() => import('./containers/auth/Login'));
-const Register = React.lazy(() => import('./containers/auth/Register'));
-const ForgotPassword = React.lazy(() => import('./containers/auth/ForgotPassword'));
-const ChangePassword = React.lazy(() => import('./containers/auth/ChangePassword'));
-const NotFound = React.lazy(() => import('./containers/public/404'));
-const About = React.lazy(() => import('./containers/public/About'));
-const oauthSuccess = React.lazy(() => import('./containers/auth/OauthSuccess'));
-const classPreviewNewTab = React.lazy(() => import('./containers/classroom/classPreviewNewTab'))
+const Login = React.lazy(() => import('./containers/auth/Login'))
+const Register = React.lazy(() => import('./containers/auth/Register'))
+const ForgotPassword = React.lazy(() =>
+    import('./containers/auth/ForgotPassword')
+)
+const ChangePassword = React.lazy(() =>
+    import('./containers/auth/ChangePassword')
+)
+const NotFound = React.lazy(() => import('./containers/public/404'))
+const About = React.lazy(() => import('./containers/public/About'))
+const oauthSuccess = React.lazy(() => import('./containers/auth/OauthSuccess'))
+const classPreviewNewTab = React.lazy(() =>
+    import('./containers/classroom/classPreviewNewTab')
+)
 const EmalVerification = React.lazy(() =>
     import('./containers/auth/EmalVerification')
 )
 
-const contactUs = React.lazy(() => import('./containers/public/Contact'));
+const contactUs = React.lazy(() => import('./containers/public/Contact'))
 
-const ClassRoomPreview = React.lazy(() => import('./containers/classroom/ClassroomPreview'));
-const Routes = (props) => {
-  useEffect(() => {
-    if(!props.isAutheticated){
-      props.onTryAutoSignup();
-    }
-  }, [ props ])
+const ClassRoomPreview = React.lazy(() =>
+    import('./containers/classroom/ClassroomPreview')
+)
+const Routes = props => {
+    useEffect(() => {
+        if (!props.isAutheticated) {
+            props.onTryAutoSignup()
+        }
+    }, [props])
     let routes = (
         <Switch>
             <Route exact component={ logout } path={ url.AUTH_LOGOUT } />
@@ -75,8 +92,8 @@ const Routes = (props) => {
             <Route component={ NotFound } />
         </Switch>
     )
-  
-      if(props.isAutheticated){
+
+    if (props.isAutheticated) {
         routes = (
             <Switch>
                 <Route exact component={ Home } path={ url.HOME } />
@@ -112,23 +129,21 @@ const Routes = (props) => {
                 <Route component={ NotFound } />
             </Switch>
         )
-      }
-    return (
-        <React.Fragment>
-            {routes}
-        </React.Fragment>
-    );
+    }
+    return <React.Fragment>{routes}</React.Fragment>
 }
 const mapStateToProps = state => {
     return {
-      isAutheticated: state.auth.authenticated !== false
+        isAutheticated: state.auth.authenticated !== false
     }
-  }
-  
-  const matchDispatchToProps = (dispatch) => {
+}
+
+const matchDispatchToProps = dispatch => {
     return {
-  onTryAutoSignup: () => dispatch({ type: actionType.AUTO_AUTH_INIT })
-    };
-  };
-  
-  export default withRouter(connect(mapStateToProps,matchDispatchToProps)(Routes));
+        onTryAutoSignup: () => dispatch({ type: actionType.AUTO_AUTH_INIT })
+    }
+}
+
+export default withRouter(
+    connect(mapStateToProps, matchDispatchToProps)(Routes)
+)
