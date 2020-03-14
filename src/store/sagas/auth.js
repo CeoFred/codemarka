@@ -130,8 +130,8 @@ export function* authLoginUserSaga({ email, password }) {
 }
 
 export function* autoLoginUserSaga() {
-    const _id = localStorage.getItem(userIdAlias);
-    const _token = localStorage.getItem(userTokenAlias)
+    const _id = yield localStorage.getItem(userIdAlias);
+    const _token = yield  localStorage.getItem(userTokenAlias)
 
     const url = APIURLS.AUTO_LOGIN_USER;
     const myHeaders = yield new Headers()
@@ -146,10 +146,7 @@ export function* autoLoginUserSaga() {
 
     });
 
-    const tokenV = yield localStorage.getItem(userTokenAlias);
-    const useridV = yield localStorage.getItem(userIdAlias);
-
-    if (tokenV && useridV) {
+    if (_token && _id) {
 
         try {
 
@@ -157,13 +154,13 @@ export function* autoLoginUserSaga() {
             const resolvedResponse = yield call(resolvePromise, response.json())
             if (resolvedResponse.status === 1) {
 
-                if (tokenV && useridV) {
+                if (_token && _id) {
 
-                    yield localStorage.setItem(userTokenAlias, tokenV)
-                    yield localStorage.setItem(userIdAlias, useridV)
+                    yield localStorage.setItem(userTokenAlias, _token);
+                    yield localStorage.setItem(userIdAlias, _id);
 
                 }
-                resolvedResponse.data.token = tokenV;
+                resolvedResponse.data.token = _token;
                 yield put(actions.autoAuthSuccess(resolvedResponse.data));
 
             } else if (resolvedResponse.message.name === 'JsonWebTokenError') {
