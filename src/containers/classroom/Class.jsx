@@ -35,7 +35,7 @@ import Modal from '../../components/Partials/Modals/Modal'
 import Input from '../../components/Partials/Input/Input'
 import Spinner from '../../components/Partials/Preloader'
 import ParticipantModal from '../../components/classroom/Participants/Modal'
-import AudioBroadcast from '../../components/classroom/Audio/Audio';
+// import AudioBroadcast from '../../components/classroom/Audio/Audio';
 
 import { CLASSROOM_FILE_DOWNLOAD } from '../../config/api_url'
 import './css/Environment.css'
@@ -143,7 +143,7 @@ const MainClassLayout = ({
         changed: false,
         value: ''
     })
-    let connAttempts = 0
+    const connAttempts = useRef(0);
     const [inRoom, setInRoom] = useState(null)
 
     const redirectTo = (e, path) => {
@@ -261,7 +261,7 @@ const MainClassLayout = ({
                     // the disconnection was initiated by the server, you need to reconnect manually
                     socket.connect()
                 }
-                if (connAttempts > 3) {
+                if (connAttempts.current > 3) {
                     toast.warn('Disconnected from classroom', {
                         position: toast.POSITION.BOTTOM_RIGHT
                     })
@@ -275,7 +275,7 @@ const MainClassLayout = ({
             })
 
             socket.on('reconnecting', attemptNumber => {
-                connAttempts++
+                connAttempts.current++
                 if (attemptNumber > 3) {
                     toast.info(
                         'Attempting to reconnect to classroom,please wait...'
@@ -294,7 +294,7 @@ const MainClassLayout = ({
             })
 
             socket.on('reconnect_error', error => {
-                if (connAttempts >= 3) {
+                if (connAttempts.current >= 3) {
                     toast.warn(
                         'Reconnection failed, try refreshing this window'
                     )
@@ -303,10 +303,10 @@ const MainClassLayout = ({
 
             socket.on('reconnect', attemptNumber => {
                 socket.emit('re_join', requestData)
-                if (connAttempts >= 3) {
+                if (connAttempts.current >= 3) {
                     toast.success('Welcome back online!')
                 }
-                connAttempts = 0
+                connAttempts.current = 0
             })
 
             //listen for new messages
@@ -417,19 +417,6 @@ const MainClassLayout = ({
                     socket.close()
                 }
             });
-
-            socket.on('audio_buffer',arr => {
-                var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                // var source = audioCtx.createBufferSource();
-                // source.buffer = arr;
-                // source.connect(audioCtx.destination);
-                // source.start();
-
-                // source.onended = () => {
-                //     console.log('broadcast ended');
-                // }
-                console.log(arr);
-            })
 
             socket.on('utyping_cleared', ({ username, userid }) => {
                 // remove user from typing list;
@@ -649,6 +636,9 @@ const MainClassLayout = ({
     }, [
         codemarkastate.owner,
         codemarkastate.messages,
+        cid,
+        codemarkastate.blocked,
+        started,
         userSpecificMessages,
         username,
         data.classroom_id,
@@ -1094,9 +1084,9 @@ const MainClassLayout = ({
         console.log(event,value,editor);
     }
 
-    const handleAuidoBroadCastAlert = (message) => {
-        toast.info(<div>Heads Up!! <br/> {message} </div>)
-    }
+    // const handleAuidoBroadCastAlert = (message) => {
+    //     toast.info(<div>Heads Up!! <br/> {message} </div>)
+    // }
 
     return (
         <div>
@@ -1111,10 +1101,6 @@ const MainClassLayout = ({
             <Preview
                 previewBtnClicked={ handlePreview }
                 classroomid={ data.classroom_id }
-            />
-            <AudioBroadcast
-                socket={ socket }
-                onAlert={ handleAuidoBroadCastAlert }
             />
             {classNotification}
             <span
