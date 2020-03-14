@@ -18,7 +18,7 @@
  * @format
  */
 
-import React, { useState, Suspense } from 'react'
+import React, { useState, Suspense, useRef } from 'react'
 import { Redirect } from 'react-router-dom'
 import io from 'socket.io-client'
 import { ToastContainer, toast } from 'react-toastify'
@@ -35,6 +35,7 @@ import Modal from '../../components/Partials/Modals/Modal'
 import Input from '../../components/Partials/Input/Input'
 import Spinner from '../../components/Partials/Preloader'
 import ParticipantModal from '../../components/classroom/Participants/Modal'
+import AudioBroadcast from '../../components/classroom/Audio/Audio';
 
 import { CLASSROOM_FILE_DOWNLOAD } from '../../config/api_url'
 import './css/Environment.css'
@@ -54,6 +55,8 @@ toast.configure({
     autoClose: 6000,
     draggable: true
 })
+
+// const localVideoRef = useRef(null);
 
 const MainClassLayout = ({
     ownerid,
@@ -99,7 +102,9 @@ const MainClassLayout = ({
         ended: false,
         started: null,
         starting: null
-    })
+    });
+
+    const [userSpecificMessages, setUserSpecificMessages] = useState([]);
 
     const startCountDonwTimer = () => {
         let t = 5
@@ -206,11 +211,25 @@ const MainClassLayout = ({
             // tell server to add user to class
             socket.emit('join', requestData);
 
+            //listen for bot messaage
+            socket.on('botWelcome', msg => {
+                setUserSpecificMessages(c => [...c, msg])
+            })
+
             //listen for new members added
             socket.on('someoneJoined', msg => {
+                console.log(msg)
                 setcodemarkaState(c => {
-                    const oldmsg = c.messages
-
+                    const oldmsg = c.messages;
+                //     oldmsg.push({
+                //     by: "bot",
+                //     msg: "Welcome 5e1f641d8c9dad37545fb9c1",
+                //     for: "5e1f641d8c9dad37545fb9c1",
+                //     name: "Vicradon",
+                //     type: "sJoin",
+                //     msgId: "cbd1d2d0-cad6-47b7-b57e-9f64000cc0af",
+                //     // newuserslist: [{…}]
+                // })
                     oldmsg.push(msg)
                     const nnc = msg.newuserslist.filter(u => {
                         return u.id !== userid
@@ -397,6 +416,19 @@ const MainClassLayout = ({
                 if (!owner) {
                     socket.close()
                 }
+            });
+
+            socket.on('audio_buffer',arr => {
+                var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                // var source = audioCtx.createBufferSource();
+                // source.buffer = arr;
+                // source.connect(audioCtx.destination);
+                // source.start();
+
+                // source.onended = () => {
+                //     console.log('broadcast ended');
+                // }
+                console.log(arr);
             })
 
             socket.on('utyping_cleared', ({ username, userid }) => {
@@ -617,6 +649,7 @@ const MainClassLayout = ({
     }, [
         codemarkastate.owner,
         codemarkastate.messages,
+        userSpecificMessages,
         username,
         data.classroom_id,
         userid,
@@ -879,15 +912,15 @@ const MainClassLayout = ({
                 return (
                     <div
                         key={ msg.id }
-                        class="card mt-0 mb-1"
+                        className="card mt-0 mb-1"
                         style={ {
                             borderLeft: '2px solid #E91E63',
                             borderRadius: 0
                         } }>
                         <div
-                            class="card-body"
+                            className="card-body"
                             style={ { padding: 10, fontWeight: 'bolder' } }>
-                            <p class="mb-0">{msg.content}</p>
+                            <p className="mb-0">{msg.content}</p>
                         </div>
                     </div>
                 )
@@ -1011,18 +1044,18 @@ const MainClassLayout = ({
                     <button
                         type="button"
                         onClick={ e => redirectTo(e, '/') }
-                        class="btn btn-animated  btn-sm btn-outline-success btn-animated-y">
-                        <span class="btn-inner--visible">NOT NOW</span>
-                        <span class="btn-inner--hidden">
+                        className="btn btn-animated  btn-sm btn-outline-success btn-animated-y">
+                        <span className="btn-inner--visible">NOT NOW</span>
+                        <span className="btn-inner--hidden">
                             <i className="fa fa-pause-circle"></i>
                         </span>
                     </button>
                     <button
                         type="button"
                         onClick={ handleClassStarRating }
-                        class="btn btn-animated  btn-sm btn-outline-success btn-animated-x">
-                        <span class="btn-inner--visible">SUBMIT</span>
-                        <span class="btn-inner--hidden">
+                        className="btn btn-animated  btn-sm btn-outline-success btn-animated-x">
+                        <span className="btn-inner--visible">SUBMIT</span>
+                        <span className="btn-inner--hidden">
                             <i className="fa fa-thumbs-up"></i>
                         </span>
                     </button>
@@ -1061,19 +1094,27 @@ const MainClassLayout = ({
         console.log(event,value,editor);
     }
 
+    const handleAuidoBroadCastAlert = (message) => {
+        toast.info(<div>Heads Up!! <br/> {message} </div>)
+    }
+
     return (
         <div>
             <Seo
-                title={`${name} :: codemarka classroom`}
-                metaDescription={description}>
+                title={ `${ name } :: codemarka classroom` }
+                metaDescription={ description }>
                 <script src="https://unpkg.com/jshint@2.9.6/dist/jshint.js"></script>
                 <script src="https://unpkg.com/jsonlint@1.6.3/web/jsonlint.js"></script>
                 <script src="https://unpkg.com/csslint@1.0.5/dist/csslint.js"></script>
             </Seo>
             <ToastContainer />
             <Preview
-                previewBtnClicked={handlePreview}
-                classroomid={data.classroom_id}
+                previewBtnClicked={ handlePreview }
+                classroomid={ data.classroom_id }
+            />
+            <AudioBroadcast
+                socket={ socket }
+                onAlert={ handleAuidoBroadCastAlert }
             />
             {classNotification}
             <span
@@ -1086,59 +1127,61 @@ const MainClassLayout = ({
             </span>
 
             <Navigation
-                name={name}
-                downloadLink={classfilesdownloadlink}
-                favourite={addClassToFavourite}
-                isFavourite={codemarkastate.favourite}
-                topic={topic}
-                exitClassGracefully={handleexitClassGracefully}
-                classroomid={data.classroom_id}
-                testConnection={handletestConnection}
-                classReport={handleclassReport}
-                number={codemarkastate.numberInClass}
-                owner={owner}
-                endClass={handleEndClass}
-                startClass={handlestartClass}
+                name={ name }
+                downloadLink={ classfilesdownloadlink }
+                favourite={ addClassToFavourite }
+                isFavourite={ codemarkastate.favourite }
+                topic={ topic }
+                exitClassGracefully={ handleexitClassGracefully }
+                classroomid={ data.classroom_id }
+                testConnection={ handletestConnection }
+                classReport={ handleclassReport }
+                number={ codemarkastate.numberInClass }
+                owner={ owner }
+                endClass={ handleEndClass }
+                startClass={ handlestartClass }
             />
 
             <button
                 id="dialogueToStart"
                 type="button"
-                class="btn btn-danger d-none"
+                className="btn btn-danger d-none"
                 data-toggle="modal"
                 data-target="#startclassModal"></button>
             <div
-                class="modal modal-white fade"
+                className="modal modal-white fade"
                 id="startclassModal"
-                tabindex="-1"
+                tabIndex="-1"
                 role="dialog"
                 aria-labelledby="startclassModal"
                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
+                <div
+                    className="modal-dialog modal-dialog-centered"
+                    role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
                             <button
                                 type="button"
-                                class="close"
+                                className="close"
                                 data-dismiss="modal"
                                 aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
-                            <div class="py-3 text-center">
+                        <div className="modal-body">
+                            <div className="py-3 text-center">
                                 {codemarkastate.started === null ? (
                                     <div>
                                         {codemarkastate.starting === true ? (
                                             <div>
-                                                <h5 class="heading h4 mt-4">
+                                                <h5 className="heading h4 mt-4">
                                                     Starting...
                                                 </h5>
                                                 <Spinner />
                                             </div>
                                         ) : (
                                             <div>
-                                                <h5 class="heading h4 mt-4">
+                                                <h5 className="heading h4 mt-4">
                                                     Hi there!
                                                 </h5>
                                                 <p>
@@ -1150,10 +1193,10 @@ const MainClassLayout = ({
                                                     the settings icon and locate
                                                     the actions button.
                                                 </p>
-                                                <div class="modal-footer">
+                                                <div className="modal-footer">
                                                     <button
                                                         type="button"
-                                                        class="btn btn-sm btn-success"
+                                                        className="btn btn-sm btn-success"
                                                         onClick={
                                                             handlestartClass
                                                         }>
@@ -1161,7 +1204,7 @@ const MainClassLayout = ({
                                                     </button>
                                                     <button
                                                         type="button "
-                                                        class="btn btn-sm btn-white"
+                                                        className="btn btn-sm btn-white"
                                                         data-dismiss="modal">
                                                         Later
                                                     </button>
@@ -1185,32 +1228,34 @@ const MainClassLayout = ({
             <button
                 id="shutdownemitionbtn"
                 type="button"
-                class="btn btn-danger d-none"
+                className="btn btn-danger d-none"
                 data-toggle="modal"
                 data-target="#shutdownSignalModal">
                 shutting down..
             </button>
             <div
-                class="modal modal-info fade"
+                className="modal modal-info fade"
                 id="shutdownSignalModal"
-                tabindex="-1"
+                tabIndex="-1"
                 role="dialog"
                 aria-labelledby="shutdownSignalModal"
                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
+                <div
+                    className="modal-dialog modal-dialog-centered"
+                    role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
                             <button
                                 type="button"
-                                class="close"
+                                className="close"
                                 data-dismiss="modal"
                                 aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
-                            <div class="py-3 text-center">
-                                <b class="fas fa-4x">
+                        <div className="modal-body">
+                            <div className="py-3 text-center">
+                                <b className="fas fa-4x">
                                     {codemarkastate.ended ? (
                                         <h1>The End!</h1>
                                     ) : (
@@ -1219,7 +1264,7 @@ const MainClassLayout = ({
                                 </b>
                                 {!codemarkastate.ended ? (
                                     <div>
-                                        <h5 class="heading h4 mt-4">
+                                        <h5 className="heading h4 mt-4">
                                             Shutting down classroom!
                                         </h5>
                                         <p>
@@ -1235,13 +1280,13 @@ const MainClassLayout = ({
                                 )}
                             </div>
                         </div>
-                        <div class="modal-footer">
+                        <div className="modal-footer">
                             <a
-                                class="btn btn-sm btn-primary"
-                                href={classfilesdownloadlink}>
+                                className="btn btn-sm btn-primary"
+                                href={ classfilesdownloadlink }>
                                 Download Files
                             </a>
-                            <a class="btn btn-sm btn-white" href="/?#">
+                            <a className="btn btn-sm btn-white" href="/?#">
                                 Leave now
                             </a>
                         </div>
@@ -1252,33 +1297,35 @@ const MainClassLayout = ({
             <button
                 id="exitbtn"
                 type="button"
-                class="btn btn-danger d-none"
+                className="btn btn-danger d-none"
                 data-toggle="modal"
                 data-target="#exitClass">
                 Exit
             </button>
             <div
-                class={'modal modal-danger fade'}
+                className={ 'modal modal-danger fade' }
                 id="exitClass"
-                tabindex="-1"
+                tabIndex="-1"
                 role="dialog"
                 aria-labelledby="exitClass"
                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title h6" id="modal_title_6">
-                                This is way to dangerous
+                <div
+                    className="modal-dialog modal-dialog-centered"
+                    role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title h6" id="modal_title_6">
+                                This is way too dangerous
                             </h5>
                             <button
                                 type="button"
-                                class="close"
+                                className="close"
                                 data-dismiss="modal"
                                 aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
+                        <div className="modal-body">
                             {codemarkastate.sdemitted &&
                             !codemarkastate.ended ? (
                                 <div className="text-center">
@@ -1286,13 +1333,13 @@ const MainClassLayout = ({
                                     <br /> <Spinner />{' '}
                                 </div>
                             ) : (
-                                <div class="py-3 text-center">
-                                    <i class="fas fa-exclamation-circle fa-4x"></i>
+                                <div className="py-3 text-center">
+                                    <i className="fas fa-exclamation-circle fa-4x"></i>
                                     {codemarkastate.ended ? (
                                         <h2 className="heading h1">Done!</h2>
                                     ) : (
                                         <div>
-                                            <h5 class="heading h4 mt-4">
+                                            <h5 className="heading h4 mt-4">
                                                 Should we stop now?
                                             </h5>
                                             <p>
@@ -1308,17 +1355,17 @@ const MainClassLayout = ({
                             )}
                         </div>
                         {!codemarkastate.sdemitted ? (
-                            <div class="modal-footer">
+                            <div className="modal-footer">
                                 <button
                                     type="button "
-                                    class="btn btn-sm btn-white"
+                                    className="btn btn-sm btn-white"
                                     data-dismiss="modal">
                                     Cancel
                                 </button>
                                 <button
                                     type="button"
-                                    class="btn btn-sm btn-white"
-                                    onClick={HandleClassShutdown}>
+                                    className="btn btn-sm btn-white"
+                                    onClick={ HandleClassShutdown }>
                                     End now
                                 </button>
                             </div>
@@ -1333,8 +1380,8 @@ const MainClassLayout = ({
                 targetid="exit_class_modal_cont"
                 type="default"
                 size="sm"
-                titleIcon={<i className="fa fa-thumbs-up"></i>}
-                title={' Rate this classroom '}>
+                titleIcon={ <i className="fa fa-thumbs-up"></i> }
+                title={ ' Rate this classroom ' }>
                 {addStars}
             </Modal>
 
@@ -1342,8 +1389,8 @@ const MainClassLayout = ({
                 targetid="pinned_modal_cont"
                 type="default"
                 size="sm"
-                titleIcon={<i className="fa fa-pen-nib"></i>}
-                title={'Pinned Messages'}>
+                titleIcon={ <i className="fa fa-pen-nib"></i> }
+                title={ 'Pinned Messages' }>
                 {getPinnedMessages()}
                 {owner ? addPinTextArea : ''}
             </Modal>
@@ -1356,7 +1403,7 @@ const MainClassLayout = ({
                     owner ? (
                         <button
                             type="submit"
-                            onClick={handleClassInfoUpdate}
+                            onClick={ handleClassInfoUpdate }
                             className="btn btn-sm float-left btn-soft-primary">
                             {ClassroomInformation.submitted ? (
                                 <Spinner />
@@ -1369,18 +1416,18 @@ const MainClassLayout = ({
                     )
                 }
                 title="classroom Information">
-                <form onSubmit={handleClassInfoUpdate}>
+                <form onSubmit={ handleClassInfoUpdate }>
                     <Input
                         name="cname"
                         label="Classroom Name"
                         elementType="input"
-                        elementConfig={{
+                        elementConfig={ {
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'cname'
-                        }}
-                        value={ClassroomInformation.cname.value}
-                        changed={e =>
+                        } }
+                        value={ ClassroomInformation.cname.value }
+                        changed={ e =>
                             handleClassroomInformationInputChange(e, 'cname')
                         }
                     />
@@ -1388,26 +1435,26 @@ const MainClassLayout = ({
                         name="ctopic"
                         label="Classroom Topic"
                         elementType="input"
-                        elementConfig={{
+                        elementConfig={ {
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'ctopic'
-                        }}
-                        value={ClassroomInformation.ctopic.value}
-                        changed={e =>
+                        } }
+                        value={ ClassroomInformation.ctopic.value }
+                        changed={ e =>
                             handleClassroomInformationInputChange(e, 'ctopic')
                         }
                     />
                     <Input
                         label="Classroom Description"
                         elementType="textarea"
-                        elementConfig={{
+                        elementConfig={ {
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'cdesc'
-                        }}
-                        value={ClassroomInformation.cdesc.value}
-                        changed={e =>
+                        } }
+                        value={ ClassroomInformation.cdesc.value }
+                        changed={ e =>
                             handleClassroomInformationInputChange(e, 'cdesc')
                         }
                     />
@@ -1415,41 +1462,42 @@ const MainClassLayout = ({
             </Modal>
 
             <ParticipantModal
-                users={codemarkastate.users}
-                toogleUserEditAccess={handletoogleUserEditAccess}
-                owner={owner}
-                ownerid={ownerid}
-                userid={userid}
-                sendUserPrivateMessage={handlePrivateMessaging}
-                blockUser={handleUserBlocking}
-                waveAtUser={handlewaveAtUser}
+                users={ codemarkastate.users }
+                toogleUserEditAccess={ handletoogleUserEditAccess }
+                owner={ owner }
+                ownerid={ ownerid }
+                userid={ userid }
+                sendUserPrivateMessage={ handlePrivateMessaging }
+                blockUser={ handleUserBlocking }
+                waveAtUser={ handlewaveAtUser }
             />
 
-            <div style={{ width: '100%', height: '87vh' }}>
+            <div style={ { width: '100%', height: '87vh' } }>
                 <div className="container-fluid ">
                     <div className="row">
                         <div className="col-2 p-0">
-                            <Suspense fallback={<Spinner />}>
+                            <Suspense fallback={ <Spinner /> }>
                                 <Convo
-                                    typing={codemarkastate.typingState}
-                                    username={username}
-                                    inputValue={inputState.value}
-                                    handleInputChange={handleInputChange}
-                                    sendMessage={handleMessageSubmit}
-                                    focused={inputState.isFocused}
-                                    messages={codemarkastate.messages}
-                                    user={userid}
-                                    owner={ownerid}
+                                    typing={ codemarkastate.typingState }
+                                    username={ username }
+                                    inputValue={ inputState.value }
+                                    handleInputChange={ handleInputChange }
+                                    sendMessage={ handleMessageSubmit }
+                                    focused={ inputState.isFocused }
+                                    messages={ codemarkastate.messages }
+                                    userSpecificMessages={ userSpecificMessages }
+                                    user={ userid }
+                                    owner={ ownerid }
                                 />
                             </Suspense>
                         </div>
                         <div className="col-10 p-0">
-                            <Suspense fallback={<Spinner />}>
+                            <Suspense fallback={ <Spinner /> }>
                                 <Editor
-                                    readOnly={codemarkastate.editorPriviledge}
-                                    handleEditorChange={editorChanged}
-                                    files={codemarkastate.editors}
-                                    dropDownSelect={handledropDownSelect}
+                                    readOnly={ codemarkastate.editorPriviledge }
+                                    handleEditorChange={ editorChanged }
+                                    files={ codemarkastate.editors }
+                                    dropDownSelect={ handledropDownSelect }
                                 />
                             </Suspense>
                         </div>

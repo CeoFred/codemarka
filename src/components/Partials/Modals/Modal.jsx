@@ -8,7 +8,7 @@ export default function Modal(props) {
                     props.type
                 } docs-example-modal-${ props.size || 'sm' }` }
                 id={ props.targetid }
-                tabindex="-1"
+                tabIndex="-1"
                 role="dialog"
                 aria-labelledby="exampleModalLabel"
                 aria-hidden="true">

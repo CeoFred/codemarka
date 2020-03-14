@@ -131,7 +131,7 @@ const Modal = ({
         <div>
             <div
                 className="modal fade participants_modal_cont"
-                tabindex="-1"
+                tabIndex="-1"
                 role="dialog"
                 aria-labelledby="participantsModal"
                 aria-hidden="true">

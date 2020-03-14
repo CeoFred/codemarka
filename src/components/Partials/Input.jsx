@@ -1,5 +1,7 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+import * as URLs from '../../config/url';
 
 export default function Input(props) {
   const regular = (
@@ -11,9 +13,9 @@ export default function Input(props) {
               {props.isLoginPasswordInput && props.forgotPassword ? (
                   <div className="mb-2">
                       <Link
-                          to="/auth/recover"
+                          to={ URLs.AUTH_FORGOT_PASSWORD }
                           className="small text-muted text-underline--dashed border-primary">
-                          Lost password?
+                          Forgot password?
                       </Link>
                   </div>
               ) : (
@@ -31,12 +33,12 @@ export default function Input(props) {
                   ''
               )}
               <input
-                  type={props.type}
+                  type={ props.type }
                   className="form-control"
-                  id={props.id || ''}
-                  placeholder={props.placeholder}
-                  onChange={props.changed}
-                  value={props.value}
+                  id={ props.id || '' }
+                  placeholder={ props.placeholder }
+                  onChange={ props.changed }
+                  value={ props.value }
               />
               {props.finalAppend ? (
                   <div className="input-group-append">
@@ -72,7 +74,7 @@ export default function Input(props) {
       </div>
   );
   switch (props.fieldtype) {
-    case "checkbox":
+    case 'checkbox':
       return checkbox;
 
     default:
