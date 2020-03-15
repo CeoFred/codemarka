@@ -10,6 +10,7 @@ export const CLASSROOM_FILE_DOWNLOAD = `${ host }classroom/download/`;
 export const USER_SIGN_UP = `${ host }auth/user/signup`;
 export const USER_SIGN_IN = `${ host }auth/user/signin`;
 export const AUTO_LOGIN_USER = `${ host }auth/user/token/verify`
+export const ACCOUNT_RECOVERY =  `${ host }auth/user/account/recovery`;
 // Oauth
 
 export const GITHUB_AUTH_URL = `${ host }auth/github`;

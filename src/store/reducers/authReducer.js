@@ -155,6 +155,21 @@ const autoAuthInit = (state, action) => {
     });
 }
 
+const accountRecoveryFailed = (state, action) => {
+    return helper.updateObject(state,{
+        error: true,
+        loading:false,
+        message: action.msg
+    })
+}
+
+const accountRecoveryStart = (state, action) => {
+    return helper.updateObject(state,{
+        error: false,
+        loading: true,
+        message: null
+    })
+}
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
 
@@ -172,6 +187,8 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.NOTIFICATION_ALERT_CLOSE): return ClearAlertMessage(state,action)
         case(actionTypes.AUTH_RESET): return reset(state,action)
         case(actionTypes.LOGOUT_SUCCESSFUL): return logoutSuccessful(state,action);
+        case(actionTypes.ACCOUNT_RECOVERY_START): return accountRecoveryStart(state,action);
+        case(actionTypes.ACCOUNT_RECOVERY_FAILED): return accountRecoveryFailed(state,action);
         default: return state;
     }
 }

@@ -1,6 +1,6 @@
 import { takeLatest } from 'redux-saga/effects'
 
-import { logoutSaga,checkAuthTimeoutSaga ,authLoginUserSaga,autoLoginUserSaga,authRegisterUserSaga } from '../auth';
+import { accountRecovery,logoutSaga,checkAuthTimeoutSaga ,authLoginUserSaga,autoLoginUserSaga,authRegisterUserSaga } from '../auth';
 import * as actionTypes from '../../actions/Types';
 
 export function* watchAuth(){
@@ -9,5 +9,5 @@ export function* watchAuth(){
     yield takeLatest(actionTypes.AUTH_USER_LOGIN_INIT,authLoginUserSaga)
     yield takeLatest(actionTypes.AUTH_USER_SIGNUP_INIT,authRegisterUserSaga)
     yield takeLatest(actionTypes.AUTO_AUTH_INIT, autoLoginUserSaga)
-
+    yield takeLatest(actionTypes.ACCOUNT_RECOVERY_START, accountRecovery)
 }
