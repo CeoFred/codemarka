@@ -210,7 +210,7 @@ export function* accountRecovery({ email }){
             const { status, message } = resolvedResponse;
             
             if(status && status !== 0){
-
+                yield put(actions.accountRecoverySuccess(status));
             } else {
                 yield put(actions.accountRecoveryFailed(message));
             }

@@ -170,6 +170,14 @@ const accountRecoveryStart = (state, action) => {
         message: null
     })
 }
+
+const accountRecoverySuccess = (state, action) => {
+    return helper.updateObject(state, {
+        error: false,
+        loading: false,
+        message: 'Hurray!! Your mail is on it\'\s way'
+    })
+}
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
 
@@ -189,6 +197,7 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.LOGOUT_SUCCESSFUL): return logoutSuccessful(state,action);
         case(actionTypes.ACCOUNT_RECOVERY_START): return accountRecoveryStart(state,action);
         case(actionTypes.ACCOUNT_RECOVERY_FAILED): return accountRecoveryFailed(state,action);
+        case(actionTypes.ACCOUNT_RECOVERY_SUCCESS): return accountRecoverySuccess(state,action)
         default: return state;
     }
 }

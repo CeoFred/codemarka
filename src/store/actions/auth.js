@@ -112,3 +112,10 @@ export const accountRecoveryFailed = (message) => {
         msg: message
     }
 }
+
+export const accountRecoverySuccess = (status) => {
+    return {
+        type: actionTypes.ACCOUNT_RECOVERY_SUCCESS,
+        status
+    }
+}

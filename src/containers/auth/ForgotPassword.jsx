@@ -32,7 +32,7 @@ function ForgotPassword(props) {
          value: '',
          formSubmitted: false,
          alertMessage: props.message,
-         alertType: props.error && props.message ? 'success' : 'danger'
+         alertType: Boolean(props.error) !== true ? 'success' : 'danger'
      })
 
     const handleInputChange = e => {
@@ -59,14 +59,16 @@ function ForgotPassword(props) {
          }
      }
      const alert = (
-         <Alert display={ props.message ? true : false } type={ state.alertType }>
+         <Alert
+             display={ props.message ? true : false }
+             type={ !Boolean(props.error) ? 'success' : 'danger' }>
              {props.message ? `${ props.message }` : ''}
          </Alert>
      )
   return (
       <div>
           <Helmet
-              title="Account Recovery || codemarka.dev "
+              title="Account Recovery - codemarka"
               metaDescription=""
           />
 
@@ -122,7 +124,7 @@ function ForgotPassword(props) {
 const mapStateToProps = state => {
     return {
         loading: state.auth.loading,
-        error: state.auth.message,
+        error: state.auth.error,
         isAuthenticated: state.auth.user.token !== null,
         message: state.auth.message
     }
