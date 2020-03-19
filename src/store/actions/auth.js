@@ -98,3 +98,24 @@ export const logoutSucceed = () => {
         type: 'LOGOUT_SUCCESSFUL'
     }
 }
+
+export const accountRecoveryInit = (email) => {
+    return {
+        type: actionTypes.ACCOUNT_RECOVERY_START,
+        email
+    }
+}
+
+export const accountRecoveryFailed = (message) => {
+    return {
+        type: actionTypes.ACCOUNT_RECOVERY_FAILED,
+        msg: message
+    }
+}
+
+export const accountRecoverySuccess = (status) => {
+    return {
+        type: actionTypes.ACCOUNT_RECOVERY_SUCCESS,
+        status
+    }
+}
