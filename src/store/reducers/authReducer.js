@@ -178,26 +178,74 @@ const accountRecoverySuccess = (state, action) => {
         message: 'Hurray!! Your mail is on it\'\s way'
     })
 }
+
+const accountPasswordChangeStart = (state, action) => {
+    return helper.updateObject(state, {
+        error: false,
+        loading: true,
+        message: null
+    })
+}
+
+const accountPasswordChangeSuccess = (state, action) => {
+    return helper.updateObject(state, {
+        error: false,
+        loading: false,
+        message: 'Hurray!!'
+    });
+}
+
+const accountPasswordChangeFailed = (state, action) => {
+    return helper.updateObject(state, {
+        error: true,
+        loading: false,
+        message: action.msg
+    })
+}
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
+        case actionTypes.AUTH_USER_LOGIN_START:
+            return authStart(state, action)
+        case actionTypes.AUTH_USER_LOGIN_SUCCESS:
+            return authLoginSuccess(state, action)
+        case actionTypes.AUTH_USER_LOGIN_FAILED:
+            return authLoginFailed(state, action)
+        case actionTypes.AUTH_LOGOUT:
+            return authLogout(state, action)
+        case actionTypes.SET_AUTH_REDIRECT_PATH:
+            return setAuthRedirectPat(state, action)
+        case actionTypes.AUTO_AUTH_FAILED:
+            return autoAuthFailed(state, action)
+        case actionTypes.AUTO_AUTH_SUCCESS:
+            return authAutoSuccess(state, action)
+        case actionTypes.AUTH_USER_SIGNUP_FAILED:
+            return authRegistrationFailed(state, action)
+        case actionTypes.AUTO_AUTH_INIT:
+            return autoAuthInit(state, action)
+        case actionTypes.AUTH_USER_SIGNUP_SUCCESS:
+            return authRegistrationSuccess(state, action)
+        case actionTypes.AUTH_USER_SIGNUP_START:
+            return authStart(state, action)
+        case actionTypes.NOTIFICATION_ALERT_CLOSE:
+            return ClearAlertMessage(state, action)
+        case actionTypes.AUTH_RESET:
+            return reset(state, action)
+        case actionTypes.LOGOUT_SUCCESSFUL:
+            return logoutSuccessful(state, action)
+        case actionTypes.ACCOUNT_RECOVERY_START:
+            return accountRecoveryStart(state, action)
+        case actionTypes.ACCOUNT_RECOVERY_FAILED:
+            return accountRecoveryFailed(state, action)
+        case actionTypes.ACCOUNT_RECOVERY_SUCCESS:
+            return accountRecoverySuccess(state, action)
+        case actionTypes.ACCOUNT_PASSWORD_CHANGE_START:
+            return accountPasswordChangeStart(state, action)
+        case actionTypes.ACCOUNT_PASSWORD_CHANGE_SUCCESS:
+            return accountPasswordChangeSuccess(state, action)
+        case actionTypes.ACCOUNT_PASSWORD_CHANGE_FAILED:
+            return accountPasswordChangeFailed(state, action)
 
-        case(actionTypes.AUTH_USER_LOGIN_START): return authStart(state,action)
-        case(actionTypes.AUTH_USER_LOGIN_SUCCESS): return authLoginSuccess(state,action);
-        case(actionTypes.AUTH_USER_LOGIN_FAILED): return authLoginFailed(state,action);    
-        case(actionTypes.AUTH_LOGOUT): return authLogout(state,action);   
-        case(actionTypes.SET_AUTH_REDIRECT_PATH): return setAuthRedirectPat(state,action);     
-        case(actionTypes.AUTO_AUTH_FAILED): return autoAuthFailed(state,action);
-        case(actionTypes.AUTO_AUTH_SUCCESS): return authAutoSuccess(state,action);
-        case(actionTypes.AUTH_USER_SIGNUP_FAILED): return authRegistrationFailed(state,action);
-        case(actionTypes.AUTO_AUTH_INIT) : return autoAuthInit(state,action);
-        case(actionTypes.AUTH_USER_SIGNUP_SUCCESS): return authRegistrationSuccess(state,action);
-        case(actionTypes.AUTH_USER_SIGNUP_START): return authStart(state,action)
-        case(actionTypes.NOTIFICATION_ALERT_CLOSE): return ClearAlertMessage(state,action)
-        case(actionTypes.AUTH_RESET): return reset(state,action)
-        case(actionTypes.LOGOUT_SUCCESSFUL): return logoutSuccessful(state,action);
-        case(actionTypes.ACCOUNT_RECOVERY_START): return accountRecoveryStart(state,action);
-        case(actionTypes.ACCOUNT_RECOVERY_FAILED): return accountRecoveryFailed(state,action);
-        case(actionTypes.ACCOUNT_RECOVERY_SUCCESS): return accountRecoverySuccess(state,action)
-        default: return state;
+        default:
+            return state
     }
 }

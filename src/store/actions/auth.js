@@ -119,3 +119,16 @@ export const accountRecoverySuccess = (status) => {
         status
     }
 }
+
+export const passwordChangeInit = (data) => {
+    return {
+        type: actionTypes.ACCOUNT_PASSWORD_CHANGE_INIT,
+        data
+    }
+}
+
+export const userPasswordChangeStart = () => {
+    return {
+        type: actionTypes.ACCOUNT_PASSWORD_CHANGE_START
+    }
+}

@@ -33,7 +33,6 @@ function ChangePassword(props) {
      } = props
      const token = params.token || null;
      const user = params.user || null;
-     console.log(props);
     const [passwordResetControls, setPasswordReset] = useState({
         controls: {
             p1: {
@@ -46,8 +45,10 @@ function ChangePassword(props) {
             }
         },
         formSubmitted: false,
-        alertMessage: props.message,
-        alertType: props.error && props.message ? 'success' : 'danger'
+        alertMessage: props.message,         
+        alertType: Boolean(props.error) !== true ? 'success' : 'danger',
+        passwordMatch: null,
+        validationError:null
     })
 
     const handleInputChange = (event,controlName) => {
@@ -62,10 +63,13 @@ function ChangePassword(props) {
                 touched: true
             }
         }
+
         setPasswordReset({
             ...passwordResetControls,
-            controls: updatedControls
+            controls: updatedControls,
+            validationError: null
         })
+        
     }
     let redct
     if (props.isAuthenticated) {
@@ -82,14 +86,48 @@ function ChangePassword(props) {
     const alert = (
         <Alert
             display={ props.message ? true : false }
-            type={ passwordResetControls.alertType }>
+            type={ !Boolean(props.error) ? 'success' : 'danger' }>
             {props.message ? `${ props.message }` : ''}
+        </Alert>
+    )
+    const validationErrorAlert = (
+        <Alert
+            display={
+                passwordResetControls.validationError !== null ? true : false
+            }
+            type="danger">
+            {passwordResetControls.validationError}
         </Alert>
     )
 
     const handlePasswordReset = (e) => {
         e.preventDefault();
+          setPasswordReset({
+              ...passwordResetControls,
+              validationError: null
+          })
+        const data = {
+            nPass: passwordResetControls.controls.p1.value,
+            nPass2: passwordResetControls.controls.p2.value,
+            user,token
+        }
 
+        if(data.nPass === '' || data.nPass2 === ''){
+            setPasswordReset({
+                ...passwordResetControls,
+                validationError: 'Input Field cannot be left empty.'
+            })
+            return;
+        }
+
+        if(data.nPass !== data.nPass2){
+            setPasswordReset({
+                ...passwordResetControls,
+                validationError: 'Passwords do not match, try again.'
+            })
+            return;
+        }
+        props.onAccountChangedPasswordInit(data)
     }
 
   return (
@@ -110,6 +148,7 @@ function ChangePassword(props) {
                           <span class="clearfix" />
                           {redct}
                           {alert}
+                          {validationErrorAlert}
                           <form onSubmit={ handlePasswordReset }>
                               {/* pasword input */}
                               <Input
@@ -141,18 +180,20 @@ function ChangePassword(props) {
                                   //   finalAppend
                                   //   finalAppendsvg={ finalAppendsvg }
                               />
+                              <p className="text-danger">
+                                  {passwordResetControls.passwordMatch !== null
+                                      ? 'Password does not match'
+                                      : ''}
+                              </p>
                               <div class="mt-4">
                                   <Button
-                                      type="button"
+                                      type="submit"
                                       textColor="#fff"
+                                      disabled={ props.loading ? true : false }
                                       block
                                       onClick={ handlePasswordReset }
                                       color="success">
-                                      { props.loading ? (
-                                          <Spinner />
-                                      ) : (
-                                          'Reset'
-                                      )}
+                                      {props.loading ? <Spinner /> : 'Reset'}
                                   </Button>
                               </div>
                           </form>
@@ -167,7 +208,7 @@ function ChangePassword(props) {
 const mapStateToProps = state => {
     return {
         loading: state.auth.loading,
-        error: state.auth.message,
+        error: state.auth.error,
         isAuthenticated: state.auth.user.token !== null,
         message: state.auth.message
     }
@@ -175,8 +216,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onResetAll: () => dispatch(action.authResetAll()),
-        onAccountRecovery: email => dispatch(action.accountRecoveryInit(email))
+        onAccountChangedPasswordInit: data => dispatch(action.passwordChangeInit(data))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ChangePassword)

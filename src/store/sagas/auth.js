@@ -205,7 +205,6 @@ export function* accountRecovery({ email }){
             const response = yield fetch(accountRecoveryRequest);
 
             const resolvedResponse = yield call(resolvePromise, response.json())
-            console.log(resolvedResponse);
             
             const { status, message } = resolvedResponse;
             
@@ -214,4 +213,33 @@ export function* accountRecovery({ email }){
             } else {
                 yield put(actions.accountRecoveryFailed(message));
             }
+}
+
+export function* userPasswordChange({data}) {
+    yield put(actions.userPasswordChangeStart());
+    
+        const url = APIURLS.ACCOUNT_PASSWORD_RESET;
+        
+        const myHeaders = yield new Headers()
+        myHeaders.append('Content-Type', 'Application/json')
+
+    const passwordReset = yield new Request(url, {
+        method: 'POST',
+        cache: 'default',
+        headers: myHeaders,
+        body: JSON.stringify({...data}),
+        mode: 'cors'
+
+    });
+            const response = yield fetch(passwordReset);
+
+            const resolvedResponse = yield call(resolvePromise, response.json())
+            
+            const { status, message } = resolvedResponse;
+            if(status && status !== 0){
+                yield put(actions.accountRecoverySuccess(status));
+            } else {
+                yield put(actions.accountRecoveryFailed(message));
+            }
+
 }
