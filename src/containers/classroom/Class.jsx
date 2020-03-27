@@ -105,6 +105,7 @@ const MainClassLayout = ({
     });
 
     const [userSpecificMessages, setUserSpecificMessages] = useState([]);
+    const [userInvitationData,setUserInvitationData] = useState({value:'',socketFeedback:null,socketFeedbackStatus:null});
 
     const startCountDonwTimer = () => {
         let t = 5
@@ -582,6 +583,32 @@ const MainClassLayout = ({
                     </div>
                 )
             })
+             socket.on('error',() => {
+                setcodemarkaState(c => {
+                    return { ...c, submitted: false }
+                })
+                toast.warning(
+                    <div>
+                        <b>Whoops!!!</b> <br /> Something went wrong, try again later!`
+                    </div>
+                )
+            });
+            socket.on('User_not_found_on_search',() => {
+                setcodemarkaState(c => {
+                    return { ...c, submitted: false }
+                })
+                setUserInvitationData(c => {
+                    return {...c,socketFeedback:'User not found',socketFeedbackStatus:0}
+                })
+            });
+            socket.on('invite_sent',() => {
+                setcodemarkaState(c => {
+                    return { ...c, submitted: false }
+                })
+                setUserInvitationData(c => {
+                    return {...c,value:'',socketFeedback:'Great! Invitation was sent.',socketFeedbackStatus:1}
+                })
+            });
 
             socket.on('class_favourites', likedList => {
                 setcodemarkaState(c => {
@@ -856,6 +883,36 @@ const MainClassLayout = ({
                 return { ...c, touched: false, value: '' }
             })
             socket.emit('new_pinned_message', ClassroomPinnedInformation.value)
+        } else {
+            alert('No permission to perform Operation!');
+        }
+    }
+
+    const handleUserInviteSubmit = e => {
+        e.preventDefault();
+        if (owner && userInvitationData.value.trim() !== '') {
+            setcodemarkaState(c => {
+                return { ...c, submitted: true }
+            })
+            setUserInvitationData(c => {
+                return { ...c, socketFeedback:null, socketFeedbackStatus:null }
+            });
+            
+            socket.emit('invite_user', {
+                user: userInvitationData.value,
+                classData: {ownerid,
+                data,
+                owner,
+                name,
+                description,
+                username,
+                topic,
+                started,
+                cid,
+                cd}
+            })
+        } else {
+            alert('No permission to perform Operation or check input!');
         }
     }
 
@@ -1059,8 +1116,17 @@ const MainClassLayout = ({
     }
 
     const handleEndClass = e => {
-        e.preventDefault()
+        e.preventDefault();
         document.querySelector('#exitbtn').click()
+    }
+
+    const handleuserInvitationDataChange = e => {
+        e.preventDefault();
+        e.persist();
+        const v = e.target.value;
+        setUserInvitationData(c => {
+            return { value: v, socketFeedback:null, socketFeedbackStatus:null }
+        });
     }
 
     const HandleClassShutdown = e => {
@@ -1079,9 +1145,14 @@ const MainClassLayout = ({
             })
         }
     }
+    const handleAddUserIconClicked = e => {
+        document.querySelector('#participantModalExitButton').click()
+        document.querySelector('#add_user_modal_btn').click();
+
+    }
 
     const handledropDownSelect = (event,value,editor) => {
-        console.log(event,value,editor);
+        // console.log(event,value,editor);
     }
 
     // const handleAuidoBroadCastAlert = (message) => {
@@ -1380,7 +1451,49 @@ const MainClassLayout = ({
                 {getPinnedMessages()}
                 {owner ? addPinTextArea : ''}
             </Modal>
-
+            <button
+                id="add_user_modal_btn"
+                type="button"
+                className="btn btn-danger d-none"
+                data-toggle="modal"
+                data-target="#add_user_modal"></button>
+            <Modal
+                targetid="add_user_modal"
+                type="default"
+                size="sm"
+                titleIcon={ <i className="fa fa-users"></i> }
+                title={ 'Invite users' }>
+                <form>
+                    <Input
+                        name="add_user_input"
+                        elementType="input"
+                        elementConfig={ {
+                            disabled: owner ? false : true,
+                            placeholder: 'Invite with email or username',
+                            name: 'add_user_input'
+                        } }
+                        value={ userInvitationData.value }
+                        inputType="input"
+                        changed={ handleuserInvitationDataChange }
+                    />
+                    <button
+                        type="submit"
+                        onClick={ handleUserInviteSubmit }
+                        disabled={ codemarkastate.submitted }
+                        className="btn btn-sm btn-block float-left btn-success">
+                        {codemarkastate.submitted ? (
+                            <Spinner />
+                        ) : (
+                            <div>
+                                Send Invite <i className="fa fa-forward"></i>
+                            </div>
+                        )}
+                    </button>
+                    <div>
+                        {userInvitationData.socketFeedback !== null  ? (<span className={ `${ userInvitationData.socketFeedbackStatus ? 'text-success' : 'text-danger' }` }> {userInvitationData.socketFeedback} </span>) : ''}
+                    </div>
+                </form>
+            </Modal>
             <Modal
                 targetid="details_modal_cont"
                 type="default"
@@ -1456,6 +1569,7 @@ const MainClassLayout = ({
                 sendUserPrivateMessage={ handlePrivateMessaging }
                 blockUser={ handleUserBlocking }
                 waveAtUser={ handlewaveAtUser }
+                handleAddUserIconClicked={ handleAddUserIconClicked }
             />
 
             <div style={ { width: '100%', height: '87vh' } }>

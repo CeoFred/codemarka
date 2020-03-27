@@ -6,19 +6,18 @@ import './css/conversation.css';
 
 const BotMessage = ({ m, time }) => {
     return (
-        <div
-            className="message received"
-            key={m.msgId}
-            id={m.msgId}>
-            <div
-                style={{ color: `#ED7BCA` }}
-                className="font-weight-800">
-                Codemarka Bot
+        <div className="message received" key={ m.msgId } id={ m.msgId }>
+            <div style={ { color: '#ED7BCA' } } className="font-weight-800">
+                MARKA-BOT{' '}
+                <br/>
+                <small style={ { color: '#000' } }>
+                    (visible to only you)
+                </small>
             </div>
-            Hello {m.name} from the bot
-            <span className="metadata">
-                <span className="time">{time}</span>
-            </span>
+            <p className="pt-3">
+            Hello {m.name},need help navigating ? just type --bot and i'll be glad to help. Enjoy 
+            your session.
+            </p>
         </div>
     )
 }
@@ -46,20 +45,20 @@ export default function Conversation(props) {
                 if (m.for === props.user) {
                     return (
                         <div>
-                            <div className="message_extra" key={m.msgId} id={m.msgId}>
+                            <div className="message_extra" key={ m.msgId } id={ m.msgId }>
                                 You
-                         {m.type === 'sLeft' ? ' left' : ' Joined'}
+                                {m.type === 'sLeft' ? ' left' : ' Joined'}
                             </div>
                             <div>
                                 {
-                                    m.type === 'sLeft' ? '' : <BotMessage m={m} time={time} />
+                                    m.type === 'sLeft' ? '' : <BotMessage m={ m } time={ time } />
                                 }
                             </div>
                         </div>
                     )
                 }
                 return (
-                    <div className="message_extra" key={m.msgId} id={m.msgId}>
+                    <div className="message_extra" key={ m.msgId } id={ m.msgId }>
                         {m.name}
                         {m.type === 'sLeft' ? ' left' : ' Joined'}
                     </div>
@@ -67,17 +66,17 @@ export default function Conversation(props) {
             } else if (m.by === 'server' && m.type === 'oldMsgUpdate') {
                 return (
                     <div
-                        className={`message ${
+                        className={ `message ${
                             m.by === props.user ? 'sent' : 'received'
-                            }`}
-                        key={m.msgId}
-                        id={m.msgId}>
+                            }` }
+                        key={ m.msgId }
+                        id={ m.msgId }>
                         <div
-                            style={{ color: `${m.color ? m.color : 'white'}` }}
+                            style={ { color: `${ m.color ? m.color : 'white' }` } }
                             className="font-weight-800">
                             {m.by !== props.user
                                 ? m.name +
-                                `${props.owner === m.by ? '(Admin)' : ''}`
+                                `${ props.owner === m.by ? '(Admin)' : '' }`
                                 : ''}
                         </div>
                         {m.msg}
@@ -106,17 +105,17 @@ export default function Conversation(props) {
             } else {
                 return (
                     <div
-                        className={`message ${
+                        className={ `message ${
                             m.by === props.user ? 'sent' : 'received'
-                            }`}
-                        key={m.msgId}
-                        id={m.msgId}>
+                            }` }
+                        key={ m.msgId }
+                        id={ m.msgId }>
                         <div
-                            style={{ color: `${m.color ? m.color : 'white'}` }}
+                            style={ { color: `${ m.color ? m.color : 'white' }` } }
                             className="font-weight-800">
                             {m.by !== props.user
                                 ? m.name +
-                                `${props.owner === m.by ? '(Admin)' : ''}`
+                                `${ props.owner === m.by ? '(Admin)' : '' }`
                                 : ''}
                         </div>
                         {m.msg}
@@ -165,7 +164,7 @@ export default function Conversation(props) {
                         <span className="m-auto">
                             {whoIsTypingArray[0].username} and{' '}
                             {whoIsTypingArray[1].username} are typing ...
-              </span>
+                        </span>
                     )
                 }
             } else {
@@ -182,7 +181,7 @@ export default function Conversation(props) {
 
                     <span>{props.username}</span>
                 </span>
-                <div className="font-italic text-justify text-white" style={{ fontSize: 10 }}>
+                <div className="font-italic text-justify text-white" style={ { fontSize: 10 } }>
                     {getTyping()}
                 </div>
             </div>
@@ -198,14 +197,14 @@ export default function Conversation(props) {
 
                     resize="none"
                     id="input_area"
-                    onBlur={props.inputBlur}
-                    onFocus={props.inputFocused}
-                    value={props.inputValue}
-                    onChange={props.handleInputChange}
-                    onKeyDown={inputKeyDown}
+                    onBlur={ props.inputBlur }
+                    onFocus={ props.inputFocused }
+                    value={ props.inputValue }
+                    onChange={ props.handleInputChange }
+                    onKeyDown={ inputKeyDown }
                     placeholder="Write a message"
                     className="form-control"
-                    style={{ borderRadius: '15px' }}
+                    style={ { borderRadius: '15px' } }
                 ></textarea>
             </div>
         </div>

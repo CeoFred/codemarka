@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react'
 
 export default function Modal(props) {
@@ -15,10 +16,10 @@ export default function Modal(props) {
                 <div
                     className="modal-dialog modal-dialog-centered"
                     role="document">
-                    <div className="modal-content" style={{height:'90vh',overflow:'auto'}}>
+                    <div className="modal-content" style={ {height:'90vh',overflow:'auto'} }>
                         <div className="modal-header">
                             <h5 className="modal-title" id="exampleModalLabel">
-                                {props.titleIcon || ''}
+                                {props.titleIcon || ''} {' '}
                                 {props.title || ''}
                             </h5>
                             <button

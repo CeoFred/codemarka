@@ -9,12 +9,13 @@ const Modal = ({
     owner,
     sendUserPrivateMessage,
     waveAtUser,
-    blockUser
+    blockUser,
+    handleAddUserIconClicked
 }) => {
     let users__ = 'Waiting for people to join...'
 
     if (users && users.length > 0) {
-       users__ = users.map(u => {
+        users__ = users.map(u => {
             if (userid !== u.id) {
                 return (
                     <li className="list-group-item" key={ u.id }>
@@ -26,7 +27,8 @@ const Modal = ({
                                     u.username.toUpperCase()[1]
                                 }
                                 src={ u.avatar }
-                                class="avatar  rounded-circle avatar-sm"/>
+                                class="avatar  rounded-circle avatar-sm"
+                            />
                             <span>
                                 <a
                                     href={ `/user/profile/${ u.id }?ref=classroom` }
@@ -70,7 +72,7 @@ const Modal = ({
                                             onClick={ (e, user = u) =>
                                                 sendUserPrivateMessage(e, user)
                                             }
-                                            href='/#'
+                                            href="/#"
                                             style={ { cursor: 'pointer' } }
                                             className="text-info p-1">
                                             message
@@ -79,7 +81,7 @@ const Modal = ({
                                             onClick={ (e, user = u) =>
                                                 waveAtUser(e, user)
                                             }
-                                            href='/#'
+                                            href="/#"
                                             style={ { cursor: 'pointer' } }
                                             className="text-dark p-1">
                                             wave
@@ -125,7 +127,7 @@ const Modal = ({
         users__.length === 1 &&
         users__[0] === undefined
     ) {
-        users__ = 'No one has joined yet'
+        users__ = 'No one has joined yet, try inviting by email or username.'
     }
     return (
         <div>
@@ -148,12 +150,32 @@ const Modal = ({
                                 className="close text-white"
                                 data-dismiss="modal"
                                 aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                                <span
+                                    id="participantModalExitButton"
+                                    aria-hidden="true"
+                                    style={ { color: '#fff' } }>
+                                    &times;
+                                </span>
                             </button>
                         </div>
-                        <div className="modal-body">
+                        <div
+                            className="modal-body"
+                            style={ { textAlign: 'center' } }>
                             <ul className="list-group">{users__}</ul>
                         </div>
+                        {owner ? (
+                            <div>
+                                <i
+                                    onClick={ handleAddUserIconClicked }
+                                    className="float-right fa fa-user-plus fa-1x"
+                                    style={ {
+                                        margin: 20,
+                                        color: '#E91E63'
+                                    } }></i>
+                            </div>
+                        ) : (
+                            ''
+                        )}
                     </div>
                 </div>
             </div>
