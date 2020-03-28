@@ -71,7 +71,8 @@ const MainClassLayout = ({
     pinnedMessages,
     started,
     cid,
-    cd
+    cd,
+    kid
 }) => {
     const [inputState, setInputState] = useState({
         value: '',
@@ -908,7 +909,7 @@ const MainClassLayout = ({
                 username,
                 topic,
                 started,
-                cid,
+                kid,
                 cd}
             })
         } else {

@@ -90,7 +90,7 @@ function Environment(props) {
 
             return (
                 <Redirect
-                    to={`/auth/signin?authCheck=failed&redir=/c/classroom/${classroomId}`}
+                    to={`/auth/signin?authCheck=failed&redir=/c/classroom/${ classroomId }`}
                 />
             )
         }
@@ -247,6 +247,7 @@ function Environment(props) {
                         pinnedMessages={props.class_pinnedMessages}
                         history={history}
                         cd={props.c}
+                        kid={props.kid}
                     />
                 )
             } else {
@@ -307,7 +308,8 @@ const mapStateToProps = ({ auth, classroom }) => {
         blocked: classroom.blocked,
         status: classroom.status,
         startTimeFull: classroom.startTimeFull,
-        cid: classroom._id
+        cid: classroom._id,
+        kid: classroom.Kid
     }
 }
 
