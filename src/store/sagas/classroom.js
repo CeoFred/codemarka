@@ -47,12 +47,12 @@ export function* createClass(data){
 
 }
 
-export function* verifyClassRoom({ classId }){
+export function* verifyClassRoom({ classKid }){
     yield delay(100)
      
     yield put({ type: actionTypes.CLASSROOM_VERIFICATION_INIT })
 
-    const requestData = { classroom: classId }
+    const requestData = { classroom: classKid }
 
      const url = APIURLS.CLASSROOM_VERIFY_URL;
      myHeaders.set('Content-Type', 'Application/json')

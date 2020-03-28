@@ -329,7 +329,7 @@ function NewClassroom(props) {
 const mapStateToProps = ({ auth, classroom }) => {
     return {
         token: auth.user.token,
-        classroom: classroom.classdetails ? classroom.classdetails._id : null,
+        classroom: classroom.classdetails ? classroom.classdetails.Kid : null,
         loading: classroom.loading
     }
 }

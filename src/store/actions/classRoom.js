@@ -1,9 +1,9 @@
 import * as actionTypes from './Types'
 
-export function classVerify(classId){
+export function classVerify(classKid){
     return {
         type:actionTypes.CLASSROOM_ASYNC_VERIFICATION_INIT,
-        classId
+        classKid
     }
 }
 

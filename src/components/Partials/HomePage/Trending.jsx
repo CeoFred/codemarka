@@ -42,7 +42,7 @@ function Trending() {
                                         )
                                     </small>
                                     <a
-                                        href={ `c/classroom/${ tr._id }` }
+                                        href={ `c/classroom/${ tr.Kid }` }
                                         className="h5 stretched-link lh-150">
                                         {tr.topic}
                                     </a>
