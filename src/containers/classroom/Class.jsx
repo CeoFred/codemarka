@@ -513,7 +513,7 @@ const MainClassLayout = ({
                 setClassroomInformation(c => {
                     return { ...c, submitted: false }
                 })
-                onClassroomVerify(doc._id)
+                onClassroomVerify(doc.Kid)
             })
 
             socket.on('blocking_user_success', ({ user, by, newStudents }) => {
