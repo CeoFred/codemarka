@@ -136,7 +136,7 @@ function ChangePassword(props) {
 
           <section>
               <div class="row align-items-center justify-content-center min-vh-100">
-                  <div class="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
+                  <div class="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0 px-sm-5 mx-3">
                       <div>
                           <div class="mb-5 text-center">
                               <h6 class="h3 mb-1">Password Reset</h6>
