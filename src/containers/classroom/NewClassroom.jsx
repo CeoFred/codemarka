@@ -294,7 +294,7 @@ function NewClassroom(props) {
 
             <section>
                 <div className="row min-vh-100">
-                    <div className="col-md-6 col-lg-6 col-xl-6 p-sm-2 p-lg-4 p-md-2 p-3 py-6 py-md-0 mb-3 registration-container">
+                    <div className="col-sm-0 col-md-6 col-lg-6 col-xl-6 px-sm-5 px-lg-5 p-md-2 py-md-0 px-md-5 mb-3 registration-container">
                         <div>
                             <div className="mb-5 mt-2 text-center">
                                 <b className="text-muted mb-0"></b>
@@ -306,8 +306,8 @@ function NewClassroom(props) {
                                 title="Heads Up!">
                                 {state.formErrorMessage}
                             </Alert>
-                            <div className="pb-5 text-center">
-                                <h6 className="h3 mb-1">
+                            <div className="py-4 text-center">
+                                <h6 className="h3 mb-0">
                                     Create your Free Classroom Today!
                                 </h6>
                             </div>
