@@ -1,6 +1,6 @@
 //app pages
-
 export const HOME = '/';
+export const BLOG = '/blog';
 export const ABOUT = '/public/about-us';
 export const CONTACT = '/public/contact-us';
 export const TERMS_AND_CONDITIONS = '/public/terms-and-condition';
