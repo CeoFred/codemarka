@@ -12,8 +12,8 @@ export const CLASSROOMS = '/classrooms/locale/all'
 export const JOIN_CLASSROOM = '/classrooms/join/:classroom'
 export const CLASSROOM = '/c/classroom/:classroom'
 export const CLASSROOM_NEW = '/classroom/create'
-export const PROTECTED_CLASSROOM_PREVIEW = '/c/classroom/setup/:classroomId'
-export const CLASSROOM_PREVIEW_NEW_TAB = '/c/classroom/preview/:classroomId';
+export const PROTECTED_CLASSROOM_PREVIEW = '/c/classroom/setup/:classroomKid'
+export const CLASSROOM_PREVIEW_NEW_TAB = '/c/classroom/preview/:classroomKid';
 
 // Authentication
 export const AUTH_SIGN_IN  = '/auth/signin';

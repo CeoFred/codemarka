@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.com/CeoFred/colab.svg?token=8zGCZEFENvahi3TRnh5R&branch=master)](https://travis-ci.com/CeoFred/colab)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/87db2963-eef7-46f6-a2c1-cda901408905/deploy-status)](https://app.netlify.com/sites/gracious-perlman-d94df4/deploys)
+[![Build Status](https://travis-ci.com/CeoFred/codemarka.svg?token=8zGCZEFENvahi3TRnh5R&branch=master)](https://travis-ci.com/CeoFred/codemarka)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/87db2963-eef7-46f6-a2c1-cda901408905/deploy-status)](https://app.netlify.com/sites/codemarka/deploys)
 
-#Colab (codemarka)
+#codemarka
 A real time coding platform for teams with an additional conversation flow feature.
 
 ## Getting started with colab
@@ -19,14 +19,16 @@ Current Features
 - Single Administrator
 - Live code base preview
 - classroom link shortner
+- Code Liniting
+- Multiple administrators
 
 Future AdOns
 
 - Realtime audio recording
 - Classroom screen monitoring with audio and video
 - Support multiple files
-- Multiple administrators
-
+- Classroom mentions
+- LESS,SCSS,Typscript,Markdown.
 <p>Hot Links</p>
 
  - (Audio Recording) - https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API/Using_the_MediaStream_Recording_API
