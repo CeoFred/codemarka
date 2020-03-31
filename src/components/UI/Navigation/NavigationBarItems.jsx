@@ -8,30 +8,30 @@ function NavigationBarItems(props) {
         return (
             <ul className="navbar-nav ml-auto">
                 <li className="nav-item">
-                    <a
+                    <Link
                         className="nav-link"
                         style={{ fontWeight: 'normal' }}
-                        href={url.HOME}>
+                        to={url.HOME}>
                         Home
-                  </a>
+                  </Link>
                 </li>
 
                 <li className="nav-item">
-                    <a
+                    <Link
                         className="nav-link"
                         style={{ fontWeight: 'normal' }}
-                        href={url.BLOG}>
+                        to={url.BLOG}>
                         Blog
-                  </a>
+                  </Link>
                 </li>
 
                 <li className="nav-item ">
-                    <a
+                    <Link
                         className="nav-link"
                         style={{ fontWeight: 'normal' }}
-                        href={url.CLASSROOM_NEW}>
+                        to={url.CLASSROOM_NEW}>
                         Create
-                  </a>
+                  </Link>
                 </li>
 
                 <li className="nav-item">
@@ -53,45 +53,45 @@ function NavigationBarItems(props) {
         return (
             <ul className="navbar-nav ml-auto">
                 <li className="nav-item">
-                    <a
+                    <Link
                         className="nav-link"
                         style={{ fontWeight: 'normal' }}
-                        href={url.HOME}>
+                        to={url.HOME}>
                         Home
-              </a>
+              </Link>
                 </li>
                 <li className="nav-item">
-                    <a
+                    <Link
                         className="nav-link"
                         style={{ fontWeight: 'normal' }}
-                        href={url.BLOG}>
+                        to={url.BLOG}>
                         Blog
-              </a>
+              </Link>
                 </li>
                 <li className="nav-item ">
-                    <a
+                    <Link
                         className="nav-link"
                         style={{ fontWeight: 'normal' }}
-                        href={url.ABOUT}>
+                        to={url.ABOUT}>
                         About
-              </a>
+              </Link>
                 </li>
                 <li className="nav-item ">
-                    <a
+                    <Link
                         className="nav-link"
                         style={{ fontWeight: 'normal' }}
-                        href="/#pricing">
+                        to="/#pricing">
                         Pricing
-              </a>
+              </Link>
                 </li>
 
                 <li className="nav-item ">
-                    <a
+                    <Link
                         className="nav-link"
                         style={{ fontWeight: 'normal' }}
-                        href={url.AUTH_SIGN_IN}>
+                        to={url.AUTH_SIGN_IN}>
                         Login
-              </a>
+              </Link>
                 </li>
             </ul>
         )

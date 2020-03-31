@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 import isFuture from 'date-fns/isFuture'
 
 import Spinner from '../../components/Partials/Preloader'
@@ -21,13 +21,15 @@ import Alert from '../../components/Partials/Alert/Alert'
 import './newclassroom.css'
 import * as action from '../../store/actions'
 
+import rocket from "../../media/images/rocket.svg";
+
 function NewClassroom(props) {
     useEffect(() => {
         props.onClassroomSwitch('classroom')
     });
-    
+
     const mappedCountry = countyJson.map((country) => {
-        return {value:`${ country.code }`, displayValue: `${ country.name }`}
+        return { value: `${country.code}`, displayValue: `${country.name}` }
     });
     const [state, setState] = useState({
         controls: {
@@ -217,12 +219,15 @@ function NewClassroom(props) {
             const date = formData.startDate;
             const time = formData.startTime;
 
-            if(!isFuture(new Date(`${ date } ${ time }`))){
+            if (!isFuture(new Date(`${date} ${time}`))) {
                 alert('Please Ensure your start date and time is in the future');
-                 setState({ ...state, formisSubmitted:false,
-                     controls: {
-                         ...state.controls,
-                         startDate:{...state.controls.startTime,valid: false}} });
+                setState({
+                    ...state, formisSubmitted: false,
+                    controls: {
+                        ...state.controls,
+                        startDate: { ...state.controls.startTime, valid: false }
+                    }
+                });
                 return false;
             }
             // eslint-disable-next-line no-undef
@@ -247,17 +252,17 @@ function NewClassroom(props) {
         })
     }
     const form = (
-        <form onSubmit={ submitHandler }>
+        <form onSubmit={submitHandler}>
             {formElementArray.map(formElement => (
                 <Input
-                    key={ formElement.id }
-                    elementConfig={ formElement.config.elementConfig }
-                    elementType={ formElement.config.elementType }
-                    value={ formElement.config.value }
-                    changed={ event => inputChangeHandler(event, formElement.id) }
-                    invalid={ formElement.config.valid }
-                    touched={ formElement.config.touched }
-                    label={ formElement.config.label }
+                    key={formElement.id}
+                    elementConfig={formElement.config.elementConfig}
+                    elementType={formElement.config.elementType}
+                    value={formElement.config.value}
+                    changed={event => inputChangeHandler(event, formElement.id)}
+                    invalid={formElement.config.valid}
+                    touched={formElement.config.touched}
+                    label={formElement.config.label}
                 />
             ))}
 
@@ -265,35 +270,49 @@ function NewClassroom(props) {
                 block
                 textColor="#fff"
                 color="success"
-                clicked={ submitHandler }
-                disabled={ !state.formisValid }>
+                clicked={submitHandler}
+                disabled={!state.formisValid}>
                 {state.formisSubmitted ? <Spinner /> : 'Go'}
             </Button>
         </form>
     )
 
     if (props.classroom) {
-        return <Redirect to={ `/c/classroom/${ props.classroom }` } />
+        return <Redirect to={`/c/classroom/${props.classroom}`} />
     }
 
     return (
         <div>
-            <button
-                className="zindex-100 btn btn-outline-info fixed-left position-md-absolute position-absolute
-                         rounded-circle btn-icon-only mt-3 float-left ml-3">
-                <a href="/">
+            <Link to="/">
+
+                <button
+                    className="zindex-100 btn btn-outline-secondary fixed-left position-lg-fixed position-md-absolute position-absolute
+                         rounded-circle btn-icon-only mt-3 float-left ml-3 home-button">
+
                     {' '}
                     <span class="btn-inner--icon">
                         <i className="fa fa-home"></i>
                     </span>
-                </a>
-            </button>
+                </button>
+            </Link>
+
             <Helmet
                 title="Create a classroom | codemarka"
                 metaDescription="Collaborte, build and learn in real time when you create a classroom for free."></Helmet>
 
             <section>
                 <div className="row min-vh-100">
+                    <div className="col-sm-12 col-md-6 col-lg-6 col-xl-6 py-6 py-md-0 side">
+
+
+                        <div className="align-content-center justify-content-center rocket-cont ">
+                            <div className="rocket-cont">
+                                <img width="200" src={rocket} alt="" />
+                            </div>
+
+                        </div>
+                    </div>
+
                     <div className="col-sm-0 col-md-6 col-lg-6 col-xl-6 px-sm-5 px-lg-5 p-md-2 py-md-0 px-md-5 mb-3 registration-container">
                         <div>
                             <div className="mb-5 mt-2 text-center">
@@ -301,8 +320,8 @@ function NewClassroom(props) {
                             </div>
                             <span className="clearfix" />
                             <Alert
-                                type={ state.alertType }
-                                display={ state.formErrorMessage }
+                                type={state.alertType}
+                                display={state.formErrorMessage}
                                 title="Heads Up!">
                                 {state.formErrorMessage}
                             </Alert>
@@ -317,9 +336,7 @@ function NewClassroom(props) {
                     </div>
                     {/* image section */}
 
-                    <div className="col-sm-12 col-md-6 col-lg-6 col-xl-6 py-6 py-md-0 side">
-                        <div className="align-content-center justify-content-center "></div>
-                    </div>
+
                 </div>
             </section>
         </div>
