@@ -3,6 +3,7 @@
 import React from 'react'
 import NavigationBarItems from './NavigationBarItems'
 import { useSelector } from 'react-redux'
+import { Link } from "react-router-dom";
 
 import logo from '../../../media/images/logo/codemark__logo.png'
 export default function NavigationBar() {
@@ -20,14 +21,14 @@ export default function NavigationBar() {
                 className="navbar navbar-main navbar-expand-lg navbar-sticky navbar-dark bg-dark"
                 id="navbar-main">
                 <div className="container">
-                    <a className="navbar-brand" href="/">
+                    <Link className="navbar-brand" to="/">
                         <img
                             style={ { height: '20px', width: '130px' } }
                             alt="codemarka"
                             src={ logo }
                             id="navbar-logo"
                         />{' '}
-                    </a>
+                    </Link>
                     <button
                         className="navbar-toggler collapsed"
                         type="button"
@@ -43,7 +44,7 @@ export default function NavigationBar() {
                         id="navbar-main-collapse">
                         <div className="collapse-header align-items-center">
                             <div className="col-6">
-                                <a className="navbar-brand" href="/">
+                                <Link className="navbar-brand" to="/">
                                     <img
                                         style={ {
                                             height: '20px',
@@ -52,7 +53,7 @@ export default function NavigationBar() {
                                         alt="codemarka"
                                         src={ logo }
                                     />{' '}
-                                </a>{' '}
+                                </Link>{' '}
                             </div>{' '}
                             <div className="col-6 text-right">
                                 <button

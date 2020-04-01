@@ -20,6 +20,8 @@ const newclassroom = React.lazy(() =>
 
 const logout = React.lazy(() => import('./containers/auth/Logout'))
 const Home = React.lazy(() => import('./containers/public/Home/Index'))
+const Blog = React.lazy(() => import('./containers/public/Blog'))
+const Version2 = React.lazy(() => import('./containers/public/Blog/version-2-launched'))
 
 const Login = React.lazy(() => import('./containers/auth/Login'))
 const Register = React.lazy(() => import('./containers/auth/Register'))
@@ -52,81 +54,85 @@ const Routes = props => {
     }, [props])
     let routes = (
         <Switch>
-            <Route exact component={ logout } path={ url.AUTH_LOGOUT } />
-            <Route exact component={ Home } path={ url.HOME } />
-            <Route exact component={ Login } path={ url.AUTH_SIGN_IN } />
-            <Route exact component={ Register } path={ url.AUTH_SIGN_UP } />
-            <Route exact component={ About } path={ url.ABOUT } />
-            <Route exact component={ oauthSuccess } path={ url.OAUTH_URL } />
-            <Route exact component={ contactUs } path={ url.CONTACT } />
+            <Route exact component={logout} path={url.AUTH_LOGOUT} />
+            <Route exact component={Home} path={url.HOME} />
+            <Route exact component={Blog} path={url.BLOG} />
+            <Route exact component={Version2} path={url.VERSION2} />
+            <Route exact component={Login} path={url.AUTH_SIGN_IN} />
+            <Route exact component={Register} path={url.AUTH_SIGN_UP} />
+            <Route exact component={About} path={url.ABOUT} />
+            <Route exact component={oauthSuccess} path={url.OAUTH_URL} />
+            <Route exact component={contactUs} path={url.CONTACT} />
 
             <Route
                 exact
-                component={ EmalVerification }
-                path={ url.EMAIL_VERIFICATION }
+                component={EmalVerification}
+                path={url.EMAIL_VERIFICATION}
             />
             <Route
                 exact
-                component={ ForgotPassword }
-                path={ url.AUTH_FORGOT_PASSWORD }
+                component={ForgotPassword}
+                path={url.AUTH_FORGOT_PASSWORD}
             />
-            <Redirect from={ url.CLASSROOMS } to={ url.AUTH_SIGN_IN } />
+            <Redirect from={url.CLASSROOMS} to={url.AUTH_SIGN_IN} />
             <Route
                 exact
-                component={ ClassRoomPreview }
-                path={ url.PROTECTED_CLASSROOM_PREVIEW }
+                component={ClassRoomPreview}
+                path={url.PROTECTED_CLASSROOM_PREVIEW}
             />
-            <Route exact component={ classrooom } path={ url.CLASSROOM } />
+            <Route exact component={classrooom} path={url.CLASSROOM} />
             <Route
                 exact
-                component={ classPreviewNewTab }
-                path={ url.CLASSROOM_PREVIEW_NEW_TAB }
+                component={classPreviewNewTab}
+                path={url.CLASSROOM_PREVIEW_NEW_TAB}
             />
-            <Route exact component={ newclassroom } path={ url.CLASSROOM_NEW } />
+            <Route exact component={newclassroom} path={url.CLASSROOM_NEW} />
             <Route
                 exact
-                component={ ChangePassword }
-                path={ url.AUTH_CHANGE_PASSWORD }
+                component={ChangePassword}
+                path={url.AUTH_CHANGE_PASSWORD}
             />
 
-            <Route component={ NotFound } />
+            <Route component={NotFound} />
         </Switch>
     )
 
     if (props.isAutheticated) {
         routes = (
             <Switch>
-                <Route exact component={ Home } path={ url.HOME } />
-                <Route exact component={ About } path={ url.ABOUT } />
-                <Route exact component={ oauthSuccess } path={ url.OAUTH_URL } />
-                <Route exact component={ contactUs } path={ url.CONTACT } />
+                <Route exact component={Home} path={url.HOME} />
+                <Route exact component={Blog} path={url.BLOG} />
+                <Route exact component={Version2} path={url.VERSION2} />
+                <Route exact component={About} path={url.ABOUT} />
+                <Route exact component={oauthSuccess} path={url.OAUTH_URL} />
+                <Route exact component={contactUs} path={url.CONTACT} />
 
                 <Route
                     exact
-                    component={ ChangePassword }
-                    path={ url.AUTH_CHANGE_PASSWORD }
+                    component={ChangePassword}
+                    path={url.AUTH_CHANGE_PASSWORD}
                 />
-                <Route exact component={ logout } path={ url.AUTH_LOGOUT } />
+                <Route exact component={logout} path={url.AUTH_LOGOUT} />
                 <Route
                     exact
-                    component={ newclassroom }
-                    path={ url.CLASSROOM_NEW }
+                    component={newclassroom}
+                    path={url.CLASSROOM_NEW}
                 />
-                <Route exact component={ classrooom } path={ url.CLASSROOM } />
-                <Redirect from={ url.CLASSROOMS } to={ url.AUTH_SIGN_IN } />
-                <Route exact component={ Login } path={ url.AUTH_SIGN_IN } />
-                <Route exact component={ Register } path={ url.AUTH_SIGN_UP } />
+                <Route exact component={classrooom} path={url.CLASSROOM} />
+                <Redirect from={url.CLASSROOMS} to={url.AUTH_SIGN_IN} />
+                <Route exact component={Login} path={url.AUTH_SIGN_IN} />
+                <Route exact component={Register} path={url.AUTH_SIGN_UP} />
                 <Route
                     exact
-                    component={ ClassRoomPreview }
-                    path={ url.PROTECTED_CLASSROOM_PREVIEW }
+                    component={ClassRoomPreview}
+                    path={url.PROTECTED_CLASSROOM_PREVIEW}
                 />
                 <Route
                     exact
-                    component={ classPreviewNewTab }
-                    path={ url.CLASSROOM_PREVIEW_NEW_TAB }
+                    component={classPreviewNewTab}
+                    path={url.CLASSROOM_PREVIEW_NEW_TAB}
                 />
-                <Route component={ NotFound } />
+                <Route component={NotFound} />
             </Switch>
         )
     }

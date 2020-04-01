@@ -23,10 +23,10 @@ export default function Home() {
                                   </h1>
                                   <p class="lead text-white opaci ty-8 tal-sm font-weight-light">
                                       Real time communication is an integral
-                                      part of codemarka. You get to write code
+                                      part of Codemarka. You get to write code
                                       in the browser, and see updated real time
                                       results just as you code. Currently,
-                                      codemarka ships with just HTML, CSS AND
+                                      Codemarka ships with just HTML, CSS and
                                       Javascript editors with more
                                       implementations in the future.
                                   </p>
@@ -82,10 +82,10 @@ export default function Home() {
                                   What is codemarka used for?
                               </h3>
                               We built codemarak with the community in
-                              mind,people use it for various reasons some use
+                              mind, people use it for various reasons. Some use
                               our tool to host workshops on various web topics
-                              for their communities, for an individual you might
-                              want to debug.
+                              for their communities. For an individual you might
+                              want to debug with a team member remotely.
                           </p>
                           <p className="lead lh-180">
                               <h3 className="heading h3">
@@ -93,8 +93,8 @@ export default function Home() {
                               </h3>
                               <p>
                                   We are out to make everyone happy, newbies,
-                                  pros and the God's can use codemarka but
-                                  particularly front end engineers.
+                                  pros and the gods can use codemarka but
+                                  particularly front-end engineers.
                               </p>
                           </p>
                       </div>
