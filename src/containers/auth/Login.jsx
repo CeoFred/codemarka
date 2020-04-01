@@ -213,11 +213,21 @@ function Login(props) {
                             </div>
 
                             <div className="row">
-                                <div className="d-none">
-                                    <Github link={ APIURLS.GITHUB_AUTH_URL } />
+                                <div className="col-6">
+                                    <Github
+                                        link={
+                                            APIURLS.GITHUB_AUTH_URL +
+                                            '?auth=login&vendor=github'
+                                        }
+                                    />
                                 </div>
-                                <div className="col-12">
-                                    <Google link={ APIURLS.GOOGLE_AUTH_URL } />
+                                <div className="col-6">
+                                    <Google
+                                        link={
+                                            APIURLS.GOOGLE_AUTH_URL +
+                                            '?auth=login&vendor=google'
+                                        }
+                                    />
                                 </div>
                             </div>
                             <div className="mt-4 text-center">
