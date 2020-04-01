@@ -11,7 +11,7 @@ export class classPreviewNewTab extends Component {
 
   componentDidMount() {
      const { match: { params }  } = this.props;
-  const classroomId = params.classroomId;
+  const classroomKid = params.classroomKid;
 
     const host = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test' ? process.env.REACT_APP_REMOTE_API_URL : process.env.REACT_APP_LOCAL_API_URL
     const myHeaders = new Headers()
@@ -19,7 +19,7 @@ export class classPreviewNewTab extends Component {
 
     const handlePreviewFileFetch = () => {
 
-    const url = `${ host }classroom/preview/${ classroomId }`;
+    const url = `${ host }classroom/preview/${ classroomKid }`;
         
         const searchClassroomRequest =  new Request(url, {
             method: 'GET',

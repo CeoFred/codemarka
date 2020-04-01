@@ -191,7 +191,7 @@ const accountPasswordChangeSuccess = (state, action) => {
     return helper.updateObject(state, {
         error: false,
         loading: false,
-        message: 'Hurray!!'
+        message: 'Great! Your new password has been set,login to continue.'
     });
 }
 

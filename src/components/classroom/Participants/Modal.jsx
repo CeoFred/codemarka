@@ -68,24 +68,22 @@ const Modal = ({
                                     </div>
                                 ) : (
                                     <div className="ml-5">
-                                        <a
+                                        <b
                                             onClick={ (e, user = u) =>
                                                 sendUserPrivateMessage(e, user)
                                             }
-                                            href="/#"
                                             style={ { cursor: 'pointer' } }
                                             className="text-info p-1">
                                             message
-                                        </a>
-                                        <a
+                                        </b>
+                                        <b
                                             onClick={ (e, user = u) =>
                                                 waveAtUser(e, user)
                                             }
-                                            href="/#"
                                             style={ { cursor: 'pointer' } }
                                             className="text-dark p-1">
                                             wave
-                                        </a>
+                                        </b>
                                     </div>
                                 )}
                             </span>
@@ -127,7 +125,10 @@ const Modal = ({
         users__.length === 1 &&
         users__[0] === undefined
     ) {
-        users__ = 'No one has joined yet, try inviting by email or username.'
+        users__ = 'No one has joined yet.'
+        if(owner){
+            users__ =  'Your students are yet to join, try inviting the, via email or usernameby clicking the icon below.'
+        }
     }
     return (
         <div>

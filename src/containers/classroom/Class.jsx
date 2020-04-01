@@ -210,6 +210,16 @@ const MainClassLayout = ({
                     </div>
                 )
             })
+            
+            // disconnect users previous session
+            socket.on('disconnect_user_before_join',(data) => {
+                if(data.userId === userid){
+                    socket.close();
+                    toast.warn('Session terminated', {
+                        position: toast.POSITION.BOTTOM_RIGHT
+                    });
+                }
+            });
             // tell server to add user to class
             socket.emit('join', requestData);
 
@@ -220,18 +230,8 @@ const MainClassLayout = ({
 
             //listen for new members added
             socket.on('someoneJoined', msg => {
-                console.log(msg)
                 setcodemarkaState(c => {
                     const oldmsg = c.messages;
-                //     oldmsg.push({
-                //     by: "bot",
-                //     msg: "Welcome 5e1f641d8c9dad37545fb9c1",
-                //     for: "5e1f641d8c9dad37545fb9c1",
-                //     name: "Vicradon",
-                //     type: "sJoin",
-                //     msgId: "cbd1d2d0-cad6-47b7-b57e-9f64000cc0af",
-                //     // newuserslist: [{…}]
-                // })
                     oldmsg.push(msg)
                     const nnc = msg.newuserslist.filter(u => {
                         return u.id !== userid
@@ -603,7 +603,6 @@ const MainClassLayout = ({
                     return {...c,value:'',socketFeedback:reason,socketFeedbackStatus:0}
                 })
             });
-
             socket.on('invite_sent',() => {
                 setcodemarkaState(c => {
                     return { ...c, submitted: false }
@@ -641,15 +640,16 @@ const MainClassLayout = ({
             //listen to file changes
             socket.on(
                 'class_files_updated',
-                ({ id, file, content, editedBy }) => {
+                ({ fid, file, content, editedBy }) => {
                     setcodemarkaState(c => {
                         // check preview states
+                        console.log(c);
                         if (editedBy !== userid) {
                             let oldFiles
                             c.editors.forEach((element, i) => {
                                 if (
                                     element.file === file &&
-                                    element.id === id
+                                    element.id === fid
                                 ) {
                                     oldFiles = c.editors
                                     oldFiles[i].content = content
@@ -660,7 +660,7 @@ const MainClassLayout = ({
                                 editors: oldFiles,
                                 previewContent: {
                                     ...c.previewContent,
-                                    [file]: { content, id }
+                                    [file]: { content, id:fid }
                                 }
                             }
                         } else {
@@ -760,6 +760,7 @@ const MainClassLayout = ({
             id: fid,
             editedBy: userid,
             kid
+
         }
 
         setcodemarkaState(c => {
