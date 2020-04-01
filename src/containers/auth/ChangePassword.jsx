@@ -87,7 +87,14 @@ function ChangePassword(props) {
         <Alert
             display={ props.message ? true : false }
             type={ !Boolean(props.error) ? 'success' : 'danger' }>
-            {props.message ? `${ props.message }` : ''}
+            {props.message && Boolean(props.error) !== true ? (
+                <p>
+                    Great! Your password has been updated,please{' '}
+                    <a href="/auth/signin">login</a> to continue.
+                </p>
+            ) : (
+                `${ props.message }`
+            )}
         </Alert>
     )
     const validationErrorAlert = (
