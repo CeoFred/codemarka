@@ -3,16 +3,16 @@
 * {
   padding: 0;
   margin: 0;
-  font-family: 'Ubuntu','Nunito';
+  font-family: 'Ubuntu', 'Nunito';
 }
 
 .bg-gold {
   color: gold;
 }
 
-@media screen and (max-width:320px){
+@media screen and (max-width:320px) {
   .login-container {
-    margin:20px;
+    margin: 20px;
   }
 }
 
@@ -20,20 +20,25 @@
   .registration-container {
     margin: 20px;
   }
-  .registration-container.p-7{
-    padding:0;
-    margin:20px;
+
+  .registration-container.p-7 {
+    padding: 0;
+    margin: 20px;
   }
+
   .side {
-    display:none;
+    display: none;
   }
+
   .conversation__container {
-    display:none;
+    display: none;
   }
+
   .vp-dead {
     display: block;
   }
+
   .login-container {
-    margin:20px;
+    margin: 20px;
   }
 }
