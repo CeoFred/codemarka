@@ -590,18 +590,20 @@ const MainClassLayout = ({
                 })
                 toast.warning(
                     <div>
-                        <b>Whoops!!!</b> <br /> Something went wrong, try again later!`
+                        <b>Whoops!!!</b> <br /> Something went wrong, try again later!
                     </div>
                 )
             });
-            socket.on('User_not_found_on_search',() => {
+
+            socket.on('user_invite_failed',(reason) => {
                 setcodemarkaState(c => {
                     return { ...c, submitted: false }
                 })
                 setUserInvitationData(c => {
-                    return {...c,socketFeedback:'User not found',socketFeedbackStatus:0}
+                    return {...c,value:'',socketFeedback:reason,socketFeedbackStatus:0}
                 })
             });
+
             socket.on('invite_sent',() => {
                 setcodemarkaState(c => {
                     return { ...c, submitted: false }
@@ -610,6 +612,15 @@ const MainClassLayout = ({
                     return {...c,value:'',socketFeedback:'Great! Invitation was sent.',socketFeedbackStatus:1}
                 })
             });
+
+            socket.on('editor_update_error',(reason) => {
+                toast.warning(
+                    <div>
+                        <b>Whoops!!!</b> <br />
+                        Error updating work files on remote server. 
+                    </div>
+                )
+            })
 
             socket.on('class_favourites', likedList => {
                 setcodemarkaState(c => {
@@ -747,7 +758,8 @@ const MainClassLayout = ({
             class: data.classroom_id,
             user: data.user_id,
             id: fid,
-            editedBy: userid
+            editedBy: userid,
+            kid
         }
 
         setcodemarkaState(c => {
@@ -1458,12 +1470,13 @@ const MainClassLayout = ({
                 className="btn btn-danger d-none"
                 data-toggle="modal"
                 data-target="#add_user_modal"></button>
+            
             <Modal
                 targetid="add_user_modal"
                 type="default"
                 size="sm"
                 titleIcon={ <i className="fa fa-users"></i> }
-                title={ 'Invite users' }>
+                title={ 'Invite people' }>
                 <form>
                     <Input
                         name="add_user_input"
@@ -1481,7 +1494,7 @@ const MainClassLayout = ({
                         type="submit"
                         onClick={ handleUserInviteSubmit }
                         disabled={ codemarkastate.submitted }
-                        className="btn btn-sm btn-block float-left btn-success">
+                        className="btn btn-sm float-right btn-success">
                         {codemarkastate.submitted ? (
                             <Spinner />
                         ) : (
