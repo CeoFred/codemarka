@@ -197,7 +197,10 @@ if (props.authRegistrationSuccess) {
 }
   return (
       <div>
-          <Helmet title="Signup to codemarka" metaDescription="Get started today by creating a free account on codemarka." />
+          <Helmet
+              title="Signup to codemarka"
+              metaDescription="Get started today by creating a free account on codemarka."
+          />
           {redct}
           <section className="mt-5 mt-lg-6 mt-md-7 mt-sm-5 mb-3">
               <div className="mt-3 row align-items-center justify-content-center min-vh-100">
@@ -259,9 +262,9 @@ if (props.authRegistrationSuccess) {
                                   elementConfig={ {
                                       options: [
                                           {
-                                            value:'',
-                                            displayValue: 'What do you do?',
-                                            selected: true
+                                              value: '',
+                                              displayValue: 'What do you do?',
+                                              selected: true
                                           },
                                           {
                                               value: 'FE',
@@ -274,12 +277,11 @@ if (props.authRegistrationSuccess) {
                                           },
                                           {
                                               value: 'AI',
-                                              displayValue:
-                                                  'Machine Learning'
+                                              displayValue: 'Machine Learning'
                                           },
                                           {
-                                            value: 'FS',
-                                            displayValue: 'Fullstack'
+                                              value: 'FS',
+                                              displayValue: 'Fullstack'
                                           }
                                       ]
                                   } }
@@ -303,7 +305,11 @@ if (props.authRegistrationSuccess) {
                                       textColor="#fff"
                                       block
                                       color="primary">
-                                      {props.loading ? <Spinner /> : 'Create my account'}
+                                      {props.loading ? (
+                                          <Spinner />
+                                      ) : (
+                                          'Create my account'
+                                      )}
                                   </Button>
                               </div>
                           </form>
@@ -312,11 +318,21 @@ if (props.authRegistrationSuccess) {
                           </div>
 
                           <div className="row">
-                              <div className="d-none col-sm-6">
-                                  <Github link={ APIURLS.GITHUB_AUTH_URL } />
+                              <div className=" col-sm-6">
+                                  <Github
+                                      link={
+                                          APIURLS.GITHUB_AUTH_URL +
+                                          '?auth=signup&vendor=github'
+                                      }
+                                  />
                               </div>
-                              <div className="col-12">
-                                  <Google link={ APIURLS.GOOGLE_AUTH_URL } />
+                              <div className="col-sm-6">
+                                  <Google
+                                      link={
+                                          APIURLS.GOOGLE_AUTH_URL +
+                                          '?auth=signup&vendor=google'
+                                      }
+                                  />
                               </div>
                           </div>
                           <div className="mt-4 text-center">

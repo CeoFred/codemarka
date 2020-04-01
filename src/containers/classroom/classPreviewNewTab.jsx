@@ -35,13 +35,17 @@ export class classPreviewNewTab extends Component {
       handlePreviewFileFetch().then(d => d.json()).then(files => {
          const previewFrame = document.getElementById('tabpreviewframe');
     let styles, html , script;
-        if(files && files.data && files.status){
-          document.title = `${ files.data.name }- Preview`;
-              styles = files.data.css.content
-              html = files.data.html.content
-              script = files.data.js.content
+      if(files.status){
+            styles = files.data.css.content
+            html = files.data.html.content
+            script = files.data.js.content
+            document.title =   `${ files.data.name } - Preview on codemarka`;
 
-        }
+      } else {
+        styles = '';
+        html = 'Not Found!';
+        script = '';
+      }
 
     const getGeneratedPageURL = ({ html, css, js }) => {
   const getBlobURL = (code, type) => {

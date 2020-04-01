@@ -12,11 +12,12 @@ export default function Modal(props) {
                 tabIndex="-1"
                 role="dialog"
                 aria-labelledby="exampleModalLabel"
+                style={ {backgroundColor: 'rgba(8, 8, 8, 0.72)'} }
                 aria-hidden="true">
                 <div
                     className="modal-dialog modal-dialog-centered"
                     role="document">
-                    <div className="modal-content" style={ {height:'90vh',overflow:'auto'} }>
+                    <div className="modal-content" style={ {height:'auto',overflow:'auto'} }>
                         <div className="modal-header">
                             <h5 className="modal-title" id="exampleModalLabel">
                                 {props.titleIcon || ''} {' '}
@@ -30,7 +31,7 @@ export default function Modal(props) {
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div className="modal-body h-50 overflow-y container-fluid">
+                        <div className="modal-body h-auto overflow-y container-fluid">
                             {props.children}
                         </div>
                         <div className="modal-footer">
