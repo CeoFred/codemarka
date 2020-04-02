@@ -313,12 +313,14 @@ const MainClassLayout = ({
 
             //listen for new messages
             socket.on('nM', data => {
+                console.log('new message');
                 setcodemarkaState(c => {
                     const oldmsg = c.messages
                     oldmsg.push(data)
                     const newuserTypingList = c.typingState.filter(typist => {
                         return typist.id !== data.by
                     })
+                    console.log(oldmsg);
                     return {
                         ...c,
                         messages: oldmsg,
@@ -735,6 +737,7 @@ const MainClassLayout = ({
             const msg_data = {
                 user: userid,
                 class: data.classroom_id,
+                kid,
                 message: inputState.value,
                 time: new Date(),
                 messageColor: getRandomColor()

@@ -4,23 +4,23 @@ import { formatToTimeZone } from 'date-fns-timezone';
 
 import './css/conversation.css';
 
-const BotMessage = ({ m, time }) => {
-    return (
-        <div className="message received" key={ m.msgId } id={ m.msgId }>
-            <div style={ { color: '#ED7BCA' } } className="font-weight-800">
-                MARKA-BOT{' '}
-                <br/>
-                <small style={ { color: '#000' } }>
-                    (visible to only you)
-                </small>
-            </div>
-            <p className="pt-3">
-            Hello {m.name},need help navigating ? just type --bot and i'll be glad to help. Enjoy 
-            your session.
-            </p>
-        </div>
-    )
-}
+// const BotMessage = ({ m, time }) => {
+//     return (
+//         <div className="message received" key={ m.msgId } id={ m.msgId }>
+//             <div style={ { color: '#ED7BCA' } } className="font-weight-800">
+//                 MARKA-BOT{' '}
+//                 <br/>
+//                 <small style={ { color: '#000' } }>
+//                     (visible to only you)
+//                 </small>
+//             </div>
+//             <p className="pt-3">
+//             Hello {m.name},need help navigating ? just type --bot and i'll be glad to help. Enjoy 
+//             your session.
+//             </p>
+//         </div>
+//     )
+// }
 
 export default function Conversation(props) {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -48,11 +48,6 @@ export default function Conversation(props) {
                             <div className="message_extra" key={ m.msgId } id={ m.msgId }>
                                 You
                                 {m.type === 'sLeft' ? ' left' : ' Joined'}
-                            </div>
-                            <div>
-                                {
-                                    m.type === 'sLeft' ? '' : <BotMessage m={ m } time={ time } />
-                                }
                             </div>
                         </div>
                     )
