@@ -72,7 +72,8 @@ const MainClassLayout = ({
     started,
     cid,
     cd,
-    kid
+    kid,
+    gravatarUrl
 }) => {
     const [inputState, setInputState] = useState({
         value: '',
@@ -1214,6 +1215,7 @@ const MainClassLayout = ({
                 owner={ owner }
                 endClass={ handleEndClass }
                 startClass={ handlestartClass }
+                gravatarUrl={ gravatarUrl }
             />
 
             <button
