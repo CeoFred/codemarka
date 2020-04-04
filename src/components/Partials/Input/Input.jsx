@@ -36,7 +36,7 @@ if(props.elementType === 'input'){
             className={ InputClasses.join(' ') }
             { ...props.elementConfig }
             value={ props.value }
-            onChange={ e => props.changed(e, props.name) }></textarea>
+            onChange={ props.changed }></textarea>
     )
     break;
 

@@ -5,7 +5,7 @@ export default function Button(props) {
       <button
       onClick={ props.clicked }
       type={ props.type || 'button' }
-      className={ `btn btn-${ props.color } ${ props.block ? `btn-block` : `` }  ${ props.animation } btn-${
+      className={ `mb-2 btn btn-${ props.color } ${ props.block ? `btn-block` : `` }  ${ props.animation } btn-${
         props.size
       } ${ props.icon || "" }` }
       disabled={ props.disabled || false }

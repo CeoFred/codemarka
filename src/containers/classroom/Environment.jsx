@@ -249,6 +249,7 @@ function Environment(props) {
                         cd={props.c}
                         kid={props.kid}
                         gravatarUrl={props.gravatarUrl}
+                        classroomD={props.classroom}
                     />
                 )
             } else {
@@ -311,7 +312,8 @@ const mapStateToProps = ({ auth, classroom }) => {
         startTimeFull: classroom.startTimeFull,
         cid: classroom._id,
         kid: classroom.Kid,
-        gravatarUrl: classroom.gravatarUrl
+        gravatarUrl: classroom.gravatarUrl,
+        classroom
     }
 }
 

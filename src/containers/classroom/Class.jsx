@@ -35,6 +35,8 @@ import Modal from '../../components/Partials/Modals/Modal'
 import Input from '../../components/Partials/Input/Input'
 import Spinner from '../../components/Partials/Preloader'
 import ParticipantModal from '../../components/classroom/Participants/Modal'
+import ClassRoomSettingsModal from '../../components/classroom/Settings/index.jsx';
+
 // import AudioBroadcast from '../../components/classroom/Audio/Audio';
 
 import { CLASSROOM_FILE_DOWNLOAD } from '../../config/api_url'
@@ -73,7 +75,8 @@ const MainClassLayout = ({
     cid,
     cd,
     kid,
-    gravatarUrl
+    gravatarUrl,
+    classroomD
 }) => {
     const [inputState, setInputState] = useState({
         value: '',
@@ -1180,16 +1183,21 @@ const MainClassLayout = ({
     return (
         <div>
             <Seo
-                title={ `${ name } :: codemarka classroom` }
-                metaDescription={ description }>
+                title={`${name} :: codemarka classroom`}
+                metaDescription={description}>
                 <script src="https://unpkg.com/jshint@2.9.6/dist/jshint.js"></script>
                 <script src="https://unpkg.com/jsonlint@1.6.3/web/jsonlint.js"></script>
                 <script src="https://unpkg.com/csslint@1.0.5/dist/csslint.js"></script>
             </Seo>
             <ToastContainer />
             <Preview
-                previewBtnClicked={ handlePreview }
-                classroomid={ data.classroom_id }
+                previewBtnClicked={handlePreview}
+                classroomid={data.classroom_id}
+            />
+            <ClassRoomSettingsModal
+                codemarkastate={codemarkastate}
+                socket={codemarkastate}
+                cdata={classroomD}
             />
             {classNotification}
             <span
@@ -1202,20 +1210,20 @@ const MainClassLayout = ({
             </span>
 
             <Navigation
-                name={ name }
-                downloadLink={ classfilesdownloadlink }
-                favourite={ addClassToFavourite }
-                isFavourite={ codemarkastate.favourite }
-                topic={ topic }
-                exitClassGracefully={ handleexitClassGracefully }
-                classroomid={ data.classroom_id }
-                testConnection={ handletestConnection }
-                classReport={ handleclassReport }
-                number={ codemarkastate.numberInClass }
-                owner={ owner }
-                endClass={ handleEndClass }
-                startClass={ handlestartClass }
-                gravatarUrl={ gravatarUrl }
+                name={name}
+                downloadLink={classfilesdownloadlink}
+                favourite={addClassToFavourite}
+                isFavourite={codemarkastate.favourite}
+                topic={topic}
+                exitClassGracefully={handleexitClassGracefully}
+                classroomid={data.classroom_id}
+                testConnection={handletestConnection}
+                classReport={handleclassReport}
+                number={codemarkastate.numberInClass}
+                owner={owner}
+                endClass={handleEndClass}
+                startClass={handlestartClass}
+                gravatarUrl={gravatarUrl}
             />
 
             <button
@@ -1359,7 +1367,7 @@ const MainClassLayout = ({
                         <div className="modal-footer">
                             <a
                                 className="btn btn-sm btn-primary"
-                                href={ classfilesdownloadlink }>
+                                href={classfilesdownloadlink}>
                                 Download Files
                             </a>
                             <a className="btn btn-sm btn-white" href="/?#">
@@ -1379,7 +1387,7 @@ const MainClassLayout = ({
                 Exit
             </button>
             <div
-                className={ 'modal modal-danger fade' }
+                className={'modal modal-danger fade'}
                 id="exitClass"
                 tabIndex="-1"
                 role="dialog"
@@ -1441,7 +1449,7 @@ const MainClassLayout = ({
                                 <button
                                     type="button"
                                     className="btn btn-sm btn-white"
-                                    onClick={ HandleClassShutdown }>
+                                    onClick={HandleClassShutdown}>
                                     End now
                                 </button>
                             </div>
@@ -1456,8 +1464,8 @@ const MainClassLayout = ({
                 targetid="exit_class_modal_cont"
                 type="default"
                 size="sm"
-                titleIcon={ <i className="fa fa-thumbs-up"></i> }
-                title={ ' Rate this classroom ' }>
+                titleIcon={<i className="fa fa-thumbs-up"></i>}
+                title={' Rate this classroom '}>
                 {addStars}
             </Modal>
 
@@ -1465,8 +1473,8 @@ const MainClassLayout = ({
                 targetid="pinned_modal_cont"
                 type="default"
                 size="sm"
-                titleIcon={ <i className="fa fa-pen-nib"></i> }
-                title={ 'Pinned Messages' }>
+                titleIcon={<i className="fa fa-pen-nib"></i>}
+                title={'Pinned Messages'}>
                 {getPinnedMessages()}
                 {owner ? addPinTextArea : ''}
             </Modal>
@@ -1476,30 +1484,30 @@ const MainClassLayout = ({
                 className="btn btn-danger d-none"
                 data-toggle="modal"
                 data-target="#add_user_modal"></button>
-            
+
             <Modal
                 targetid="add_user_modal"
                 type="default"
                 size="sm"
-                titleIcon={ <i className="fa fa-users"></i> }
-                title={ 'Invite people' }>
+                titleIcon={<i className="fa fa-users"></i>}
+                title={'Invite people'}>
                 <form>
                     <Input
                         name="add_user_input"
                         elementType="input"
-                        elementConfig={ {
+                        elementConfig={{
                             disabled: owner ? false : true,
                             placeholder: 'Invite with email or username',
                             name: 'add_user_input'
-                        } }
-                        value={ userInvitationData.value }
+                        }}
+                        value={userInvitationData.value}
                         inputType="input"
-                        changed={ handleuserInvitationDataChange }
+                        changed={handleuserInvitationDataChange}
                     />
                     <button
                         type="submit"
-                        onClick={ handleUserInviteSubmit }
-                        disabled={ codemarkastate.submitted }
+                        onClick={handleUserInviteSubmit}
+                        disabled={codemarkastate.submitted}
                         className="btn btn-sm float-right btn-success">
                         {codemarkastate.submitted ? (
                             <Spinner />
@@ -1510,7 +1518,19 @@ const MainClassLayout = ({
                         )}
                     </button>
                     <div>
-                        {userInvitationData.socketFeedback !== null  ? (<span className={ `${ userInvitationData.socketFeedbackStatus ? 'text-success' : 'text-danger' }` }> {userInvitationData.socketFeedback} </span>) : ''}
+                        {userInvitationData.socketFeedback !== null ? (
+                            <span
+                                className={`${
+                                    userInvitationData.socketFeedbackStatus
+                                        ? 'text-success'
+                                        : 'text-danger'
+                                }`}>
+                                {' '}
+                                {userInvitationData.socketFeedback}{' '}
+                            </span>
+                        ) : (
+                            ''
+                        )}
                     </div>
                 </form>
             </Modal>
@@ -1522,7 +1542,7 @@ const MainClassLayout = ({
                     owner ? (
                         <button
                             type="submit"
-                            onClick={ handleClassInfoUpdate }
+                            onClick={handleClassInfoUpdate}
                             className="btn btn-sm float-left btn-soft-primary">
                             {ClassroomInformation.submitted ? (
                                 <Spinner />
@@ -1535,18 +1555,18 @@ const MainClassLayout = ({
                     )
                 }
                 title="classroom Information">
-                <form onSubmit={ handleClassInfoUpdate }>
+                <form onSubmit={handleClassInfoUpdate}>
                     <Input
                         name="cname"
                         label="Classroom Name"
                         elementType="input"
-                        elementConfig={ {
+                        elementConfig={{
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'cname'
-                        } }
-                        value={ ClassroomInformation.cname.value }
-                        changed={ e =>
+                        }}
+                        value={ClassroomInformation.cname.value}
+                        changed={e =>
                             handleClassroomInformationInputChange(e, 'cname')
                         }
                     />
@@ -1554,26 +1574,26 @@ const MainClassLayout = ({
                         name="ctopic"
                         label="Classroom Topic"
                         elementType="input"
-                        elementConfig={ {
+                        elementConfig={{
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'ctopic'
-                        } }
-                        value={ ClassroomInformation.ctopic.value }
-                        changed={ e =>
+                        }}
+                        value={ClassroomInformation.ctopic.value}
+                        changed={e =>
                             handleClassroomInformationInputChange(e, 'ctopic')
                         }
                     />
                     <Input
                         label="Classroom Description"
                         elementType="textarea"
-                        elementConfig={ {
+                        elementConfig={{
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'cdesc'
-                        } }
-                        value={ ClassroomInformation.cdesc.value }
-                        changed={ e =>
+                        }}
+                        value={ClassroomInformation.cdesc.value}
+                        changed={e =>
                             handleClassroomInformationInputChange(e, 'cdesc')
                         }
                     />
@@ -1581,43 +1601,43 @@ const MainClassLayout = ({
             </Modal>
 
             <ParticipantModal
-                users={ codemarkastate.users }
-                toogleUserEditAccess={ handletoogleUserEditAccess }
-                owner={ owner }
-                ownerid={ ownerid }
-                userid={ userid }
-                sendUserPrivateMessage={ handlePrivateMessaging }
-                blockUser={ handleUserBlocking }
-                waveAtUser={ handlewaveAtUser }
-                handleAddUserIconClicked={ handleAddUserIconClicked }
+                users={codemarkastate.users}
+                toogleUserEditAccess={handletoogleUserEditAccess}
+                owner={owner}
+                ownerid={ownerid}
+                userid={userid}
+                sendUserPrivateMessage={handlePrivateMessaging}
+                blockUser={handleUserBlocking}
+                waveAtUser={handlewaveAtUser}
+                handleAddUserIconClicked={handleAddUserIconClicked}
             />
 
-            <div style={ { width: '100%', height: '87vh' } }>
+            <div style={{ width: '100%', height: '87vh' }}>
                 <div className="container-fluid ">
                     <div className="row">
                         <div className="col-2 p-0">
-                            <Suspense fallback={ <Spinner /> }>
+                            <Suspense fallback={<Spinner />}>
                                 <Convo
-                                    typing={ codemarkastate.typingState }
-                                    username={ username }
-                                    inputValue={ inputState.value }
-                                    handleInputChange={ handleInputChange }
-                                    sendMessage={ handleMessageSubmit }
-                                    focused={ inputState.isFocused }
-                                    messages={ codemarkastate.messages }
-                                    userSpecificMessages={ userSpecificMessages }
-                                    user={ userid }
-                                    owner={ ownerid }
+                                    typing={codemarkastate.typingState}
+                                    username={username}
+                                    inputValue={inputState.value}
+                                    handleInputChange={handleInputChange}
+                                    sendMessage={handleMessageSubmit}
+                                    focused={inputState.isFocused}
+                                    messages={codemarkastate.messages}
+                                    userSpecificMessages={userSpecificMessages}
+                                    user={userid}
+                                    owner={ownerid}
                                 />
                             </Suspense>
                         </div>
                         <div className="col-10 p-0">
-                            <Suspense fallback={ <Spinner /> }>
+                            <Suspense fallback={<Spinner />}>
                                 <Editor
-                                    readOnly={ codemarkastate.editorPriviledge }
-                                    handleEditorChange={ editorChanged }
-                                    files={ codemarkastate.editors }
-                                    dropDownSelect={ handledropDownSelect }
+                                    readOnly={codemarkastate.editorPriviledge}
+                                    handleEditorChange={editorChanged}
+                                    files={codemarkastate.editors}
+                                    dropDownSelect={handledropDownSelect}
                                 />
                             </Suspense>
                         </div>

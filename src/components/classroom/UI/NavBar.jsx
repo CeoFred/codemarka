@@ -12,7 +12,12 @@ function NavBar(props) {
                     <img height="30px" src={logo} alt="codemarka_logo" />
                 </a>
                 <span className="navbar-brand ml-2">
-                    <img height="30px" style={{borderRadius:'50%'}} src={props.gravatarUrl} alt={props.name+'gravatar'} />
+                    <img
+                        height="30px"
+                        style={{ borderRadius: '50%' }}
+                        src={props.gravatarUrl}
+                        alt={props.name + 'gravatar'}
+                    />
                 </span>
                 <span className="navbar-brand">
                     {props.topic}
@@ -140,6 +145,19 @@ function NavBar(props) {
                                 </span>
                             </span>
                         </li>
+
+                        <li
+                            data-toggle="modal"
+                            data-target="#classroom_settings_modaal"
+                            title="Settings"
+                            className="nav-item">
+                            <span className="nav-link nav-link-icon">
+                                <i className="fa fa-cogs"></i>
+                                <span className="nav-link-inner--text d-lg-none">
+                                    Settings
+                                </span>
+                            </span>
+                        </li>
                         <li title="Settings" className="nav-item dropdown">
                             <span
                                 className="nav-link nav-link-icon"
@@ -148,7 +166,7 @@ function NavBar(props) {
                                 data-toggle="dropdown"
                                 aria-haspopup="true"
                                 aria-expanded="false">
-                                <i className="fa fa-cogs"></i>
+                                <i className="fa fa-ellipsis-v"></i>
                                 <span className="nav-link-inner--text d-lg-none">
                                     Settings
                                 </span>
