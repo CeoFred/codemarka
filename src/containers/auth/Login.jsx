@@ -19,9 +19,11 @@ import Spinner from '../../components/Partials/Preloader'
 import Alert from '../../components/Partials/Alert/Alert'
 
 import * as action from '../../store/actions'
-import * as APIURLS from '../../config/api_url'
-import { updateObject } from '../../utility/shared'
-
+import * as APIURLS from '../../config/api_url';
+import * as APPURLS from '../../config/url';
+import { updateObject } from '../../utility/shared';
+import Logo from '../../media/images/logo/codemark__logo.png'
+import './style.css';
 const initialPrependsvg = (
     <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -56,13 +58,10 @@ const emailIconSvg = (
 )
 
 function Login(props) {
-    const { onResetAll } = props
-
+    const { onResetAll, onClassroomSwitch } = props
     useEffect(() => {
-        return () => {
-            onResetAll()
-        }
-    }, [onResetAll])
+            onClassroomSwitch('classroom')
+    });
 
     // useEffect(() => {
     //     document.getElementsByTagName('form')[0].onkeydown = e => console.log(e);
@@ -148,9 +147,42 @@ function Login(props) {
                 metaDescription="Return back to learn or host classrooms in real time"
             />
             {redct}
-            <section className="mt-5">
-                <div className="row align-items-center justify-content-center min-vh-100">
-                    <div className="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0 login-container">
+            <section className="container-fluid">
+                <div className="row min-vh-100">
+                    <div className="comm_bg_img col-md-8 col-xl-8 col-lg-8 py-6 py-md-0 h-100vh d-sm-none d-md-flex d-lg-flex d-xl-flex">
+                        <div className="details_container">
+                            <div className="logo_container">
+                                <img
+                                    src={Logo}
+                                    height="25"
+                                    alt="codemarka_logo"
+                                />
+                                <span className="badge badge-warning">PRO</span>
+                            </div>
+                            <div className="mb-2">
+                                <p className="float-left p-text text-white line-height-1">
+                                    Get the best out of every classrom and enjoy
+                                    <br />
+                                    all our exciting features by
+                                    <br /> getting a community account today.
+                                </p>
+                            </div>
+                            <Link to={APPURLS.COMMUNITY_ACCOUNT_SIGNUP_PAGE}>
+                                <button
+                                    type="button"
+                                    class="btn btn-animated btn-primary btn-animated-x">
+                                    <span class="btn-inner--visible">
+                                        SIGN UP
+                                    </span>
+                                    <span class="btn-inner--hidden">
+                                        <i className="fa fa-arrow-alt-circle-right"></i>
+                                    </span>
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
+
+                    <div className="mt-7 p-3 col-md-4 col-lg-4 col-xl-4 py-6 py-md-0">
                         <div>
                             <div className="mb-5 text-center">
                                 <h6 className="h3 mb-1">Welcome back!</h6>
@@ -160,16 +192,16 @@ function Login(props) {
                             </div>
                             <span className="clearfix" />
                             {alert}
-                            <form onSubmit={ submitHandler }>
+                            <form onSubmit={submitHandler}>
                                 <Input
                                     type="email"
                                     id="emailinput"
                                     placeholder="someone@someserver.com"
                                     label="Email address"
                                     initialPrepend
-                                    initialPrependsvg={ emailIconSvg }
-                                    value={ state.controls.email.value }
-                                    changed={ event =>
+                                    initialPrependsvg={emailIconSvg}
+                                    value={state.controls.email.value}
+                                    changed={(event) =>
                                         handleInputChange(event, 'email')
                                     }
                                 />
@@ -181,19 +213,19 @@ function Login(props) {
                                     label="password"
                                     isLoginPasswordInput
                                     initialPrepend
-                                    forgotPassword={ true }
-                                    initialPrependsvg={ initialPrependsvg }
-                                    value={ state.controls.password.value }
-                                    finalAppend={ false }
-                                    changed={ event =>
+                                    forgotPassword={true}
+                                    initialPrependsvg={initialPrependsvg}
+                                    value={state.controls.password.value}
+                                    finalAppend={false}
+                                    changed={(event) =>
                                         handleInputChange(event, 'password')
                                     }
                                 />
                                 <div className="mt-4">
                                     <Button
                                         type="submit"
-                                        clicked={ submitHandler }
-                                        disabled={ props.loading }
+                                        clicked={submitHandler}
+                                        disabled={props.loading}
                                         textColor="#fff"
                                         block
                                         color="primary">
@@ -259,7 +291,8 @@ const mapDispatchToProps = dispatch => {
     return {
         onResetAll: () => dispatch(action.authResetAll()),
         onAuth: (email, password) =>
-            dispatch(action.authLoginUser(email, password))
+            dispatch(action.authLoginUser(email, password)),
+        onClassroomSwitch: (state) => dispatch(action.dispatchAppEnvironment(state))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

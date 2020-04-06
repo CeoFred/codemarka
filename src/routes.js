@@ -40,6 +40,9 @@ const classPreviewNewTab = React.lazy(() =>
 const EmalVerification = React.lazy(() =>
     import('./containers/auth/EmalVerification')
 )
+const CommunityAccountRegistration = React.lazy(() =>
+    import('./containers/auth/CommunityAccountRegistration')
+)
 
 const contactUs = React.lazy(() => import('./containers/public/Contact'))
 
@@ -49,7 +52,7 @@ const ClassRoomPreview = React.lazy(() =>
 const Routes = props => {
     useEffect(() => {
         if (!props.isAutheticated) {
-            props.onTryAutoSignup()
+            props.onTryAutoSignIn()
         }
     }, [props])
     let routes = (
@@ -63,7 +66,7 @@ const Routes = props => {
             <Route exact component={About} path={url.ABOUT} />
             <Route exact component={oauthSuccess} path={url.OAUTH_URL} />
             <Route exact component={contactUs} path={url.CONTACT} />
-
+            <Route exact component={CommunityAccountRegistration} path={url.COMMUNITY_ACCOUNT_SIGNUP_PAGE} />
             <Route
                 exact
                 component={EmalVerification}
@@ -146,7 +149,7 @@ const mapStateToProps = state => {
 
 const matchDispatchToProps = dispatch => {
     return {
-        onTryAutoSignup: () => dispatch({ type: actionType.AUTO_AUTH_INIT })
+        onTryAutoSignIn: () => dispatch({ type: actionType.AUTO_AUTH_INIT })
     }
 }
 
