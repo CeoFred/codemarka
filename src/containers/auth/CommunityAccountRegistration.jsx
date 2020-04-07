@@ -1,48 +1,114 @@
 import React,{ useEffect, useState } from 'react';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import Input from '../../components/Partials/Input'
+// import Input from '../../components/Partials/Input'
 import Helmet from '../../components/SEO/helmet'
-import Spinner from '../../components/Partials/Preloader'
-import Alert from '../../components/Partials/Alert/Alert'
+// import Spinner from '../../components/Partials/Preloader'
+// import Alert from '../../components/Partials/Alert/Alert'
 
 import * as action from '../../store/actions'
-import * as APIURLS from '../../config/api_url'
+import * as APPURL from '../../config/url';
+import { checkValidity } from '../../utility/shared'
 
+import svgUrl from '../../media/images/svg/illustrations/illustration-11.svg';
 import './style.css';
- function CommunityAccountRegistration(props) {
+
+ const CommunityAccountRegistration = (props) => {
 
    useEffect(() => {
        props.onEnvironmentSwitch('classroom')
    });
-   const step2 = (
-       <div class="row">
-           <div class="col-md-6">
-               <div class="form-group">
-                   <label class="form-control-label">Email</label>
-                   <input
-                       class="form-control"
-                       type="email"
-                       placeholder="name@exmaple.com"
-                   />
-                   <small class="form-text text-muted mt-2">
-                       This is the main email address that we'll send
-                       notifications as well your signin email.
-                   </small>
-               </div>
-           </div>
-           <div class="col-md-6">
-               <div class="form-group">
-                   <label class="form-control-label">Phone</label>
-                   <input
-                       class="form-control"
-                       type="text"
-                       placeholder="+40-777 245 549"
-                   />
-               </div>
-           </div>
-       </div>
-   );
+
+   const [formControls, setFormControlState] = useState({
+       controls: {
+           communityName: {
+               touched: false,
+               value: '',
+               validation: {
+                   required: true,
+                   minLength: 5,
+               },
+               valid: false,
+           },
+           communityAcronym: {
+               touched: false,
+               value: '',
+               validation: {
+                   required: true,
+                   minLength: 2,
+               },
+               valid: false,
+           },
+           communityWebsite: {
+               touched: false,
+               value: '',
+               validation: {
+                   required: false,
+                   minLength: 5,
+                   url: true,
+               },
+               valid: true,
+           },
+           communityAffiliation: {
+               touched: false,
+               value: '',
+               validation: {
+                   required: true,
+                   minLength: 2,
+               },
+               valid: false,
+           },
+           communityCity: {
+               touched: false,
+               value: '',
+               validation: {
+                   required: true,
+                   minLength: 5,
+               },
+               valid: false,
+           },
+           communityCountry: {
+               touched: false,
+               value: '',
+               validation: {
+                   required: true,
+                   minLength: 5,
+               },
+               valid: false,
+           },
+       },
+       formisvalid: false,
+       formisSubmitted: false,
+   })
+
+   const handleInputChage = (e) => {
+       const controlName = e.target.name;
+       const updatedControls = {
+           ...formControls.controls,
+           [controlName]: {
+               ...formControls.controls[controlName],
+               value: e.target.value,
+               valid: checkValidity(
+                   e.target.value,
+                   formControls.controls[controlName].validation
+               ),
+               touched: true,
+           },
+       }
+       let formisvalid = true
+       for (const inputIdentifier in updatedControls) {
+           formisvalid = updatedControls[inputIdentifier].valid && formisvalid
+       }
+       setFormControlState((formControl) => {
+           return {...formControl,
+           controls: updatedControls,
+           formisvalid
+        }
+       })
+   }
+   
+
   return (
       <div className="community_container container-fluid">
           <Helmet title="Signup for a community Account - Codemarka" />
@@ -79,11 +145,17 @@ import './style.css';
                                   <div class="col-md-6">
                                       <div class="form-group">
                                           <label class="form-control-label">
-                                              Community Name
+                                              Community Name{' '}
+                                              <span className="text-danger pl-1">
+                                                  *
+                                              </span>
                                           </label>
                                           <input
                                               class="form-control"
                                               type="text"
+                                              name="communityName"
+                                                 value={formControls.controls.communityName.value}
+                                              onChange={handleInputChage}
                                               placeholder="Enter your communities name"
                                           />
                                       </div>
@@ -92,10 +164,16 @@ import './style.css';
                                       <div class="form-group">
                                           <label class="form-control-label">
                                               Acronymn
+                                              <span className="text-danger pl-1">
+                                                  *
+                                              </span>
                                           </label>
                                           <input
                                               class="form-control"
                                               type="text"
+                                              name="communityAcronym"
+                                                 value={formControls.controls.communityAcronym.value}
+                                              onChange={handleInputChage}
                                               placeholder="GDG Owerri"
                                           />
                                       </div>
@@ -110,7 +188,9 @@ import './style.css';
                                           <input
                                               type="text"
                                               class="form-control"
-                                              data-toggle="date"
+                                              name="communityWebsite"
+                                                 value={formControls.controls.communityWebsite.value}
+                                              onChange={handleInputChage}
                                               placeholder="https://gdgowerri.dev"
                                           />
                                       </div>
@@ -118,18 +198,26 @@ import './style.css';
                                   <div class="col-md-6">
                                       <div class="form-group">
                                           <label class="form-control-label">
-                                              Affiliation
+                                              Affiliation{' '}
+                                              <span className="text-danger pl-1">
+                                                  *
+                                              </span>
                                           </label>
                                           <select
                                               class="form-control"
+                                              name="communityAffiliation"
+                                                 value={
+                                                     formControls.controls.communityAffiliation.value
+                                                 }
+                                              onChange={handleInputChage}
                                               data-toggle="select">
-                                              <option value="1">
+                                              <option value="GDG">
                                                   Google Developer Group
                                               </option>
-                                              <option value="2">
+                                              <option value="FDC">
                                                   Facebook Developer Circle
                                               </option>
-                                              <option value="2">
+                                              <option value="RNS">
                                                   Rather not say
                                               </option>
                                           </select>
@@ -140,37 +228,68 @@ import './style.css';
                                   <div class="col-md-6">
                                       <div class="form-group">
                                           <label class="form-control-label">
-                                              City
+                                              City{' '}
+                                              <span className="text-danger pl-1">
+                                                  *
+                                              </span>
                                           </label>
                                           <input
                                               class="form-control"
                                               type="text"
                                               placeholder="Lagos"
+                                              name="communityCity"
+                                                 value={formControls.controls.communityCity.value}
+                                              onChange={handleInputChage}
                                           />
                                       </div>
                                   </div>
                                   <div class="col-md-6">
                                       <div class="form-group">
                                           <label class="form-control-label">
-                                              Country
+                                              Country{' '}
+                                              <span className="text-danger pl-1">
+                                                  *
+                                              </span>
                                           </label>
                                           <input
                                               class="form-control"
                                               type="text"
                                               placeholder="Nigeria"
+                                              name="communityCountry"
+                                                 value={formControls.controls.communityCountry.value}
+                                              onChange={handleInputChage}
                                           />
                                       </div>
                                   </div>
-
-                                  <button
-                                      style={{ marginLeft: '15px' }}
-                                      type="button"
-                                      class="btn btn-primary hover-translate-y-n3">
-                                      Next
-                                  </button>
+                                  <div className="flex align-items-center d-flex w-100 justify-content-between">
+                                      <span className="text-primary font-weight-bolder ml-2">
+                                          <Link
+                                              to={
+                                                  APPURL.COMMUNITY_ACCOUNT_LOGIN_PAGE
+                                              }>
+                                              Sign in instead
+                                          </Link>
+                                      </span>
+                                      <button
+                                          style={{ marginLeft: '15px' }}
+                                          type="button"
+                                          class="btn btn-primary hover-translate-y-n3 mr-2">
+                                          Next
+                                      </button>
+                                  </div>
                               </div>
                           </div>
-                          <div class="col-12 col-md-5 mt-4 mt-md-0 text-md-right community_vector_img_bg h-100"></div>
+                          <div class="col-12 col-md-5 mt-4 mt-md-0 text-md-center h-100">
+                              <img
+                                  src={svgUrl}
+                                  style={{
+                                      height: '300px',
+                                      position: 'absolute',
+                                      bottom: '122px',
+                                      left: '122px',
+                                  }}
+                              />
+                          </div>
                       </div>
                   </div>
               </div>

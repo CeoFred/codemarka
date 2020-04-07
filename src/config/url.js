@@ -25,3 +25,4 @@ export const AUTH_LOGOUT  = '/auth/user/logout';
 export const OAUTH_URL = '/auth/user/oauth/success/:token/:user'
 export const EMAIL_VERIFICATION = '/account/confirmed/:verified/'
 export const COMMUNITY_ACCOUNT_SIGNUP_PAGE = '/auth/signup/community';
+export const COMMUNITY_ACCOUNT_LOGIN_PAGE = '/auth/signin/community'
