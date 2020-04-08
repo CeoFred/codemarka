@@ -16,7 +16,7 @@ function NavBar(props) {
                         height="30px"
                         style={{ borderRadius: '50%' }}
                         src={props.gravatarUrl}
-                        alt={props.name + 'gravatar'}
+                        alt={'gvt'}
                     />
                 </span>
                 <span className="navbar-brand">
