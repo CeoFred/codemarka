@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { ActiveComponentsStateContext } from './active_components_state_context';
-import "./more_options.css";
+import "../css/more_options.css";
 
 
 const MoreOptions = () => {

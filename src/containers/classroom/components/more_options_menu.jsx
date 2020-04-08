@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { ActiveComponentsStateContext } from './active_components_state_context';
 
-const EmojiComponent = () => {
+const MoreOptionsMenu = () => {
 
   const { moreOptionsMenu, toggleMoreOptionsMenu } = useContext(ActiveComponentsStateContext);
 
@@ -19,4 +19,4 @@ const EmojiComponent = () => {
   )
 }
 
-export default EmojiComponent;
+export default MoreOptionsMenu;

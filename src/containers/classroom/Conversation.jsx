@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { formatToTimeZone } from 'date-fns-timezone';
-import ChatComponent from "./components/more_options_menu.jsx";
+import MoreOptionsMenu from "./components/more_options_menu.jsx";
 
 import './css/conversation.css';
 import MoreOptions from './components/more_options.jsx';
@@ -194,7 +194,7 @@ export default function Conversation(props) {
                             style={{ borderRadius: '15px' }}
                         ></textarea>
                     </div>
-                    <ChatComponent />
+                    <MoreOptionsMenu />
                 </div>
             </div>
         </ContextWrapper>

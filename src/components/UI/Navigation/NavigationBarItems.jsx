@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 
 import * as url from '../../../config/url';
 function NavigationBarItems(props) {
+    const [showBlog, setShowBlog] = React.useState(false);
     if (props.isAuthenticated) {
         return (
             <ul className="navbar-nav ml-auto">
@@ -16,14 +17,18 @@ function NavigationBarItems(props) {
                   </Link>
                 </li>
 
-                <li className="nav-item">
-                    <Link
-                        className="nav-link"
-                        style={{ fontWeight: 'normal' }}
-                        to={url.BLOG}>
-                        Blog
-                  </Link>
-                </li>
+                {
+                    showBlog ?
+                        (
+                            <li className="nav-item">
+                                <Link
+                                    className="nav-link"
+                                    style={{ fontWeight: 'normal' }}
+                                    to={url.BLOG}
+                                >Blog</Link>
+                            </li>
+                        ) : null
+                }
 
                 <li className="nav-item ">
                     <Link
