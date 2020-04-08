@@ -290,7 +290,7 @@ function NewClassroom(props) {
                          rounded-circle btn-icon-only mt-3 float-left ml-3 home-button">
 
                     {' '}
-                    <span class="btn-inner--icon">
+                    <span className="btn-inner--icon">
                         <i className="fa fa-home"></i>
                     </span>
                 </button>

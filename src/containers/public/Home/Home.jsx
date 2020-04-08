@@ -24,10 +24,10 @@ export default function Home() {
                                       parts of the world in realtime.
                                   </h1>
                                   <p className="lead text-white opacity-8 text-left">
-                                      Built for the community ,by the community.
+                                      Built for the community, by the community.<br />
                                       Feeling left out already?
                                   </p>
-                                  <div className="mt-5">
+                                  <div className="mt-4">
                                       <Link
                                           to={ url.AUTH_SIGN_UP }
                                           className="btn-inner--text text-white">

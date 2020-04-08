@@ -14,10 +14,21 @@ div.input_container textarea.form-control {
 
 div.input_container {
     width: 100%;
+    height: 54px;
+}
+
+div.message-container {
+    display: grid;
+    background-color:rgb(31, 45, 61);
+    align-items: center;
+    grid-template-columns:6fr 1fr;
+    width: 100%;
     position: absolute;
     bottom: 0;
-    left: 0;
-    height: 54px;
+}
+.more-options-menu {
+    margin: 0 auto;
+    cursor: pointer;
 }
 
 div.messages {

@@ -45,7 +45,7 @@ const host =
         ? process.env.REACT_APP_REMOTE_API_URL
         : process.env.REACT_APP_LOCAL_API_URL
 
-const socket = io(`${ host }classrooms`, {
+const socket = io(`${host}classrooms`, {
     reconnection: true,
     reconnectionDelay: 6000,
     reconnectionDelayMax: 6000,
@@ -106,7 +106,7 @@ const MainClassLayout = ({
     });
 
     const [userSpecificMessages, setUserSpecificMessages] = useState([]);
-    const [userInvitationData,setUserInvitationData] = useState({value:'',socketFeedback:null,socketFeedbackStatus:null});
+    const [userInvitationData, setUserInvitationData] = useState({ value: '', socketFeedback: null, socketFeedbackStatus: null });
 
     const startCountDonwTimer = () => {
         let t = 5
@@ -210,10 +210,10 @@ const MainClassLayout = ({
                     </div>
                 )
             })
-            
+
             // disconnect users previous session
-            socket.on('disconnect_user_before_join',(data) => {
-                if(data.userId === userid){
+            socket.on('disconnect_user_before_join', (data) => {
+                if (data.userId === userid) {
                     socket.close();
                     toast.warn('Session terminated', {
                         position: toast.POSITION.BOTTOM_RIGHT
@@ -258,7 +258,7 @@ const MainClassLayout = ({
 
             socket.on('disconnect', reason => {
                 socket.emit('leave', requestData)
-                
+
                 if (reason === 'io server disconnect') {
                     // the disconnection was initiated by the server, you need to reconnect manually
                     socket.connect()
@@ -560,7 +560,7 @@ const MainClassLayout = ({
 
             socket.on('user_waved', ({ from, to }) => {
                 if (userid === to.id) {
-                    toast.info(`${ from } waved at you`)
+                    toast.info(`${from} waved at you`)
                 }
             })
 
@@ -584,7 +584,7 @@ const MainClassLayout = ({
                     </div>
                 )
             })
-             socket.on('error',() => {
+            socket.on('error', () => {
                 setcodemarkaState(c => {
                     return { ...c, submitted: false }
                 })
@@ -595,28 +595,28 @@ const MainClassLayout = ({
                 )
             });
 
-            socket.on('user_invite_failed',(reason) => {
+            socket.on('user_invite_failed', (reason) => {
                 setcodemarkaState(c => {
                     return { ...c, submitted: false }
                 })
                 setUserInvitationData(c => {
-                    return {...c,value:'',socketFeedback:reason,socketFeedbackStatus:0}
+                    return { ...c, value: '', socketFeedback: reason, socketFeedbackStatus: 0 }
                 })
             });
-            socket.on('invite_sent',() => {
+            socket.on('invite_sent', () => {
                 setcodemarkaState(c => {
                     return { ...c, submitted: false }
                 })
                 setUserInvitationData(c => {
-                    return {...c,value:'',socketFeedback:'Great! Invitation was sent.',socketFeedbackStatus:1}
+                    return { ...c, value: '', socketFeedback: 'Great! Invitation was sent.', socketFeedbackStatus: 1 }
                 })
             });
 
-            socket.on('editor_update_error',(reason) => {
+            socket.on('editor_update_error', (reason) => {
                 toast.warning(
                     <div>
                         <b>Whoops!!!</b> <br />
-                        Error updating work files on remote server. 
+                        Error updating work files on remote server.
                     </div>
                 )
             })
@@ -660,7 +660,7 @@ const MainClassLayout = ({
                                 editors: oldFiles,
                                 previewContent: {
                                     ...c.previewContent,
-                                    [file]: { content, id:fid }
+                                    [file]: { content, id: fid }
                                 }
                             }
                         } else {
@@ -708,6 +708,10 @@ const MainClassLayout = ({
                 classroomid: data.classroom_id
             })
         }
+    }
+
+    const collectEmoji = (emoji) => {
+        setInputState({ ...inputState, value: `${inputState.value} ${emoji}` })
     }
 
     const handleMessageSubmit = e => {
@@ -822,11 +826,11 @@ const MainClassLayout = ({
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        ${ css && `<link rel="stylesheet" type="text/css" href="${ cssURL }" />` }
-        ${ js && `<script src="${ jsURL }"></script>` }
+        ${ css && `<link rel="stylesheet" type="text/css" href="${cssURL}" />`}
+        ${ js && `<script src="${jsURL}"></script>`}
       </head>
       <body>
-        ${ html || '' }
+        ${ html || ''}
       </body>
     </html>
   `
@@ -846,7 +850,7 @@ const MainClassLayout = ({
     }
 
     let classNotification
-    
+
     const handletoogleUserEditAccess = (e, u) => {
         socket.emit('toogle_class_role', { user: u, new_role: e.target.value })
     }
@@ -865,7 +869,7 @@ const MainClassLayout = ({
     }
 
     const handlewaveAtUser = (e, user) => {
-        toast.info(`Hey! You just waved at ${ user.username }`)
+        toast.info(`Hey! You just waved at ${user.username}`)
         socket.emit('user_waving', user)
     }
 
@@ -909,21 +913,23 @@ const MainClassLayout = ({
                 return { ...c, submitted: true }
             })
             setUserInvitationData(c => {
-                return { ...c, socketFeedback:null, socketFeedbackStatus:null }
+                return { ...c, socketFeedback: null, socketFeedbackStatus: null }
             });
-            
+
             socket.emit('invite_user', {
                 user: userInvitationData.value,
-                classData: {ownerid,
-                data,
-                owner,
-                name,
-                description,
-                username,
-                topic,
-                started,
-                kid,
-                cd}
+                classData: {
+                    ownerid,
+                    data,
+                    owner,
+                    name,
+                    description,
+                    username,
+                    topic,
+                    started,
+                    kid,
+                    cd
+                }
             })
         } else {
             alert('No permission to perform Operation or check input!');
@@ -931,22 +937,22 @@ const MainClassLayout = ({
     }
 
     const addPinTextArea = (
-        <form onSubmit={ handleClassPinnnedSubmit }>
+        <form onSubmit={handleClassPinnnedSubmit}>
             <Input
                 name="text__area__msg__pin"
                 elementType="textarea"
-                elementConfig={ {
+                elementConfig={{
                     disabled: owner ? false : true,
                     placeholder: 'Pin Message Here...',
                     name: 'text__area__msg__pin'
-                } }
-                value={ ClassroomPinnedInformation.value }
+                }}
+                value={ClassroomPinnedInformation.value}
                 inputType="textarea"
-                changed={ handlePinTextAreaChange }
+                changed={handlePinTextAreaChange}
             />
             <button
                 type="submit"
-                onClick={ handleClassPinnnedSubmit }
+                onClick={handleClassPinnnedSubmit}
                 className="btn btn-sm float-left btn-soft-success">
                 {codemarkastate.submitted ? <Spinner /> : 'Add'}
             </button>
@@ -965,22 +971,22 @@ const MainClassLayout = ({
             toast.error('No Access to perfom this action')
         }
     }
-    const classfilesdownloadlink = `${ CLASSROOM_FILE_DOWNLOAD }${ data.classroom_id }`
+    const classfilesdownloadlink = `${CLASSROOM_FILE_DOWNLOAD}${data.classroom_id}`
 
     const getPinnedMessages = () => {
         const pm = codemarkastate.pinnedMessages.map(msg => {
             if (msg.content.trim() !== '')
                 return (
                     <div
-                        key={ msg.id }
+                        key={msg.id}
                         className="card mt-0 mb-1"
-                        style={ {
+                        style={{
                             borderLeft: '2px solid #E91E63',
                             borderRadius: 0
-                        } }>
+                        }}>
                         <div
                             className="card-body"
-                            style={ { padding: 10, fontWeight: 'bolder' } }>
+                            style={{ padding: 10, fontWeight: 'bolder' }}>
                             <p className="mb-0">{msg.content}</p>
                         </div>
                     </div>
@@ -1079,24 +1085,24 @@ const MainClassLayout = ({
 
             <div>
                 <span
-                    onClick={ handleClassStar }
+                    onClick={handleClassStar}
                     id="1"
                     className="fa fa-star fa__codemarka__star fa-2x border-success"></span>
                 <span
-                    onClick={ handleClassStar }
+                    onClick={handleClassStar}
                     id="2"
                     className="fa fa-star fa-2x fa__codemarka__star border-success"></span>
                 <span
-                    onClick={ handleClassStar }
+                    onClick={handleClassStar}
                     id="3"
                     className="fa fa-star fa-2x fa__codemarka__star border-success"></span>
                 <span
-                    onClick={ handleClassStar }
+                    onClick={handleClassStar}
                     id="4"
                     className="fa fa-star fa-2x fa__codemarka__star border-success"></span>
                 <span
                     id="5"
-                    onClick={ handleClassStar }
+                    onClick={handleClassStar}
                     className="fa fa-star fa-2x fa__codemarka__star border-success"></span>
             </div>
 
@@ -1104,7 +1110,7 @@ const MainClassLayout = ({
                 <div>
                     <button
                         type="button"
-                        onClick={ e => redirectTo(e, '/') }
+                        onClick={e => redirectTo(e, '/')}
                         className="btn btn-animated  btn-sm btn-outline-success btn-animated-y">
                         <span className="btn-inner--visible">NOT NOW</span>
                         <span className="btn-inner--hidden">
@@ -1113,7 +1119,7 @@ const MainClassLayout = ({
                     </button>
                     <button
                         type="button"
-                        onClick={ handleClassStarRating }
+                        onClick={handleClassStarRating}
                         className="btn btn-animated  btn-sm btn-outline-success btn-animated-x">
                         <span className="btn-inner--visible">SUBMIT</span>
                         <span className="btn-inner--hidden">
@@ -1126,7 +1132,7 @@ const MainClassLayout = ({
     )
 
     if (codemarkastate.redirect) {
-        return <Redirect to={ codemarkastate.redirect } />
+        return <Redirect to={codemarkastate.redirect} />
     }
 
     const handleEndClass = e => {
@@ -1139,7 +1145,7 @@ const MainClassLayout = ({
         e.persist();
         const v = e.target.value;
         setUserInvitationData(c => {
-            return { value: v, socketFeedback:null, socketFeedbackStatus:null }
+            return { value: v, socketFeedback: null, socketFeedbackStatus: null }
         });
     }
 
@@ -1165,7 +1171,7 @@ const MainClassLayout = ({
 
     }
 
-    const handledropDownSelect = (event,value,editor) => {
+    const handledropDownSelect = (event, value, editor) => {
         // console.log(event,value,editor);
     }
 
@@ -1176,16 +1182,16 @@ const MainClassLayout = ({
     return (
         <div>
             <Seo
-                title={ `${ name } :: codemarka classroom` }
-                metaDescription={ description }>
+                title={`${name} :: codemarka classroom`}
+                metaDescription={description}>
                 <script src="https://unpkg.com/jshint@2.9.6/dist/jshint.js"></script>
                 <script src="https://unpkg.com/jsonlint@1.6.3/web/jsonlint.js"></script>
                 <script src="https://unpkg.com/csslint@1.0.5/dist/csslint.js"></script>
             </Seo>
             <ToastContainer />
             <Preview
-                previewBtnClicked={ handlePreview }
-                classroomid={ data.classroom_id }
+                previewBtnClicked={handlePreview}
+                classroomid={data.classroom_id}
             />
             {classNotification}
             <span
@@ -1198,19 +1204,19 @@ const MainClassLayout = ({
             </span>
 
             <Navigation
-                name={ name }
-                downloadLink={ classfilesdownloadlink }
-                favourite={ addClassToFavourite }
-                isFavourite={ codemarkastate.favourite }
-                topic={ topic }
-                exitClassGracefully={ handleexitClassGracefully }
-                classroomid={ data.classroom_id }
-                testConnection={ handletestConnection }
-                classReport={ handleclassReport }
-                number={ codemarkastate.numberInClass }
-                owner={ owner }
-                endClass={ handleEndClass }
-                startClass={ handlestartClass }
+                name={name}
+                downloadLink={classfilesdownloadlink}
+                favourite={addClassToFavourite}
+                isFavourite={codemarkastate.favourite}
+                topic={topic}
+                exitClassGracefully={handleexitClassGracefully}
+                classroomid={data.classroom_id}
+                testConnection={handletestConnection}
+                classReport={handleclassReport}
+                number={codemarkastate.numberInClass}
+                owner={owner}
+                endClass={handleEndClass}
+                startClass={handlestartClass}
             />
 
             <button
@@ -1251,45 +1257,45 @@ const MainClassLayout = ({
                                                 <Spinner />
                                             </div>
                                         ) : (
-                                            <div>
-                                                <h5 className="heading h4 mt-4">
-                                                    Hi there!
+                                                <div>
+                                                    <h5 className="heading h4 mt-4">
+                                                        Hi there!
                                                 </h5>
-                                                <p>
-                                                    Your classroom session is
-                                                    yet to begin, click on start
-                                                    now and open the doors. You
-                                                    can still start this
-                                                    classroom later by clicking
-                                                    the settings icon and locate
-                                                    the actions button.
+                                                    <p>
+                                                        Your classroom session is
+                                                        yet to begin, click on start
+                                                        now and open the doors. You
+                                                        can still start this
+                                                        classroom later by clicking
+                                                        the settings icon and locate
+                                                        the actions button.
                                                 </p>
-                                                <div className="modal-footer">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-sm btn-success"
-                                                        onClick={
-                                                            handlestartClass
-                                                        }>
-                                                        Start Now
+                                                    <div className="modal-footer">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-sm btn-success"
+                                                            onClick={
+                                                                handlestartClass
+                                                            }>
+                                                            Start Now
                                                     </button>
-                                                    <button
-                                                        type="button "
-                                                        className="btn btn-sm btn-white"
-                                                        data-dismiss="modal">
-                                                        Later
+                                                        <button
+                                                            type="button "
+                                                            className="btn btn-sm btn-white"
+                                                            data-dismiss="modal">
+                                                            Later
                                                     </button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        )}
+                                            )}
                                     </div>
                                 ) : (
-                                    <div>
-                                        <h5 className="heading h4 mt-4">
-                                            You are all set!
+                                        <div>
+                                            <h5 className="heading h4 mt-4">
+                                                You are all set!
                                         </h5>
-                                    </div>
-                                )}
+                                        </div>
+                                    )}
                             </div>
                         </div>
                     </div>
@@ -1330,8 +1336,8 @@ const MainClassLayout = ({
                                     {codemarkastate.ended ? (
                                         <h1>The End!</h1>
                                     ) : (
-                                        codemarkastate.countDownTime
-                                    )}
+                                            codemarkastate.countDownTime
+                                        )}
                                 </b>
                                 {!codemarkastate.ended ? (
                                     <div>
@@ -1347,14 +1353,14 @@ const MainClassLayout = ({
                                         </p>
                                     </div>
                                 ) : (
-                                    ''
-                                )}
+                                        ''
+                                    )}
                             </div>
                         </div>
                         <div className="modal-footer">
                             <a
                                 className="btn btn-sm btn-primary"
-                                href={ classfilesdownloadlink }>
+                                href={classfilesdownloadlink}>
                                 Download Files
                             </a>
                             <a className="btn btn-sm btn-white" href="/?#">
@@ -1374,7 +1380,7 @@ const MainClassLayout = ({
                 Exit
             </button>
             <div
-                className={ 'modal modal-danger fade' }
+                className={'modal modal-danger fade'}
                 id="exitClass"
                 tabIndex="-1"
                 role="dialog"
@@ -1398,32 +1404,32 @@ const MainClassLayout = ({
                         </div>
                         <div className="modal-body">
                             {codemarkastate.sdemitted &&
-                            !codemarkastate.ended ? (
-                                <div className="text-center">
-                                    Processing,please wait...
-                                    <br /> <Spinner />{' '}
-                                </div>
-                            ) : (
-                                <div className="py-3 text-center">
-                                    <i className="fas fa-exclamation-circle fa-4x"></i>
-                                    {codemarkastate.ended ? (
-                                        <h2 className="heading h1">Done!</h2>
-                                    ) : (
-                                        <div>
-                                            <h5 className="heading h4 mt-4">
-                                                Should we stop now?
+                                !codemarkastate.ended ? (
+                                    <div className="text-center">
+                                        Processing,please wait...
+                                        <br /> <Spinner />{' '}
+                                    </div>
+                                ) : (
+                                    <div className="py-3 text-center">
+                                        <i className="fas fa-exclamation-circle fa-4x"></i>
+                                        {codemarkastate.ended ? (
+                                            <h2 className="heading h1">Done!</h2>
+                                        ) : (
+                                                <div>
+                                                    <h5 className="heading h4 mt-4">
+                                                        Should we stop now?
                                             </h5>
-                                            <p>
-                                                Once you end this classroom,
-                                                it's no longer visible to anyone
-                                                and request to join would fail,
-                                                but can be restored from your
-                                                dashboard.
+                                                    <p>
+                                                        Once you end this classroom,
+                                                        it's no longer visible to anyone
+                                                        and request to join would fail,
+                                                        but can be restored from your
+                                                        dashboard.
                                             </p>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                                                </div>
+                                            )}
+                                    </div>
+                                )}
                         </div>
                         {!codemarkastate.sdemitted ? (
                             <div className="modal-footer">
@@ -1436,13 +1442,13 @@ const MainClassLayout = ({
                                 <button
                                     type="button"
                                     className="btn btn-sm btn-white"
-                                    onClick={ HandleClassShutdown }>
+                                    onClick={HandleClassShutdown}>
                                     End now
                                 </button>
                             </div>
                         ) : (
-                            ''
-                        )}
+                                ''
+                            )}
                     </div>
                 </div>
             </div>
@@ -1451,8 +1457,8 @@ const MainClassLayout = ({
                 targetid="exit_class_modal_cont"
                 type="default"
                 size="sm"
-                titleIcon={ <i className="fa fa-thumbs-up"></i> }
-                title={ ' Rate this classroom ' }>
+                titleIcon={<i className="fa fa-thumbs-up"></i>}
+                title={' Rate this classroom '}>
                 {addStars}
             </Modal>
 
@@ -1460,8 +1466,8 @@ const MainClassLayout = ({
                 targetid="pinned_modal_cont"
                 type="default"
                 size="sm"
-                titleIcon={ <i className="fa fa-pen-nib"></i> }
-                title={ 'Pinned Messages' }>
+                titleIcon={<i className="fa fa-pen-nib"></i>}
+                title={'Pinned Messages'}>
                 {getPinnedMessages()}
                 {owner ? addPinTextArea : ''}
             </Modal>
@@ -1470,42 +1476,43 @@ const MainClassLayout = ({
                 type="button"
                 className="btn btn-danger d-none"
                 data-toggle="modal"
-                data-target="#add_user_modal"></button>
-            
+                data-target="#add_user_modal"
+            ></button>
+
             <Modal
                 targetid="add_user_modal"
                 type="default"
                 size="sm"
-                titleIcon={ <i className="fa fa-users"></i> }
-                title={ 'Invite people' }>
+                titleIcon={<i className="fa fa-users"></i>}
+                title={'Invite people'}>
                 <form>
                     <Input
                         name="add_user_input"
                         elementType="input"
-                        elementConfig={ {
+                        elementConfig={{
                             disabled: owner ? false : true,
                             placeholder: 'Invite with email or username',
                             name: 'add_user_input'
-                        } }
-                        value={ userInvitationData.value }
+                        }}
+                        value={userInvitationData.value}
                         inputType="input"
-                        changed={ handleuserInvitationDataChange }
+                        changed={handleuserInvitationDataChange}
                     />
                     <button
                         type="submit"
-                        onClick={ handleUserInviteSubmit }
-                        disabled={ codemarkastate.submitted }
+                        onClick={handleUserInviteSubmit}
+                        disabled={codemarkastate.submitted}
                         className="btn btn-sm float-right btn-success">
                         {codemarkastate.submitted ? (
                             <Spinner />
                         ) : (
-                            <div>
-                                Send Invite <i className="fa fa-forward"></i>
-                            </div>
-                        )}
+                                <div>
+                                    Send Invite <i className="fa fa-forward"></i>
+                                </div>
+                            )}
                     </button>
                     <div>
-                        {userInvitationData.socketFeedback !== null  ? (<span className={ `${ userInvitationData.socketFeedbackStatus ? 'text-success' : 'text-danger' }` }> {userInvitationData.socketFeedback} </span>) : ''}
+                        {userInvitationData.socketFeedback !== null ? (<span className={`${userInvitationData.socketFeedbackStatus ? 'text-success' : 'text-danger'}`}> {userInvitationData.socketFeedback} </span>) : ''}
                     </div>
                 </form>
             </Modal>
@@ -1514,34 +1521,35 @@ const MainClassLayout = ({
                 type="default"
                 size="sm"
                 buttonExtra={
-                    owner ? (
-                        <button
-                            type="submit"
-                            onClick={ handleClassInfoUpdate }
-                            className="btn btn-sm float-left btn-soft-primary">
-                            {ClassroomInformation.submitted ? (
-                                <Spinner />
-                            ) : (
-                                'Save'
-                            )}
-                        </button>
-                    ) : (
-                        false
-                    )
+                    owner ?
+                        (
+                            <button
+                                type="submit"
+                                onClick={handleClassInfoUpdate}
+                                className="btn btn-sm float-left btn-soft-primary">
+                                {
+                                    ClassroomInformation.submitted ?
+                                        (<Spinner />) : ('Save')
+                                }
+                            </button>
+                        ) :
+                        (
+                            false
+                        )
                 }
                 title="classroom Information">
-                <form onSubmit={ handleClassInfoUpdate }>
+                <form onSubmit={handleClassInfoUpdate}>
                     <Input
                         name="cname"
                         label="Classroom Name"
                         elementType="input"
-                        elementConfig={ {
+                        elementConfig={{
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'cname'
-                        } }
-                        value={ ClassroomInformation.cname.value }
-                        changed={ e =>
+                        }}
+                        value={ClassroomInformation.cname.value}
+                        changed={e =>
                             handleClassroomInformationInputChange(e, 'cname')
                         }
                     />
@@ -1549,70 +1557,72 @@ const MainClassLayout = ({
                         name="ctopic"
                         label="Classroom Topic"
                         elementType="input"
-                        elementConfig={ {
+                        elementConfig={{
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'ctopic'
-                        } }
-                        value={ ClassroomInformation.ctopic.value }
-                        changed={ e =>
+                        }}
+                        value={ClassroomInformation.ctopic.value}
+                        changed={e =>
                             handleClassroomInformationInputChange(e, 'ctopic')
                         }
                     />
                     <Input
                         label="Classroom Description"
                         elementType="textarea"
-                        elementConfig={ {
+                        elementConfig={{
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'cdesc'
-                        } }
-                        value={ ClassroomInformation.cdesc.value }
-                        changed={ e =>
+                        }}
+                        value={ClassroomInformation.cdesc.value}
+                        changed={e =>
                             handleClassroomInformationInputChange(e, 'cdesc')
                         }
                     />
                 </form>
             </Modal>
 
+
             <ParticipantModal
-                users={ codemarkastate.users }
-                toogleUserEditAccess={ handletoogleUserEditAccess }
-                owner={ owner }
-                ownerid={ ownerid }
-                userid={ userid }
-                sendUserPrivateMessage={ handlePrivateMessaging }
-                blockUser={ handleUserBlocking }
-                waveAtUser={ handlewaveAtUser }
-                handleAddUserIconClicked={ handleAddUserIconClicked }
+                users={codemarkastate.users}
+                toogleUserEditAccess={handletoogleUserEditAccess}
+                owner={owner}
+                ownerid={ownerid}
+                userid={userid}
+                sendUserPrivateMessage={handlePrivateMessaging}
+                blockUser={handleUserBlocking}
+                waveAtUser={handlewaveAtUser}
+                handleAddUserIconClicked={handleAddUserIconClicked}
             />
 
-            <div style={ { width: '100%', height: '87vh' } }>
+            <div style={{ width: '100%', height: '87vh' }}>
                 <div className="container-fluid ">
                     <div className="row">
                         <div className="col-2 p-0">
-                            <Suspense fallback={ <Spinner /> }>
+                            <Suspense fallback={<Spinner />}>
                                 <Convo
-                                    typing={ codemarkastate.typingState }
-                                    username={ username }
-                                    inputValue={ inputState.value }
-                                    handleInputChange={ handleInputChange }
-                                    sendMessage={ handleMessageSubmit }
-                                    focused={ inputState.isFocused }
-                                    messages={ codemarkastate.messages }
-                                    userSpecificMessages={ userSpecificMessages }
-                                    user={ userid }
-                                    owner={ ownerid }
+                                    typing={codemarkastate.typingState}
+                                    username={username}
+                                    inputValue={inputState.value}
+                                    handleInputChange={handleInputChange}
+                                    sendMessage={handleMessageSubmit}
+                                    focused={inputState.isFocused}
+                                    messages={codemarkastate.messages}
+                                    userSpecificMessages={userSpecificMessages}
+                                    user={userid}
+                                    owner={ownerid}
+                                    collectEmoji={collectEmoji}
                                 />
                             </Suspense>
                         </div>
                         <div className="col-10 p-0">
-                            <Suspense fallback={ <Spinner /> }>
+                            <Suspense fallback={<Spinner />}>
                                 <Editor
-                                    readOnly={ codemarkastate.editorPriviledge }
-                                    handleEditorChange={ editorChanged }
-                                    files={ codemarkastate.editors }
-                                    dropDownSelect={ handledropDownSelect }
+                                    readOnly={codemarkastate.editorPriviledge}
+                                    handleEditorChange={editorChanged}
+                                    files={codemarkastate.editors}
+                                    dropDownSelect={handledropDownSelect}
                                 />
                             </Suspense>
                         </div>
