@@ -41,7 +41,7 @@ const EmalVerification = React.lazy(() =>
     import('./containers/auth/EmalVerification')
 )
 const CommunityAccountRegistration = React.lazy(() =>
-    import('./containers/auth/CommunityAccountRegistration')
+    import('./containers/auth/Community/index.jsx')
 )
 
 const contactUs = React.lazy(() => import('./containers/public/Contact'))
