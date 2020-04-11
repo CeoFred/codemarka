@@ -58,7 +58,7 @@ const emailIconSvg = (
 )
 
 function Login(props) {
-    const { onResetAll, onClassroomSwitch } = props
+    const {  onClassroomSwitch } = props
     useEffect(() => {
             onClassroomSwitch('classroom')
     });

@@ -87,7 +87,7 @@ const mappedCountry = countyJson.map((country) => {
            }
            setFormControlState({...formControls,contols:updatedConrols,formisvalid: true});
          }
-     },[oldData]);
+     },[oldData,formControls]);
      
       const handleInputChage = (e) => {
           const controlName = e.target.name
@@ -104,7 +104,7 @@ const mappedCountry = countyJson.map((country) => {
               },
           }
 
-          if(controlName == "communityWebsite"){
+          if(controlName === "communityWebsite"){
             if(updatedControls[controlName].value.trim() === ''){
               updatedControls[controlName].valid =  true;
             }
