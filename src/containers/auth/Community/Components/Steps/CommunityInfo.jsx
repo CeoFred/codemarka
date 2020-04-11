@@ -39,7 +39,7 @@ const mappedCountry = countyJson.map((country) => {
                  value: '',
                  validation: {
                      required: false,
-                     minLength: 5,
+                     minLength: 4,
                      url: true,
                  },
                  valid: true,
@@ -58,7 +58,6 @@ const mappedCountry = countyJson.map((country) => {
                  value: '',
                  validation: {
                      required: true,
-                     minLength: 5,
                  },
                  valid: false,
              },
@@ -87,7 +86,7 @@ const mappedCountry = countyJson.map((country) => {
            }
            setFormControlState({...formControls,contols:updatedConrols,formisvalid: true});
          }
-     },[oldData,formControls]);
+     },[oldData]);
      
       const handleInputChage = (e) => {
           const controlName = e.target.name

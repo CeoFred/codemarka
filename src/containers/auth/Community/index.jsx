@@ -20,7 +20,7 @@ import '../style.css';
        props.onEnvironmentSwitch('classroom')
    });
 
-   const [currentFormStep, setCurrentFormStep] = useState(4);
+   const [currentFormStep, setCurrentFormStep] = useState(1);
    const [communitativeCommunityData, setcommunitativeCommunityData] = useState({})
    const setCurrentFormAndData = (step,data) => {
     setcommunitativeCommunityData(c => {
