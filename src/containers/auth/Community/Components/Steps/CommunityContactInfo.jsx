@@ -1,8 +1,10 @@
 import React, { useState, useLayoutEffect } from 'react'
+import axios from 'axios'
 
 import { checkValidity } from '../../../../../utility/shared'
 import Spinner from '../../../../../components/Partials/Preloader'
 import Alert from '../../../../../components/Partials/Alert/Alert'
+import * as APIURL from '../../../../../config/api_url'
 
 
 export default function CommunityContactInfo(props) {
@@ -117,30 +119,57 @@ export default function CommunityContactInfo(props) {
       * @retrun void
       */
     const handleFormSubmission = (event) => {
-        event.preventDefault();
+       event.preventDefault()
+       const formisSubmitted = true
+       setFormControlState({ ...formControls, formisSubmitted })
 
-        const formisSubmitted = true
-        setFormControlState({ ...formControls, formisSubmitted })
+       const formData = {}
+       if (formControls.formisvalid) {
+           for (const formElementIdentifier in formControls.controls) {
+               formData[formElementIdentifier] =
+                   formControls.controls[formElementIdentifier].value
+           }
 
-        const formData = {};
-        if (formControls.formisvalid) {
-            for (const formElementIdentifier in formControls.controls) {
-                formData[formElementIdentifier] =
-                    formControls.controls[formElementIdentifier].value;
-            }
-            setTimeout(() => isValidatedAndShouldProceed(4,formData),1500);
+           axios
+               .patch(
+                   APIURL.COMMUNITY_ACCOUNT_CREATE_CONTACT_INFO_TEMP +
+                       `/${props.tempkid}`,
+                   formData
+               )
+               .then((data) => {
+                   if (data.statusText === 'OK' && data.data.status) {
+                       setTimeout(
+                           () =>
+                               isValidatedAndShouldProceed(
+                                   4,
+                                   formData,
+                                   data.data.data
+                               ),
+                           500
+                       )
+                   }
+               })
+               .catch((err) => {
+                   setFormControlState({
+                       ...formControls,
+                       formisSubmitted: false,
+                       alertType: 'error',
+                       formErrored: true,
+                       formErrorMessage:
+                           'Whoops!! Something went wrong,try again',
+                   })
+               })
+       } else {
+           setFormControlState({
+               ...formControls,
+               alertType: 'error',
+               formErrored: true,
+               formErrorMessage:
+                   'Form Validation Failed, please check inputs and try again',
+           })
 
-        } else {
-            
-            setFormControlState({
-                ...formControls,
-                alertType: 'error',
-                formErrored: true,
-                formErrorMessage: 'Form Validation Failed, please check inputs and try again'
-            });
-
-            return false
-        }
+           return false
+       }
     }
   return (
       <div>

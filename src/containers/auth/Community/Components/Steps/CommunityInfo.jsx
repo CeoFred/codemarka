@@ -1,7 +1,10 @@
 import React,{ useState, useLayoutEffect } from 'react';
 import { Link } from 'react-router-dom'
+import axios from 'axios';
 
-import * as APPURL from '../../../../../config/url'
+import * as APPURL from '../../../../../config/url';
+import * as APIURL from '../../../../../config/api_url';
+
 import { checkValidity } from '../../../../../utility/shared';
 import countyJson from '../../../../../utility/country.json'
 
@@ -18,7 +21,7 @@ const mappedCountry = countyJson.map((country) => {
          controls: {
              communityName: {
                  touched: false,
-                 value: '',
+                 value: 'google developers',
                  validation: {
                      required: true,
                      minLength: 5,
@@ -27,7 +30,7 @@ const mappedCountry = countyJson.map((country) => {
              },
              communityAcronym: {
                  touched: false,
-                 value: '',
+                 value: 'GDG PWE',
                  validation: {
                      required: true,
                      minLength: 2,
@@ -46,7 +49,7 @@ const mappedCountry = countyJson.map((country) => {
              },
              communityAffiliation: {
                  touched: false,
-                 value: '',
+                 value: 'GDBD',
                  validation: {
                      required: true,
                      minLength: 2,
@@ -55,7 +58,7 @@ const mappedCountry = countyJson.map((country) => {
              },
              communityCity: {
                  touched: false,
-                 value: '',
+                 value: 'IMO',
                  validation: {
                      required: true,
                  },
@@ -63,7 +66,7 @@ const mappedCountry = countyJson.map((country) => {
              },
              communityCountry: {
                  touched: false,
-                 value: '',
+                 value: 'NG',
                  validation: {
                      required: true,
                      minLength: 2,
@@ -72,7 +75,7 @@ const mappedCountry = countyJson.map((country) => {
                  valid: false,
              },
          },
-         formisvalid: false,
+         formisvalid: true,
          formisSubmitted: false,
      });
 
@@ -132,9 +135,8 @@ const mappedCountry = countyJson.map((country) => {
       
     const handleFormSubmission = (event) => {
         event.preventDefault();
-
         const formisSubmitted = true
-        setFormControlState({ ...formControls, formisSubmitted })
+        setFormControlState({ ...formControls, formisSubmitted,formErrored:null,formErrorMessage:null })
 
         const formData = {};
         if (formControls.formisvalid) {
@@ -142,7 +144,18 @@ const mappedCountry = countyJson.map((country) => {
                 formData[formElementIdentifier] =
                     formControls.controls[formElementIdentifier].value;
             }
-            setTimeout(() => isValidatedAndShouldProceed(2,formData),1500);
+            if (props.tempkid !== null) {
+                isValidatedAndShouldProceed(2, formData, props.tempkid);
+                return;
+            }
+            axios.post(APIURL.COMMUNITY_ACCOUNT_CREATE_INFO_TEMP,formData).then(data => {
+                if(data.statusText === "OK" && data.data.status){
+
+            setTimeout(() => isValidatedAndShouldProceed(2,formData,data.data.data),500);
+                }
+            }).catch(err => {
+                setFormControlState({ ...formControls, formisSubmitted: false, alertType:'error',formErrored:true, formErrorMessage:'Whoops!! Something went wrong,try again' })
+            });
 
         } else {
             

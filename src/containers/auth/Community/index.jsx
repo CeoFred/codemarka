@@ -21,13 +21,13 @@ import '../style.css';
    });
 
    const [currentFormStep, setCurrentFormStep] = useState(1);
-   const [communitativeCommunityData, setcommunitativeCommunityData] = useState({})
-   const setCurrentFormAndData = (step,data) => {
+   const [communitativeCommunityData, setcommunitativeCommunityData] = useState({tempkid:null})
+
+   const setCurrentFormAndData = (step,data,tempkid = null) => {
     setcommunitativeCommunityData(c => {
-        return {...c,[step-1]:data}
+        return {...c,[step-1]:data,tempkid: tempkid}
     })
     setCurrentFormStep(step);
-    console.log(step,data);
    }
 
    const handlereturnToPreviousForm = (step,data) => {
@@ -42,6 +42,7 @@ import '../style.css';
                isValidatedAndShouldProceed={setCurrentFormAndData}
                returnToPreviousForm={handlereturnToPreviousForm}
                oldData={communitativeCommunityData[1]}
+               tempkid={communitativeCommunityData.tempkid}
                {...props}
            />
        ),
@@ -50,6 +51,7 @@ import '../style.css';
                isValidatedAndShouldProceed={setCurrentFormAndData}
                returnToPreviousForm={handlereturnToPreviousForm}
                oldData={communitativeCommunityData[2]}
+               tempkid={communitativeCommunityData.tempkid}
                {...props}
            />
        ),
@@ -58,6 +60,7 @@ import '../style.css';
                isValidatedAndShouldProceed={setCurrentFormAndData}
                returnToPreviousForm={handlereturnToPreviousForm}
                oldData={communitativeCommunityData[3]}
+               tempkid={communitativeCommunityData.tempkid}
                {...props}
            />
        ),
@@ -66,6 +69,7 @@ import '../style.css';
                isValidatedAndShouldProceed={setCurrentFormAndData}
                returnToPreviousForm={handlereturnToPreviousForm}
                oldData={communitativeCommunityData[4]}
+               tempkid={communitativeCommunityData.tempkid}
                {...props}
            />
        ),
@@ -74,6 +78,7 @@ import '../style.css';
                isValidatedAndShouldProceed={setCurrentFormAndData}
                returnToPreviousForm={handlereturnToPreviousForm}
                oldData={communitativeCommunityData[5]}
+               tempkid={communitativeCommunityData.tempkid}
                {...props}
            />
        ),
@@ -82,6 +87,7 @@ import '../style.css';
                isValidatedAndShouldProceed={setCurrentFormAndData}
                returnToPreviousForm={handlereturnToPreviousForm}
                oldData={communitativeCommunityData[6]}
+               tempkid={communitativeCommunityData.tempkid}
                {...props}
            />
        ),

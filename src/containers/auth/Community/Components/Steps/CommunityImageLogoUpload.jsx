@@ -2,8 +2,10 @@ import React,{ useState } from 'react'
 import axios from 'axios';
 
 import Spinner from '../../../../../components/Partials/Preloader'
+import * as APIURL from '../../../../../config/api_url';
 
 function CommunityImageLogoUpload(props) {
+
   const handlePreviousForm = (e) => {
       props.returnToPreviousForm(3)
   }
@@ -90,6 +92,7 @@ function CommunityImageLogoUpload(props) {
 
   const onChangeHandler = (event) => {
       const file = event.target.files[0];
+      console.log(props);
       if (maxSelectFile(event) && checkMimeType(event) && checkFileSize(event)) {
           setstate({ error: null, isValid: true, message: null, file: null })
 
@@ -98,14 +101,27 @@ function CommunityImageLogoUpload(props) {
               formisvalid: false,
               formisSubmitted: true,
               inProgress :true});
+
           setstate({ ...state, file });
+
           const data = new FormData();
           data.append('file', file);
 
           axios
-              .post('http://localhost:2001/auth/community/upload/logo', data)
+              .patch(APIURL.COMMUNITY_ACCOUNT_CREATE_LOGO_TEMP+`/${props.tempkid}`, data)
               .then((res) => {
                   console.log(res.statusText)
+                  if (res.statusText === 'OK' && res.data.status) {
+                      setTimeout(
+                          () =>
+                              props.isValidatedAndShouldProceed(
+                                  5,
+                                  file,
+                                  res.data.data
+                              ),
+                          1500
+                      )
+                  }
                   setFormControl({
                       ...formControls,
                       formisvalid: true,
@@ -113,6 +129,7 @@ function CommunityImageLogoUpload(props) {
                       inProgress: false,
                   })
               }).catch(err => {
+                  console.log(err);
                   setFormControl({
                       ...formControls,
                       formisvalid: true,

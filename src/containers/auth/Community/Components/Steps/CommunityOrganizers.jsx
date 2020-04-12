@@ -1,8 +1,10 @@
 import React,{ useState, useLayoutEffect } from 'react';
+import axios from 'axios';
 
 import { checkValidity } from '../../../../../utility/shared';
 import Spinner from '../../../../../components/Partials/Preloader'
 import Alert from '../../../../../components/Partials/Alert/Alert';
+import * as APIURL from '../../../../../config/api_url'
 
 function CommunityInfo(props) {
     const { isValidatedAndShouldProceed, returnToPreviousForm, oldData } = props
@@ -51,6 +53,7 @@ function CommunityInfo(props) {
          formisvalid: false,
          formisSubmitted: false,
      })
+
       const handleInputChage = (e) => {
           const controlName = e.target.name
           const updatedControls = {
@@ -127,7 +130,6 @@ function CommunityInfo(props) {
       */
     const handleFormSubmission = (event) => {
         event.preventDefault();
-
         const formisSubmitted = true
         setFormControlState({ ...formControls, formisSubmitted })
 
@@ -135,9 +137,35 @@ function CommunityInfo(props) {
         if (formControls.formisvalid) {
             for (const formElementIdentifier in formControls.controls) {
                 formData[formElementIdentifier] =
-                    formControls.controls[formElementIdentifier].value;
+                    formControls.controls[formElementIdentifier].value
             }
-            setTimeout(() => isValidatedAndShouldProceed(3,formData),1500);
+            
+            axios
+                .patch(APIURL.COMMUNITY_ACCOUNT_CREATE_ORGANIZERS_TEMP+`/${props.tempkid}`, formData)
+                .then((data) => {
+                    if (data.statusText === 'OK' && data.data.status) {
+
+                        setTimeout(
+                            () =>
+                                isValidatedAndShouldProceed(
+                                    3,
+                                    formData,
+                                    data.data.data
+                                ),
+                            500
+                        )
+                    }
+                })
+                .catch((err) => {
+                    setFormControlState({
+                        ...formControls,
+                        formisSubmitted: false,
+                        alertType: 'error',
+                        formErrored: true,
+                        formErrorMessage:
+                            'Whoops!! Something went wrong,try again',
+                    })
+                })
 
         } else {
             
