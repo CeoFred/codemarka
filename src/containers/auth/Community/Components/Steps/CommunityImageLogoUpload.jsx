@@ -20,8 +20,10 @@ function CommunityImageLogoUpload(props) {
 
   const handleFormSubmission = (event) => {
       event.preventDefault()
-          const formData = {};
-          setTimeout(() => props.isValidatedAndShouldProceed(5, formData), 1500)   
+          setTimeout(
+              () => props.isValidatedAndShouldProceed(5, props.tempkid),
+              500
+          )   
   }
 
   const checkMimeType = (event) => {
@@ -91,8 +93,9 @@ function CommunityImageLogoUpload(props) {
   }
 
   const onChangeHandler = (event) => {
-      const file = event.target.files[0];
-      console.log(props);
+
+    const file = event.target.files[0];
+
       if (maxSelectFile(event) && checkMimeType(event) && checkFileSize(event)) {
           setstate({ error: null, isValid: true, message: null, file: null })
 
@@ -112,6 +115,13 @@ function CommunityImageLogoUpload(props) {
               .then((res) => {
                   console.log(res.statusText)
                   if (res.statusText === 'OK' && res.data.status) {
+                 setstate({
+                     error: false,
+                     isValid: false,
+                     message: 'Upload successfull',
+                     file: null,
+                 })
+
                       setTimeout(
                           () =>
                               props.isValidatedAndShouldProceed(
@@ -136,6 +146,9 @@ function CommunityImageLogoUpload(props) {
                       formisSubmitted: false,
                       inProgress: false,
                   })
+                  event.target.value = null
+                 setstate({ error: true, isValid: true, message: 'Failed to Upload File,try again', file: null })
+
               });
       } 
   }

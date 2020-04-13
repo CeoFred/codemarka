@@ -1,9 +1,9 @@
 /** @format */
 
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import axios from "axios";
 
-import * as APPURL from '../../../../../config/url'
+import * as APIURL from '../../../../../config/api_url'
 import { checkValidity } from '../../../../../utility/shared'
 
 import Spinner from '../../../../../components/Partials/Preloader'
@@ -16,13 +16,13 @@ function CommunityLoginCredentials(props) {
         controls: {
             communityEmail: {
                 touched: false,
-                value: '',
+                value: (props.communitativeCommunityData[2].email),
                 validation: {
                     required: true,
                     minLength: 5,
-                    isEmail:true
+                    isEmail: true,
                 },
-                valid: false,
+                valid: true,
             },
             communityPassword: {
                 touched: false,
@@ -75,7 +75,6 @@ function CommunityLoginCredentials(props) {
 
     const handleFormSubmission = (event) => {
         event.preventDefault()
-
         const formisSubmitted = true
         setFormControlState({ ...formControls, formisSubmitted })
 
@@ -85,7 +84,36 @@ function CommunityLoginCredentials(props) {
                 formData[formElementIdentifier] =
                     formControls.controls[formElementIdentifier].value
             }
-            setTimeout(() => isValidatedAndShouldProceed(4, formData), 1500)
+
+            axios
+                .post(
+                    APIURL.COMMUNITY_ACCOUNT_CREATE_FINAL +
+                        `/${props.tempkid}`,
+                    formData
+                )
+                .then((data) => {
+                    if (data.statusText === 'OK' && data.data.status) {
+                        setTimeout(
+                            () =>
+                                isValidatedAndShouldProceed(
+                                    7,
+                                    formData,
+                                    data.data.data
+                                ),
+                            500
+                        )
+                    }
+                })
+                .catch((err) => {
+                    setFormControlState({
+                        ...formControls,
+                        formisSubmitted: false,
+                        alertType: 'error',
+                        formErrored: true,
+                        formErrorMessage:
+                            'Whoops!! Something went wrong,try again',
+                    })
+                })
         } else {
             setFormControlState({
                 ...formControls,
@@ -103,10 +131,10 @@ function CommunityLoginCredentials(props) {
             <div class="row">
                 <div className="mb-5 text-left" style={{ paddingLeft: '15px' }}>
                     <h6 className="h3 mb-1">
-                        <b>Community Information</b>
+                        <b>Authentication Credentials</b>
                     </h6>
                     <p className="text-muted mb-0">
-                        let's get to know your community to serve you better
+                        set-up your login details to access your dashboard.
                     </p>
                     <Alert
                         type={formControls.alertType}
@@ -114,102 +142,38 @@ function CommunityLoginCredentials(props) {
                         {formControls.formErrorMessage}
                     </Alert>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-8 col-12">
                     <div class="form-group">
                         <label class="form-control-label">
-                            Community Name{' '}
-                            <span className="text-danger pl-1">*</span>
+                            Email <span className="text-danger pl-1">*</span>
                         </label>
                         <input
                             class="form-control"
-                            type="text"
-                            name="communityName"
-                            value={formControls.controls.communityName.value}
+                            type="email"
+                            name="communityEmail"
+                            value={formControls.controls.communityEmail.value}
                             onChange={handleInputChage}
-                            placeholder="Enter your communities name"
-                        />
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="form-control-label">
-                            Acronymn
-                            <span className="text-danger pl-1">*</span>
-                        </label>
-                        <input
-                            class="form-control"
-                            type="text"
-                            name="communityAcronym"
-                            value={formControls.controls.communityAcronym.value}
-                            onChange={handleInputChage}
-                            placeholder="GDG Owerri"
+                            placeholder="name@someserver.com"
                         />
                     </div>
                 </div>
             </div>
             <div class="row align-items-center">
-                <div class="col-md-6">
+                <div class="col-md-8 col-12">
                     <div class="form-group">
-                        <label class="form-control-label">Public Website</label>
+                        <label class="form-control-label">Password</label>
                         <input
-                            type="text"
+                            type="password"
                             class="form-control"
-                            name="communityWebsite"
-                            value={formControls.controls.communityWebsite.value}
+                            name="communityPassword"
+                            value={formControls.controls.communityPassword.value}
                             onChange={handleInputChage}
-                            placeholder="https://gdgowerri.dev"
                         />
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="form-control-label">
-                            Affiliation{' '}
-                            <span className="text-danger pl-1">*</span>
-                        </label>
-                        <select
-                            class="form-control"
-                            name="communityAffiliation"
-                            value={
-                                formControls.controls.communityAffiliation.value
-                            }
-                            onChange={handleInputChage}
-                            data-toggle="select">
-                            <option value={0}>Select Affiliation</option>
-                            <option value="GDG">Google Developer Group</option>
-                            <option value="FDC">
-                                Facebook Developer Circle
-                            </option>
-                            <option value="RNS">Rather not say</option>
-                        </select>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="form-control-label">
-                            City <span className="text-danger pl-1">*</span>
-                        </label>
-                        <input
-                            class="form-control"
-                            type="text"
-                            placeholder="Lagos"
-                            name="communityCity"
-                            value={formControls.controls.communityCity.value}
-                            onChange={handleInputChage}
-                        />
-                    </div>
-                </div>
-                <div class="col-md-6">
-
-                </div>
-                <div className="flex align-items-center d-flex w-100 justify-content-between">
-                    <span className="text-primary font-weight-bolder ml-2">
-                        <Link to={APPURL.COMMUNITY_ACCOUNT_LOGIN_PAGE}>
-                            Sign in instead
-                        </Link>
-                    </span>
+                <div className="flex align-items-center d-flex w-100 justify-content-start">
                     <button
                         style={{ marginLeft: '15px' }}
                         type="button"
@@ -220,7 +184,7 @@ function CommunityLoginCredentials(props) {
                         formControls.formisvalid ? (
                             <Spinner />
                         ) : (
-                            'Next'
+                            'Finish'
                         )}
                     </button>
                 </div>

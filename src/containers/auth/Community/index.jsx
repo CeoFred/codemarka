@@ -11,6 +11,7 @@ import CommunityLoginCredentialsStep from './Components/Steps/CommunityLoginCred
 import CommunityImageLogoUploadStep from './Components/Steps/CommunityImageLogoUpload'
 import CommunityContactInfoStep from './Components/Steps/CommunityContactInfo'
 import CommunitySocialMediaStep from './Components/Steps/CommunitySocialMediaHandles'
+import SuccessInformation from './Components/Steps/SuccessInfo'
 
 import '../style.css';
 
@@ -23,7 +24,7 @@ import '../style.css';
    const [currentFormStep, setCurrentFormStep] = useState(1);
    const [communitativeCommunityData, setcommunitativeCommunityData] = useState({tempkid:null})
 
-   const setCurrentFormAndData = (step,data,tempkid = null) => {
+   const setCurrentFormAndData = (step,data,tempkid = communitativeCommunityData.tempkid) => {
     setcommunitativeCommunityData(c => {
         return {...c,[step-1]:data,tempkid: tempkid}
     })
@@ -43,6 +44,7 @@ import '../style.css';
                returnToPreviousForm={handlereturnToPreviousForm}
                oldData={communitativeCommunityData[1]}
                tempkid={communitativeCommunityData.tempkid}
+               communitativeCommunityData={communitativeCommunityData}
                {...props}
            />
        ),
@@ -52,6 +54,7 @@ import '../style.css';
                returnToPreviousForm={handlereturnToPreviousForm}
                oldData={communitativeCommunityData[2]}
                tempkid={communitativeCommunityData.tempkid}
+               communitativeCommunityData={communitativeCommunityData}
                {...props}
            />
        ),
@@ -61,6 +64,7 @@ import '../style.css';
                returnToPreviousForm={handlereturnToPreviousForm}
                oldData={communitativeCommunityData[3]}
                tempkid={communitativeCommunityData.tempkid}
+               communitativeCommunityData={communitativeCommunityData}
                {...props}
            />
        ),
@@ -79,6 +83,7 @@ import '../style.css';
                returnToPreviousForm={handlereturnToPreviousForm}
                oldData={communitativeCommunityData[5]}
                tempkid={communitativeCommunityData.tempkid}
+               communitativeCommunityData={communitativeCommunityData}
                {...props}
            />
        ),
@@ -88,9 +93,11 @@ import '../style.css';
                returnToPreviousForm={handlereturnToPreviousForm}
                oldData={communitativeCommunityData[6]}
                tempkid={communitativeCommunityData.tempkid}
+               communitativeCommunityData={communitativeCommunityData}
                {...props}
            />
        ),
+       7: <SuccessInformation />,
    }
 
 
@@ -121,14 +128,13 @@ import '../style.css';
                               {stepComponentObject[currentFormStep]}
                               {/** Steps end */}
                           </div>
-                          <div class="col-12 col-md-5 mt-4 mt-md-0 text-md-center h-100">
+                          <div class="col-12 col-md-5 mt-4 mt-md-0 text-md-center h-100 d-none d-md-flex d-lg-flex justify-content-center align-items-center">
                               <img
                                   src={svgUrl}
                                   style={{
-                                      height: '300px',
-                                      position: 'absolute',
-                                      bottom: '122px',
-                                      left: '122px',
+                                      height: '200px',
+                                      maxWidth:'100%',
+                                      maxHeight:'100%'
                                   }}
                               />
                           </div>

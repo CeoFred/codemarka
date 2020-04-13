@@ -1,10 +1,12 @@
 /** @format */
 
 import React, { useState, useLayoutEffect } from 'react'
+import axios from 'axios'
 
 import { checkValidity } from '../../../../../utility/shared'
 import Spinner from '../../../../../components/Partials/Preloader'
 import Alert from '../../../../../components/Partials/Alert/Alert'
+import * as APIURL from '../../../../../config/api_url'
 
 export default function CommunitySocialMediaInfo(props) {
     const { isValidatedAndShouldProceed, returnToPreviousForm, oldData } = props
@@ -16,7 +18,6 @@ export default function CommunitySocialMediaInfo(props) {
                 value: '',
                 validation: {
                     required: false,
-                    minLength: 5,
                     url: true,
                 },
                 valid: false,
@@ -26,7 +27,6 @@ export default function CommunitySocialMediaInfo(props) {
                 value: '',
                 validation: {
                     required: false,
-                    minLength: 2,
                     url: true,
                 },
                 valid: false,
@@ -36,7 +36,6 @@ export default function CommunitySocialMediaInfo(props) {
                 value: '',
                 validation: {
                     required: false,
-                    minLength: 5,
                     url: true,
                 },
                 valid: false,
@@ -46,12 +45,12 @@ export default function CommunitySocialMediaInfo(props) {
                 value: '',
                 validation: {
                     required: false,
-                    minLength: 5,
+                    url: true,
                 },
                 valid: false,
             },
         },
-        formisvalid: false,
+        formisvalid: true,
         formisSubmitted: false,
     })
     const handleInputChage = (e) => {
@@ -77,6 +76,9 @@ export default function CommunitySocialMediaInfo(props) {
         } else {
             e.target.classList.remove('is-valid')
             e.target.classList.add('is-invalid')
+        }
+        if (updatedControls[controlName].value.trim() === '') {
+            updatedControls[controlName].valid = true
         }
 
         let formisvalid = true
@@ -121,35 +123,65 @@ export default function CommunitySocialMediaInfo(props) {
             })
         }
     }, [oldData])
-    /**
-     * Handle Form Submission
-     * @param event Event
-     * @retrun void
-     */
+   
+
+     /**
+      * Handle Form Submission
+      * @param event Event
+      * @retrun void
+      */
     const handleFormSubmission = (event) => {
-        event.preventDefault()
+       event.preventDefault()
+       const formisSubmitted = true
+       setFormControlState({ ...formControls, formisSubmitted })
 
-        const formisSubmitted = true
-        setFormControlState({ ...formControls, formisSubmitted })
+       const formData = {}
+       if (formControls.formisvalid) {
+           for (const formElementIdentifier in formControls.controls) {
+               formData[formElementIdentifier] =
+                   formControls.controls[formElementIdentifier].value
+           }
 
-        const formData = {}
-        if (formControls.formisvalid) {
-            for (const formElementIdentifier in formControls.controls) {
-                formData[formElementIdentifier] =
-                    formControls.controls[formElementIdentifier].value
-            }
-            setTimeout(() => isValidatedAndShouldProceed(4, formData), 1500)
-        } else {
-            setFormControlState({
-                ...formControls,
-                alertType: 'error',
-                formErrored: true,
-                formErrorMessage:
-                    'Form Validation Failed, please check inputs and try again',
-            })
+           axios
+               .patch(
+                   APIURL.COMMUNITY_ACCOUNT_CREATE_SOCIAL_MEDIA_INFO_TEMP +
+                       `/${props.tempkid}`,
+                   formData
+               )
+               .then((data) => {
+                   if (data.statusText === 'OK' && data.data.status) {
+                       setTimeout(
+                           () =>
+                               isValidatedAndShouldProceed(
+                                   6,
+                                   formData,
+                                   data.data.data
+                               ),
+                           500
+                       )
+                   }
+               })
+               .catch((err) => {
+                   setFormControlState({
+                       ...formControls,
+                       formisSubmitted: false,
+                       alertType: 'danger',
+                       formErrored: true,
+                       formErrorMessage:
+                           'Whoops!! Something went wrong,try again',
+                   })
+               })
+       } else {
+           setFormControlState({
+               ...formControls,
+               alertType: 'danger',
+               formErrored: true,
+               formErrorMessage:
+                   'Form Validation Failed, please check inputs and try again',
+           })
 
-            return false
-        }
+           return false
+       }
     }
     return (
         <div>
