@@ -146,7 +146,6 @@ function CommunityImageLogoUpload(props) {
                       formisSubmitted: false,
                       inProgress: false,
                   })
-                  event.target.value = null
                  setstate({ error: true, isValid: true, message: 'Failed to Upload File,try again', file: null })
 
               });

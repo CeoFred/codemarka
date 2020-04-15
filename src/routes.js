@@ -43,6 +43,9 @@ const EmalVerification = React.lazy(() =>
 const CommunityAccountRegistration = React.lazy(() =>
     import('./containers/auth/Community/index.jsx')
 )
+const CommunityAccountLogin = React.lazy(() =>
+    import('./containers/auth/Community/signin.jsx')
+)
 
 const contactUs = React.lazy(() => import('./containers/public/Contact'))
 
@@ -66,7 +69,17 @@ const Routes = props => {
             <Route exact component={About} path={url.ABOUT} />
             <Route exact component={oauthSuccess} path={url.OAUTH_URL} />
             <Route exact component={contactUs} path={url.CONTACT} />
-            <Route exact component={CommunityAccountRegistration} path={url.COMMUNITY_ACCOUNT_SIGNUP_PAGE} />
+            <Route
+                exact
+                component={CommunityAccountRegistration}
+                path={url.COMMUNITY_ACCOUNT_SIGNUP_PAGE}
+            />
+            <Route
+                exact
+                component={CommunityAccountLogin}
+                path={url.COMMUNITY_ACCOUNT_LOGIN_PAGE}
+            />
+
             <Route
                 exact
                 component={EmalVerification}

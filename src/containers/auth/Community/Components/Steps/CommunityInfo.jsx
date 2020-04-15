@@ -154,14 +154,14 @@ const mappedCountry = countyJson.map((country) => {
             setTimeout(() => isValidatedAndShouldProceed(2,formData,data.data.data),500);
                 }
             }).catch(err => {
-                setFormControlState({ ...formControls, formisSubmitted: false, alertType:'error',formErrored:true, formErrorMessage:'Whoops!! Something went wrong,try again' })
+                setFormControlState({ ...formControls, formisSubmitted: false, alertType:'danger',formErrored:true, formErrorMessage:'Whoops!! Something went wrong,try again' })
             });
 
         } else {
             
             setFormControlState({
                 ...formControls,
-                alertType: 'error',
+                alertType: 'danger',
                 formErrored: true,
                 formErrorMessage: 'Form Validation Failed, please check inputs and try again'
             });

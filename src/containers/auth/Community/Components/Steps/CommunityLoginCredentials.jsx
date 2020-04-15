@@ -76,8 +76,11 @@ function CommunityLoginCredentials(props) {
     const handleFormSubmission = (event) => {
         event.preventDefault()
         const formisSubmitted = true
-        setFormControlState({ ...formControls, formisSubmitted })
-
+        setFormControlState({ ...formControls, formisSubmitted,
+                alertType: null,
+                formErrored: null,
+                formErrorMessage:null })
+         
         const formData = {}
         if (formControls.formisvalid) {
             for (const formElementIdentifier in formControls.controls) {
@@ -108,7 +111,7 @@ function CommunityLoginCredentials(props) {
                     setFormControlState({
                         ...formControls,
                         formisSubmitted: false,
-                        alertType: 'error',
+                        alertType: 'danger',
                         formErrored: true,
                         formErrorMessage:
                             'Whoops!! Something went wrong,try again',
@@ -117,7 +120,7 @@ function CommunityLoginCredentials(props) {
         } else {
             setFormControlState({
                 ...formControls,
-                alertType: 'error',
+                alertType: 'danger',
                 formErrored: true,
                 formErrorMessage:
                     'Form Validation Failed, please check inputs and try again',

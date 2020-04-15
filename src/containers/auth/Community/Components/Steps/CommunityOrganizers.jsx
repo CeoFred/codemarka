@@ -160,7 +160,7 @@ function CommunityInfo(props) {
                     setFormControlState({
                         ...formControls,
                         formisSubmitted: false,
-                        alertType: 'error',
+                        alertType: 'danger',
                         formErrored: true,
                         formErrorMessage:
                             'Whoops!! Something went wrong,try again',
@@ -171,7 +171,7 @@ function CommunityInfo(props) {
             
             setFormControlState({
                 ...formControls,
-                alertType: 'error',
+                alertType: 'danger',
                 formErrored: true,
                 formErrorMessage: 'Form Validation Failed, please check inputs and try again'
             });

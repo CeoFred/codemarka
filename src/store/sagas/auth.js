@@ -99,11 +99,11 @@ export function* authLoginUserSaga({ email, password }) {
                 yield localStorage.removeItem(userIdAlias);
                 yield localStorage.removeItem(userTokenAlias);
                 yield localStorage.setItem(userTokenAlias, resolvedResponse.data.token)
-                yield localStorage.setItem(userIdAlias, resolvedResponse.data._id)
+                yield localStorage.setItem(userIdAlias, resolvedResponse.data.kid)
 
             } else {
                 yield localStorage.setItem(userTokenAlias, resolvedResponse.data.token)
-                yield localStorage.setItem(userIdAlias, resolvedResponse.data._id)
+                yield localStorage.setItem(userIdAlias, resolvedResponse.data.kid)
             }
 
             yield put(actions.authLoginSuccess(resolvedResponse.data));
@@ -130,7 +130,7 @@ export function* authLoginUserSaga({ email, password }) {
 }
 
 export function* autoLoginUserSaga() {
-    const _id = yield localStorage.getItem(userIdAlias);
+    const kid = yield localStorage.getItem(userIdAlias);
     const _token = yield  localStorage.getItem(userTokenAlias)
 
     const url = APIURLS.AUTO_LOGIN_USER;
@@ -141,7 +141,7 @@ export function* autoLoginUserSaga() {
         method: 'POST',
         cache: 'default',
         headers: myHeaders,
-        body: JSON.stringify({ token: _token, user: _id }),
+        body: JSON.stringify({ token: _token, user: kid }),
         mode: 'cors'
 
     });
