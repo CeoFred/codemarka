@@ -113,8 +113,7 @@ function CommunityLoginCredentials(props) {
                         formisSubmitted: false,
                         alertType: 'danger',
                         formErrored: true,
-                        formErrorMessage:
-                            'Whoops!! Something went wrong,try again',
+                        formErrorMessage: err.response.data.message,
                     })
                 })
         } else {

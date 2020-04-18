@@ -24,6 +24,7 @@ import * as APPURLS from '../../config/url';
 import { updateObject } from '../../utility/shared';
 import Logo from '../../media/images/logo/codemark__logo.png'
 import './style.css';
+
 const initialPrependsvg = (
     <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -58,14 +59,17 @@ const emailIconSvg = (
 )
 
 function Login(props) {
-    const {  onClassroomSwitch } = props
-    useEffect(() => {
-            onClassroomSwitch('classroom')
-    });
+    const { onClassroomSwitch, onResetAll } = props
+   const [mounted, setMounted] = useState(false)
+   useEffect(() => {
+       setMounted(true)
+       if (!mounted) {
+           onResetAll()
+           onClassroomSwitch('classroom')
+       }
+   }, mounted)
+    
 
-    // useEffect(() => {
-    //     document.getElementsByTagName('form')[0].onkeydown = e => console.log(e);
-    // })
     const [state, setState] = useState({
         controls: {
             email: {
@@ -122,6 +126,7 @@ function Login(props) {
             return false
         }
     }
+
     const alert = (
         <Alert display={ props.message } type={ state.alertType }>
             {props.message ? `${ props.message }` : ''}
@@ -148,8 +153,8 @@ function Login(props) {
             />
             {redct}
             <section className="container-fluid">
-                <div className="row min-vh-100">
-                    <div className="comm_bg_img col-md-8 col-xl-8 col-lg-8 py-6 py-md-0 h-100vh d-sm-none d-md-flex d-lg-flex d-xl-flex">
+                <div className="row min-vh-100" style={{maxHeight:'100vh','overflow':'auto'}}>
+                    <div className="comm_bg_img col-md-8 col-xl-8 col-lg-8 py-6 py-md-0 h-100vh d-none d-md-flex d-lg-flex d-xl-flex">
                         <div className="details_container">
                             <div className="logo_container">
                                 <img
@@ -182,7 +187,7 @@ function Login(props) {
                         </div>
                     </div>
 
-                    <div className="mt-7 p-3 col-md-4 col-lg-4 col-xl-4 py-6 py-md-0">
+                    <div className="mt-3 p-3 col-md-4 col-lg-4 col-xl-4 py-6 h-100 py-md-0 oveflow-auto" style={{maxHeight:'100vh',overflow:'auto'}}>
                         <div>
                             <div className="mb-5 text-center">
                                 <h6 className="h3 mb-1">Welcome back!</h6>

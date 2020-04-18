@@ -21,7 +21,7 @@ const mappedCountry = countyJson.map((country) => {
          controls: {
              communityName: {
                  touched: false,
-                 value: 'google developers',
+                 value: '',
                  validation: {
                      required: true,
                      minLength: 5,
@@ -30,7 +30,7 @@ const mappedCountry = countyJson.map((country) => {
              },
              communityAcronym: {
                  touched: false,
-                 value: 'GDG PWE',
+                 value: '',
                  validation: {
                      required: true,
                      minLength: 2,
@@ -49,7 +49,7 @@ const mappedCountry = countyJson.map((country) => {
              },
              communityAffiliation: {
                  touched: false,
-                 value: 'GDBD',
+                 value: '',
                  validation: {
                      required: true,
                      minLength: 2,
@@ -58,7 +58,7 @@ const mappedCountry = countyJson.map((country) => {
              },
              communityCity: {
                  touched: false,
-                 value: 'IMO',
+                 value: '',
                  validation: {
                      required: true,
                  },
@@ -66,7 +66,7 @@ const mappedCountry = countyJson.map((country) => {
              },
              communityCountry: {
                  touched: false,
-                 value: 'NG',
+                 value: '',
                  validation: {
                      required: true,
                      minLength: 2,
@@ -75,7 +75,7 @@ const mappedCountry = countyJson.map((country) => {
                  valid: false,
              },
          },
-         formisvalid: true,
+         formisvalid: false,
          formisSubmitted: false,
      });
 
@@ -292,7 +292,7 @@ const mappedCountry = countyJson.map((country) => {
               </div>
               <div className="flex align-items-center d-flex w-100 justify-content-between">
                   <span className="text-primary font-weight-bolder ml-2">
-                      <Link to={APPURL.COMMUNITY_ACCOUNT_LOGIN_PAGE}>
+                      <Link to={APPURL.AUTH_SIGN_IN}>
                           Sign in instead
                       </Link>
                   </span>

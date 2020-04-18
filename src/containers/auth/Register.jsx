@@ -17,7 +17,11 @@ import * as URLS from '../../config/url';
 import * as APIURLS from '../../config/api_url';
 
 import * as action from '../../store/actions';
-import { updateObject } from '../../utility/shared';
+
+import * as APPURLS from '../../config/url'
+import { updateObject } from '../../utility/shared'
+import Logo from '../../media/images/logo/codemark__logo.png'
+import './style.css'
 
 const emailIconSvg = (
     <svg
@@ -74,13 +78,17 @@ const userIconSvg = (
 
 function Register(props) {
 
-const { onResetAll } = props;
-useEffect(() => {
-  
-  return () => {
-     onResetAll();
-  };
-}, [ onResetAll ]);
+    const { onClassroomSwitch,onResetAll } = props
+    const [mounted,setMounted] = useState(false);
+    useEffect(() => {
+        setMounted(true)
+        if(!mounted){
+            onResetAll()
+            onClassroomSwitch('classroom')
+        }
+    },mounted)
+    
+
 
   const [ state, setState ] = useState({
     controls : {
@@ -113,7 +121,7 @@ useEffect(() => {
     },
     formSubmitted: false,
     alertMessage:props.message,
-    alertType : !props.error   ? 'danger' : 'success',
+    alertType : Boolean(props.error) === true   ? 'danger' : 'success',
   
   })
   
@@ -136,10 +144,6 @@ useEffect(() => {
     const formData = {};
 
     if (formSubmitted) {
-      
-      if(!state.controls.checkbox.value){
-        setState({ ...state,alertMessage:'You have agreed' })
-      }
 
       for (const formElementIdentifier in state.controls) {
         formData[ formElementIdentifier ] =
@@ -151,7 +155,7 @@ useEffect(() => {
 
       setState({
         ...state,
-        alertType: 'error',
+        alertType: 'danger',
         formErrored: true,
         formErrorMessage:
           'Form Validation Failed, please check inputs and try again'
@@ -168,8 +172,7 @@ useEffect(() => {
   let alert = (
       <Alert 
               display={ props.message }
-              clicked={ handleAlertClick }
-              type={ state.alertType }
+              type={ props.error ? 'danger':'success' }
               >
           {props.message ? `${ props.message }` : ''}
       </Alert>
@@ -202,9 +205,47 @@ if (props.authRegistrationSuccess) {
               metaDescription="Get started today by creating a free account on codemarka."
           />
           {redct}
-          <section className="mt-5 mt-lg-6 mt-md-7 mt-sm-5 mb-3">
-              <div className="mt-3 row align-items-center justify-content-center min-vh-100">
-                  <div className="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0 registration-container">
+
+          <section className="container-fluid">
+              <div
+                  className="row min-vh-100"
+                  style={{ maxHeight: '100vh', overflow: 'hidden' }}>
+                  <div className="comm_bg_img col-md-8 col-xl-8 col-lg-8 py-6 py-md-0 h-100vh d-none d-md-flex d-lg-flex d-xl-flex">
+                      <div className="details_container">
+                          <div className="logo_container">
+                              <img
+                                  src={Logo}
+                                  height="25"
+                                  alt="codemarka_logo"
+                              />
+                              <span className="badge badge-warning">PRO</span>
+                          </div>
+                          <div className="mb-2">
+                              <p className="float-left p-text text-white line-height-1">
+                                  Get the best out of every classrom and enjoy
+                                  <br />
+                                  all our exciting features by
+                                  <br /> getting a community account today.
+                              </p>
+                          </div>
+                          <Link to={APPURLS.COMMUNITY_ACCOUNT_SIGNUP_PAGE}>
+                              <button
+                                  type="button"
+                                  class="btn btn-animated btn-primary btn-animated-x">
+                                  <span class="btn-inner--visible">
+                                      SIGN UP
+                                  </span>
+                                  <span class="btn-inner--hidden">
+                                      <i className="fa fa-arrow-alt-circle-right"></i>
+                                  </span>
+                              </button>
+                          </Link>
+                      </div>
+                  </div>
+
+                  <div
+                      className="mt-3 p-3 col-md-4 col-lg-4 col-xl-4 py-6 h-100 py-md-0 oveflow-auto"
+                      style={{ maxHeight: '100vh', overflow: 'auto' }}>
                       <div>
                           <div className="mb-5 text-center">
                               <h6 className="h3 mb-1 mt-3">
@@ -216,16 +257,16 @@ if (props.authRegistrationSuccess) {
                               {alert}
                           </div>
                           <span className="clearfix" />
-                          <form onSubmit={ submitHandler }>
+                          <form onSubmit={submitHandler}>
                               {/* username input */}
                               <Input
                                   type="text"
                                   placeholder="superuser"
                                   label="username"
                                   initialPrepend
-                                  initialPrependsvg={ userIconSvg }
-                                  value={ state.controls.username.value }
-                                  changed={ e =>
+                                  initialPrependsvg={userIconSvg}
+                                  value={state.controls.username.value}
+                                  changed={(e) =>
                                       handleInputChange(e, 'username')
                                   }
                               />
@@ -236,72 +277,62 @@ if (props.authRegistrationSuccess) {
                                   placeholder="someone@someserver.com"
                                   label="Email address"
                                   initialPrepend
-                                  initialPrependsvg={ emailIconSvg }
-                                  value={ state.controls.email.value }
-                                  changed={ e => handleInputChange(e, 'email') }
+                                  initialPrependsvg={emailIconSvg}
+                                  value={state.controls.email.value}
+                                  changed={(e) => handleInputChange(e, 'email')}
                               />
                               {/* pasword input */}
                               <Input
                                   type="password"
                                   placeholder="Secret password"
                                   label="password"
-                                  isLoginPasswordInput={ false }
+                                  isLoginPasswordInput={false}
                                   initialPrepend
-                                  initialPrependsvg={ initialPrependsvg }
-                                  value={ state.controls.password.value }
-                                  changed={ e =>
+                                  initialPrependsvg={initialPrependsvg}
+                                  value={state.controls.password.value}
+                                  changed={(e) =>
                                       handleInputChange(e, 'password')
                                   }
                               />
 
                               <Select
                                   elementType="select"
-                                  changed={ e => {
+                                  changed={(e) => {
                                       handleInputChange(e, 'techStack')
-                                  } }
-                                  elementConfig={ {
+                                  }}
+                                  elementConfig={{
                                       options: [
                                           {
                                               value: '',
                                               displayValue: 'What do you do?',
-                                              selected: true
+                                              selected: true,
                                           },
                                           {
                                               value: 'FE',
                                               displayValue:
-                                                  'Front End Developer'
+                                                  'Front End Developer',
                                           },
                                           {
                                               value: 'BE',
-                                              displayValue: 'Back End Developer'
+                                              displayValue:
+                                                  'Back End Developer',
                                           },
                                           {
                                               value: 'AI',
-                                              displayValue: 'Machine Learning'
+                                              displayValue: 'Machine Learning',
                                           },
                                           {
                                               value: 'FS',
-                                              displayValue: 'Fullstack'
-                                          }
-                                      ]
-                                  } }
+                                              displayValue: 'Fullstack',
+                                          },
+                                      ],
+                                  }}
                               />
-
-                              {/* checkbox */}
-                              <Input
-                                  fieldtype="checkbox"
-                                  selected={ state.controls.checkbox.value }
-                                  clicked={ e =>
-                                      handleInputChange(e, 'checkbox')
-                                  }>
-                                  I agree to the terms and conditions
-                              </Input>
-
                               <div className="mt-4">
                                   <Button
                                       type="submit"
-                                      clicked={ submitHandler }
-                                      disabled={ props.loading }
+                                      clicked={submitHandler}
+                                      disabled={props.loading}
                                       textColor="#fff"
                                       block
                                       color="primary">
@@ -335,10 +366,10 @@ if (props.authRegistrationSuccess) {
                                   />
                               </div>
                           </div>
-                          <div className="mt-4 text-center">
+                          <div className="mb-4 mt-2 text-center">
                               <small>Already have an account?</small>{' '}
                               <Link
-                                  to={ URLS.AUTH_SIGN_IN }
+                                  to={URLS.AUTH_SIGN_IN}
                                   className="small font-weight-bold">
                                   signin
                               </Link>
@@ -363,9 +394,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-      onAuth: ( email, password,username,techStack ) => dispatch( action.authRegisterUser( email, password,username,techStack ) ),
+      onAuth: (email, password, username, techStack) =>
+          dispatch(
+              action.authRegisterUser(email, password, username, techStack)
+          ),
       onAlertClose: () => dispatch(action.ClearMessage()),
-      onResetAll: () => dispatch(action.authResetAll())
-  };
+      onResetAll: () => dispatch(action.authResetAll()),
+      onClassroomSwitch: (state) =>
+          dispatch(action.dispatchAppEnvironment(state)),
+  }
 };
 export default connect( mapStateToProps, mapDispatchToProps )(Register)
