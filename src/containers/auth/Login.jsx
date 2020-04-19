@@ -118,7 +118,7 @@ function Login(props) {
         } else {
             setState({
                 ...state,
-                alertType: 'error',
+                alertType: 'danger',
                 formErrored: true,
                 formErrorMessage:
                     'Form Validation Failed, please check inputs and try again'
@@ -128,7 +128,7 @@ function Login(props) {
     }
 
     const alert = (
-        <Alert display={ props.message } type={ state.alertType }>
+        <Alert display={ props.message } type={ props.error ? 'danger':'success' }>
             {props.message ? `${ props.message }` : ''}
         </Alert>
     )
