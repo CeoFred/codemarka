@@ -1,12 +1,13 @@
 .side{
-    
-    background-color: #2dca8c;
-    background-attachment: fixed;
-    /* background-size: cover;
-    background-image:url('../../media/images/rocket.svg');
-    width: 4px; */
+        background-color: #3c4858;
+        background-attachment: fixed;
+        position: sticky;
 }
-
+.codemarka_logo {
+    display: block;
+    position: fixed;
+    width: 300px;
+}
 .home-button {
     position: fixed !important;
     color: white !important;

@@ -73,10 +73,8 @@ export function* verifyClassRoom({ classKid }){
     } else {
         if(resolvedResponse.data){
             yield put(actions.classVerifySuccess(resolvedResponse.data));
-
         } else {
         yield put(actions.classVerifySuccess(resolvedResponse.message));
-
         }
     }
 } catch (e) {

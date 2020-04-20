@@ -22,11 +22,19 @@ import './newclassroom.css'
 import * as action from '../../store/actions'
 
 import rocket from "../../media/images/rocket.svg";
+import logo from '../../media/images/logo/codemark__logo.png'
 
 function NewClassroom(props) {
-    useEffect(() => {
-        props.onClassroomSwitch('classroom')
-    });
+     const { onClassroomSwitch, onResetAll } = props
+     const [mounted, setMounted] = useState(false)
+     useEffect(() => {
+         setMounted(true)
+         if (!mounted) {
+             onResetAll()
+             onClassroomSwitch('classroom')
+         }
+     }, mounted)
+    
 
     const mappedCountry = countyJson.map((country) => {
         return { value: `${country.code}`, displayValue: `${country.name}` }
@@ -284,11 +292,9 @@ function NewClassroom(props) {
     return (
         <div>
             <Link to="/">
-
                 <button
                     className="zindex-100 btn btn-outline-secondary fixed-left position-lg-fixed position-md-absolute position-absolute
                          rounded-circle btn-icon-only mt-3 float-left ml-3 home-button">
-
                     {' '}
                     <span class="btn-inner--icon">
                         <i className="fa fa-home"></i>
@@ -303,13 +309,15 @@ function NewClassroom(props) {
             <section>
                 <div className="row min-vh-100">
                     <div className="col-sm-12 col-md-6 col-lg-6 col-xl-6 py-6 py-md-0 side">
-
-
                         <div className="align-content-center justify-content-center rocket-cont ">
                             <div className="rocket-cont">
-                                <img width="200" src={rocket} alt="" />
+                                <img width="200" src={rocket} alt="rocket" />
+                                <img
+                                    src={logo}
+                                    className="codemarka_logo"
+                                    alt="codemarka"
+                                />
                             </div>
-
                         </div>
                     </div>
 
@@ -335,8 +343,6 @@ function NewClassroom(props) {
                         </div>
                     </div>
                     {/* image section */}
-
-
                 </div>
             </section>
         </div>

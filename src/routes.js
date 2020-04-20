@@ -21,7 +21,6 @@ const newclassroom = React.lazy(() =>
 const logout = React.lazy(() => import('./containers/auth/Logout'))
 const Home = React.lazy(() => import('./containers/public/Home/Index'))
 const Blog = React.lazy(() => import('./containers/public/Blog'))
-const Version2 = React.lazy(() => import('./containers/public/Blog/version-2-launched'))
 
 const Login = React.lazy(() => import('./containers/auth/Login'))
 const Register = React.lazy(() => import('./containers/auth/Register'))
@@ -43,16 +42,13 @@ const EmalVerification = React.lazy(() =>
 const CommunityAccountRegistration = React.lazy(() =>
     import('./containers/auth/Community/index.jsx')
 )
-const CommunityAccountLogin = React.lazy(() =>
-    import('./containers/auth/Community/signin.jsx')
-)
 
 const contactUs = React.lazy(() => import('./containers/public/Contact'))
 
 const ClassRoomPreview = React.lazy(() =>
     import('./containers/classroom/ClassroomPreview')
 )
-const Routes = props => {
+const Routes = (props) => {
     useEffect(() => {
         if (!props.isAutheticated) {
             props.onTryAutoSignIn()
@@ -63,7 +59,6 @@ const Routes = props => {
             <Route exact component={logout} path={url.AUTH_LOGOUT} />
             <Route exact component={Home} path={url.HOME} />
             <Route exact component={Blog} path={url.BLOG} />
-            <Route exact component={Version2} path={url.VERSION2} />
             <Route exact component={Login} path={url.AUTH_SIGN_IN} />
             <Route exact component={Register} path={url.AUTH_SIGN_UP} />
             <Route exact component={About} path={url.ABOUT} />
@@ -74,12 +69,6 @@ const Routes = props => {
                 component={CommunityAccountRegistration}
                 path={url.COMMUNITY_ACCOUNT_SIGNUP_PAGE}
             />
-            <Route
-                exact
-                component={CommunityAccountLogin}
-                path={url.COMMUNITY_ACCOUNT_LOGIN_PAGE}
-            />
-
             <Route
                 exact
                 component={EmalVerification}
@@ -118,7 +107,6 @@ const Routes = props => {
             <Switch>
                 <Route exact component={Home} path={url.HOME} />
                 <Route exact component={Blog} path={url.BLOG} />
-                <Route exact component={Version2} path={url.VERSION2} />
                 <Route exact component={About} path={url.ABOUT} />
                 <Route exact component={oauthSuccess} path={url.OAUTH_URL} />
                 <Route exact component={contactUs} path={url.CONTACT} />
@@ -154,15 +142,15 @@ const Routes = props => {
     }
     return <React.Fragment>{routes}</React.Fragment>
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
-        isAutheticated: state.auth.authenticated !== false
+        isAutheticated: state.auth.authenticated !== false,
     }
 }
 
-const matchDispatchToProps = dispatch => {
+const matchDispatchToProps = (dispatch) => {
     return {
-        onTryAutoSignIn: () => dispatch({ type: actionType.AUTO_AUTH_INIT })
+        onTryAutoSignIn: () => dispatch({ type: actionType.AUTO_AUTH_INIT }),
     }
 }
 
