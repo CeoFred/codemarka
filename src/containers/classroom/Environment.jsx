@@ -296,8 +296,8 @@ function Environment(props) {
 const mapStateToProps = ({ auth, classroom }) => {
     return {
         isAuthenticated: auth.user.token !== null,
-        userid: auth.user.userId,
-        username: auth.user.username,
+        userid: auth.user.accountid,
+        username: auth.user.displayName,
         user_t: auth.user.token,
         class_verified: classroom.validated,
         classOwner: classroom.owner,

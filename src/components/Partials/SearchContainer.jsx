@@ -6,10 +6,10 @@ function SearchContainer({ results, display }) {
   if (results && results !== undefined && results !== null && Array.isArray(results) && results.length > 0) {
     res = results.map(r => {
       return (
-          <div className="list p-0" key={ r._id }>
-              <a href={ `/c/classroom/${ r._id }` } className="text-dark">
+          <div className="list p-0 m-1" key={ r.Kid }>
+              <a href={ `/c/classroom/${ r.Kid }` } className="text-dark">
                   {' '}
-                  {r.name} ({r.location})
+                  <b> - {r.name} ({r.location})</b>
               </a>
           </div>
       )

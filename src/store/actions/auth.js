@@ -1,12 +1,11 @@
 import * as actionTypes from './Types'
 
-export const authLoginSuccess = (token) => {
-
-    return {
-        type: actionTypes.AUTH_USER_LOGIN_SUCCESS,
-        response: token,
-    }
-};
+export const authLoginSuccess = (response) => {
+           return {
+               type: actionTypes.AUTH_USER_LOGIN_SUCCESS,
+               response,
+           }
+       }
 
 export const authLoginFailed = (error) => {
     return {

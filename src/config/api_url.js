@@ -16,3 +16,11 @@ export const ACCOUNT_PASSWORD_RESET = `${ host }auth/user/account/password/reset
 
 export const GITHUB_AUTH_URL = `${ host }auth/github`;
 export const GOOGLE_AUTH_URL = `${ host }auth/google`;
+
+//community creation
+export const COMMUNITY_ACCOUNT_CREATE_INFO_TEMP = `${host}community/auth/create/info/temp`;
+export const COMMUNITY_ACCOUNT_CREATE_CONTACT_INFO_TEMP = `${host}community/auth/create/contactInfo/temp`
+export const COMMUNITY_ACCOUNT_CREATE_LOGO_TEMP = `${host}community/auth/create/logo/temp`
+export const COMMUNITY_ACCOUNT_CREATE_SOCIAL_MEDIA_INFO_TEMP = `${host}community/auth/create/socialInfo/temp`
+export const COMMUNITY_ACCOUNT_CREATE_ORGANIZERS_TEMP = `${host}community/auth/create/organizers/temp`
+export const COMMUNITY_ACCOUNT_CREATE_FINAL = `${host}community/auth/create/final`;

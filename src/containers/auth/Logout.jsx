@@ -49,6 +49,7 @@ function Logout(props) {
             return (<Redirect to={ url.AUTH_SIGN_IN }/>);
         }
     }
+    props.onLogout()
     return (
         <div>
             {checkAuth()}

@@ -7,11 +7,12 @@ const INITIAL_STATE = {
     loading:false,
     message:'',
     user:{
-        username:null,
+        displayName:null,
         token:null,
-        userId:null,
-        photoUrl:null,
-        email:null
+        accountKid:null,
+        displayImg:null,
+        email:null,
+        accountType:null
     },
     authenticated:false,
     authState:null
@@ -46,6 +47,7 @@ const authLoginFailed = (state,{ message }) => {
 }
 
 const authLoginSuccess = (state,action) => {
+    // console.log('success')
     return helper.updateObject(state,{
         loading:false,
         error:false,
@@ -53,8 +55,8 @@ const authLoginSuccess = (state,action) => {
         authenticated:true,
         user:{
             token: action.response.token,
-            userId:action.response._id,
-            username: action.response.username || action.response.profile.name
+            accountKid:action.response.kid,
+            displayName: action.response.displayName
         },
         authState:'done'
     })
@@ -125,9 +127,11 @@ const authAutoSuccess = ( state, action ) => {
         message: '',
         user: { 
             token: action.token,
-            userId: action._id,
-            username:action.username,
-            email: action.email
+            accountid: action.kid,
+            displayName:action.displayName,
+            email: action.email,
+            displayImg: action.displayImg,
+            accountType:action.accountType
         },
         authState:'done'        
 

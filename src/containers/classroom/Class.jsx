@@ -162,7 +162,8 @@ const MainClassLayout = ({
         const requestData = {
             classroom_id: cid || data.classroom_id,
             userId: userid,
-            username
+            username,
+            cdata: classroomD
         }
 
         if (inRoom && owner && !started) {
@@ -191,7 +192,7 @@ const MainClassLayout = ({
             socket.on('rejoin_updateMsg', msg => {
                 setcodemarkaState(c => {
                     const nnc = msg.newuserslist.filter(u => {
-                        return String(u.id) !== String(userid)
+                        return String(u.kid) !== String(userid)
                     })
                     return {
                         ...c,
@@ -238,7 +239,7 @@ const MainClassLayout = ({
                     const oldmsg = c.messages;
                     oldmsg.push(msg)
                     const nnc = msg.newuserslist.filter(u => {
-                        return u.id !== userid
+                        return u.kid !== userid
                     })
                     return {
                         ...c,
@@ -352,13 +353,13 @@ const MainClassLayout = ({
                     oldmsg.push(msg)
 
                     let newUserList = c.users.filter(user => {
-                        return String(user.id) !== String(msg.for)
+                        return String(user.kid) !== String(msg.for)
                     })
                     newUserList = newUserList.filter(u => {
-                        return String(u.id) !== String(userid)
+                        return String(u.kid) !== String(userid)
                     })
                     const newTypingState = c.typingState.filter(user => {
-                        return String(user.id) !== String(msg.for)
+                        return String(user.kid) !== String(msg.for)
                     })
 
                     return {
@@ -440,7 +441,7 @@ const MainClassLayout = ({
             socket.on('classroom_users', data => {
                 setcodemarkaState(c => {
                     const uwt = data.filter(u => {
-                        return u.id !== userid
+                        return u.kid !== userid
                     })
                     return { ...c, users: data, numberInClass: uwt.length }
                 })
@@ -474,7 +475,7 @@ const MainClassLayout = ({
             })
 
             socket.on('newuser_role', __d => {
-                if (String(__d.id) === String(userid) && __d.role) {
+                if (String(__d.kid) === String(userid) && __d.role) {
                     setcodemarkaState(c => {
                         return {
                             ...c,
@@ -649,7 +650,6 @@ const MainClassLayout = ({
                 ({ fid, file, content, editedBy }) => {
                     setcodemarkaState(c => {
                         // check preview states
-                        console.log(c);
                         if (editedBy !== userid) {
                             let oldFiles
                             c.editors.forEach((element, i) => {

@@ -24,5 +24,9 @@ export const AUTH_CHANGE_PASSWORD = '/auth/user/account/password/reset/:token/:u
 export const AUTH_LOGOUT  = '/auth/user/logout';
 export const OAUTH_URL = '/auth/user/oauth/success/:token/:user'
 export const EMAIL_VERIFICATION = '/account/confirmed/:verified/'
-export const COMMUNITY_ACCOUNT_SIGNUP_PAGE = '/auth/signup/community';
-export const COMMUNITY_ACCOUNT_LOGIN_PAGE = '/auth/signin/community'
+export const COMMUNITY_ACCOUNT_SIGNUP_PAGE = '/auth/signup/community'
+
+export const ACCOUNT_SETTINGS = '/user/account/settings'
+export const ACCOUNT_BILLING = '/user/account/billing'
+export const USER_PROFILE = '/user/account/profile'
+export const COMMUNITY_DASHBOARD = '/user/dashboard/'
