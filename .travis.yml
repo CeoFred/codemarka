@@ -12,5 +12,10 @@ deploy:
     skip_cleanup: true
     domain: codemarka.surge.sh
     project: ./build/
+  - provider: firebase
+    token:
+      secure: 1//03mBfZPgr25tPCgYIARAAGAMSNwF-L9IrDAN4UieNO8gYZu4-ItOymNg_D6a7F2s-2Z-kng1iErrYyFrt1wumN0NTvrcJ3ITXGJQ
+      
 on:
   branch: master
+  
