@@ -6,18 +6,20 @@ function SearchContainer({ results, display }) {
   if (results && results !== undefined && results !== null && Array.isArray(results) && results.length > 0) {
     res = results.map(r => {
       return (
-          <div className="list p-0 m-1" key={ r.Kid }>
-              <a href={ `/c/classroom/${ r.Kid }` } className="text-dark">
-                  {' '}
-                  <b> - {r.name} ({r.location})</b>
+          <div className="list p-0 text-align-left" key={ r.kid }>
+          { r.name.toLowerCase() === 'no results found!!' ? (<b>Whoops! No result found</b>) : 
+              (<div><a href={ `/c/classroom/${ r.kid }` } className="text-dark">
+                {r.topic}
               </a>
+            <p><small>by: {r.name.toLowerCase() || r.communityName.toLowerCase()}</small></p></div>)
+            }
           </div>
       )
     });
   }
   return (
       <div className={ `card ${ display ? 'd-block' : 'd-none' }` }>
-          <div className="card-body">{res}</div>
+          <div className="card-body border-r">{res}</div>
       </div>
   );
 }

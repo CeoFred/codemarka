@@ -54,3 +54,14 @@
         display: none;
     }
 }
+
+.trending__title h3::after{
+    border-bottom: 4px solid #26ab76;
+    border-radius: 6px;
+    width: 70%;
+    content: "";
+    display: block;
+}
+.bg-size--home {
+    background-image: url('../../../media/images/vectors/eastwood-order-completed.png');
+}
