@@ -40,6 +40,15 @@ function NavigationBarItems(props) {
                     </Link>
                 </li>
 
+                <li className="nav-item ">
+                    <Link
+                        className="nav-link"
+                        style={{ fontWeight: 'normal' }}
+                        to={url.COMMUNITY_INDEX}>
+                        Join a Community
+                    </Link>
+                </li>
+
                 <li class="nav-item dropdown dropdown-animate">
                     <a
                         class="nav-link nav-link-icon px-2"
@@ -68,7 +77,9 @@ function NavigationBarItems(props) {
                             Hi, {displayName}
                         </h6>
                         {isCommunityAccount ? (
-                            <Link to={url.COMMUNITY_DASHBOARD+accountid} class="dropdown-item">
+                            <Link
+                                to={url.COMMUNITY_DASHBOARD + accountid}
+                                class="dropdown-item">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="1em"
@@ -85,9 +96,7 @@ function NavigationBarItems(props) {
                                 <span>Dashboard</span>
                             </Link>
                         ) : (
-                            <Link
-                                to={url.USER_PROFILE}
-                                class="dropdown-item">
+                            <Link to={url.USER_PROFILE} class="dropdown-item">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="1em"
@@ -130,9 +139,7 @@ function NavigationBarItems(props) {
                             <span>Billing</span>{' '}
                         </Link>
                         <div class="dropdown-divider"></div>
-                        <Link
-                            to={url.ACCOUNT_SETTINGS}
-                            class="dropdown-item">
+                        <Link to={url.ACCOUNT_SETTINGS} class="dropdown-item">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="1em"
@@ -149,9 +156,7 @@ function NavigationBarItems(props) {
                             </svg>{' '}
                             <span>Settings</span>{' '}
                         </Link>
-                        <a
-                            href={url.AUTH_LOGOUT}
-                            class="dropdown-item">
+                        <a href={url.AUTH_LOGOUT} class="dropdown-item">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="1em"
@@ -171,7 +176,6 @@ function NavigationBarItems(props) {
                         </a>
                     </div>
                 </li>
-
             </ul>
         )
     } else {

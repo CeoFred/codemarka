@@ -262,7 +262,6 @@ const MainClassLayout = ({
             })
 
             socket.on('disconnect', reason => {
-                socket.emit('leave', requestData)
                 
                 if (reason === 'io server disconnect') {
                     // the disconnection was initiated by the server, you need to reconnect manually
@@ -318,14 +317,12 @@ const MainClassLayout = ({
 
             //listen for new messages
             socket.on('nM', data => {
-                console.log('new message');
                 setcodemarkaState(c => {
                     const oldmsg = c.messages
                     oldmsg.push(data)
                     const newuserTypingList = c.typingState.filter(typist => {
                         return typist.id !== data.by
                     })
-                    console.log(oldmsg);
                     return {
                         ...c,
                         messages: oldmsg,
@@ -508,12 +505,6 @@ const MainClassLayout = ({
                         return { ...c, favourite: liked }
                     })
                 }
-                if (owner && liked) {
-                    toast.info('Hurray! New Classroom Favourite')
-                }
-                if (owner && !liked) {
-                    toast.info('Too bad! Lost a Classroom Favourite')
-                }
             })
 
             socket.on('newClassInformation', doc => {
@@ -521,8 +512,8 @@ const MainClassLayout = ({
                 setClassroomInformation(c => {
                     return { ...c, submitted: false }
                 })
-                onClassroomVerify(doc.Kid)
-            })
+                onClassroomVerify(doc.kid);
+            });
 
             socket.on('blocking_user_success', ({ user, by, newStudents }) => {
                 setcodemarkaState(s => {
@@ -566,7 +557,7 @@ const MainClassLayout = ({
             })
 
             socket.on('user_waved', ({ from, to }) => {
-                if (userid === to.id) {
+                if (userid === to.kid) {
                     toast.info(`${ from } waved at you`)
                 }
             })
@@ -591,6 +582,7 @@ const MainClassLayout = ({
                     </div>
                 )
             })
+
              socket.on('error',() => {
                 setcodemarkaState(c => {
                     return { ...c, submitted: false }
@@ -610,6 +602,7 @@ const MainClassLayout = ({
                     return {...c,value:'',socketFeedback:reason,socketFeedbackStatus:0}
                 })
             });
+
             socket.on('invite_sent',() => {
                 setcodemarkaState(c => {
                     return { ...c, submitted: false }
@@ -647,26 +640,34 @@ const MainClassLayout = ({
             //listen to file changes
             socket.on(
                 'class_files_updated',
-                ({ fid, file, content, editedBy }) => {
+                (data) => {
+                    console.log(data);
+                    const EditorName = data.file;
+                    const updatedContentForEditor = data.content;
+                    const EditorId = data.id;
+                    const FileEditorsKid = data.user;
+
                     setcodemarkaState(c => {
                         // check preview states
-                        if (editedBy !== userid) {
-                            let oldFiles
-                            c.editors.forEach((element, i) => {
+                        if (FileEditorsKid !== userid) {
+
+                            let newEditorContent;
+
+                            c.editors.forEach((editor, i) => {
                                 if (
-                                    element.file === file &&
-                                    element.id === fid
+                                    editor.file === EditorName &&
+                                    editor.id === EditorId
                                 ) {
-                                    oldFiles = c.editors
-                                    oldFiles[i].content = content
+                                    newEditorContent = c.editors
+                                    newEditorContent[i].content = updatedContentForEditor
                                 }
                             })
                             return {
                                 ...c,
-                                editors: oldFiles,
+                                editors: newEditorContent,
                                 previewContent: {
                                     ...c.previewContent,
-                                    [file]: { content, id:fid }
+                                    [EditorName]: { content:updatedContentForEditor, id:EditorId }
                                 }
                             }
                         } else {
@@ -751,11 +752,11 @@ const MainClassLayout = ({
     }
 
     const editorChanged = (e, o, v, t) => {
-        let fid
+        let editorFileId
 
         codemarkastate.editors.forEach(element => {
             if (element.file === t) {
-                fid = element.id
+                editorFileId = element.id
             }
         })
 
@@ -763,11 +764,10 @@ const MainClassLayout = ({
             file: t,
             content: v,
             class: data.classroom_id,
-            user: data.user_id,
-            id: fid,
+            user: userid,
+            id: editorFileId,
             editedBy: userid,
-            kid
-
+            kid: data.classroom_id,
         }
 
         setcodemarkaState(c => {
@@ -775,7 +775,7 @@ const MainClassLayout = ({
                 ...c,
                 previewContent: {
                     ...c.previewContent,
-                    [t]: { content: v, id: fid }
+                    [t]: { content: v, id: editorFileId }
                 }
             }
         })

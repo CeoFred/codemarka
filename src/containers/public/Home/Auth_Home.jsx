@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 import { dispatchAppEnvironment } from '../../../store/actions/app'
 
 import TrendingClassrooms from '../../../components/Partials/HomePage/Trending';
+import FetchCommunities from '../../../components/Partials/FetchCommunities';
+import HappeningNow from '../../../components/Partials/HappeningNow';
+
 import SearchContainer from '../../../components/Partials/SearchContainer';
 import './auth.css';
 
@@ -51,6 +54,11 @@ function Auth_Home(props) {
         }
 
     }
+
+    const closeSearchResult = (e) => {
+        e.preventDefault();
+        setResults({ result: null });
+    }
     const handleSearchInputChange = (e) => {
         e.preventDefault();
         setSearchInput({ touched:true,value:e.target.value });
@@ -70,7 +78,7 @@ function Auth_Home(props) {
             if(m.data && m.data.length >= 1){
                 setResults({ result:m.data });
             } else {
-                setResults({ result:null });
+                setResults({ result:[{name:'No Results Found!!'}] });
             }
         }).catch(err => {
              setResults({ result:'Opps! Something went wrong' });
@@ -84,46 +92,60 @@ function Auth_Home(props) {
     return (
         <div className="colab__container">
             {/* start search container */}
-            <div className="search__container row">
-                <div className="search__input__container p-md-0">
-                    <div className="card border-0 shadow-lg rounded-lg card-dark bg-translucent-white">
-                        <div className="card-body">
-                            <form
-                                action={ `/classroom/search/q/${ searchInput.value }` }>
-                                <h5 className="font-weight-bold text-center mb-2">
-                                    Find Classrooms
-                                </h5>
-                                <div className="form-group">
-                                    <div className="input-group">
-                                        <input
-                                            type="search"
-                                            value={ searchInput.value }
-                                            onChange={ handleSearchInputChange }
-                                            className="form-control"
-                                            placeholder="Over 1,000,000 Classrooms"
-                                            aria-label="Over 1,000,000 Classrooms"
-                                            aria-describedby="basic-addon2"
-                                        />
-                                        <div className="input-group-append">
-                                            <button
-                                                onClick={ searchInit }
-                                                type="button"
-                                                className="btn btn-success"
-                                                id="basic-addon2">
-                                                <i className="fa fa-search"></i>
-                                            </button>
-                                        </div>
+            <section class="slice py-8 bg-dark bg-cover bg-size--home">
+                <span class="mask bg-gradient-dark opacity-6"></span>
+                <div
+                    data-offset-top="#navbar-main"
+                    style={{ paddingTop: '59px' }}>
+                    <div class="container d-flex align-items-center text-center text-lg-left py-5">
+                        <div class="col px-0">
+                            <div class="row row-grid align-items-center">
+                                <div class="col-lg-8 text-lg-left text-sm-left text-md-left">
+                                    <h1 class="text-white m-0 tal-sm font-weight-bold">
+                                        Learn. Build. Collaborate.
+                                  </h1>
+                                    <p style={{marginBottom:'3rem'}} class="lead text-white opacity-8 tal-sm font-weight-light">
+                                        Discover classrooms
+                                  </p>
+                                    <div class="mt-1">
+                                        <form
+                                            action={`/classroom/search/q/${searchInput.value}`}>
+                                            <div className="form-group">
+                                                <div className="input-group">
+                                                    <input
+                                                        type="search"
+                                                        value={searchInput.value}
+                                                        onChange={handleSearchInputChange}
+                                                        className="form-control"
+                                                        placeholder="Over 1,000,000 Classrooms"
+                                                        aria-label="Over 1,000,000 Classrooms"
+                                                        aria-describedby="basic-addon2"
+                                                        onBlur={closeSearchResult}
+                                                    />
+                                                    <div className="input-group-append">
+                                                        <button
+                                                            onClick={searchInit}
+                                                            type="button"
+                                                            className="btn btn-success"
+                                                            id="basic-addon2">
+                                                            <i className="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <SearchContainer
+                                                display={results.result}
+                                                results={results.result}
+                                            />
+                                        </form>
                                     </div>
                                 </div>
-                                <SearchContainer
-                                    display={ results.result }
-                                    results={ results.result }
-                                />
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class="shape-container shape-line shape-position-bottom"></div>
+            </section>
 
             {/* end search container */}
 
@@ -149,11 +171,36 @@ function Auth_Home(props) {
                         </div>
                     </div>
                     <div className="trending__container w-100 pt-4">
-                        <div className="trending__title mb-3 text-center ">
-                            <h3 className="font-weight-700 text-capitalize d-inline pr-3">
-                                Trending{' '}
+                        <div className="trending__title mb-4 text-center ">
+                            <h3 className="font-weight-700 float-left text-uppercase d-inline pr-3">
+                                Discover rooms{' '}
                             </h3>{' '}
-                            <i className="fa fa-fire fa-4x"></i>
+                        </div>
+                        <TrendingClassrooms />
+                    </div>
+                    <div className="trending__container w-100 pt-4">
+                        <div className="trending__title mb-4 text-center ">
+                            <h3 className="font-weight-700 float-left text-uppercase d-inline pr-3">
+                                Join a community{' '}
+                            </h3>{' '}
+                        </div>
+                        <FetchCommunities />
+                    </div>
+                    
+                    <div className="trending__container w-100 pt-4">
+                        <div className="trending__title mb-4 text-center ">
+                            <h3 className="font-weight-700 float-left text-uppercase d-inline pr-3">
+                                Happening now{' '}
+                            </h3>{' '}
+                        </div>
+                        <HappeningNow />
+                    </div>
+
+                    <div className="trending__container w-100 pt-4">
+                        <div className="trending__title mb-4 text-center ">
+                            <h3 className="font-weight-700 float-left text-uppercase d-inline pr-3">
+                                Based on Topic{' '}
+                            </h3>{' '}
                         </div>
                         <TrendingClassrooms />
                     </div>

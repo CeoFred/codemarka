@@ -28,8 +28,11 @@ function Trending() {
             fetchTrending().then(d => d.json()).then(rd => {
                 content.current = rd.data.map(tr => {
                     return (
-                        <div className="col-md-4" key={ tr._id }>
+                        <div className="col-md-4" key={ tr.kid }>
                             <div className="card bg-section-dark text-white hover-translate-y-n3 hover-shadow-lg overflow-hidden">
+                                <a  
+                                        href={ `c/classroom/${ tr.kid }` }
+                                >
                                 <div className="card-body py-4">
                                     <small className="d-block text-sm mb-2">
                                         {tr.name.toUpperCase()} {' '}
@@ -41,11 +44,10 @@ function Trending() {
                                         )}
                                         )
                                     </small>
-                                    <a
-                                        href={ `c/classroom/${ tr.Kid }` }
+                                    <b
                                         className="h5 stretched-link lh-150">
                                         {tr.topic}
-                                    </a>
+                                    </b>
                                     <p className="mt-3 mb-0 lh-170">
                                         {tr.description}
                                     </p>
@@ -85,6 +87,7 @@ function Trending() {
                                         </div>
                                     </div>
                                 </div>
+                                </a>
                             </div>
                         </div>
                     )
