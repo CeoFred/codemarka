@@ -79,6 +79,11 @@ const Routes = (props) => {
                 component={ForgotPassword}
                 path={url.AUTH_FORGOT_PASSWORD}
             />
+            <Route
+                exact
+                component={ForgotPassword}
+                path={url.CLASSROOMS}
+            />
             <Redirect from={url.CLASSROOMS} to={url.AUTH_SIGN_IN} />
             <Route
                 exact

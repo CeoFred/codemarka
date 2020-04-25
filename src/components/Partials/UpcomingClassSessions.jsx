@@ -1,31 +1,31 @@
 /* eslint-disable no-undef */
-import React, { useState, useRef,  } from 'react'
+import React, { useState, useRef, } from 'react'
 
-import * as API_URLS  from '../../config/api_url';
+import * as API_URLS from '../../config/api_url';
 
-function HappeningNow() {
+function UpcomingClassroomSession() {
 
   const [hasMounted, setHasMounted] = useState(false);
   const content = useRef('');
 
   if (!hasMounted) {
 
-    const fetchHappeningNow = () => {
+    const fetchUpcomingClassroomSession = () => {
 
-      const url = API_URLS.GET_LIVE_CLASS_SESSIONS;
+      const url = API_URLS.GET_UPCOMING_CLASS_SESSIONS;
       const myHeaders = new Headers()
       myHeaders.append('Content-Type', 'Application/json')
 
-      const fetchHappeningNowClassroomsRequest = new Request(url, {
+      const fetchUpcomingClassroomSessionClassroomsRequest = new Request(url, {
         method: 'GET',
         cache: 'default',
         headers: myHeaders,
         mode: 'cors'
       });
 
-      return fetch(fetchHappeningNowClassroomsRequest)
+      return fetch(fetchUpcomingClassroomSessionClassroomsRequest)
     }
-    fetchHappeningNow().then(d => d.json()).then(rd => {
+    fetchUpcomingClassroomSession().then(d => d.json()).then(rd => {
       content.current = rd.data.map(tr => {
         return (
           <div className="col-6 col-md-4" key={tr.kid}>
@@ -101,10 +101,10 @@ function HappeningNow() {
   return (
     <div className="pt-5 pb-5 text-center">
       <div className="row text-center align-content-center">
-          {content.current}
+        {content.current}
       </div>
     </div>
   )
 }
 
-export default HappeningNow
+export default UpcomingClassroomSession
