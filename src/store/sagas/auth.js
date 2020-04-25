@@ -92,21 +92,11 @@ export function* authLoginUserSaga({ email, password }) {
     try {
         const response = yield fetch(loginRequest)
         const resolvedResponse = yield call(resolvePromise, response.json())
-
-        if (resolvedResponse.status === 1) {
-            
-            if (localStorage.getItem(userTokenAlias) && localStorage.getItem(userIdAlias)) {
-                yield localStorage.removeItem(userIdAlias);
-                yield localStorage.removeItem(userTokenAlias);
+        if (resolvedResponse.status) {
+                // console.log('in');
                 yield localStorage.setItem(userTokenAlias, resolvedResponse.data.token)
-                yield localStorage.setItem(userIdAlias, resolvedResponse.data._id)
-
-            } else {
-                yield localStorage.setItem(userTokenAlias, resolvedResponse.data.token)
-                yield localStorage.setItem(userIdAlias, resolvedResponse.data._id)
-            }
-
-            yield put(actions.authLoginSuccess(resolvedResponse.data));
+                yield localStorage.setItem(userIdAlias, resolvedResponse.data.kid)
+                yield put(actions.authLoginSuccess(resolvedResponse.data))  ;
 
         } else if (typeof resolvedResponse.message == 'object') {
 
@@ -130,8 +120,8 @@ export function* authLoginUserSaga({ email, password }) {
 }
 
 export function* autoLoginUserSaga() {
-    const _id = yield localStorage.getItem(userIdAlias);
-    const _token = yield  localStorage.getItem(userTokenAlias)
+    const kid = yield localStorage.getItem(userIdAlias);
+    const token = yield  localStorage.getItem(userTokenAlias)
 
     const url = APIURLS.AUTO_LOGIN_USER;
     const myHeaders = yield new Headers()
@@ -141,26 +131,22 @@ export function* autoLoginUserSaga() {
         method: 'POST',
         cache: 'default',
         headers: myHeaders,
-        body: JSON.stringify({ token: _token, user: _id }),
+        body: JSON.stringify({ token, kid }),
         mode: 'cors'
 
     });
 
-    if (_token && _id) {
+    if (token && kid) {
 
         try {
 
             const response = yield fetch(autoLoginRequest)
             const resolvedResponse = yield call(resolvePromise, response.json())
-            if (resolvedResponse.status === 1) {
+            console.log(resolvedResponse);
+            if (resolvedResponse.status) {
 
-                if (_token && _id) {
-
-                    yield localStorage.setItem(userTokenAlias, _token);
-                    yield localStorage.setItem(userIdAlias, _id);
-
-                }
-                resolvedResponse.data.token = _token;
+                yield localStorage.setItem(userTokenAlias, resolvedResponse.data.token);
+                yield localStorage.setItem(userIdAlias, resolvedResponse.data.kid);
                 yield put(actions.autoAuthSuccess(resolvedResponse.data));
 
             } else if (resolvedResponse.message.name === 'JsonWebTokenError') {
@@ -168,13 +154,7 @@ export function* autoLoginUserSaga() {
                 yield put(actions.autoAuthFailed('jwt malformed'))
 
             } else {
-
-                if (resolvedResponse.message) {
-                    yield localStorage.clear();
-                }
-
                 yield put(actions.autoAuthFailed(resolvedResponse.message))
-
             }
 
         } catch ({ message }) {
@@ -187,6 +167,7 @@ export function* autoLoginUserSaga() {
     }
 
 }
+
 export function* accountRecovery({ email }){
 
         const url = APIURLS.ACCOUNT_RECOVERY;

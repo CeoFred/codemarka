@@ -16,3 +16,25 @@ export const ACCOUNT_PASSWORD_RESET = `${ host }auth/user/account/password/reset
 
 export const GITHUB_AUTH_URL = `${ host }auth/github`;
 export const GOOGLE_AUTH_URL = `${ host }auth/google`;
+
+//community creation
+export const COMMUNITY_ACCOUNT_CREATE_INFO_TEMP = `${host}community/auth/create/info/temp`;
+export const COMMUNITY_ACCOUNT_CREATE_CONTACT_INFO_TEMP = `${host}community/auth/create/contactInfo/temp`
+export const COMMUNITY_ACCOUNT_CREATE_LOGO_TEMP = `${host}community/auth/create/logo/temp`
+export const COMMUNITY_ACCOUNT_CREATE_SOCIAL_MEDIA_INFO_TEMP = `${host}community/auth/create/socialInfo/temp`
+export const COMMUNITY_ACCOUNT_CREATE_ORGANIZERS_TEMP = `${host}community/auth/create/organizers/temp`
+export const COMMUNITY_ACCOUNT_CREATE_FINAL = `${host}community/auth/create/final`;
+
+
+//community
+export const GET_COMMUNITIES = `${host}community/`;
+export const GET_SINGLE_COMMUNITY = `${host}community/`; //:kid param
+export const RATE_COMMUNITY = `${host}community/rate/`; //:kid param
+export const JOIN_COMMUNITY = `${host}community/membership/join/` //:kid param
+export const LEAVE_COMMUNITY = `${host}community/membership/join/` //:kid param
+export const GET_CLASSROOMS_BY_COMMUNITY = `${host}community/classrooms/` //:kid param
+
+
+//classrooms
+export const GET_LIVE_CLASS_SESSIONS = `${host}classroom/live`;
+export const GET_UPCOMING_CLASS_SESSIONS = `${host}classroom/upcoming`;
