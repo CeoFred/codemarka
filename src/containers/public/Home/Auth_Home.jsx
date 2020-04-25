@@ -7,6 +7,8 @@ import { dispatchAppEnvironment } from '../../../store/actions/app'
 import TrendingClassrooms from '../../../components/Partials/HomePage/Trending';
 import FetchCommunities from '../../../components/Partials/FetchCommunities';
 import HappeningNow from '../../../components/Partials/HappeningNow';
+import UpcomingClassroomSessions from '../../../components/Partials/UpcomingClassSessions';
+
 
 import SearchContainer from '../../../components/Partials/SearchContainer';
 import './auth.css';
@@ -199,10 +201,10 @@ function Auth_Home(props) {
                     <div className="trending__container w-100 pt-4">
                         <div className="trending__title mb-4 text-center ">
                             <h3 className="font-weight-700 float-left text-uppercase d-inline pr-3">
-                                Based on Topic{' '}
+                                Upcoming{' '}
                             </h3>{' '}
                         </div>
-                        <TrendingClassrooms />
+                        <UpcomingClassroomSessions />
                     </div>
                 </div>
             </div>
