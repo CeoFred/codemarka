@@ -6,7 +6,12 @@ function Trending() {
 
     const [ hasMounted, setHasMounted ] = useState(false);
     const content = useRef('');
-
+    function truncateString(str, num) {
+        if (str.length <= num) {
+            return str
+        }
+        return str.slice(0, num) + '...'
+    }
         if(!hasMounted){
             
             const fetchTrending = () => {
@@ -28,14 +33,15 @@ function Trending() {
             fetchTrending().then(d => d.json()).then(rd => {
                 content.current = rd.data.map(tr => {
                     return (
-                        <div className="col-md-4" key={ tr.kid }>
-                            <div className="card bg-section-dark text-white hover-translate-y-n3 hover-shadow-lg overflow-hidden">
+                        <div className="col-md-3" style={{maxHeight: '300px'}} key={ tr.kid }>
+                            <div style={{maxHeight:'100%',height:'100%'}} className="card bg-section-dark text-white hover-translate-y-n3 hover-shadow-lg overflow-hidden">
                                 <a  
                                         href={ `c/classroom/${ tr.kid }` }
+                                        style={{height:'100%'}}
                                 >
-                                <div className="card-body py-4">
+                                <div className="card-body py-4" style={{height:'70%'}}>
                                     <small className="d-block text-sm mb-2">
-                                        {tr.name.toUpperCase()} {' '}
+                                            {truncateString(tr.name.toUpperCase(),20)} {' '}
                                       (
                                         {tr.classVisibility === 'Public' ? (
                                             <i className="fa fa-unlock"></i>
@@ -45,28 +51,26 @@ function Trending() {
                                         )
                                     </small>
                                     <b
-                                        className="h5 stretched-link lh-150">
-                                        {tr.topic}
+                                        className="h5 stretched-link lh-150" style={{fontSize:'0.78rem'}}>
+                                            {truncateString(tr.topic,20)}
                                     </b>
-                                    <p className="mt-3 mb-0 lh-170">
-                                        {tr.description}
-                                    </p>
+                                        <p className={{marginTop:'1rem'}}>{truncateString(tr.description.toLowerCase(),40)}</p>
                                 </div>
-                                <div className="card-footer border-0 delimiter-top">
+                                <div className="card-footer border-0 delimiter-top" style={{height:'30%'}}>
                                     <div className="row align-items-center">
                                         <div className="col-auto">
                                             <span className="avatar avatar-sm bg-success rounded-circle">
                                                 {tr.location}
                                             </span>
-                                            <span className="text-sm mb-0 avatar-content">
-                                                <i className="fas fa-users"></i>{' '}
+                                                <span className="text-sm mb-0 avatar-content" style={{ color: '#fff' }}>
+                                                    <i style={{ color:'#2dca8c'}} className="fas fa-users"></i>{' '}
                                                 {tr.students.length}
                                             </span>
                                         </div>
                                         <div className="col text-right text-right">
                                             <div className="actions">
                                                 <a
-                                                    href="/heaerter"
+                                                    href="/heartee#"
                                                     onClick={ e =>
                                                         e.preventDefault()
                                                     }
@@ -75,7 +79,7 @@ function Trending() {
                                                     {tr.likes.length}
                                                 </a>
                                                 <a
-                                                    href="/liker"
+                                                    href="/likee#"
                                                     onClick={ e =>
                                                         e.preventDefault()
                                                     }
@@ -100,7 +104,7 @@ function Trending() {
 
     return (
         <div className="pt-5 pb-5 text-center">
-            <div className="row text-center justify-content-center align-content-center">
+            <div className="row text-center align-content-center">
                 <Suspense fallback={ <Preloader /> }>
                     {content.current}
                 </Suspense>

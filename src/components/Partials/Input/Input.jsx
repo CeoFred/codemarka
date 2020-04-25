@@ -64,15 +64,15 @@ if(props.elementType === 'input'){
     }
     return(
         <div className="form-group">
-            <label className="form-control-label">{props.label}</label>
+            <label className="form-control-label">{props.label}{props.validation && props.validation.required ? (<span className="text-danger pl-2">* required</span>) : ''}</label>
             <div className="input-group input-group-merge">
                 {inputElement}
                 {/* <div class="input-group-append">
                 <span class="input-group-text"><i data-feather="credit-card"></i></span>
             </div> */}
-                {/* <div class="valid-feedback">
-        Looks good!
-      </div> */}
+                <div class="form-text text-muted mt-2">
+                    <small>{props.elementConfig.inputHelperText}</small>
+                </div> 
             </div>
         </div>
     );
