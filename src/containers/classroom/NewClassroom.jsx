@@ -46,7 +46,8 @@ function NewClassroom(props) {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeholder: 'Dragon Riders'
+                    placeholder: 'Dragon Riders',
+                    inputHelperText: "e.g David and Friends."
                 },
                 value: '',
                 validation: {
@@ -76,12 +77,14 @@ function NewClassroom(props) {
                 elementType: 'input',
                 elementConfig: {
                     type: 'date',
-                    placeholder: 'Select Date'
+                    placeholder: 'Select Date',
+                    inputHelperText: "Date should not be in the past."
+
                 },
                 value: '',
                 validation: {
                     required: true,
-                    isFutureDate: true
+                    isPastDate: false
                 },
                 valid: false,
                 touched: false
@@ -118,7 +121,9 @@ function NewClassroom(props) {
                             value: 'Private',
                             displayValue: 'Private'
                         }
-                    ]
+                    ],
+                    inputHelperText: "Private classrooms can only be searched for. Not restrictions to enter once with a valid url to your classroom"
+
                 },
                 value: '',
                 validation: {
@@ -143,39 +148,36 @@ function NewClassroom(props) {
                 touched: false
             },
             classType: {
-                label: 'classtype',
+                label: 'Classroom Type',
                 elementType: 'select',
                 elementConfig: {
                     options: [
-                        {
-                            value: '',
-                            displayValue: 'Select class Type'
-                        },
                         {
                             value: 'Basic Web App',
                             displayValue: 'Basic Web App(HTML,CSS AND JS)'
                         }
                     ]
                 },
-                value: '',
+                value: 'Basic Web App',
                 validation: {
-                    required: true,
+                    required: false,
                     minLength: 3
                 },
-                valid: false,
+                valid: true,
                 touched: false
             },
             description: {
                 label: 'class description',
                 elementType: 'textarea',
                 elementConfig: {
-                    type: 'textarea'
-                    // placeholder: "Sele"
+                    type: 'textarea',
+                    placeholder: "Let people know more about your class",
+                    inputHelperText: "min 40 Words."
                 },
                 value: '',
                 validation: {
-                    required: true
-                    // minLength: 3
+                    required: true,
+                    minLength: 40
                 },
                 valid: false,
                 touched: false
@@ -233,7 +235,7 @@ function NewClassroom(props) {
                     ...state, formisSubmitted: false,
                     controls: {
                         ...state.controls,
-                        startDate: { ...state.controls.startTime, valid: false }
+                        startTime: { ...state.controls.startTime, valid: false }
                     }
                 });
                 return false;
@@ -285,8 +287,8 @@ function NewClassroom(props) {
         </form>
     )
 
-    if (props.classroom) {
-        return <Redirect to={`/c/classroom/${props.classroom}`} />
+    if (props.classroom_kid) {
+        return <Redirect to={`/c/classroom/${props.classroom_kid}`} />
     }
 
     return (
@@ -327,12 +329,7 @@ function NewClassroom(props) {
                                 <b className="text-muted mb-0"></b>
                             </div>
                             <span className="clearfix" />
-                            <Alert
-                                type={state.alertType}
-                                display={state.formErrorMessage}
-                                title="Heads Up!">
-                                {state.formErrorMessage}
-                            </Alert>
+                            
                             <div className="py-4 text-center">
                                 <h6 className="h3 mb-0">
                                     Create your Free Classroom Today!
@@ -340,6 +337,12 @@ function NewClassroom(props) {
                             </div>
                             <span className="clearfix" />
                             {form}
+                            <Alert
+                                type={state.alertType}
+                                display={state.formErrorMessage}
+                                title="Heads Up!">
+                                {state.formErrorMessage}
+                            </Alert>
                         </div>
                     </div>
                     {/* image section */}
@@ -352,7 +355,7 @@ function NewClassroom(props) {
 const mapStateToProps = ({ auth, classroom }) => {
     return {
         token: auth.user.token,
-        classroom: classroom.classdetails ? classroom.classdetails.Kid : null,
+        classroom_kid: classroom.classdetails ? classroom.classdetails.kid : null,
         loading: classroom.loading
     }
 }

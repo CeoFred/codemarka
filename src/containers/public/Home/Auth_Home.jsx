@@ -6,7 +6,7 @@ import { dispatchAppEnvironment } from '../../../store/actions/app'
 
 import TrendingClassrooms from '../../../components/Partials/HomePage/Trending';
 import FetchCommunities from '../../../components/Partials/FetchCommunities';
-import HappeningNow from '../../../components/Partials/HappeningNow';
+// import HappeningNow from '../../../components/Partials/HappeningNow';
 import UpcomingClassroomSessions from '../../../components/Partials/UpcomingClassSessions';
 
 
@@ -187,15 +187,6 @@ function Auth_Home(props) {
                             </h3>{' '}
                         </div>
                         <FetchCommunities />
-                    </div>
-                    
-                    <div className="trending__container w-100 pt-4">
-                        <div className="trending__title mb-4 text-center ">
-                            <h3 className="font-weight-700 float-left text-uppercase d-inline pr-3">
-                                Happening now{' '}
-                            </h3>{' '}
-                        </div>
-                        <HappeningNow />
                     </div>
 
                     <div className="trending__container w-100 pt-4">
