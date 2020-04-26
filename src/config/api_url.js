@@ -33,8 +33,8 @@ export const RATE_COMMUNITY = `${host}community/rate/`; //:kid param
 export const JOIN_COMMUNITY = `${host}community/membership/join/` //:kid param
 export const LEAVE_COMMUNITY = `${host}community/membership/join/` //:kid param
 export const GET_CLASSROOMS_BY_COMMUNITY = `${host}community/classrooms/` //:kid param
+export const GET_UPCOMING_CLASS_SESSIONS = `${host}community/upcoming/`; //:kid param
+export const GET_LIVE_CLASS_SESSIONS = `${host}community/live/`; //:kid
 
 
 //classrooms
-export const GET_LIVE_CLASS_SESSIONS = `${host}classroom/live`;
-export const GET_UPCOMING_CLASS_SESSIONS = `${host}classroom/upcoming`;

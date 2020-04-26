@@ -136,7 +136,7 @@ export default function Editor(props) {
                      className="bg-dark-light p-2 m-0 text-white font-weight-bolder">
                      <span className="float-left">
                          {f.file.toUpperCase()}
-                         <DropDown
+                         {/* <DropDown
                              selected={props.dropDownSelect}
                              list={[
                                  { name: 'CSS', value: 'css' },
@@ -144,12 +144,12 @@ export default function Editor(props) {
                                  { name: 'LESS', value: 'less' }
                              ]}
                              for={f.file}
-                         />
+                         /> */}
                      </span>
 
-                     <span className="float-right">
+                     {/* <span className="float-right">
                          <i className="fas fa-plus-square"></i>
-                     </span>
+                     </span> */}
                  </div>
 
                  <CodeMirror
@@ -171,19 +171,19 @@ export default function Editor(props) {
                      className="bg-dark-light p-2 m-0 text-white font-weight-bolder">
                      <span className="float-left">
                          {f.file.toUpperCase()}
-                         <DropDown
+                         {/* <DropDown
                              selected={props.dropDownSelect}
                              list={[
                                  { name: 'HTML', value: 'html' },
                                  { name: 'Markdown', value: 'md' }
                              ]}
                              for={f.file}
-                         />
+                         /> */}
                      </span>
 
-                     <span className="float-right">
+                     {/* <span className="float-right">
                          <i className="fas fa-plus-square"></i>
-                     </span>
+                     </span> */}
                  </div>
 
                  <CodeMirror
@@ -205,7 +205,7 @@ export default function Editor(props) {
                      className="bg-dark-light p-2 m-0 text-white font-weight-bolder">
                      <span className="float-left">
                          {f.file.toUpperCase()}
-                         <DropDown
+                         {/* <DropDown
                              selected={props.dropDownSelect}
                              list={[
                                  { name: 'Javascript', value: 'JS' },
@@ -213,12 +213,12 @@ export default function Editor(props) {
                                  { name: 'Coffee Script', value: 'CS' }
                              ]}
                              for={f.file}
-                         />
+                         /> */}
                      </span>
 
-                     <span className="float-right">
+                     {/* <span className="float-right">
                          <i className="fas fa-plus-square"></i>
-                     </span>
+                     </span> */}
                  </div>
                  <CodeMirror
                      value={f.content}

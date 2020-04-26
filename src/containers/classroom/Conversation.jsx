@@ -1,29 +1,29 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React,{ useEffect} from 'react';
 import { formatToTimeZone } from 'date-fns-timezone';
 
 import './css/conversation.css';
 
-// const BotMessage = ({ m, time }) => {
-//     return (
-//         <div className="message received" key={ m.msgId } id={ m.msgId }>
-//             <div style={ { color: '#ED7BCA' } } className="font-weight-800">
-//                 MARKA-BOT{' '}
-//                 <br/>
-//                 <small style={ { color: '#000' } }>
-//                     (visible to only you)
-//                 </small>
-//             </div>
-//             <p className="pt-3">
-//             Hello {m.name},need help navigating ? just type --bot and i'll be glad to help. Enjoy 
-//             your session.
-//             </p>
-//         </div>
-//     )
-// }
-
 export default function Conversation(props) {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    useEffect(() => {
+        // document.getElementById("fala").innerHTML = 'text';
+    })
+    var wrapURLs = function (text, new_window, id) {
+        var url_pattern = /(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}\-\x{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?/ig;
+        var target = (new_window === true || new_window == null) ? '_blank' : '';
+
+        const rt = text.replace(url_pattern, function (url) {
+            var protocol_pattern = /^(?:(?:https?|ftp):\/\/)/i;
+            var href = protocol_pattern.test(url) ? url : 'http://' + url;
+
+            return `<a href="${href}" target="${target}"> ${url} </a>`;
+        });
+        console.log(rt);
+        // document.getElementById(`#${id}`).innerHTML = rt;
+        return (<div dangerouslySetInnerHTML={{ __html: rt }} />);
+    };
+
 
     const inputKeyDown = (event) => {
         if (event.keyCode === 13) {
@@ -33,7 +33,7 @@ export default function Conversation(props) {
         }
     }
     let messages;
-    //  let lastIndex;
+
     if (props.messages && props.messages.length > 0) {
 
         messages = props.messages.map((m, i) => {
@@ -45,7 +45,7 @@ export default function Conversation(props) {
                 if (m.for === props.user) {
                     return (
                         <div>
-                            <div className="message_extra" key={ m.msgId } id={ m.msgId }>
+                            <div className="message_extra" key={m.msgId} id={m.msgId}>
                                 You
                                 {m.type === 'sLeft' ? ' left' : ' Joined'}
                             </div>
@@ -53,7 +53,7 @@ export default function Conversation(props) {
                     )
                 }
                 return (
-                    <div className="message_extra" key={ m.msgId } id={ m.msgId }>
+                    <div className="message_extra" key={m.msgId} id={m.msgId}>
                         {m.name}
                         {m.type === 'sLeft' ? ' left' : ' Joined'}
                     </div>
@@ -61,50 +61,51 @@ export default function Conversation(props) {
             } else if (m.by === 'server' && m.type === 'oldMsgUpdate') {
                 return (
                     <div
-                        className={ `message ${
+                        className={`message ${
                             m.by === props.user ? 'sent' : 'received'
-                            }` }
-                        key={ m.msgId }
-                        id={ m.msgId }>
+                            }`}
+                        key={m.msgId}
+                        id={m.msgId}>
                         <div
-                            style={ { color: `${ m.color ? m.color : 'white' }` } }
-                            className="font-weight-800">
+                            style={{ color: `${m.color ? m.color : 'white'}` }}
+                            className="font-weight-800 user-by">
                             {m.by !== props.user
                                 ? m.name +
-                                `${ props.owner === m.by ? '(Admin)' : '' }`
+                                `${props.owner === m.by ? '(admin)' : ''}`
                                 : ''}
                         </div>
-                        {m.msg}
+                        {wrapURLs(String(m.msg), true, m.msgId)}
                         <span className="metadata">
-                            <span className="time">{time}</span>
+                            <b className="time">{time}</b>
                         </span>
                     </div>
                 )
             } else {
                 return (
                     <div
-                        className={ `message ${
+                        className={`message ${
                             m.by === props.user ? 'sent' : 'received'
-                            }` }
-                        key={ m.msgId }
-                        id={ m.msgId }>
+                            }`}
+                        key={m.msgId}
+                        id={m.msgId}>
                         <div
-                            style={ { color: `${ m.color ? m.color : 'white' }` } }
-                            className="font-weight-800">
+                            style={{ color: `${m.color ? m.color : 'white'}` }}
+                            className="font-weight-800 user-by">
                             {m.by !== props.user
                                 ? m.name +
-                                `${ props.owner === m.by ? '(Admin)' : '' }`
+                                `${props.owner === m.by ? '(admin)' : ''}`
                                 : ''}
                         </div>
-                        {m.msg}
+                        {wrapURLs(m.msg, true, m.msgId)}
                         <span className="metadata">
-                            <span className="time">{time}</span>
+                            <b className="time">{time}</b>
                         </span>
                     </div>
                 )
             }
         })
     }
+
 
     const getTyping = () => {
 
@@ -138,16 +139,14 @@ export default function Conversation(props) {
             <div className="user-bar">
 
                 <span className="name">
-
-                    <span>{props.username}</span>
+                    {props.isOnline ? 'online' : 'offline' } <span className={`dot-${props.isOnline ? 'online' : 'offline'}`}></span>
                 </span>
-                <div className="font-italic text-justify text-white" style={ { fontSize: 10 } }>
+                <div className="font-italic text-justify text-white" style={{ fontSize: 10 }}>
                     {getTyping()}
                 </div>
             </div>
             {/* messages tab */}
-            <div className="container bg-black messages">
-
+            <div className="container bg-black messages" id="fala">
                 {messages}
             </div>
 
@@ -157,14 +156,13 @@ export default function Conversation(props) {
 
                     resize="none"
                     id="input_area"
-                    onBlur={ props.inputBlur }
-                    onFocus={ props.inputFocused }
-                    value={ props.inputValue }
-                    onChange={ props.handleInputChange }
-                    onKeyDown={ inputKeyDown }
+                    onBlur={props.inputBlur}
+                    onFocus={props.inputFocused}
+                    value={props.inputValue}
+                    onChange={props.handleInputChange}
+                    onKeyDown={inputKeyDown}
                     placeholder="Write a message"
                     className="form-control"
-                    style={ { borderRadius: '15px' } }
                 ></textarea>
             </div>
         </div>

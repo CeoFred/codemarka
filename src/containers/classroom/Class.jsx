@@ -106,7 +106,8 @@ const MainClassLayout = ({
         countDownTime: 5,
         ended: false,
         started: null,
-        starting: null
+        starting: null,
+        connected:true
     });
 
     const [userSpecificMessages, setUserSpecificMessages] = useState([]);
@@ -262,7 +263,7 @@ const MainClassLayout = ({
             })
 
             socket.on('disconnect', reason => {
-                
+                setcodemarkaState({...codemarkastate,connected: false})
                 if (reason === 'io server disconnect') {
                     // the disconnection was initiated by the server, you need to reconnect manually
                     socket.connect()
@@ -312,6 +313,8 @@ const MainClassLayout = ({
                 if (connAttempts.current >= 3) {
                     toast.success('Welcome back online!')
                 }
+                setcodemarkaState({ ...codemarkastate, connected: true })
+
                 connAttempts.current = 0
             })
 
@@ -1628,6 +1631,7 @@ const MainClassLayout = ({
                                     userSpecificMessages={userSpecificMessages}
                                     user={userid}
                                     owner={ownerid}
+                                    isOnline={codemarkastate.connected}
                                 />
                             </Suspense>
                         </div>
