@@ -81,10 +81,10 @@ export default function CommunitySocialMediaInfo(props) {
             updatedControls[controlName].valid = true
         }
 
-        let formisvalid = true
-        for (const inputIdentifier in updatedControls) {
-            formisvalid = updatedControls[inputIdentifier].valid && formisvalid
-        }
+        let formisvalid = true && checkValidity(
+            e.target.value,
+            formControls.controls[controlName].validation
+        );
         setFormControlState((formControl) => {
             return { ...formControl, controls: updatedControls, formisvalid }
         })

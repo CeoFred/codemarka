@@ -107,7 +107,7 @@ const MainClassLayout = ({
         ended: false,
         started: null,
         starting: null,
-        connected:false
+        connected:true
     });
 
     const [userSpecificMessages, setUserSpecificMessages] = useState([]);
@@ -188,7 +188,6 @@ const MainClassLayout = ({
                         pinnedMessages: pinnedMessages
                     }
                 })
-                setcodemarkaState({ ...codemarkastate, connected: true })
             })
 
             socket.on('rejoin_updateMsg', msg => {

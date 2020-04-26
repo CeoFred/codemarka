@@ -48,6 +48,8 @@ const contactUs = React.lazy(() => import('./containers/public/Contact'))
 const ClassRoomPreview = React.lazy(() =>
     import('./containers/classroom/ClassroomPreview')
 )
+const SingleCommunity = React.lazy(() => import('./containers/community/index'));
+
 const Routes = (props) => {
     useEffect(() => {
         if (!props.isAutheticated) {
@@ -64,6 +66,7 @@ const Routes = (props) => {
             <Route exact component={About} path={url.ABOUT} />
             <Route exact component={oauthSuccess} path={url.OAUTH_URL} />
             <Route exact component={contactUs} path={url.CONTACT} />
+            <Route exact component={SingleCommunity} path={url.COMMUNITY_SINGLE} />
             <Route
                 exact
                 component={CommunityAccountRegistration}
@@ -115,6 +118,7 @@ const Routes = (props) => {
                 <Route exact component={About} path={url.ABOUT} />
                 <Route exact component={oauthSuccess} path={url.OAUTH_URL} />
                 <Route exact component={contactUs} path={url.CONTACT} />
+                <Route exact component={SingleCommunity} path={url.COMMUNITY_SINGLE} />
 
                 <Route
                     exact
