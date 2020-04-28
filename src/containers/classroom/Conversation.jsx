@@ -1,10 +1,12 @@
 /* eslint-disable react/prop-types */
-import React,{ useEffect} from 'react';
+import React,{ useEffect, useRef } from 'react';
 import { formatToTimeZone } from 'date-fns-timezone';
 
 import './css/conversation.css';
 
 export default function Conversation(props) {
+    const messageRef = useRef(null);
+
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     useEffect(() => {
         // document.getElementById("fala").innerHTML = 'text';
@@ -36,7 +38,7 @@ export default function Conversation(props) {
 
     if (props.messages && props.messages.length > 0) {
 
-        messages = props.messages.map((m, i) => {
+        messageRef.current = props.messages.map((m, i) => {
 
             const date = new Date(m.oTime)
             const time = formatToTimeZone(date, 'h:mm a', { timeZone })
@@ -44,12 +46,10 @@ export default function Conversation(props) {
             if (m.by.toLowerCase() === 'server' && m.type) {
                 if (m.for === props.user) {
                     return (
-                        <div>
                             <div className="message_extra" key={m.msgId} id={m.msgId}>
                                 You
                                 {m.type === 'sLeft' ? ' left' : ' Joined'}
                             </div>
-                        </div>
                     )
                 }
                 return (
@@ -64,7 +64,7 @@ export default function Conversation(props) {
                         className={`message ${
                             m.by === props.user ? 'sent' : 'received'
                             }`}
-                        key={m.msgId}
+                        key={m.msgId.toString()}
                         id={m.msgId}>
                         <div
                             style={{ color: `${m.color ? m.color : 'white'}` }}
@@ -86,7 +86,7 @@ export default function Conversation(props) {
                         className={`message ${
                             m.by === props.user ? 'sent' : 'received'
                             }`}
-                        key={m.msgId}
+                        key={m.msgId.toString()}
                         id={m.msgId}>
                         <div
                             style={{ color: `${m.color ? m.color : 'white'}` }}
@@ -147,7 +147,7 @@ export default function Conversation(props) {
             </div>
             {/* messages tab */}
             <div className="container bg-black messages" id="fala">
-                {messages}
+                {messageRef.current}
             </div>
 
             {/* input text area */}

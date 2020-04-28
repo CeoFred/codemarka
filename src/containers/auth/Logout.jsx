@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -8,9 +8,8 @@ import * as url from '../../config/url';
 function Logout(props) {
     
     const { isAuthenticated, onLogout } = props;
-
+    const [loggedOut, setloggedOut] = useState(false);
     useEffect(() => {
-        if(isAuthenticated){
              
             const logout = () => {
                 const host = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test' ? process.env.REACT_APP_REMOTE_API_URL : process.env.REACT_APP_LOCAL_API_URL
@@ -37,23 +36,22 @@ function Logout(props) {
             logout().then(data => data.json()).then(res => {
                 if(Number(res.status) === 1){
                     onLogout()
+                    setloggedOut(true);
                 }
                 onLogout()
             })
             
-        } 
-    }, [ onLogout,isAuthenticated ]);
+    }, [ isAuthenticated ]);
 
     const checkAuth = () => {
-        if(!isAuthenticated){
+        if (loggedOut){
             return (<Redirect to={ url.AUTH_SIGN_IN }/>);
         }
     }
-    props.onLogout()
     return (
         <div>
             {checkAuth()}
-            Redirecting...
+            Redirecting please wait...
         </div>
     )
 }

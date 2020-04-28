@@ -4,7 +4,7 @@ import React from 'react'
 import Router from './router'
 import './App.css'
 
-function App() {
-    return <Router />
+function App(props) {
+    return <Router {...props}/>
 }
 export default App

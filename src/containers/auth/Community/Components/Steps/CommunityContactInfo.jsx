@@ -17,9 +17,8 @@ export default function CommunityContactInfo(props) {
                  value: '',
                  validation: {
                      required: false,
-                     minLength: 5,
                  },
-                 valid: false,
+                 valid: true,
              },
              telephone: {
                  touched: false,

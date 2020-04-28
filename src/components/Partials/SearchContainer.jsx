@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
 function SearchContainer({ results, display }) {
   let res;
 
@@ -8,9 +7,9 @@ function SearchContainer({ results, display }) {
       return (
           <div className="list p-0 text-align-left" key={ r.kid }>
           { r.name.toLowerCase() === 'no results found!!' ? (<b>Whoops! No result found</b>) : 
-              (<div><Link to={ `/c/classroom/${ r.kid }` } className="text-dark">
+              (<div><a href={ `/c/classroom/${ r.kid }` } className="text-dark">
                 {r.topic}
-              </Link>
+              </a>
             <p><small>by: {r.name.toLowerCase() || r.communityName.toLowerCase()}</small></p></div>)
             }
           </div>

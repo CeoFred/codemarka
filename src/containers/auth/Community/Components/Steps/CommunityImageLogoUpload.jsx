@@ -95,9 +95,10 @@ function CommunityImageLogoUpload(props) {
   const onChangeHandler = (event) => {
 
     const file = event.target.files[0];
+      setstate({ error: null, isValid: true, message: null })
+
 
       if (maxSelectFile(event) && checkMimeType(event) && checkFileSize(event)) {
-          setstate({ error: null, isValid: true, message: null, file: null })
 
           setFormControl({
               ...formControls,
@@ -147,7 +148,6 @@ function CommunityImageLogoUpload(props) {
                       inProgress: false,
                   })
                  setstate({ error: true, isValid: true, message: 'Failed to Upload File,try again', file: null })
-
               });
       } 
   }

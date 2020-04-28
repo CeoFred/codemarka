@@ -137,6 +137,9 @@ export default function CommunitySocialMediaInfo(props) {
 
        const formData = {}
        if (formControls.formisvalid) {
+           const allowed = prompt("Are you sure you want to proceed? Yes or No");
+            if(allowed.toLowerCase() === "no") return;
+            
            for (const formElementIdentifier in formControls.controls) {
                formData[formElementIdentifier] =
                    formControls.controls[formElementIdentifier].value

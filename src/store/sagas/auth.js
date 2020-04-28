@@ -6,7 +6,7 @@ import * as actionTypes from '../actions/Types';
 import { resolvePromise } from '../../utility/shared';
 
 import * as APIURLS from '../../config/api_url';
-
+import store from '../index';
 const userTokenAlias = 'wx1298';
 const userIdAlias = 'u342345';
 
@@ -120,51 +120,59 @@ export function* authLoginUserSaga({ email, password }) {
 }
 
 export function* autoLoginUserSaga() {
-    const kid = yield localStorage.getItem(userIdAlias);
-    const token = yield  localStorage.getItem(userTokenAlias)
+    const loggingOut = yield store.getState().auth.loggingOut;
+    console.log(loggingOut);
+    if(loggingOut){
+        yield put(actions.autoAuthFailed("logging out."))
+    } else {
 
-    const url = APIURLS.AUTO_LOGIN_USER;
-    const myHeaders = yield new Headers()
-    myHeaders.append('Content-Type', 'Application/json')
+        const kid = yield localStorage.getItem(userIdAlias);
+        const token = yield localStorage.getItem(userTokenAlias)
 
-    const autoLoginRequest = yield new Request(url, {
-        method: 'POST',
-        cache: 'default',
-        headers: myHeaders,
-        body: JSON.stringify({ token, kid }),
-        mode: 'cors'
+        const url = APIURLS.AUTO_LOGIN_USER;
+        const myHeaders = yield new Headers()
+        myHeaders.append('Content-Type', 'Application/json')
 
-    });
+        const autoLoginRequest = yield new Request(url, {
+            method: 'POST',
+            cache: 'default',
+            headers: myHeaders,
+            body: JSON.stringify({ token, kid }),
+            mode: 'cors'
 
-    if (token && kid) {
+        });
 
-        try {
+        if (token && kid) {
 
-            const response = yield fetch(autoLoginRequest)
-            const resolvedResponse = yield call(resolvePromise, response.json())
-            console.log(resolvedResponse);
-            if (resolvedResponse.status) {
+            try {
 
-                yield localStorage.setItem(userTokenAlias, resolvedResponse.data.token);
-                yield localStorage.setItem(userIdAlias, resolvedResponse.data.kid);
-                yield put(actions.autoAuthSuccess(resolvedResponse.data));
+                const response = yield fetch(autoLoginRequest)
+                const resolvedResponse = yield call(resolvePromise, response.json())
+                console.log(resolvedResponse);
+                if (resolvedResponse.status) {
 
-            } else if (resolvedResponse.message.name === 'JsonWebTokenError') {
+                    yield localStorage.setItem(userTokenAlias, resolvedResponse.data.token);
+                    yield localStorage.setItem(userIdAlias, resolvedResponse.data.kid);
+                    yield put(actions.autoAuthSuccess(resolvedResponse.data));
 
-                yield put(actions.autoAuthFailed('jwt malformed'))
+                } else if (resolvedResponse.message.name === 'JsonWebTokenError') {
 
-            } else {
-                yield put(actions.autoAuthFailed(resolvedResponse.message))
+                    yield put(actions.autoAuthFailed('jwt malformed'))
+
+                } else {
+                    yield put(actions.autoAuthFailed(resolvedResponse.message))
+                }
+
+            } catch ({ message }) {
+                yield put(actions.autoAuthFailed({ message }))
+
             }
-
-        } catch ({ message }) {
-            yield put(actions.autoAuthFailed({ message }))
+        } else {
+            yield put(actions.autoAuthFailed('Token and userid not found'))
 
         }
-    } else {
-        yield put(actions.autoAuthFailed('Token and userid not found'))
-
     }
+    
 
 }
 

@@ -3,9 +3,11 @@ import { connect } from 'react-redux'
 
 import { Redirect } from 'react-router-dom'
 // import * as action from '../../store/actions/'
-// import {  } from '../../store/actions/app';
+import { dispatchAppEnvironment  } from '../../store/actions/app';
 
 import * as APIURL from '../../config/api_url';
+import * as APPURL from '../../config/url';
+
 
 import './style/index.css';
 
@@ -14,6 +16,10 @@ import header from '../../media/images/group-of-people-watching-on-laptop-159538
 
 function Dashboard(props) {
 
+  useEffect(() => {
+    props.onEnvSwtich('app');
+
+  });
   const {
     match: { params },
   } = props
@@ -24,6 +30,9 @@ function Dashboard(props) {
   const [upcomingClassrooms, setupcomingClassrooms] = useState([]);
   const upcomingSessionRefs = useRef('loading..');
   const [isOwner, setisOwner] = useState(props.userid === communitykid);
+  const [isMember, setisMember] = useState(null);
+  const [memberShipRequest, setmemberShipRequest] = useState({loading:false});
+
 
   useEffect(() => {
     if(isLoaded) return;
@@ -44,15 +53,25 @@ function Dashboard(props) {
     fetch(request).then(data => data.json()).then(d => {
       if(d.data){
         setCommunityDetails({...d.data});
-        setIsLoaded(true);
+        const members = d.data.members;
+        if(members.length > 0){
+          const memberShipStatus = members.filter(member => member.kid === props.userid);
+          memberShipStatus.length > 0 ? setisMember(true) : setisMember(false);
+        }
 
         fetch(upcomingClassroomsRequest).then(data => data.json()).then(d => {
-          if (d.data) {
+
+          if (!(d.data[0])) {
+            setupcomingClassrooms(d.data);
+            upcomingSessionRefs.current = "No Upcoming session";
+          }
+          else {
+            
             setupcomingClassrooms(d.data);
            upcomingSessionRefs.current = d.data.map(session => {
               return (
 
-                <div class="row align-items-center mb-3 shadow-none">
+                <div class="row align-items-center mb-3 shadow-none" key={session.kid}>
                   <div class="col-auto">
                     <div class="icon icon-shape bg-soft-primary text-primary">
                       <img src={session.gravatarUrl} />
@@ -78,6 +97,8 @@ function Dashboard(props) {
               )
             })
           }
+          setIsLoaded(true);
+
         }).catch(er => {
           setupcomingClassrooms([]);
         });
@@ -101,6 +122,39 @@ function Dashboard(props) {
 
   const joinCommunityAsMember = (e) => {
 
+    if(Number(props.accountType) === 102){
+      alert("Failed to perform operation with account type,community.")
+      return;
+    } else {
+
+    const action = isMember ? 'leave':'join';
+
+      const myHeaders =  new Headers();
+      myHeaders.append('Content-Type', 'Application/json')
+   
+      const membershipRequest = new Request(APIURL.JOIN_COMMUNITY + communitykid, {
+      method: 'POST',
+      cache: 'default',
+      mode: 'cors',
+      headers:myHeaders,
+      body: JSON.stringify({user:props.userid,action})
+    });
+
+    setmemberShipRequest({loading:true});
+    fetch(membershipRequest).then(d => d.json()).then(dd => {
+      console.log(dd);
+      const newMembers = dd.data;
+      const memberShipStatus = newMembers.filter(member => member.kid === props.userid);
+      memberShipStatus.length > 0 ? setisMember(true) : setisMember(false); 
+      setmemberShipRequest({loading:false});
+      setCommunityDetails({ ...communityDetails,members:dd.data});
+    }).catch(er => {
+      console.log(er);
+      setmemberShipRequest({ loading: false });
+
+    })
+    }
+
   }
 
   const setReminderForClassroomSession = (e,roomid) => {
@@ -109,9 +163,7 @@ function Dashboard(props) {
   const copyUrl = (id) => {
 
   };
-  // if(!props.isAuthenticated){
-  //   return (<Redirect to={`${APPURL.AUTH_SIGN_IN}/??authCheck=failed&redir=/community/${communitykid}`}/>)
-  // }
+  
 
   const getStarRating = (rating) => {
     const star = rating;
@@ -138,17 +190,21 @@ function Dashboard(props) {
       return(<p>No members yet.</p>)
     }
     else {
-      members.map(mem => {
+      return members.map(mem => {
         return (
 
-          <div className="col-auto text-center my-1 px-1">
+          <div className="col-auto text-center my-1 px-1" key={mem.kid}>
             <a href="#" className="avatar bg-primary text-white rounded-circle border border-lg border-soft-primary hover-scale-105">
-              {mem.name[0]+mem.name[1]}
+              {mem.username[0].toUpperCase()+mem.username[1].toUpperCase()}
             </a>
           </div>
         )
       })
     }
+  }
+
+  if (!props.isAuthenticated && props.authState === "done") {
+    return (<Redirect to={`${APPURL.AUTH_SIGN_IN}/?authCheck=failed&redir=/community/${communitykid}`} />)
   }
   if(!isLoaded){
     return (
@@ -163,10 +219,17 @@ function Dashboard(props) {
     <section className="community_container">
       <div className="top-header-container" style={{ backgroundImage: `url(${header})` }}>
         <div className="action-container">
-          <i className="fa fa-bell" onClick={turnNotificationsForCommunity}></i>
-          <i className="fa fa-plus" onClick={joinCommunityAsMember}></i>
-
-        </div>
+          {/* <i className="fa fa-bell" onClick={turnNotificationsForCommunity}></i>
+          <i className="fa fa-plus" onClick={joinCommunityAsMember}></i> */}
+          <button onClick={joinCommunityAsMember} className={`btn btn-sm ${isOwner || isMember ? 'bg-success' : 'bg-dark'}`}>
+            
+            {memberShipRequest.loading ? (<div className="spinner-grow" style={{backgroundColor:"#fff"}} role="status">
+              <span className="sr-only">Loading...</span>
+            </div>) : (<b>{isOwner || isMember ? (<span>Member <i className="fa fa-check pl-2"></i></span>) : 'join'}</b>)}
+            
+            </button>
+         
+          </div>
         <div className="logo_container">
           <img src={communityDetails.Logo || img} className="avatar header-image rounded-circle avatar-lg" />
             <input type="file" hidden id="logoUpdateInput"/>
@@ -304,7 +367,7 @@ function Dashboard(props) {
         <div className="col-md-4 col-12">
           <div className="card" style={{margin:20}}>
             <div className="card-header">
-              <span className="h6">Members</span>
+              <span className="h6">Members({communityDetails.members.length})</span>
             </div>
             <div className="card-body py-3">
               <div className="row mx-n1">
@@ -352,12 +415,15 @@ const mapStateToProps = ({ auth, classroom }) => {
     userid: auth.user.accountid,
     username: auth.user.displayName,
     user_t: auth.user.token,
+    authState: auth.authState,
+    accountType: auth.user.accountType
     
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
+    onEnvSwtich: state => dispatch(dispatchAppEnvironment(state))
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)

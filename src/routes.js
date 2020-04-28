@@ -51,10 +51,15 @@ const ClassRoomPreview = React.lazy(() =>
 const SingleCommunity = React.lazy(() => import('./containers/community/index'));
 
 const Routes = (props) => {
+    console.log(props);
+
     useEffect(() => {
-        if (!props.isAutheticated) {
-            props.onTryAutoSignIn()
-        }
+        console.log(props.location.pathname.includes('logout'));
+        if (props.location.pathname.includes('logout') === false){
+            if (!props.isAutheticated) {
+                props.onTryAutoSignIn()
+            }
+        };
     }, [props])
     let routes = (
         <Switch>
@@ -66,7 +71,6 @@ const Routes = (props) => {
             <Route exact component={About} path={url.ABOUT} />
             <Route exact component={oauthSuccess} path={url.OAUTH_URL} />
             <Route exact component={contactUs} path={url.CONTACT} />
-            <Route exact component={SingleCommunity} path={url.COMMUNITY_SINGLE} />
             <Route
                 exact
                 component={CommunityAccountRegistration}
