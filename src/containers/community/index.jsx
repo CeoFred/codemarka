@@ -8,6 +8,7 @@ import { dispatchAppEnvironment  } from '../../store/actions/app';
 import * as APIURL from '../../config/api_url';
 import * as APPURL from '../../config/url';
 
+import Helmet from '../../components/SEO/helmet';
 
 import './style/index.css';
 
@@ -217,6 +218,9 @@ function Dashboard(props) {
   }
   return (
     <section className="community_container">
+      <Helmet title={communityDetails.communityName + " - Codemarka Community"} 
+        metaDescription={communityDetails.description || ""} />
+
       <div className="top-header-container" style={{ backgroundImage: `url(${header})` }}>
         <div className="action-container">
           {/* <i className="fa fa-bell" onClick={turnNotificationsForCommunity}></i>

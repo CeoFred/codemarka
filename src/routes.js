@@ -49,12 +49,10 @@ const ClassRoomPreview = React.lazy(() =>
     import('./containers/classroom/ClassroomPreview')
 )
 const SingleCommunity = React.lazy(() => import('./containers/community/index'));
-
+const Communities = React.lazy(() => import('./containers/community/all.jsx'));
 const Routes = (props) => {
-    console.log(props);
 
     useEffect(() => {
-        console.log(props.location.pathname.includes('logout'));
         if (props.location.pathname.includes('logout') === false){
             if (!props.isAutheticated) {
                 props.onTryAutoSignIn()
@@ -103,6 +101,7 @@ const Routes = (props) => {
                 component={classPreviewNewTab}
                 path={url.CLASSROOM_PREVIEW_NEW_TAB}
             />
+            <Route exact component={SingleCommunity} path={url.COMMUNITY_SINGLE} />
             <Route exact component={newclassroom} path={url.CLASSROOM_NEW} />
             <Route
                 exact
@@ -122,7 +121,8 @@ const Routes = (props) => {
                 <Route exact component={About} path={url.ABOUT} />
                 <Route exact component={oauthSuccess} path={url.OAUTH_URL} />
                 <Route exact component={contactUs} path={url.CONTACT} />
-                <Route exact component={SingleCommunity} path={url.COMMUNITY_SINGLE} />
+                <Route exact component={SingleCommunity} path={url.ROUTE_COMMUNITY_SINGLE} />
+                <Route exact component={Communities} path={url.COMMUNITY_INDEX} />
 
                 <Route
                     exact

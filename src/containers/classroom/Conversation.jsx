@@ -21,9 +21,7 @@ export default function Conversation(props) {
 
             return `<a href="${href}" target="${target}"> ${url} </a>`;
         });
-        console.log(rt);
-        // document.getElementById(`#${id}`).innerHTML = rt;
-        return (<div dangerouslySetInnerHTML={{ __html: rt }} />);
+        return (<div className="r-message" dangerouslySetInnerHTML={{ __html: rt }} />);
     };
 
 
@@ -65,7 +63,9 @@ export default function Conversation(props) {
                             m.by === props.user ? 'sent' : 'received'
                             }`}
                         key={m.msgId.toString()}
-                        id={m.msgId}>
+                        id={m.msgId}
+                        style={{ borderLeft: `2px solid ${m.color ? m.color : 'white'}` }}
+                        >
                         <div
                             style={{ color: `${m.color ? m.color : 'white'}` }}
                             className="font-weight-800 user-by">
@@ -87,6 +87,8 @@ export default function Conversation(props) {
                             m.by === props.user ? 'sent' : 'received'
                             }`}
                         key={m.msgId.toString()}
+
+                        style={{ borderLeft: `2px solid ${m.color ? m.color : 'white'}` }}
                         id={m.msgId}>
                         <div
                             style={{ color: `${m.color ? m.color : 'white'}` }}
@@ -119,12 +121,12 @@ export default function Conversation(props) {
 
             if (usersTyping > 0) {
                 if (usersTyping === 1) {
-                    return (<span className="m-auto">{whoIsTypingArray[0].username} is typing...</span>)
+                    return (<span className="m-auto">{whoIsTypingArray[0].username.slice(0, 10)} is typing...</span>)
                 } else if (usersTyping === 2) {
                     return (
                         <span className="m-auto">
-                            {whoIsTypingArray[0].username} and{' '}
-                            {whoIsTypingArray[1].username} are typing ...
+                            {whoIsTypingArray[0].username.slice(0, 10)} and{' '}
+                            {whoIsTypingArray[1].username.slice(0, 10)} are typing
                         </span>
                     )
                 }
@@ -139,11 +141,18 @@ export default function Conversation(props) {
             <div className="user-bar">
 
                 <span className="name">
-                    {props.isOnline ? 'online' : 'offline' } <span className={`dot-${props.isOnline ? 'online' : 'offline'}`}></span>
+    <div>{props.username.slice(0,20)}{props.username.length > 19 ? '...' : ''}</div>
+                    <div style={{
+                        marginTop: '-10px', 
+                        color: '#fff',
+                        fontSize: '1rem',
+                        fontWeight: 200}}>{props.isOnline ? 'online' : 'offline'} <span className={`dot-${props.isOnline ? 'online' : 'offline'}`}></span>
+                        </div>
+                    <div className="text-white" style={{ fontSize: 10 }}>
+                        {getTyping()}
+                    </div>
                 </span>
-                <div className="font-italic text-justify text-white" style={{ fontSize: 10 }}>
-                    {getTyping()}
-                </div>
+
             </div>
             {/* messages tab */}
             <div className="container bg-black messages" id="fala">
