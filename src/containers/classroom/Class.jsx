@@ -18,7 +18,7 @@
  * @format
  */
 
-import React, { useState, Suspense, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { Redirect } from 'react-router-dom'
 import io from 'socket.io-client'
 import { ToastContainer, toast } from 'react-toastify'
@@ -178,9 +178,9 @@ const MainClassLayout = ({
             //listen for old message
             socket.on('updateMsg', msg => {
                 setcodemarkaState(c => {
-                    const oldmsg = c.messages
-                    msg.msgs.forEach(element => {
-                        oldmsg.push(element)
+                    let oldmsg = c.messages
+                   oldmsg = msg.msgs.map(element => {
+                        return element;
                     })
                     return {
                         ...c,
@@ -263,12 +263,12 @@ const MainClassLayout = ({
             })
 
             socket.on('disconnect', reason => {
-                setcodemarkaState({...codemarkastate,connected: false})
+                // setcodemarkaState({...codemarkastate,connected: false})
                 if (reason === 'io server disconnect') {
                     // the disconnection was initiated by the server, you need to reconnect manually
                     socket.connect()
                 }
-                if (connAttempts.current > 3) {
+                if (connAttempts.current > 6) {
                     toast.warn('Disconnected from classroom', {
                         position: toast.POSITION.BOTTOM_RIGHT
                     })
@@ -301,7 +301,7 @@ const MainClassLayout = ({
             })
 
             socket.on('reconnect_error', error => {
-                if (connAttempts.current >= 3) {
+                if (connAttempts.current >= 5) {
                     toast.warn(
                         'Reconnection failed, try refreshing this window'
                     )
@@ -310,10 +310,10 @@ const MainClassLayout = ({
 
             socket.on('reconnect', attemptNumber => {
                 socket.emit('re_join', requestData)
-                if (connAttempts.current >= 3) {
-                    toast.success('Welcome back online!')
+                if (connAttempts.current >= 5) {
+                    toast.success('connection restored.')
                 }
-                setcodemarkaState({ ...codemarkastate, connected: true })
+                // setcodemarkaState({ ...codemarkastate, connected: true })
 
                 connAttempts.current = 0
             })
@@ -1619,7 +1619,6 @@ const MainClassLayout = ({
                 <div className="container-fluid ">
                     <div className="row">
                         <div className="col-2 p-0">
-                            <Suspense fallback={<Spinner />}>
                                 <Convo
                                     typing={codemarkastate.typingState}
                                     username={username}
@@ -1631,19 +1630,16 @@ const MainClassLayout = ({
                                     userSpecificMessages={userSpecificMessages}
                                     user={userid}
                                     owner={ownerid}
-                                    isOnline={codemarkastate.connected}
+                                    isOnline={socket.connected}
                                 />
-                            </Suspense>
                         </div>
                         <div className="col-10 p-0">
-                            <Suspense fallback={<Spinner />}>
                                 <Editor
                                     readOnly={codemarkastate.editorPriviledge}
                                     handleEditorChange={editorChanged}
                                     files={codemarkastate.editors}
                                     dropDownSelect={handledropDownSelect}
                                 />
-                            </Suspense>
                         </div>
                     </div>
                 </div>

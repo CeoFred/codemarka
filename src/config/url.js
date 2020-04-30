@@ -36,3 +36,5 @@ export const COMMUNITY_SINGLE = '/community/'
 //app routes
 export const ROUTE_COMMUNITY_SINGLE = '/community/:kid'
 
+//blog
+export const MAY_RELEASE = '/blog/v1.1/may/2020'

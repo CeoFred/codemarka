@@ -121,7 +121,6 @@ export function* authLoginUserSaga({ email, password }) {
 
 export function* autoLoginUserSaga() {
     const loggingOut = yield store.getState().auth.loggingOut;
-    console.log(loggingOut);
     if(loggingOut){
         yield put(actions.autoAuthFailed("logging out."))
     } else {
@@ -148,7 +147,6 @@ export function* autoLoginUserSaga() {
 
                 const response = yield fetch(autoLoginRequest)
                 const resolvedResponse = yield call(resolvePromise, response.json())
-                console.log(resolvedResponse);
                 if (resolvedResponse.status) {
 
                     yield localStorage.setItem(userTokenAlias, resolvedResponse.data.token);

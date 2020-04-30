@@ -5,7 +5,7 @@ div.conversation__container {
 }
 
 div.input_container textarea.form-control {
-    height: 63px;
+    height: 51px;
     outline: none;
     border-radius: 0px;
     overflow-y: auto;

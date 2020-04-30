@@ -7,13 +7,13 @@ export default function Details(props) {
     let socket,toast,owner;
     const [ClassroomInformation, setClassroomInformation] = useState({
         cname: {
-            value: '',
+            value: props.cdata.name,
         },
         cdesc: {
-            value: '',
+            value: props.cdata.description,
         },
         ctopic: {
-            value: '',
+            value: props.cdata.topic,
         },
         submitted: false,
     })
@@ -39,8 +39,8 @@ export default function Details(props) {
     return (
         <div className="ml-7 mr-7 mt-0">
             <div>
-            Short URL - <b>https://cmarka.xyz/3454</b> { ' '}
-            <b>copy</b>
+    Short URL - <b>{props.cdata.shortUrl}</b> { ' '}
+            
             </div>
             <form onSubmit={handleClassInfoUpdate}>
                 <Input
