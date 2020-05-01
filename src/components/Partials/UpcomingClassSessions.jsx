@@ -10,7 +10,7 @@ export default function FetchUpcomingClass() {
   useEffect(() => {
     if (!state.fetched) {
 
-      const url = APIURL.GET_UPCOMING_CLASS_SESSIONS;
+      const url = APIURL.GET_UPCOMING_CLASSRROM_SESSIONS;
 
       const request = new Request(url, {
         method: 'GET',

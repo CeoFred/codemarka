@@ -15,7 +15,9 @@ const INITIAL_STATE = {
         accountType:null
     },
     authenticated:false,
-    authState:null
+    authState:null,
+    loggingOut: false        
+
 }
 
 const authStart = (state,action) => {
@@ -133,8 +135,7 @@ const authAutoSuccess = ( state, action ) => {
             displayImg: action.displayImg,
             accountType:action.accountType
         },
-        authState:'done'        
-
+        authState:'done'
     })
 }
 
@@ -206,6 +207,12 @@ const accountPasswordChangeFailed = (state, action) => {
         message: action.msg
     })
 }
+
+const logoutInit = (state, action) => {
+    return helper.updateObject(state,{
+        loggingOut: true
+    })
+}
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case actionTypes.AUTH_USER_LOGIN_START:
@@ -236,6 +243,8 @@ export default (state = INITIAL_STATE, action) => {
             return reset(state, action)
         case actionTypes.LOGOUT_SUCCESSFUL:
             return logoutSuccessful(state, action)
+        case actionTypes.LOGOUT_INIT:
+            return logoutInit(state, action)
         case actionTypes.ACCOUNT_RECOVERY_START:
             return accountRecoveryStart(state, action)
         case actionTypes.ACCOUNT_RECOVERY_FAILED:

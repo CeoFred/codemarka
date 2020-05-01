@@ -1,7 +1,7 @@
 import React from 'react';
 
 import logo from '../../../media/images/colab-04.png'
-
+import './index.css';
 function NavBar(props) {
     return (
         <nav

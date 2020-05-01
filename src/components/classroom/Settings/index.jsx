@@ -24,22 +24,22 @@ export default function ClassroomModalSettings(props) {
 
         switch (E) {
             case 'Editors':
-                setComponent(<Editors />)
+                setComponent(<Editors {...props}/>)
                 break
             case 'Modes':
-                setComponent(<Modes />)
+                setComponent(<Modes {...props}/>)
                 break
            case 'More':
-                setComponent(<More />)
+                setComponent(<More {...props}/>)
                 break
            case 'Behaviour':
-                setComponent(<Behaviour />)
+                setComponent(<Behaviour {...props}/>)
                 break
            case 'Details':
-                setComponent(<Details />)
+                setComponent(<Details {...props}/>)
                 break
             default:
-                setComponent(<Editors />)
+                setComponent(<Editors {...props}/>)
                 break
         }
     }

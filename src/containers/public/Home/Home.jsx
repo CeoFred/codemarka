@@ -443,16 +443,16 @@ export default function Home() {
                                       <li>35 Max classroom students</li>
                                       <li>Code Linting</li>
                                       <li>Download Files</li>
-                                      <li>Audio Broadcast</li>
                                       <li>Text-to-speech</li>
+                                      <li>Live preveiew</li>
                                       <li>3 language Support</li>
                                   </ul>
-                                  <a
-                                      href="/auth/signup?ref=home&auth=falseup"
+                                  <Link
+                                      to="/auth/signup?ref=home&auth=falseup"
                                       className="btn btn-sm btn-warning hover-translate-y-n3 hover-shadow-lg mb-3"
                                       target="_blank">
                                       Get started
-                                  </a>
+                                  </Link>
                               </div>
                           </div>
                       </div>
@@ -460,9 +460,8 @@ export default function Home() {
                           <div className="card card-pricing bg-primary text-center px-3 shadow hover-scale-110">
                               <div className="card-header py-5 border-0 delimiter-bottom">
                                   <div className="h1 text-white text-center mb-0">
-                                      $
                                       <span className="price font-weight-bolder">
-                                          10 / month
+                                          FREE
                                       </span>
                                   </div>
                                   <span className="h6 text-white">
@@ -480,16 +479,14 @@ export default function Home() {
                                       <li>Text-to-speech</li>
                                       <li>Record class session</li>
                                       <li>Custom Domain</li>
-                                      <li>Quiz</li>
-                                      <li>Github Export</li>
-                                      <li>Screen sharing</li>
-                                      <li>Codermarka bot</li>
+                                      <li>Quiz Mode</li>
+                                      <li>Github File Export</li>
                                   </ul>
-                                  <a  href='/#'
+                                  <Link  to={url.COMMUNITY_ACCOUNT_SIGNUP_PAGE}
                                       className="btn btn-sm btn-white hover-translate-y-n3 hover-shadow-lg mb-3"
                                       target="_blank">
-                                      Coming soon
-                                  </a>
+                                      Get started
+                                  </Link>
                               </div>
                           </div>
                       </div>

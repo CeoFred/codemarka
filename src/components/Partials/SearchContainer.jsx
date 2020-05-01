@@ -1,5 +1,4 @@
 import React from 'react';
-
 function SearchContainer({ results, display }) {
   let res;
 
@@ -18,8 +17,8 @@ function SearchContainer({ results, display }) {
     });
   }
   return (
-      <div className={ `card ${ display ? 'd-block' : 'd-none' }` }>
-          <div className="card-body border-r">{res}</div>
+      <div className={ `card ${ display ? 'd-block' : 'd-none' } h-50` }>
+      <div className="card-body border-r h-100 overflow-scroll">{res}</div>
       </div>
   );
 }
