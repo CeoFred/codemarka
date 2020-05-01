@@ -17,8 +17,12 @@
   width: 100%;
   height: 30%;
   margin:20px;
-  flex-direction: column;
+  flex-direction: row;
+  right:1rem;
+}
 
+.action-container button {
+  color:#fff;
 }
 
 .avatar-lg{ width: 6rem;
@@ -26,7 +30,7 @@
     font-size: 1.25rem;
 }
 .action-container i {
- color: #fff;
+ /* color: #fff;
     margin: 5px;
     background-color: rgb(39, 52, 68);
     padding: 10px;
@@ -38,7 +42,10 @@
     width: 34px;
     height: 40px;
     text-align: center;
-    cursor: pointer;
+    cursor: pointer; */
+}
+.action-container button:hover{
+  color: #fff;
 }
 
 .logo_container {

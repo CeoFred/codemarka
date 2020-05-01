@@ -1,0 +1,6 @@
+@media screen and (max-width: 992px) {
+  #navbar-success{
+    background-color: #273444;
+    padding-left: 20px;
+  }
+}

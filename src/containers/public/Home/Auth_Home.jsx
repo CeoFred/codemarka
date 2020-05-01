@@ -57,10 +57,10 @@ function Auth_Home(props) {
 
     }
 
-    const closeSearchResult = (e) => {
-        e.preventDefault();
-        setResults({ result: null });
-    }
+    // const closeSearchResult = (e) => {
+    //     e.preventDefault();
+    //     setResults({ result: null });
+    // }
     const handleSearchInputChange = (e) => {
         e.preventDefault();
         setSearchInput({ touched:true,value:e.target.value });
@@ -122,7 +122,6 @@ function Auth_Home(props) {
                                                         placeholder="Over 1,000,000 Classrooms"
                                                         aria-label="Over 1,000,000 Classrooms"
                                                         aria-describedby="basic-addon2"
-                                                        onBlur={closeSearchResult}
                                                     />
                                                     <div className="input-group-append">
                                                         <button

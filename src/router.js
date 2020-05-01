@@ -4,10 +4,10 @@ import {  withRouter } from 'react-router-dom';
 import Layout from './containers/public/Layout';
 import Routes from './routes'; 
 
-const router = () => {
+const router = (props) => {
   return (
       <Layout>
-          <Routes/>
+          <Routes {...props} />
       </Layout>
   )
 }

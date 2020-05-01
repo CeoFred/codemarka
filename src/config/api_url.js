@@ -38,3 +38,4 @@ export const GET_LIVE_CLASS_SESSIONS = `${host}community/live/`; //:kid
 
 
 //classrooms
+export const GET_UPCOMING_CLASSRROM_SESSIONS = `${host}classroom/upcoming/`; //:kid param

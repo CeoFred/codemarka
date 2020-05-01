@@ -250,6 +250,7 @@ const mappedCountry = countyJson.map((country) => {
                           <option value={0}>Select Affiliation</option>
                           <option value="GDG">Google Developer Group</option>
                           <option value="FDC">Facebook Developer Circle</option>
+                          <option value="OTH">Others</option>
                           <option value="RNS">Rather not say</option>
                       </select>
                   </div>

@@ -31,4 +31,10 @@ export const ACCOUNT_BILLING = '/user/account/billing'
 export const USER_PROFILE = '/user/account/profile'
 export const COMMUNITY_DASHBOARD = '/community/dashboard/:kid'
 export const COMMUNITY_INDEX =  '/communities/'
-export const COMMUNITY_SINGLE = '/community/:kid'
+export const COMMUNITY_SINGLE = '/community/'
+
+//app routes
+export const ROUTE_COMMUNITY_SINGLE = '/community/:kid'
+
+//blog
+export const MAY_RELEASE = '/blog/v1.1/may/2020'

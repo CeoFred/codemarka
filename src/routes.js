@@ -20,8 +20,6 @@ const newclassroom = React.lazy(() =>
 
 const logout = React.lazy(() => import('./containers/auth/Logout'))
 const Home = React.lazy(() => import('./containers/public/Home/Index'))
-const Blog = React.lazy(() => import('./containers/public/Blog'))
-
 const Login = React.lazy(() => import('./containers/auth/Login'))
 const Register = React.lazy(() => import('./containers/auth/Register'))
 const ForgotPassword = React.lazy(() =>
@@ -49,13 +47,22 @@ const ClassRoomPreview = React.lazy(() =>
     import('./containers/classroom/ClassroomPreview')
 )
 const SingleCommunity = React.lazy(() => import('./containers/community/index'));
+const Communities = React.lazy(() => import('./containers/community/all.jsx'));
+
+//blog
+const Blog = React.lazy(() => import('./containers/public/Blog'))
+const BlogMayRelease = React.lazy(() => import('./containers/public/Blog/BlogMayRelease'))
 
 const Routes = (props) => {
+
     useEffect(() => {
-        if (!props.isAutheticated) {
-            props.onTryAutoSignIn()
-        }
-    }, [props])
+        if (props.location.pathname.includes('logout') === false){
+            if (!props.isAutheticated) {
+                props.onTryAutoSignIn()
+            }
+        };
+    }, [props]);
+
     let routes = (
         <Switch>
             <Route exact component={logout} path={url.AUTH_LOGOUT} />
@@ -66,7 +73,7 @@ const Routes = (props) => {
             <Route exact component={About} path={url.ABOUT} />
             <Route exact component={oauthSuccess} path={url.OAUTH_URL} />
             <Route exact component={contactUs} path={url.CONTACT} />
-            <Route exact component={SingleCommunity} path={url.COMMUNITY_SINGLE} />
+            <Route exact component={BlogMayRelease} path={url.MAY_RELEASE} />
             <Route
                 exact
                 component={CommunityAccountRegistration}
@@ -99,26 +106,18 @@ const Routes = (props) => {
                 component={classPreviewNewTab}
                 path={url.CLASSROOM_PREVIEW_NEW_TAB}
             />
-            <Route exact component={newclassroom} path={url.CLASSROOM_NEW} />
             <Route
                 exact
                 component={ChangePassword}
                 path={url.AUTH_CHANGE_PASSWORD}
             />
+            <Route exact component={classrooom} path={url.CLASSROOM} />
+            <Route exact component={SingleCommunity} path={url.ROUTE_COMMUNITY_SINGLE} />
 
-            <Route component={NotFound} />
-        </Switch>
-    )
-
-    if (props.isAutheticated) {
-        routes = (
-            <Switch>
-                <Route exact component={Home} path={url.HOME} />
-                <Route exact component={Blog} path={url.BLOG} />
-                <Route exact component={About} path={url.ABOUT} />
+        {props.isAutheticated ? (
+                <>
                 <Route exact component={oauthSuccess} path={url.OAUTH_URL} />
-                <Route exact component={contactUs} path={url.CONTACT} />
-                <Route exact component={SingleCommunity} path={url.COMMUNITY_SINGLE} />
+                <Route exact component={Communities} path={url.COMMUNITY_INDEX} />
 
                 <Route
                     exact
@@ -131,24 +130,17 @@ const Routes = (props) => {
                     component={newclassroom}
                     path={url.CLASSROOM_NEW}
                 />
-                <Route exact component={classrooom} path={url.CLASSROOM} />
-                <Redirect from={url.CLASSROOMS} to={url.AUTH_SIGN_IN} />
-                <Route exact component={Login} path={url.AUTH_SIGN_IN} />
-                <Route exact component={Register} path={url.AUTH_SIGN_UP} />
-                <Route
-                    exact
-                    component={ClassRoomPreview}
-                    path={url.PROTECTED_CLASSROOM_PREVIEW}
-                />
                 <Route
                     exact
                     component={classPreviewNewTab}
                     path={url.CLASSROOM_PREVIEW_NEW_TAB}
                 />
-                <Route component={NotFound} />
-            </Switch>
-        )
-    }
+                </>
+        ):''}
+
+            <Route component={NotFound} />
+        </Switch>
+    )
     return <React.Fragment>{routes}</React.Fragment>
 }
 const mapStateToProps = (state) => {
