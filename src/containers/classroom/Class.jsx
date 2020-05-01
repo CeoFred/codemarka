@@ -703,20 +703,28 @@ const MainClassLayout = ({
     const handleInputChange = e => {
         e.preventDefault()
         const value = e.target.value
-        setInputState({ ...inputState, value })
+        if(value.length > 100) {
+            const reduced = String(value).slice(0,100);
+            setInputState({ ...inputState,  reduced})
+            alert('Reduce the noise, type less. Use pinned messagees for longer texts.');
 
-        if (e.target.value.trim().length > 0) {
+
+        } else if (e.target.value.trim().length > 0) {
             socket.emit('user_typing', {
                 username,
                 userid,
                 classroomid: data.classroom_id
             })
+            setInputState({ ...inputState, value })
+
         } else {
             socket.emit('user_typing_cleared', {
                 username,
                 userid,
                 classroomid: data.classroom_id
             })
+            setInputState({ ...inputState, value })
+
         }
     }
 
