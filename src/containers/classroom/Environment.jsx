@@ -246,7 +246,7 @@ function Environment(props) {
                         topic={props.classTopic}
                         pinnedMessages={props.class_pinnedMessages}
                         history={history}
-                        cd={props.c}
+                        cd={props.cclassroom}
                         kid={props.kid}
                         gravatarUrl={props.gravatarUrl}
                         classroomD={props.classroom}
