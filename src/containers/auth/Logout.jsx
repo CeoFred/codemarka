@@ -41,7 +41,7 @@ function Logout(props) {
                 onLogout()
             })
             
-    }, [ isAuthenticated ]);
+    }, [ isAuthenticated, onLogout ]);
 
     const checkAuth = () => {
         if (loggedOut){

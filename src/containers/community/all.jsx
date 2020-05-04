@@ -77,7 +77,7 @@ function AllCommunities(props) {
             <div className="col-md-12 col-12" >
               <div className="community-data-container">
                 <div className="community-logo">
-                  <img alt="Image placeholder" src={comm.logo} class="avatar  rounded-circle" />
+                  <img alt="community_logo" src={comm.logo} class="avatar  rounded-circle" />
                 </div>
                 <div className="community-info pl-2">
           <h2 className="mb-0">{comm.name}({comm.acronym})</h2>
@@ -107,7 +107,7 @@ function AllCommunities(props) {
     }).catch((err) => {
       setcommunities([]);
     });
-  }, [communities]);
+  }, [communities,host,props.userid]);
 
   const [searchInput, setSearchInput] = useState({ touched: false, value: '' });
   const [results, setResults] = useState({ result: [] });

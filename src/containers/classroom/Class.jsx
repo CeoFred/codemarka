@@ -37,7 +37,7 @@ import Spinner from '../../components/Partials/Preloader'
 import ParticipantModal from '../../components/classroom/Participants/Modal'
 import ClassRoomSettingsModal from '../../components/classroom/Settings/index.jsx';
 
-import AttendanceCollector from '../../components/classroom/Attendance/index.jsx';
+// import AttendanceCollector from '../../components/classroom/Attendance/index.jsx';
 
 // import AudioBroadcast from '../../components/classroom/Audio/Audio';
 
@@ -160,7 +160,7 @@ const MainClassLayout = ({
     }
 
     const [starRating, setStarRating] = useState(0)
-    const [attendanceState, setattendanceState] = useState({ isCollecting:null, hasCollected:null,data:{}});
+    // const [attendanceState, setattendanceState] = useState({ isCollecting:null, hasCollected:null,data:{}});
 
     React.useEffect(() => {
         const requestData = {
@@ -700,18 +700,10 @@ const MainClassLayout = ({
         codemarkastate.classroom_id,
         owner,
         pinnedMessages,
-        onClassroomVerify
+        onClassroomVerify,
+        classroomD
     ])
 
-    React.useEffect(() => {
-        // wait 4 Seconds
-        setTimeout(() => {
-            if (classroomD.isCollectingAttendance){
-                
-            }
-        }, 4000);
-
-    },[attendanceState]);
 
     const handleInputChange = e => {
         e.preventDefault()

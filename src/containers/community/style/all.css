@@ -10,5 +10,5 @@
 
 div.community-data-container {
   display:flex;
-  justify-content: start;
+  justify-content: flex-start;
 }

@@ -33,7 +33,6 @@ export default function Conversation(props) {
             props.sendMessage(event);
         }
     }
-    let messages;
 
     if (props.messages && props.messages.length > 0) {
 

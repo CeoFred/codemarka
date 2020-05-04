@@ -34,11 +34,11 @@ function CommunityImageLogoUpload(props) {
       // list allow mime type
       const types = ['image/png', 'image/jpeg',]
       // loop access array
-      for (var x = 0; x < files.length; x++) {
+      for (var __x__ = 0; __x__ < files.length; __x__++) {
           // compare file type find doesn't matach
-          if (types.every((type) => files[x].type !== type)) {
+          if (types.every((type) => files[__x__].type !== type)) {
               // create error message and assign to container
-              err += files[x].type + ' is not a supported format\n'
+              err += files[__x__].type + ' is not a supported format\n'
           }
       }
 

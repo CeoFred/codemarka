@@ -33,7 +33,7 @@ function NewClassroom(props) {
              onResetAll()
              onClassroomSwitch('classroom')
          }
-     }, mounted)
+     }, [mounted, onResetAll, onClassroomSwitch])
     
 
     const mappedCountry = countyJson.map((country) => {
@@ -47,7 +47,7 @@ function NewClassroom(props) {
                 elementConfig: {
                     type: 'text',
                     placeholder: 'Dragon Riders',
-                    inputHelperText: "e.g David and Friends."
+                    inputhelpertext: "e.g David and Friends.",
                 },
                 value: '',
                 validation: {
@@ -55,14 +55,16 @@ function NewClassroom(props) {
                     minLength: 6
                 },
                 valid: false,
-                touched: false
+                touched: false,
+                display: true
+
             },
             topic: {
                 label: 'Topic',
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeholder: 'Javascript ES6'
+                    placeholder: 'Javascript ES6',
                 },
                 value: '',
                 validation: {
@@ -70,7 +72,9 @@ function NewClassroom(props) {
                     minLength: 5
                 },
                 valid: false,
-                touched: false
+                touched: false,
+                display: true
+
             },
             startDate: {
                 label: 'Start Date',
@@ -78,8 +82,7 @@ function NewClassroom(props) {
                 elementConfig: {
                     type: 'date',
                     placeholder: 'Select Date',
-                    inputHelperText: "Date should not be in the past."
-
+                    inputhelpertext: "Date should not be in the past.",
                 },
                 value: '',
                 validation: {
@@ -87,21 +90,25 @@ function NewClassroom(props) {
                     isPastDate: false
                 },
                 valid: false,
-                touched: false
+                touched: false,
+                display: props.isCommunityAccount
+
             },
             startTime: {
                 label: 'Start Time',
                 elementType: 'input',
                 elementConfig: {
                     type: 'time',
-                    placeholder: 'Select Time'
+                    placeholder: 'Select Time',
                 },
                 value: '',
                 validation: {
                     required: true
                 },
                 valid: false,
-                touched: false
+                touched: false,
+                display: props.isCommunityAccount
+
             },
 
             visibility: {
@@ -122,8 +129,7 @@ function NewClassroom(props) {
                             displayValue: 'Private'
                         }
                     ],
-                    inputHelperText: "Private classrooms can only be searched for. Not restrictions to enter once with a valid url to your classroom"
-
+                    inputhelpertext: "Private classrooms can only be searched for. Not restrictions to enter once with a valid url to your classroom"
                 },
                 value: '',
                 validation: {
@@ -131,13 +137,15 @@ function NewClassroom(props) {
                     minLength: 3
                 },
                 valid: false,
-                touched: false
+                touched: false,
+                display: true,
+
             },
             location: {
                 label: 'location',
                 elementType: 'select',
                 elementConfig: {
-                    options: mappedCountry
+                    options: mappedCountry,
                 },
                 value: '',
                 validation: {
@@ -145,7 +153,9 @@ function NewClassroom(props) {
                     minLength: 1
                 },
                 valid: false,
-                touched: false
+                touched: false,
+                display: props.isCommunityAccount
+
             },
             classType: {
                 label: 'Classroom Type',
@@ -164,7 +174,8 @@ function NewClassroom(props) {
                     minLength: 3
                 },
                 valid: true,
-                touched: false
+                touched: false,
+                display: true
             },
             description: {
                 label: 'class description',
@@ -172,7 +183,7 @@ function NewClassroom(props) {
                 elementConfig: {
                     type: 'textarea',
                     placeholder: "Let people know more about your class",
-                    inputHelperText: "min 40 Words."
+                    inputhelpertext: "min 40 Words.",
                 },
                 value: '',
                 validation: {
@@ -180,7 +191,38 @@ function NewClassroom(props) {
                     minLength: 40
                 },
                 valid: false,
-                touched: false
+                touched: false,
+                display: props.isCommunityAccount
+
+            },
+            isTakingAttendance: {
+                label:'Collect attendance',
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        {
+
+                            value: '',
+                            displayValue: 'Select one'
+                        },
+
+                        {
+                            value: 'Yes',
+                            displayValue: 'Yes'
+                        },
+                        {
+                            value: 'No',
+                            displayValue: 'No'
+                        }
+                    ],
+                },
+                value: '',
+                validation: {
+                    required: true,
+                },
+                valid: false,
+                touched: false,
+                display: props.isCommunityAccount
             }
         },
         formisValid: false,
@@ -226,6 +268,7 @@ function NewClassroom(props) {
                     state.controls[formElementIdentifier].value
             }
             formData.token = props.token;
+            formData.user = props.user;
             const date = formData.startDate;
             const time = formData.startTime;
 
@@ -273,6 +316,7 @@ function NewClassroom(props) {
                     invalid={formElement.config.valid}
                     touched={formElement.config.touched}
                     label={formElement.config.label}
+                    shouldDisplay={formElement.config.display}
                 />
             ))}
 
@@ -356,7 +400,9 @@ const mapStateToProps = ({ auth, classroom }) => {
     return {
         token: auth.user.token,
         classroom_kid: classroom.classdetails ? classroom.classdetails.kid : null,
-        loading: classroom.loading
+        loading: classroom.loading,
+        isCommunityAccount: auth.user.accountType === 102,
+        user: auth.user 
     }
 }
 

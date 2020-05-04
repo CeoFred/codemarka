@@ -67,7 +67,7 @@ function Login(props) {
            onResetAll()
            onClassroomSwitch('classroom')
        }
-   }, mounted)
+   }, [mounted, onClassroomSwitch, onResetAll])
     
 
     const [state, setState] = useState({

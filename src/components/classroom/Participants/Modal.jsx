@@ -15,7 +15,7 @@ const Modal = ({
     let users__ = 'Waiting for people to join...'
 
     if (users && users.length > 0) {
-        users__ = users.map(u => {
+        return users__ =  users.map(u => {
             if (userid !== u.kid) {
                 return (
                     <li className="list-group-item" key={ u.id }>

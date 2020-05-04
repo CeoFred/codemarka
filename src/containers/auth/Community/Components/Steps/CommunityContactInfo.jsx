@@ -111,7 +111,7 @@ export default function CommunityContactInfo(props) {
                   return { ...c, formisvalid }
               })
          }
-     }, [oldData])
+     }, [oldData, formControls])
      /**
       * Handle Form Submission
       * @param event Event

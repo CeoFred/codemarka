@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import React from 'react'
 import { UnControlled as CodeMirror } from 'react-codemirror2';
-import DropDown from './DropDown';
+// import DropDown from './DropDown';
 
 import './editor.css';
   require('codemirror/addon/fold/foldgutter.css');

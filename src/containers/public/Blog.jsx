@@ -54,13 +54,13 @@ export default function Home() {
                                               <div class="col-auto">
                           <span class="avatar avatar-sm bg-primary rounded-circle">{blogPost.authorShortName}</span>
                           <span class="text-sm mb-0 avatar-content">{blogPost.author}</span></div><div class="col text-right text-right">
-                                                  <div class="actions"><a href="#" class="action-item">
+                                                  <div class="actions"><a href={blogPost.url} class="action-item">
                                                       <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
                                                           viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                           stroke-width="2" stroke-linecap="round"
                                                           stroke-linejoin="round" class="feather feather-heart mr-1">
                                                           <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 50</a>
-                                                      <a href="#" class="action-item"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye mr-1">
+                                                      <a href={blogPost.url} class="action-item"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye mr-1">
                                                           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> 250</a></div></div></div></div></div></div>
                           )
                       })}
