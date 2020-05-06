@@ -64,7 +64,7 @@ if(props.elementType === 'input'){
     }
     if (props.shouldDisplay) {
         return <div className="form-group">
-            <label className="form-control-label">{props.label}{props.validation && props.validation.required ? (<span className="text-danger pl-2">* required</span>) : ''}</label>
+            <label className="form-control-label">{props.label}{props.validation && props.validation.required ? (<span className="text-danger pl-2">*   </span>) : ''}</label>
             <div className="input-group input-group-merge">
                 {inputElement}
 

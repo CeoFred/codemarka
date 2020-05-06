@@ -37,7 +37,7 @@ import Spinner from '../../components/Partials/Preloader'
 import ParticipantModal from '../../components/classroom/Participants/Modal'
 import ClassRoomSettingsModal from '../../components/classroom/Settings/index.jsx';
 
-// import AttendanceCollector from '../../components/classroom/Attendance/index.jsx';
+import AttendanceCollector from '../../components/classroom/Attendance/index.jsx';
 
 // import AudioBroadcast from '../../components/classroom/Audio/Audio';
 
@@ -86,6 +86,13 @@ const MainClassLayout = ({
         lastSentMessage: null
     })
 
+    const [attendanceState, setAttendanceState] = useState({
+
+        hasCollectedAttendance: false,
+        isCollectingAttendance: classroomD.isCollectingAttendance,
+        isSubmittingAttendance: false,
+    })
+
     const [codemarkastate, setcodemarkaState] = useState({
         messages: [],
         editors: [],
@@ -131,6 +138,9 @@ const MainClassLayout = ({
             }
         }, 1000)
     }
+    const [SocketConnection, setSocketConnection] = useState({
+        connected: socket.connected
+    })
 
     const [ClassroomInformation, setClassroomInformation] = useState({
         cname: {
@@ -193,6 +203,17 @@ const MainClassLayout = ({
                 })
             })
 
+            socket.on('collect_attendance', (attendanceList) => {
+                setAttendanceState({ ...attendanceState, hasCollectedAttendance: false, isCollectingAttendance: true, isSubmittingAttendance: true })
+                document.querySelector('#attendance_modal').click();
+            });
+
+
+            socket.on('attendance_recorded', () => {
+                setAttendanceState({ ...attendanceState, hasCollectedAttendance: true, isSubmittingAttendance: false });
+                alert('Attendance Updated!')
+            });
+
             socket.on('rejoin_updateMsg', msg => {
                 setcodemarkaState(c => {
                     const nnc = msg.newuserslist.filter(u => {
@@ -237,6 +258,7 @@ const MainClassLayout = ({
                 setUserSpecificMessages(c => [...c, msg])
             })
 
+
             //listen for new members added
             socket.on('someoneJoined', msg => {
                 setcodemarkaState(c => {
@@ -266,7 +288,8 @@ const MainClassLayout = ({
             })
 
             socket.on('disconnect', reason => {
-                // setcodemarkaState({...codemarkastate,connected: false})
+                setSocketConnection({ ...SocketConnection,connected: false});
+
                 if (reason === 'io server disconnect') {
                     // the disconnection was initiated by the server, you need to reconnect manually
                     socket.connect()
@@ -319,6 +342,8 @@ const MainClassLayout = ({
                 // setcodemarkaState({ ...codemarkastate, connected: true })
 
                 connAttempts.current = 0
+                setSocketConnection({ ...SocketConnection, connected: true });
+
             })
 
             //listen for new messages
@@ -1192,6 +1217,10 @@ const MainClassLayout = ({
         // console.log(event,value,editor);
     }
 
+    const handleAttendanceSubmission = (data) => {
+        socket.emit('new_attendance_record',data);
+    }
+
     // const handleAuidoBroadCastAlert = (message) => {
     //     toast.info(<div>Heads Up!! <br/> {message} </div>)
     // }
@@ -1215,6 +1244,7 @@ const MainClassLayout = ({
                 socket={codemarkastate}
                 cdata={classroomD}
             />
+            <AttendanceCollector isSubmittingAttendance={attendanceState.isSubmittingAttendance} isCollectingAttendance={attendanceState.isCollectingAttendance} hasCollectedAttendance={attendanceState.hasCollectedAttendance} submit={handleAttendanceSubmission}/>
             {classNotification}
             <span
                 className="d-none"
@@ -1314,9 +1344,26 @@ const MainClassLayout = ({
                                     </div>
                                 ) : (
                                     <div>
-                                        <h5 className="heading h4 mt-4">
-                                            You are all set!
-                                        </h5>
+                                            <div className="row">
+                                                <div
+                                                    className="col-md-12 mt-5 text-center d-flex justify-content-center align-items-center flex-column"
+                                                    style={{ paddingLeft: '15px' }}>
+                                                    <h6 className="h2 mb-1 text-success">
+                                                        <b>You are all set!</b>
+                                                    </h6>
+                                                    <p className="mb-0">
+                                                        Your class session is open for all with link access, we've started collecting analytics
+                                                        ensure you want to start now to get the best
+                                                        out of the data which would be available once the session is terminated,goodluck.
+                </p>
+                                                    <div class="dummy-positioning d-flex">
+                                                        <div class="success-icon">
+                                                            <div class="success-icon__tip"></div>
+                                                            <div class="success-icon__long"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                     </div>
                                 )}
                             </div>
@@ -1643,7 +1690,7 @@ const MainClassLayout = ({
                                     userSpecificMessages={userSpecificMessages}
                                     user={userid}
                                     owner={ownerid}
-                                    isOnline={socket.connected}
+                                isOnline={SocketConnection.connected}
                                 />
                         </div>
                         <div className="col-10 p-0">
