@@ -52,6 +52,8 @@ export default function Details(props) {
                         placeholder: 'Classroom Name',
                         name: 'cname',
                     }}
+                    shouldDisplay={true}
+
                     value={ClassroomInformation.cname.value}
                     changed={(e) =>
                         handleClassroomInformationInputChange(e, 'cname')
@@ -66,6 +68,8 @@ export default function Details(props) {
                         placeholder: 'Classroom Name',
                         name: 'ctopic',
                     }}
+                    shouldDisplay={true}
+
                     value={ClassroomInformation.ctopic.value}
                     changed={(e) =>
                         handleClassroomInformationInputChange(e, 'ctopic')
@@ -79,6 +83,8 @@ export default function Details(props) {
                         placeholder: 'Classroom Name',
                         name: 'cdesc',
                     }}
+                    shouldDisplay={true}
+
                     value={ClassroomInformation.cdesc.value}
                     changed={(e) =>
                         handleClassroomInformationInputChange(e, 'cdesc')

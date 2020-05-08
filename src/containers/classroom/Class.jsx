@@ -988,6 +988,7 @@ const MainClassLayout = ({
                     placeholder: 'Pin Message Here...',
                     name: 'text__area__msg__pin'
                 } }
+                shouldDisplay={true}
                 value={ ClassroomPinnedInformation.value }
                 inputType="textarea"
                 changed={ handlePinTextAreaChange }
@@ -1563,6 +1564,7 @@ const MainClassLayout = ({
                             placeholder: 'Invite with email or username',
                             name: 'add_user_input'
                         }}
+                        shouldDisplay={true}
                         value={userInvitationData.value}
                         inputType="input"
                         changed={handleuserInvitationDataChange}
@@ -1628,6 +1630,7 @@ const MainClassLayout = ({
                             placeholder: 'Classroom Name',
                             name: 'cname'
                         }}
+                        shouldDisplay={true}
                         value={ClassroomInformation.cname.value}
                         changed={e =>
                             handleClassroomInformationInputChange(e, 'cname')
@@ -1642,6 +1645,8 @@ const MainClassLayout = ({
                             placeholder: 'Classroom Name',
                             name: 'ctopic'
                         }}
+                        shouldDisplay={true}
+
                         value={ClassroomInformation.ctopic.value}
                         changed={e =>
                             handleClassroomInformationInputChange(e, 'ctopic')
@@ -1655,6 +1660,7 @@ const MainClassLayout = ({
                             placeholder: 'Classroom Name',
                             name: 'cdesc'
                         }}
+                        shouldDisplay={true}
                         value={ClassroomInformation.cdesc.value}
                         changed={e =>
                             handleClassroomInformationInputChange(e, 'cdesc')
