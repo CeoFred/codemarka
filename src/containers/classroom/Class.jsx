@@ -89,9 +89,19 @@ const MainClassLayout = ({
     const [attendanceState, setAttendanceState] = useState({
 
         hasCollectedAttendance: false,
-        isCollectingAttendance: classroomD.isCollectingAttendance,
+        isCollectingAttendance: classroomD.isTakingAttendance,
         isSubmittingAttendance: false,
-    })
+        userAttendanceData: {
+            email:"",
+            gender:"",
+            lastName:"",
+            firstName:"",
+            phone:"",
+            kid:"",
+            classExpertiseLevel:""
+        },
+        list:[]
+    });
 
     const [codemarkastate, setcodemarkaState] = useState({
         messages: [],
@@ -170,7 +180,6 @@ const MainClassLayout = ({
     }
 
     const [starRating, setStarRating] = useState(0)
-    // const [attendanceState, setattendanceState] = useState({ isCollecting:null, hasCollected:null,data:{}});
 
     React.useEffect(() => {
         const requestData = {
@@ -208,11 +217,49 @@ const MainClassLayout = ({
                 document.querySelector('#attendance_modal').click();
             });
 
+            socket.on('has_attendance_recorded',(data) => {
+                setAttendanceState({ ...attendanceState,userAttendanceData:data, hasCollectedAttendance: true, isCollectingAttendance: true, isSubmittingAttendance: false });
+            })
+
 
             socket.on('attendance_recorded', () => {
-                setAttendanceState({ ...attendanceState, hasCollectedAttendance: true, isSubmittingAttendance: false });
+                setAttendanceState({ ...attendanceState, hasCollectedAttendance: true, isCollectingAttendance: true, isSubmittingAttendance: false });
                 alert('Attendance Updated!')
             });
+
+            socket.on('new_attendance',(list) => {
+                if(owner){
+                    setAttendanceState({ ...attendanceState, hasCollectedAttendance: true, list});
+                }
+            })
+
+            socket.on('attendance_list', (list) => {
+                if (owner) {
+                    setAttendanceState({ ...attendanceState, hasCollectedAttendance: true, list });
+                }
+            })
+
+            socket.on('attendance_reminder',() => {
+                if(owner) {
+                    toast.success(
+                        <div>
+                            Heads Up!
+                        <br />
+                        Reminder Sent to all participants.{' '}
+                        </div>
+                    )
+                } else if (!attendanceState.hasCollectedAttendance){
+                      toast.success(
+                        <div>
+                        Listen Up!
+                        <br />
+                        Host is requesting you fill up your attendance,thanks.
+                        </div>
+                    )  
+                    
+                }
+
+            })
 
             socket.on('rejoin_updateMsg', msg => {
                 setcodemarkaState(c => {
@@ -1222,9 +1269,10 @@ const MainClassLayout = ({
         socket.emit('new_attendance_record',data);
     }
 
-    // const handleAuidoBroadCastAlert = (message) => {
-    //     toast.info(<div>Heads Up!! <br/> {message} </div>)
-    // }
+    const handleSendReminder = () => {
+        socket.emit('send_attendance_reminder_init')
+    }
+
 
     return (
         <div>
@@ -1245,7 +1293,15 @@ const MainClassLayout = ({
                 socket={codemarkastate}
                 cdata={classroomD}
             />
-            <AttendanceCollector isSubmittingAttendance={attendanceState.isSubmittingAttendance} isCollectingAttendance={attendanceState.isCollectingAttendance} hasCollectedAttendance={attendanceState.hasCollectedAttendance} submit={handleAttendanceSubmission}/>
+            <AttendanceCollector 
+            isSubmittingAttendance={attendanceState.isSubmittingAttendance} 
+            isCollectingAttendance={attendanceState.isCollectingAttendance} 
+            hasCollectedAttendance={attendanceState.hasCollectedAttendance} 
+            data={attendanceState.userAttendanceData}
+            isOwner={owner}
+            sendReminder={handleSendReminder}
+            list={attendanceState.list}
+            submit={handleAttendanceSubmission}/>
             {classNotification}
             <span
                 className="d-none"
@@ -1271,6 +1327,8 @@ const MainClassLayout = ({
                 endClass={handleEndClass}
                 startClass={handlestartClass}
                 gravatarUrl={gravatarUrl}
+                isCollectingAttendance={attendanceState.isCollectingAttendance}
+                hasCollectedAttendance={attendanceState.hasCollectedAttendance} 
             />
 
             <button

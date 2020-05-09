@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux'
 
 import Input from '../../Partials/Input/Input';
@@ -20,7 +20,7 @@ function AttendanceCollector(props){
           type: 'text',
           placeholder: 'David',
         },
-        value: '',
+        value: props.data.firstName,
         validation: {
           required: true,
           minLength: 2
@@ -36,7 +36,7 @@ function AttendanceCollector(props){
           type: 'text',
           placeholder: 'Johnson ',
         },
-        value: '',
+        value: props.data.lastName,
         validation: {
           required: true,
           minLength: 2
@@ -69,7 +69,7 @@ function AttendanceCollector(props){
             }
           ],
         },
-        value: '',
+        value: props.data.classExpertiseLevel,
         validation: {
           required: true,
           minLength: 3
@@ -101,7 +101,7 @@ function AttendanceCollector(props){
             }
           ],
         },
-        value: '',
+        value: props.data.gender,
         validation: {
           required: true,
           minLength: 3
@@ -134,7 +134,7 @@ function AttendanceCollector(props){
           type: 'text',
           placeholder: '+40-777 245 549',
         },
-        value: '',
+        value: props.data.phone ,
         validation: {
           required: false,
         },
@@ -151,13 +151,22 @@ function AttendanceCollector(props){
   })
   // React.useEffect(() => {
   //   // wait 4 Seconds
-  //   setTimeout(() => {
-  //     if (props.classroomData.isCollectingAttendance) {
 
-  //     }
-  //   }, 4000);
 
   // }, [attendanceState]);
+
+  useEffect(() => {
+    if (props.hasCollectedAttendance && props.isCollectingAttendance) {
+      setState({ ...state, alertType: 'success', formErrorMessage:'You are all caught up! Re-filling this form only updates your previous submission' })
+    } else if (!props.isCollectingAttendance) {
+      setState({ ...state, alertType: 'info', formErrorMessage: 'Heads Up!!Classroom does not support attendance collection, feel free to send in your information.' })
+    }
+    
+    
+    if (!props.hasCollectedAttendance && props.isCollectingAttendance){
+      setState({ ...state, alertType: 'info', formErrorMessage: 'Heads Up!! Host is requesting you fill up an attendance.' })
+    }
+  }, [props])
   const inputChangeHandler = (event, controlName) => {
     const updatedControls = {
       ...state.controls,
@@ -196,6 +205,8 @@ function AttendanceCollector(props){
 
       // eslint-disable-next-line no-undef
       props.submit(formData)
+      setState({ ...state, alertType: null, formErrorMessage: null })
+
     } else {
       setState({
         ...state,
@@ -247,6 +258,23 @@ function AttendanceCollector(props){
       </div>
     </form>
   )
+
+  let list;
+
+  list = props.list.map((atte,i) => {
+    return (
+      <tr key={atte.kid}>
+        <th scope="row">{i + 1}</th>
+        <td>{atte.firstName}</td>
+        <td>{atte.lastName}</td>
+        <td>{atte.email}</td>
+        <td>@{atte.username}</td>
+        <td>{atte.phone}</td>
+        <td>{atte.classExpertiseLevel}</td>
+      </tr>
+    )
+  })
+
   return (
     <React.Fragment>
       <button type="button" class="btn btn-primary d-none" id="attendance_modal" data-toggle="modal" data-target="#attendanceModal">
@@ -257,14 +285,40 @@ function AttendanceCollector(props){
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="attendanceModalLabel">Attendance Sheet</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <div>              
+                {props.isOwner ? (<Button
+                  size="sm"
+                  textColor="#fff"
+                  color="success"
+                  clicked={props.sendReminder}
+                ><i className="fa fa-broadcast-tower"></i> Send Reminder</Button>) : (
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
-              </button>
+              </button>)}
+              </div>
+
             </div>
             <div class="modal-body">
-                {form}
+              {props.isOwner ? (<table class="table table-dark">
+                <thead>
+                  <tr >
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Expertise Level</th>
+
+
+                  </tr>
+                </thead>
+                <tbody>
+                  {list}
+                </tbody>
+              </table>) : form }
             </div>
-            <div class="modal-footer">
+            <div class={`modal-footer ${props.isOwner ? 'd-none':''}`}>
 
               <Button
                 size="sm"
@@ -272,7 +326,7 @@ function AttendanceCollector(props){
                 color="primary"
                 clicked={submitHandler}
                 disabled={!state.formisValid}>
-                {state.formisSubmitted && props.isSubmittingAttendance ? <Spinner /> : 'submit'}
+                {state.formisSubmitted && props.isSubmittingAttendance ? <Spinner /> : state.hasCollectedAttendance ?'update': 'submit'}
               </Button>
             </div>
           </div>
