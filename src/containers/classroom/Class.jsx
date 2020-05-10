@@ -214,7 +214,7 @@ const MainClassLayout = ({
 
             socket.on('collect_attendance', (attendanceList) => {
                 setAttendanceState({ ...attendanceState, hasCollectedAttendance: false, isCollectingAttendance: true, isSubmittingAttendance: true })
-                document.querySelector('#attendance_modal').click();
+               if(!owner) document.querySelector('#attendance_modal').click();
             });
 
             socket.on('has_attendance_recorded',(data) => {
@@ -341,6 +341,7 @@ const MainClassLayout = ({
                     // the disconnection was initiated by the server, you need to reconnect manually
                     socket.connect()
                 }
+                socket.emit("lefti");
                 if (connAttempts.current > 6) {
                     toast.warn('Disconnected from classroom', {
                         position: toast.POSITION.BOTTOM_RIGHT
@@ -1297,7 +1298,7 @@ const MainClassLayout = ({
             isSubmittingAttendance={attendanceState.isSubmittingAttendance} 
             isCollectingAttendance={attendanceState.isCollectingAttendance} 
             hasCollectedAttendance={attendanceState.hasCollectedAttendance} 
-            data={attendanceState.userAttendanceData}
+            attendanceList={attendanceState.userAttendanceData}
             isOwner={owner}
             sendReminder={handleSendReminder}
             list={attendanceState.list}

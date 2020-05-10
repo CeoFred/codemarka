@@ -20,7 +20,7 @@ function AttendanceCollector(props){
           type: 'text',
           placeholder: 'David',
         },
-        value: props.data.firstName,
+        value: props.attendanceList.firstName,
         validation: {
           required: true,
           minLength: 2
@@ -36,7 +36,7 @@ function AttendanceCollector(props){
           type: 'text',
           placeholder: 'Johnson ',
         },
-        value: props.data.lastName,
+        value: props.attendanceList.lastName,
         validation: {
           required: true,
           minLength: 2
@@ -69,7 +69,7 @@ function AttendanceCollector(props){
             }
           ],
         },
-        value: props.data.classExpertiseLevel,
+        value: props.attendanceList.classExpertiseLevel,
         validation: {
           required: true,
           minLength: 3
@@ -101,7 +101,7 @@ function AttendanceCollector(props){
             }
           ],
         },
-        value: props.data.gender,
+        value: props.attendanceList.gender,
         validation: {
           required: true,
           minLength: 3
@@ -134,7 +134,7 @@ function AttendanceCollector(props){
           type: 'text',
           placeholder: '+40-777 245 549',
         },
-        value: props.data.phone ,
+        value: props.attendanceList.phone ,
         validation: {
           required: false,
         },
@@ -286,25 +286,34 @@ function AttendanceCollector(props){
             <div class="modal-header">
               <h5 class="modal-title" id="attendanceModalLabel">Attendance Sheet</h5>
               <div>              
-                {props.isOwner ? (<Button
+                {props.isOwner ? (
+                <>
+                <Button
+                  size="sm"
+                  textColor="#fff"
+                  color="warning"
+                  clicked={props.downloadAttendance}
+                ><i className="fa fa-download"></i> Download CSV</Button><Button
                   size="sm"
                   textColor="#fff"
                   color="success"
                   clicked={props.sendReminder}
-                ><i className="fa fa-broadcast-tower"></i> Send Reminder</Button>) : (
+                ><i className="fa fa-broadcast-tower"></i> Send Reminder</Button>
+                </>
+                ) : (
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>)}
               </div>
 
             </div>
-            <div class="modal-body">
-              {props.isOwner ? (<table class="table table-dark">
+            <div class={`modal-body ${props.isOwner ? 'm-0 p-0 h-80': ''}`}>
+              {props.isOwner ? (<table class="table table-dark w-100 table-responsive table-hover">
                 <thead>
                   <tr >
                     <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
                     <th scope="col">Email</th>
                     <th scope="col">Username</th>
                     <th scope="col">Phone</th>

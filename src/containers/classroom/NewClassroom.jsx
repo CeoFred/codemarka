@@ -89,7 +89,7 @@ function NewClassroom(props) {
                     required: true,
                     isPastDate: false
                 },
-                valid: false,
+                valid: !props.isCommunityAccount,
                 touched: false,
                 display: props.isCommunityAccount
 
@@ -105,7 +105,7 @@ function NewClassroom(props) {
                 validation: {
                     required: true
                 },
-                valid: false,
+                valid: !props.isCommunityAccount,
                 touched: false,
                 display: props.isCommunityAccount
 
@@ -152,7 +152,7 @@ function NewClassroom(props) {
                     required: true,
                     minLength: 1
                 },
-                valid: false,
+                valid: !props.isCommunityAccount,
                 touched: false,
                 display: props.isCommunityAccount
 
@@ -190,7 +190,7 @@ function NewClassroom(props) {
                     required: true,
                     minLength: 40
                 },
-                valid: false,
+                valid: !props.isCommunityAccount,
                 touched: false,
                 display: props.isCommunityAccount
 
@@ -220,7 +220,7 @@ function NewClassroom(props) {
                 validation: {
                     required: true,
                 },
-                valid: false,
+                valid: !props.isCommunityAccount,
                 touched: false,
                 display: props.isCommunityAccount
             }
@@ -271,18 +271,20 @@ function NewClassroom(props) {
             formData.user = props.user;
             const date = formData.startDate;
             const time = formData.startTime;
-
-            if (!isFuture(new Date(`${date} ${time}`))) {
-                alert('Please Ensure your start date and time is in the future');
-                setState({
-                    ...state, formisSubmitted: false,
-                    controls: {
-                        ...state.controls,
-                        startTime: { ...state.controls.startTime, valid: false }
-                    }
-                });
-                return false;
+if(props.isCommunityAccount){
+    if (!isFuture(new Date(`${date} ${time}`))) {
+        alert('Please Ensure your start date and time is in the future');
+        setState({
+            ...state, formisSubmitted: false,
+            controls: {
+                ...state.controls,
+                startTime: { ...state.controls.startTime, valid: false }
             }
+        });
+        return false;
+    }
+}
+            
             // eslint-disable-next-line no-undef
             props.onCreate(formData)
         } else {

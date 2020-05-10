@@ -19,7 +19,8 @@
     position: fixed;
     color: #fff;
     z-index: 99;
-    right: 0;
+    right: 50%;
+    left: 50%;
     bottom: 0;
     margin-bottom: 20px;
     margin-right: 20px;
@@ -70,4 +71,24 @@ iframe {
         /* box-shadow: 0px 0px 0px 10px #FC5185; */
         color: rgba(0, 255, 231, 0.33);
     }
+}
+
+.Toastify__toast--success {
+    background-color: #2dca8c !important;
+    border-color: #2dca8c;
+}
+
+.Toastify__toast--error {
+    color: #fff;
+    background-color: #ff5c75 !important;
+}
+
+
+.Toastify__toast--warning {
+    color: #fff;
+    background-color: #ffbe3d !important;
+}
+.Toastify__toast--info {
+    color: #fff;
+    background-color: #50b5ff !important;
 }

@@ -75,23 +75,25 @@ function NavBar(props) {
                                 </span>
                             </a>
                         </li>
-
-                        <li
-                            title="Attendance"
-                            id="attendanceElem"
-                            data-toggle="modal"
-                            data-target="#attendanceModal"
-                            className="nav-item">
-                            <span
-                                className="nav-link nav-link-icon"
-                                id="navbar-success_dropdown_1"
-                                role="button">
-                                <i className={`fa fa-clipboard-list ${attendanceIsValid ? 'text-success':''}`}></i>
-                                <span className="nav-link-inner--text d-lg-none">
-                                    Attendance
+                        {props.isCollectingAttendance ? (
+                            <li
+                                title="Attendance"
+                                id="attendanceElem"
+                                data-toggle="modal"
+                                data-target="#attendanceModal"
+                                className="nav-item">
+                                <span
+                                    className="nav-link nav-link-icon"
+                                    id="navbar-success_dropdown_1"
+                                    role="button">
+                                    <i className={`fa fa-clipboard-list ${attendanceIsValid ? 'text-success' : ''}`}></i>
+                                    <span className="nav-link-inner--text d-lg-none">
+                                        Attendance
                                 </span>
-                            </span>
-                        </li>
+                                </span>
+                            </li>
+                        ) : ''}
+                        
 
                         <li title="Notifications" className="nav-item dropdown">
                             <span
