@@ -149,11 +149,6 @@ function AttendanceCollector(props){
     formErrored: false,
     alertType: null,
   })
-  // React.useEffect(() => {
-  //   // wait 4 Seconds
-
-
-  // }, [attendanceState]);
 
   useEffect(() => {
     if (props.hasCollectedAttendance && props.isCollectingAttendance) {
@@ -161,12 +156,11 @@ function AttendanceCollector(props){
     } else if (!props.isCollectingAttendance) {
       setState({ ...state, alertType: 'info', formErrorMessage: 'Heads Up!!Classroom does not support attendance collection, feel free to send in your information.' })
     }
-    
-    
     if (!props.hasCollectedAttendance && props.isCollectingAttendance){
       setState({ ...state, alertType: 'info', formErrorMessage: 'Heads Up!! Host is requesting you fill up an attendance.' })
     }
-  }, [props])
+  }, [props]);
+
   const inputChangeHandler = (event, controlName) => {
     const updatedControls = {
       ...state.controls,
@@ -276,7 +270,7 @@ function AttendanceCollector(props){
   })
 
   return (
-    <React.Fragment>
+    <React.Profiler>
       <button type="button" class="btn btn-primary d-none" id="attendance_modal" data-toggle="modal" data-target="#attendanceModal">
         ..
 </button>
@@ -293,7 +287,7 @@ function AttendanceCollector(props){
                   textColor="#fff"
                   color="warning"
                   clicked={props.downloadAttendance}
-                ><i className="fa fa-download"></i> Download CSV</Button><Button
+                ><i className="fa fa-download"></i> {props.downloadStatus === "loading" ? "Preparing..": "Download CSV"}</Button><Button
                   size="sm"
                   textColor="#fff"
                   color="success"
@@ -341,7 +335,7 @@ function AttendanceCollector(props){
           </div>
         </div>
       </div>
-    </React.Fragment>
+    </React.Profiler>
   );
 }
 const mapStateToProps = ({ auth }) => {
