@@ -19,19 +19,34 @@
     position: fixed;
     color: #fff;
     z-index: 99;
-    right: 50%;
-    left: 50%;
     bottom: 0;
+    right:0;
     margin-bottom: 20px;
     margin-right: 20px;
     cursor: pointer;
     border: none;
     background: none;
     padding: 4px;
+    font-size:10px;
     animation: preview 2s infinite;
     transition: box-shadow 0.6s linear;
     animation-timing-function: ease-in-out;
 
+}
+
+.upload_btn {
+    position: fixed;
+    color: #498891;
+    z-index: 99;
+    bottom: 0;
+    right:0;
+    margin-bottom: 60px;
+    font-size:9px;
+    margin-right: 25px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 4px;
 }
 
 .open_new_tab_btn {

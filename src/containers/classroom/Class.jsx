@@ -88,7 +88,6 @@ const MainClassLayout = ({
     })
 
     const [attendanceState, setAttendanceState] = useState({
-
         hasCollectedAttendance: false,
         isCollectingAttendance: classroomD.isTakingAttendance,
         isSubmittingAttendance: false,
@@ -128,7 +127,12 @@ const MainClassLayout = ({
         ended: false,
         started: null,
         starting: null,
-        connected:true
+        connected:true,
+    });
+
+    const [editorUploadState, setEditorUploadState ] = useState({
+        file: '',
+        uploading: false,
     });
 
     const [userSpecificMessages, setUserSpecificMessages] = useState([]);
@@ -184,10 +188,20 @@ const MainClassLayout = ({
     const [starRating, setStarRating] = useState(0)
 
     React.useEffect(() => {
+        console.log('added event')
+        const elem = document.querySelector("#editor_file_uploader_input");
+         elem.addEventListener("change", handleUploadInputChange, { once: true, capture: true, passive: true});
+        
+        return function() {
+            console.log('removed eevent');
+        elem.removeEventListener("change", handleUploadInputChange, true);
+        }
+
+    },[editorUploadState])
+    React.useEffect(() => {
 
         socket.on('attedance_ready', (file, list) => {
             setAttendanceState(state => {
-                console.log(state);
                 return {...state,list,downloadStatus:''}
             })
             window.open(
@@ -767,7 +781,6 @@ const MainClassLayout = ({
             })
             //listen to file changes
             socket.on('class_files_updated', (data) => {
-                console.log(data)
                 const EditorName = data.file
                 const updatedContentForEditor = data.content
                 const EditorId = data.id
@@ -800,8 +813,8 @@ const MainClassLayout = ({
                                 },
                             },
                         }
-                    } else {
-                        return { ...c }
+                    } else {                       
+                     return c; 
                     }
                 })
             })
@@ -890,57 +903,6 @@ const MainClassLayout = ({
         }
     }
 
-    const editorChanged = (e, o, v, t) => {
-        let editorFileId
-
-        codemarkastate.editors.forEach(element => {
-            if (element.file === t) {
-                editorFileId = element.id
-            }
-        })
-
-        const emitObj = {
-            file: t,
-            content: v,
-            class: data.classroom_id,
-            user: userid,
-            id: editorFileId,
-            editedBy: userid,
-            kid: data.classroom_id,
-        }
-
-        setcodemarkaState(c => {
-            return {
-                ...c,
-                previewContent: {
-                    ...c.previewContent,
-                    [t]: { content: v, id: editorFileId }
-                }
-            }
-        })
-
-        if (o.origin === '+input') {
-            if (o.text[0].trim() !== '' && o.text[0].trim().length === 1) {
-                socket.emit('editorChanged', emitObj)
-            }
-        }
-
-        if (o.origin === '+delete') {
-            if (o.removed[0].trim() !== '') {
-                socket.emit('editorChanged', emitObj)
-            }
-        }
-        // if(o.origin === 'cut' && o.removed[0] !== ""){
-        //   socket.emit("editorChanged", emitObj);
-        // }
-
-        // if(o.origin === 'paste' && o.text.length > 1){
-        //   if(o.text[0] && o.text[1] !== ''){
-        //     socket.emit("editorChanged", emitObj);
-
-        //   }
-        // }
-    }
 
     const handlePreview = e => {
         const previewFrame = document.getElementById('preview_iframe')
@@ -1330,6 +1292,156 @@ const MainClassLayout = ({
         setAttendanceState({...attendanceState, downloadStatus:"loading"});
     }
 
+    const editorChanged = (e, o, v, t) => {
+        let editorFileId
+
+        codemarkastate.editors.forEach(element => {
+            if (element.file === t) {
+                editorFileId = element.id
+            }
+        })
+
+        const emitObj = {
+            file: t,
+            content: v,
+            class: data.classroom_id,
+            user: userid,
+            id: editorFileId,
+            editedBy: userid,
+            kid: data.classroom_id,
+            type:'update'
+        }
+
+        setcodemarkaState(c => {
+            return {
+                ...c,
+                previewContent: {
+                    ...c.previewContent,
+                    [t]: { content: v, id: editorFileId }
+                }
+            }
+        })
+
+        if (o.origin === '+input') {
+            if (o.text[0].trim() !== '' && o.text[0].trim().length === 1) {
+                socket.emit('editorChanged', emitObj)
+            }
+        }
+
+        if (o.origin === '+delete') {
+            if (o.removed[0].trim() !== '') {
+                socket.emit('editorChanged', emitObj)
+            }
+        }
+        // if(o.origin === 'cut' && o.removed[0] !== ""){
+        //   socket.emit("editorChanged", emitObj);
+        // }
+
+        if (o.origin === 'paste') {
+            if (o.text[0] && o.text[1] !== '') {
+                // socket.emit("editorChanged", emitObj);
+            }
+            // console.log(o, o.text,e);
+            // const text = o.text.join('')
+        }
+    }
+
+    function handleUploadInputChange(e) {
+        alert('changed');
+        if(e.target && e.target.files[0]){
+            
+            const file = e.target.files[0];
+
+            let fileType = file.type ? file.type.split('/')[1] : 'NOT SUPPORTED';
+            setEditorUploadState({uploading: true, file:fileType});
+
+            const reader = new FileReader();
+            reader.addEventListener('load', (event) => {
+                let content = event.target.result;
+                console.log(fileType)
+
+                const fileTypeSupported = ['javascript','x-javascript','script','html','css'].some(t => t === fileType.toLowerCase());
+
+                if(!fileTypeSupported){
+                    
+                    toast.error(`File type not supported for environment,only HTML,CSS and Javascript Files, Try again.`)
+                    setEditorUploadState({uploading: false, file:''});
+                } else {
+                    let editorFileId;
+                    fileType = fileType.includes('script') ? 'js' : fileType;
+                    codemarkastate.editors.forEach(element => {
+                        if (element.file === fileType) {
+                            editorFileId = element.id
+                        }
+                    });
+
+                    const emitObj = {
+                        file: fileType,
+                        content,
+                        class: data.classroom_id,
+                        user: userid,
+                        id: editorFileId,
+                        editedBy: userid,
+                        kid: data.classroom_id,
+                        type:'upload'
+                    };
+
+
+                    setcodemarkaState(c => {
+                       const nEArray = c.editors.map(e => {
+                            if(e.file === fileType){
+                                return {...e,content}
+                            } else {
+                                return e;
+                            }
+                        });
+
+                        return {
+                            ...c,
+                            previewContent: {
+                                ...c.previewContent,
+                                [fileType]: { content, id: editorFileId }
+                            },
+                            editors: nEArray
+                        }
+                    });
+
+
+                    socket.emit('editorChanged', emitObj)
+
+                    toast.success(`Upload Completed. File - ${fileType}`,{ position:'bottom-center'} )
+
+                    setEditorUploadState({uploading: false, file:''});
+
+                    e.target.value = null;
+
+                }
+            })
+
+            reader.addEventListener('progress', (event) => {
+                if (event.loaded && event.total) {
+                    const percent = (event.loaded / event.total) * 100;
+                    console.log('Progress: ', Math.round(percent));
+                }
+            })
+
+            reader.readAsText(file);
+
+        } else {
+            console.log(e);
+        }
+
+    }
+
+    
+    const handleuploadFileFromSystem = (e,file) => {
+        e.preventDefault();
+        setEditorUploadState({uploading: true, file});
+        
+        document.getElementById('editor_file_uploader_input').click();
+          
+    }
+
     return (
         <div>
             <Seo
@@ -1344,6 +1456,12 @@ const MainClassLayout = ({
                 previewBtnClicked={handlePreview}
                 classroomid={data.classroom_id}
             />
+           { owner ? (
+               <button title="Upload" type="button" onClick={handleuploadFileFromSystem} className="upload_btn" >
+                <i className="fa fa-3x fa-file"></i>
+            </button>
+           ) : '' } 
+
             <ClassRoomSettingsModal
                 codemarkastate={codemarkastate}
                 socket={codemarkastate}
@@ -1665,6 +1783,7 @@ const MainClassLayout = ({
                 {getPinnedMessages()}
                 {owner ? addPinTextArea : ''}
             </Modal>
+
             <button
                 id="add_user_modal_btn"
                 type="button"
@@ -1722,6 +1841,7 @@ const MainClassLayout = ({
                     </div>
                 </form>
             </Modal>
+
             <Modal
                 targetid="details_modal_cont"
                 type="default"
@@ -1806,7 +1926,7 @@ const MainClassLayout = ({
             <div style={{ width: '100%', height: '87vh' }}>
                 <div className="container-fluid ">
                     <div className="row">
-                        <div className="col-2 p-0">
+                        <div className="col-2 p-0 d-none d-md-block d-lg-block">
                             <Convo
                                 typing={codemarkastate.typingState}
                                 username={username}
@@ -1821,12 +1941,13 @@ const MainClassLayout = ({
                                 isOnline={SocketConnection.connected}
                             />
                         </div>
-                        <div className="col-10 p-0">
+                        <div className="p-0 col-12 col-md-10 col-lg-10">
                             <Editor
                                 readOnly={codemarkastate.editorPriviledge}
                                 handleEditorChange={editorChanged}
                                 files={codemarkastate.editors}
                                 dropDownSelect={handledropDownSelect}
+                                uploadFileFromSystem={handleuploadFileFromSystem}
                             />
                         </div>
                     </div>
