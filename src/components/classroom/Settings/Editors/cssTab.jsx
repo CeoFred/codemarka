@@ -90,6 +90,8 @@ const CssTab = (props) => {
                   value={formElement.config.value}
                   changed={(event) => inputChangeHandler(event, formElement.id)}
                   label={formElement.config.label}
+                  shouldDisplay={true}
+
               />
           ))}
           <div className="mt-2 mb-2">

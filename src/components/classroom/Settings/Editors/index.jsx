@@ -36,19 +36,19 @@ export default function Main(props) {
                       <a
                           class={`nav-link editor-tab-item ${editor === 'HTML' ? 'active' : ''}`}
                           onClick={switchEditorTabs}
-                          href="#">
+                          href="#!">
                           HTML
                       </a>
                       <a
                           class={`nav-link editor-tab-item ${editor === 'CSS' ? 'active' : ''}`}
                           onClick={switchEditorTabs}
-                          href="#">
+                          href="#!">
                           CSS
                       </a>
                       <a
                           class={`nav-link editor-tab-item ${editor === 'JS' ? 'active' : ''}`}
                           onClick={switchEditorTabs}
-                          href="#">
+                          href="#!">
                           JS
                       </a>
                   </nav>

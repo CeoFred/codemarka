@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import React from 'react'
 import { UnControlled as CodeMirror } from 'react-codemirror2';
-import DropDown from './DropDown';
+// import DropDown from './DropDown';
 
 import './editor.css';
   require('codemirror/addon/fold/foldgutter.css');
@@ -40,6 +40,10 @@ require('codemirror/addon/search/matchesonscrollbar.js');
 require('codemirror/addon/search/jump-to-line.js');
 
 export default function Editor(props) {
+
+    React.useEffect(() => {
+        console.log(props.files)
+    },[props.files]);
 
   const cssOptions = {
       mode: 'css',
@@ -130,7 +134,7 @@ export default function Editor(props) {
      
      if (f.file === 'css') {
          return (
-             <div className="col-4 h-100 pl-0 pr-0" key={i}>
+             <div className="col-md-4 col-12 h-100 pl-0 pr-0" key={i}>
                  <div
                      style={{ zIndex: 99, width: '100%', position: 'absolute' }}
                      className="bg-dark-light p-2 m-0 text-white font-weight-bolder">
@@ -147,9 +151,35 @@ export default function Editor(props) {
                          /> */}
                      </span>
 
-                     {/* <span className="float-right">
-                         <i className="fas fa-plus-square"></i>
-                     </span> */}
+                     <span className="float-right">
+                         {props.readOnly ? (
+                             <li title="css file actions" className="nav-item dropdown">
+                                 <span
+                                     className="nav-link nav-link-icon"
+                                     id="navbar-success_dropdown_css_uploader"
+                                     role="button"
+                                     data-toggle="dropdown"
+                                     aria-haspopup="true"
+                                     aria-expanded="false">
+                                     <i className="fa fa-ellipsis-v"></i>
+                                 </span>
+                                 <div
+                                     className="dropdown-menu dropdown-menu-right"
+                                     aria-labelledby="navbar-success_dropdown_css_uploader">
+                                     <a
+                                         style={{ cursor: 'pointer' }}
+                                         className="dropdown-item"
+                                         href="/#"
+                                         onClick={(e) => props.uploadFileFromSystem(e, 'css')}>
+                                         Upload File
+                                </a>
+
+
+                                 </div>
+                             </li>
+                         ) : ''}
+
+                     </span>
                  </div>
 
                  <CodeMirror
@@ -165,7 +195,7 @@ export default function Editor(props) {
 
      if (f.file === 'html') {
          return (
-             <div className="col-4 h-100 pl-0 pr-0" key={i}>
+             <div className="col-md-4 col-12 h-100 pl-0 pr-0" key={i}>
                  <div
                      style={{ zIndex: 99, width: '100%', position: 'absolute' }}
                      className="bg-dark-light p-2 m-0 text-white font-weight-bolder">
@@ -181,9 +211,35 @@ export default function Editor(props) {
                          /> */}
                      </span>
 
-                     {/* <span className="float-right">
-                         <i className="fas fa-plus-square"></i>
-                     </span> */}
+                     <span className="float-right">
+                         
+                         {props.readOnly ? (
+                             <li title="html file actions" className="nav-item dropdown">
+                                 <span
+                                     className="nav-link nav-link-icon"
+                                     id="navbar-success_dropdown_css_uploader"
+                                     role="button"
+                                     data-toggle="dropdown"
+                                     aria-haspopup="true"
+                                     aria-expanded="false">
+                                     <i className="fa fa-ellipsis-v"></i>
+                                 </span>
+                                 <div
+                                     className="dropdown-menu dropdown-menu-right"
+                                     aria-labelledby="navbar-success_dropdown_css_uploader">
+                                     <a
+                                         style={{ cursor: 'pointer' }}
+                                         className="dropdown-item"
+                                         href="/#"
+                                         onClick={(e) => props.uploadFileFromSystem(e, 'html')}>
+                                         Upload File
+                                </a>
+
+
+                                 </div>
+                             </li>
+                         ) : ''}
+                     </span>
                  </div>
 
                  <CodeMirror
@@ -199,7 +255,7 @@ export default function Editor(props) {
 
      if (f.file === 'js') {
          return (
-             <div className="col-4 h-100 pl-0 pr-0" key={i}>
+             <div className="col-md-4 col-12 h-100 pl-0 pr-0" key={i}>
                  <div
                      style={{ zIndex: 99, width: '100%', position: 'absolute' }}
                      className="bg-dark-light p-2 m-0 text-white font-weight-bolder">
@@ -216,9 +272,35 @@ export default function Editor(props) {
                          /> */}
                      </span>
 
-                     {/* <span className="float-right">
-                         <i className="fas fa-plus-square"></i>
-                     </span> */}
+                     <span className="float-right">
+                         
+                         {props.readOnly ? (
+                             <li title="javascript file actions" className="nav-item dropdown">
+                                 <span
+                                     className="nav-link nav-link-icon"
+                                     id="navbar-success_dropdown_javascript_uploader"
+                                     role="button"
+                                     data-toggle="dropdown"
+                                     aria-haspopup="true"
+                                     aria-expanded="false">
+                                     <i className="fa fa-ellipsis-v"></i>
+                                 </span>
+                                 <div
+                                     className="dropdown-menu dropdown-menu-right"
+                                     aria-labelledby="navbar-success_dropdown_javascript_uploader">
+                                     <a
+                                         style={{ cursor: 'pointer' }}
+                                         className="dropdown-item"
+                                         href="/#"
+                                         onClick={(e) => props.uploadFileFromSystem(e, 'js')}>
+                                         Upload File
+                                </a>
+
+
+                                 </div>
+                             </li>
+                         ) : ''}
+                     </span>
                  </div>
                  <CodeMirror
                      value={f.content}
@@ -237,7 +319,9 @@ export default function Editor(props) {
  
     return (
         <div className="editors__container">
+
             <div className="row h-100 p-0 m-0">
+                <input type="file" id="editor_file_uploader_input" className="d-none"/>
                 {editors}
             </div>
         </div>

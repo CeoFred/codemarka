@@ -122,7 +122,7 @@ export default function CommunitySocialMediaInfo(props) {
                 return { ...c, formisvalid }
             })
         }
-    }, [oldData])
+    }, [oldData, formControls])
    
 
      /**

@@ -15,11 +15,11 @@ const Modal = ({
     let users__ = 'Waiting for people to join...'
 
     if (users && users.length > 0) {
-        users__ = users.map(u => {
+         users__ =  users.map(u => {
             if (userid !== u.kid) {
                 return (
-                    <li className="list-group-item" key={ u.id }>
-                        <div className="d-inline float-left">
+                    <li className="list-group-item  justify-content-between align-items-center" key={ u.id }>
+                        <div className="d-inline">
                             <img
                                 alt={
                                     u.username.toUpperCase()[0] +
@@ -89,7 +89,7 @@ const Modal = ({
                             </span>
                         </div>
                         {owner ? (
-                            <span className="float-right">
+                            <div>
                                 <select
                                     className="d-inline custom-select"
                                     onChange={ e => toogleUserEditAccess(e, u) }>
@@ -109,7 +109,7 @@ const Modal = ({
                                         Classroom Access Role
                                     </option>
                                 </select>
-                            </span>
+                            </div>
                         ) : (
                             ''
                         )}
@@ -130,58 +130,27 @@ const Modal = ({
             users__ =  'Your students are yet to join, try inviting the, via email or usernameby clicking the icon below.'
         }
     }
+    
     return (
-        <div>
-            <div
-                className="modal fade participants_modal_cont"
-                tabIndex="-1"
-                role="dialog"
-                aria-labelledby="participantsModal"
-                aria-hidden="true">
-                <div className="modal-dialog modal-lg">
-                    <div className="modal-content">
-                        <div className="modal-header bg-dark ">
-                            <h5
-                                className="modal-title h6 text-white"
-                                id="participantsModal">
-                                Participants
-                            </h5>
-                            <button
-                                type="button"
-                                className="close text-white"
-                                data-dismiss="modal"
-                                aria-label="Close">
-                                <span
-                                    id="participantModalExitButton"
-                                    aria-hidden="true"
-                                    style={ { color: '#fff' } }>
-                                    &times;
-                                </span>
-                            </button>
-                        </div>
-                        <div
-                            className="modal-body"
-                            style={ { textAlign: 'center' } }>
-                            <ul className="list-group">{users__}</ul>
-                        </div>
-                        {owner ? (
-                            <div>
-                                <i
-                                    onClick={ handleAddUserIconClicked }
-                                    className="float-right fa fa-user-plus fa-1x"
-                                    style={ {
-                                        margin: 20,
-                                        color: '#E91E63'
-                                    } }></i>
-                            </div>
-                        ) : (
-                            ''
-                        )}
+        <div class="modal fade docs-example-modal-lg" id="participantModal" tabindex="-1" role="dialog" aria-labelledby="participantModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title h6" id="participantModalLabel">Participants</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
+                    <div class="modal-body">
+                        <ul className="list-group">
+                            {users__}
+                        </ul>
+                     </div>
                 </div>
             </div>
         </div>
-    )
+      )
 }
 
 export default Modal

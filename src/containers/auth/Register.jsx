@@ -86,7 +86,7 @@ function Register(props) {
             onResetAll()
             onClassroomSwitch('classroom')
         }
-    },mounted)
+    }, [mounted, onResetAll, onClassroomSwitch])
     
 
 
@@ -164,10 +164,10 @@ function Register(props) {
     }
   };
 
-  const handleAlertClick = (e) => {
-       e.preventDefault();
-      props.onAlertClose()
-  }
+//   const handleAlertClick = (e) => {
+//        e.preventDefault();
+//       props.onAlertClose()
+//   }
 
   let alert = (
       <Alert 

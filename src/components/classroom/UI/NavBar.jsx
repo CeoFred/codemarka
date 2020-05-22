@@ -3,6 +3,8 @@ import React from 'react';
 import logo from '../../../media/images/colab-04.png'
 import './index.css';
 function NavBar(props) {
+    const attendanceIsValid = props.isCollectingAttendance && props.hasCollectedAttendance;
+
     return (
         <nav
             className="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-dark"
@@ -45,9 +47,9 @@ function NavBar(props) {
                         </li>
                         <li
                             title="class participants"
-                            className="nav-item"
+                            className="nav-item cursor-pointer"
                             data-toggle="modal"
-                            data-target=".participants_modal_cont">
+                            data-target="#participantModal">
                             <span className="nav-link nav-link-icon">
                                 <i className="fa fa-users">
                                     <span className="badge badge-danger badge-circle badge-sm badge-floating border-white">
@@ -73,30 +75,25 @@ function NavBar(props) {
                                 </span>
                             </a>
                         </li>
-
-                        <li
-                            title="Audio Broadcast"
-                            className="nav-item dropdown">
-                            <span
-                                className="nav-link nav-link-icon"
-                                id="navbar-success_dropdown_1"
-                                role="button"
-                                data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false">
-                                <i className="fa fa-microphone-slash"></i>
-                                <span className="nav-link-inner--text d-lg-none">
-                                    Audio Broadcast
+                        {props.isCollectingAttendance ? (
+                            <li
+                                title="Attendance"
+                                id="attendanceElem"
+                                data-toggle="modal"
+                                data-target="#attendanceModal"
+                                className="nav-item">
+                                <span
+                                    className="nav-link nav-link-icon"
+                                    id="navbar-success_dropdown_1"
+                                    role="button">
+                                    <i className={`fa fa-clipboard-list ${attendanceIsValid ? 'text-success' : ''}`}></i>
+                                    <span className="nav-link-inner--text d-lg-none">
+                                        Attendance
                                 </span>
-                            </span>
-                            <div
-                                className="dropdown-menu dropdown-menu-right"
-                                aria-labelledby="navbar-success_dropdown_1">
-                                <span className="dropdown-item">
-                                    Audio Broadcast coming soon.
                                 </span>
-                            </div>
-                        </li>
+                            </li>
+                        ) : ''}
+                        
 
                         <li title="Notifications" className="nav-item dropdown">
                             <span

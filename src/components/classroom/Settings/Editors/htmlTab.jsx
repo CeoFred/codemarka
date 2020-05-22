@@ -107,6 +107,7 @@ export default function HtmlTab(props) {
                    changed={(event) =>
                        inputChangeHandler(event, formElement.id)
                    }
+                   shouldDisplay={true}
                    label={formElement.config.label}
                />
            ))}

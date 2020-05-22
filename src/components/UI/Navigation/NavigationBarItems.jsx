@@ -7,8 +7,8 @@ import { Link } from 'react-router-dom'
 import * as url from '../../../config/url'
 
 function NavigationBarItems(props) {
-    const { displayName, accountType, accountid } = props.user
-    const isCommunityAccount = accountType === 102 ? true : false
+    const { displayName } = props.user
+    // const isCommunityAccount = accountType === 102 ? true : false
 
     if (props.isAuthenticated) {
         return (
@@ -52,7 +52,7 @@ function NavigationBarItems(props) {
                 <li class="nav-item dropdown dropdown-animate">
                     <a
                         class="nav-link nav-link-icon px-2"
-                        href="#"
+                        href="#!"
                         role="button"
                         data-toggle="dropdown"
                         aria-haspopup="true"

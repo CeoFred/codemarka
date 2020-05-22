@@ -122,7 +122,7 @@ function CommunityInfo(props) {
                   return { ...c, formisvalid }
               })
          }
-     }, [oldData])
+     }, [oldData, formControls])
      /**
       * Handle Form Submission
       * @param event Event

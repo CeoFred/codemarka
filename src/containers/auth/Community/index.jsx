@@ -130,6 +130,7 @@ import '../style.css';
                           </div>
                           <div class="col-12 col-md-5 mt-4 mt-md-0 text-md-center h-100 d-none d-md-flex d-lg-flex justify-content-center align-items-center">
                               <img
+                                alt="svg"
                                   src={svgUrl}
                                   style={{
                                       height: '200px',

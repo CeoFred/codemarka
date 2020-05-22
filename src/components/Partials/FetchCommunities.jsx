@@ -24,9 +24,9 @@ import * as APIURL from '../../config/api_url';
       )
     }
   }
-   const upcomingSessionRefs = useRef('loading..');
+  //  const upcomingSessionRefs = useRef('loading..');
    const [memberShipRequest, setmemberShipRequest] = useState({ loading: false });
-
+  window.mem__bb__ = memberShipRequest;
 
    const joinCommunityAsMember = (e, communitykid, isAMember) => {
 
@@ -90,7 +90,7 @@ import * as APIURL from '../../config/api_url';
                 <div class="card hover-shadow-lg hover-translate-y-n3">
                   <div class="card-body py-5 text-center h-100">
                     <Link to={`community/${comm.kid}`} class="avatar rounded-circle avatar-lg hover-translate-y-n3">
-                      <img src={comm.logo} />
+                      <img src={comm.logo} alt="community_logo"/>
                     </Link>
             <p className="font-weight-bold">{comm.name}</p>
             <b>{comm.city},{comm.country}</b>

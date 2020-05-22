@@ -97,6 +97,8 @@ const JavascripTab = (props) => {
                     changed={(event) =>
                         inputChangeHandler(event, formElement.id)
                     }
+                    shouldDisplay={true}
+
                     label={formElement.config.label}
                 />
             ))}

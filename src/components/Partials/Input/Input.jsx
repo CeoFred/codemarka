@@ -47,7 +47,7 @@ if(props.elementType === 'input'){
             className={ selectClasses.join(' ') }
             defaultValue={ props.value }>
             {props.elementConfig.options.map(option => (
-                <option selected={ option.selected || false } value={ option.value } key={ option.value }>
+                <option value={ option.value } key={ option.value }>
                     {option.displayValue}
                 </option>
             ))}
@@ -62,20 +62,18 @@ if(props.elementType === 'input'){
       value={ props.value }
        onChange={ props.changed } />;
     }
-    return(
-        <div className="form-group">
-            <label className="form-control-label">{props.label}{props.validation && props.validation.required ? (<span className="text-danger pl-2">* required</span>) : ''}</label>
+    if (props.shouldDisplay) {
+        return <div className="form-group">
+            <label className="form-control-label">{props.label}{props.validation && props.validation.required ? (<span className="text-danger pl-2">*   </span>) : ''}</label>
             <div className="input-group input-group-merge">
                 {inputElement}
-                {/* <div class="input-group-append">
-                <span class="input-group-text"><i data-feather="credit-card"></i></span>
-            </div> */}
+
                 <div class="form-text text-muted mt-2">
-                    <small>{props.elementConfig.inputHelperText}</small>
-                </div> 
+                    <small>{props.elementConfig.inputhelpertext}</small>
+                </div>
             </div>
         </div>
-    );
+    } else return (<React.Fragment></React.Fragment>)
 };
 
 export default Input;

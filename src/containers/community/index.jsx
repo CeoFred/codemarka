@@ -34,6 +34,7 @@ function Dashboard(props) {
   const [isMember, setisMember] = useState(null);
   const [memberShipRequest, setmemberShipRequest] = useState({loading:false});
 
+  window.clis__codem = {upcomingClassrooms,setisOwner};
 
   useEffect(() => {
     if(isLoaded) return;
@@ -75,7 +76,7 @@ function Dashboard(props) {
                 <div class="row align-items-center mb-3 shadow-none" key={session.kid}>
                   <div class="col-auto">
                     <div class="icon icon-shape bg-soft-primary text-primary">
-                      <img src={session.gravatarUrl} />
+                      <img alt="session_gravatar" src={session.gravatarUrl} />
                     </div>
                   </div>
                   <div class="col pl-0">
@@ -84,12 +85,12 @@ function Dashboard(props) {
                   </div>
                   <div class="col-auto actions">
                     <div class="dropdown" data-toggle="dropdown">
-                      <a href="#" class="action-item" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <a href="#!" class="action-item" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i className="fa fa-dot"></i>
                       </a>
                       <div class="dropdown-menu dropdown-menu-right">
-                        <a href="#" class="dropdown-item">turn on notification</a>
-                        <a href="#" class="dropdown-item" onClick={copyUrl(session.shortUrl)}>copy url</a>
+                        <a href="#!" class="dropdown-item">turn on notification</a>
+                        <a href="#!" class="dropdown-item" onClick={copyUrl(session.shortUrl)}>copy url</a>
                       </div>
                     </div>
                   </div>
@@ -117,9 +118,9 @@ function Dashboard(props) {
     document.querySelector("#logoUpdateInput").click();
   }
 
-  const turnNotificationsForCommunity = (e) => {
+  // const turnNotificationsForCommunity = (e) => {
 
-  }
+  // }
 
   const joinCommunityAsMember = (e) => {
 
@@ -158,9 +159,9 @@ function Dashboard(props) {
 
   }
 
-  const setReminderForClassroomSession = (e,roomid) => {
+  // const setReminderForClassroomSession = (e,roomid) => {
 
-  }
+  // }
   const copyUrl = (id) => {
 
   };
@@ -195,7 +196,7 @@ function Dashboard(props) {
         return (
 
           <div className="col-auto text-center my-1 px-1" key={mem.kid}>
-            <a href="#" className="avatar bg-primary text-white rounded-circle border border-lg border-soft-primary hover-scale-105">
+            <a href="#!" className="avatar bg-primary text-white rounded-circle border border-lg border-soft-primary hover-scale-105">
               {mem.username[0].toUpperCase()+mem.username[1].toUpperCase()}
             </a>
           </div>
@@ -235,7 +236,7 @@ function Dashboard(props) {
          
           </div>
         <div className="logo_container">
-          <img src={communityDetails.Logo || img} className="avatar header-image rounded-circle avatar-lg" />
+          <img src={communityDetails.Logo || img} alt="community_logo" className="avatar header-image rounded-circle avatar-lg" />
             <input type="file" hidden id="logoUpdateInput"/>
           {isOwner ? (<button onClick={handleLogoUpload} type="file"><i className="fa fa-camera"></i></button>): ''}
         </div>
@@ -256,7 +257,7 @@ function Dashboard(props) {
 
                     {communityDetails.city},{communityDetails.country}.
                 </p>
-                <a>
+                  <a href={communityDetails.publicWebsite.toString()}>
                     <i className="fa fa-link mr-2"></i>
 
                     {communityDetails.publicWebsite || "no public website"}</a>
@@ -313,7 +314,7 @@ function Dashboard(props) {
 
                   <p className="mb-0">
                     <i className="fab fa-facebook mr-2"></i>
-                    <a href={communityDetails.facebookUrl || "#"}>{communityDetails.facebookUrl || "Not available"}</a>
+                    <a href={communityDetails.facebookUrl || "#!"}>{communityDetails.facebookUrl || "Not available"}</a>
                 </p>
                   <p className="mb-0">
                     <i className="fab fa-twitter mr-2"></i>
@@ -347,7 +348,7 @@ function Dashboard(props) {
                     Organizers</h5>
 
                   <div className="mb-1 organizers-container">
-                    <img alt="Image placeholder" src={img} className="avatar  rounded-circle pr-2"/>
+                    <img alt="oragn_1_img" src={img} className="avatar  rounded-circle pr-2"/>
                     <div className="organizers-details">
                       <p style={{margin:0}}>{communityDetails.organizers.lead.fullname}</p>
                       <p style={{ margin: 0 }}>{communityDetails.organizers.lead.email}</p>
@@ -355,7 +356,7 @@ function Dashboard(props) {
                   </div>
 
                   <div className="mb-1 organizers-container">
-                    <img alt="Image placeholder" src={img} className="avatar  rounded-circle pr-2" />
+                    <img alt="oragan_1_img" src={img} className="avatar  rounded-circle pr-2" />
                     <div className="organizers-details">
                       <p style={{ margin: 0 }}>{communityDetails.organizers.coLead.fullname}</p>
                       <p style={{ margin: 0 }}>{communityDetails.organizers.coLead.email}</p>
@@ -389,12 +390,12 @@ function Dashboard(props) {
                 </div>
                 <div class="text-right">
                   <div class="actions mr-n2">
-                    <a href="#" class="action-item"><i data-feather="refresh-ccw"></i></a>
+                    <a href="#!" class="action-item"><i data-feather="refresh-ccw"></i></a>
                     <div class="dropdown action-item" data-toggle="dropdown">
-                      <a href="#" class="action-item"><i data-feather="more-horizontal"></i></a>
+                      <a href="#!" class="action-item"><i data-feather="more-horizontal"></i></a>
                       <div class="dropdown-menu dropdown-menu-right">
-                        <a href="#" class="dropdown-item">Refresh</a>
-                        <a href="#" class="dropdown-item">turn on notifications</a>
+                        <a href="#!" class="dropdown-item">Refresh</a>
+                        <a href="#!" class="dropdown-item">turn on notifications</a>
                       </div>
                     </div>
                   </div>
