@@ -38,3 +38,4 @@ export const ROUTE_COMMUNITY_SINGLE = '/community/:kid'
 
 //blog
 export const MAY_RELEASE = '/blog/v1.1/may/2020'
+export const JUNE_RELEASE = '/blog/v1.2/june/2020'

@@ -52,6 +52,8 @@ const Communities = React.lazy(() => import('./containers/community/all.jsx'));
 //blog
 const Blog = React.lazy(() => import('./containers/public/Blog'))
 const BlogMayRelease = React.lazy(() => import('./containers/public/Blog/BlogMayRelease'))
+const BlogJuneRelease = React.lazy(() => import('./containers/public/Blog/BlogJuneRelease'))
+
 
 const Routes = (props) => {
 
@@ -74,6 +76,7 @@ const Routes = (props) => {
             <Route exact component={oauthSuccess} path={url.OAUTH_URL} />
             <Route exact component={contactUs} path={url.CONTACT} />
             <Route exact component={BlogMayRelease} path={url.MAY_RELEASE} />
+            <Route exact component={BlogJuneRelease} path={url.JUNE_RELEASE} />
             <Route
                 exact
                 component={CommunityAccountRegistration}

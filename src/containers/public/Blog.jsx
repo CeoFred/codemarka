@@ -9,7 +9,9 @@ import Helmet from '../../components/SEO/helmet';
 export default function Home() {
   const blogData = [
       { authorShortName: 'JA', url: APPURL.MAY_RELEASE, shortDescription: "We've focused more on imporving the user experinence of the authentication system..", title: "Codemarka V1.1 May Release", img: '', date: '30th April,2020',author:'Johnson Awah Alfred' },
-  ]
+      { authorShortName: 'JA', url: APPURL.JUNE_RELEASE, shortDescription: "Rolled out attendance sheet Feature and a few exciting features for an awsome...", title: "Codemarka V1.2 June Release", img: '', date: '31st May,2020',author:'Johnson Awah Alfred' },
+      
+    ]
   return (
       <div className="header-container-fluid">
           <Helmet title="Blog | Codemarka" metaDescription="" />
