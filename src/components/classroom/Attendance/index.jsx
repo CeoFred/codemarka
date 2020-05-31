@@ -152,12 +152,19 @@ function AttendanceCollector(props){
 
   useEffect(() => {
     if (props.hasCollectedAttendance && props.isCollectingAttendance) {
-      setState({ ...state, alertType: 'success', formErrorMessage:'You are all caught up! Re-filling this form only updates your previous submission' })
+      setState((S) => {
+        return { ...state, alertType: 'success', formErrorMessage:'You are all caught up! Re-filling this form only updates your previous submission' }
+      } )
+    
     } else if (!props.isCollectingAttendance) {
-      setState({ ...state, alertType: 'info', formErrorMessage: 'Heads Up!!Classroom does not support attendance collection, feel free to send in your information.' })
+      setState((S) => {
+        return { ...state, alertType: 'info', formErrorMessage: 'Heads Up!!Classroom does not support attendance collection, feel free to send in your information.' }
+      })
     }
     if (!props.hasCollectedAttendance && props.isCollectingAttendance){
-      setState({ ...state, alertType: 'info', formErrorMessage: 'Heads Up!! Host is requesting you fill up an attendance.' })
+      setState((S) => {
+        return { ...S, alertType: 'info', formErrorMessage: 'Heads Up!! Host is requesting you fill up an attendance.' }
+      })
     }
   }, [props]);
 

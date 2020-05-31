@@ -147,6 +147,7 @@ function NavBar(props) {
                             data-toggle="modal"
                             data-target="#classroom_settings_modaal"
                             title="Settings"
+                            id="settingsModal"
                             className="nav-item">
                             <span className="nav-link nav-link-icon">
                                 <i className="fa fa-cogs"></i>
@@ -189,20 +190,20 @@ function NavBar(props) {
                                 </a>
                                 {props.owner ? (
                                     <div>
-                                        <a
+                                      {props.classStarted ? (<a
                                             style={{ cursor: 'pointer' }}
                                             onClick={props.startClass}
                                             href="/#"
                                             className="dropdown-item text-success">
                                             Start Class
-                                        </a>
-                                        <a
+                                        </a>) : ( <a
                                             style={{ cursor: 'pointer' }}
                                             className="dropdown-item text-danger"
                                             href="/#"
                                             onClick={props.endClass}>
                                             End Class
-                                        </a>
+                                        </a>) }  
+                                       
                                     </div>
                                 ) : (
                                     ''

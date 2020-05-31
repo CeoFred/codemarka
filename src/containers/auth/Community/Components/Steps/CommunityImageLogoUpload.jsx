@@ -34,7 +34,7 @@ function CommunityImageLogoUpload(props) {
       // list allow mime type
       const types = ['image/png', 'image/jpeg',]
       // loop access array
-      for (var __x__ = 0; __x__ < files.length; __x__++) {
+      for (let __x__ = 0; __x__ < files.length; __x__++) {
           // compare file type find doesn't matach
           if (types.every((type) => files[__x__].type !== type)) {
               // create error message and assign to container

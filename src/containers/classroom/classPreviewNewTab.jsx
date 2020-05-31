@@ -1,16 +1,24 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-
+import { Helmet } from 'react-helmet'
 import { dispatchAppEnvironment } from '../../store/actions/app';
 
 export class classPreviewNewTab extends Component {
 
+  constructor(props){
+    super(props)
+    this.state ={
+      cssCDN : [],
+      jsCDN : []
+    }
+  }
   componentWillMount() {
     this.props.onClassroomSwitch('classroom');
   }
 
   componentDidMount() {
-     const { match: { params }  } = this.props;
+
+  const { match: { params }  } = this.props;
   const classroomKid = params.classroomKid;
 
     const host = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test' ? process.env.REACT_APP_REMOTE_API_URL : process.env.REACT_APP_LOCAL_API_URL
@@ -34,11 +42,15 @@ export class classPreviewNewTab extends Component {
   
       handlePreviewFileFetch().then(d => d.json()).then(files => {
          const previewFrame = document.getElementById('tabpreviewframe');
-    let styles, html , script;
+    let styles, html , script,externalCDN_CSS,externalCDN_JS;
       if(files.status){
             styles = files.data.css.content
             html = files.data.html.content
             script = files.data.js.content
+            externalCDN_CSS = files.data.css.externalCDN;
+            externalCDN_JS = files.data.js.externalCDN
+            this.setState({cssCDN:externalCDN_CSS, jsCDN: files.data.js.externalCDN})
+
             document.title =   `${ files.data.name } - Preview on codemarka`;
 
       } else {
@@ -47,7 +59,7 @@ export class classPreviewNewTab extends Component {
         script = '';
       }
 
-    const getGeneratedPageURL = ({ html, css, js }) => {
+    const getGeneratedPageURL = ({ html, css, js,CSS_CDN,JS_CDN }) => {
   const getBlobURL = (code, type) => {
     const blob = new Blob([ code ], { type })
     return URL.createObjectURL(blob)
@@ -55,7 +67,14 @@ export class classPreviewNewTab extends Component {
 
   const cssURL = getBlobURL(css, 'text/css')
   const jsURL = getBlobURL(js, 'text/javascript')
-
+  let extercssCDN = '', externaljsCDN ='';
+      CSS_CDN.forEach(cdn => {
+       extercssCDN += `<link href=${cdn.url} rel="stylesheet"/> \n` 
+      })
+      JS_CDN.forEach(cdn => {
+        externaljsCDN += `<script src=${cdn.url}></script> \n` 
+       })
+  
   const source = `
   <!DOCTYPE html>
     <html lang="en">
@@ -63,12 +82,15 @@ export class classPreviewNewTab extends Component {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    ${ extercssCDN }
+
         ${ css && `<link rel="stylesheet" type="text/css" href="${ cssURL }" />` }
-        ${ js && `<script src="${ jsURL }"></script>` }
       </head>
       <body>
         ${ html || '' }
       </body>
+      ${ externaljsCDN }
+      ${ js && `<script src="${ jsURL }"></script>` }
     </html>
   `
 
@@ -78,7 +100,9 @@ export class classPreviewNewTab extends Component {
 const url = getGeneratedPageURL({
   html,
   css:styles,
-  js: script
+  js: script,
+  CSS_CDN: externalCDN_CSS,
+  JS_CDN: externalCDN_JS
 })
 
     if(styles && html && script) {
@@ -99,6 +123,10 @@ const url = getGeneratedPageURL({
   render() {
     return (
         <div className="h-100vh w-100">
+          <Helmet>
+            {this.state.cssCDN.map(cdn => (<link href={cdn.url} rel="stylesheet"  crossorigin="anonymous" />))}
+            {this.state.jsCDN.map(cdn => (<script src={cdn.url} key={cdn.id}/>))}
+          </Helmet>
             <iframe id="tabpreviewframe" className="w-100 h-100" title='classpreview'></iframe>
         </div>
     )

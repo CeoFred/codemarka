@@ -40,3 +40,6 @@ export const GET_LIVE_CLASS_SESSIONS = `${host}community/live/`; //:kid
 //classrooms
 export const GET_UPCOMING_CLASSRROM_SESSIONS = `${host}classroom/upcoming/`; //:kid param
 export const DOWNLOAD_CLASSROOM_ATTENDANCE = `${host}classroom/attendance/download`
+export const GET_CLASSROOM_CSS_SETTINGS =  `${host}classroom/settings/language/css`//:classroomkid param
+export const GET_CLASSROOM_JS_SETTINGS =  `${host}classroom/settings/language/js`//:classroomkid param
+export const GET_CLASSROOM_HTML_SETTINGS =  `${host}classroom/language/settings/html`//:classroomkid param

@@ -1,13 +1,36 @@
-import React,{ useState } from 'react'
+import React,{ useState, useEffect } from 'react'
 import './style.css';
 import HtmlTab from './htmlTab';
 import CssTab from './cssTab';
 import JavascriptTab from './javascriptTab';
 
 export default function Main(props) {
-
-    const [editorShowing, setEditorShowing] = useState(<HtmlTab />);
+    const [editorShowing, setEditorShowing] = useState(<HtmlTab  />);
     const [editor,setEditor] = useState('HTML');
+    
+    useEffect(() => {
+        setEditor(props.currentEditorSelection.toUpperCase()) 
+
+     },[props.currentEditorSelection])
+ 
+     useEffect(() => {
+        
+        switch (editor) {
+            case 'HTML':
+                setEditorShowing(<HtmlTab {...props} />)
+                break
+            case 'JS':
+                setEditorShowing(<JavascriptTab {...props} />)
+                break
+            case 'CSS':
+                setEditorShowing(<CssTab {...props} />)
+                break
+            default:
+                setEditorShowing(<HtmlTab {...props} />)
+                break
+        }
+     },[editor]);
+    
     const switchEditorTabs = (e) => {
         e.preventDefault();
         const editor = e.target.innerHTML;

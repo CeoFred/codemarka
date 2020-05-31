@@ -127,7 +127,7 @@ const Modal = ({
     ) {
         users__ = 'No one has joined yet.'
         if(owner){
-            users__ =  'Your students are yet to join, try inviting the, via email or usernameby clicking the icon below.'
+            users__ =  'Your students are yet to join, try inviting them, via email or username by clicking the icon below.'
         }
     }
     
@@ -138,7 +138,7 @@ const Modal = ({
 
                     <div class="modal-header">
                         <h5 class="modal-title h6" id="participantModalLabel">Participants</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" id="participantModalExitButton" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -147,6 +147,19 @@ const Modal = ({
                             {users__}
                         </ul>
                      </div>
+                     {owner ? (
+                            <div>
+                                <i
+                                    onClick={ handleAddUserIconClicked }
+                                    className="float-right fa fa-user-plus fa-1x"
+                                    style={ {
+                                        margin: 20,
+                                        color: '#E91E63'
+                                    } }></i>
+                            </div>
+                        ) : (
+                            ''
+                        )}
                 </div>
             </div>
         </div>

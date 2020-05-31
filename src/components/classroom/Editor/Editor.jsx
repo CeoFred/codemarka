@@ -4,14 +4,6 @@ import { UnControlled as CodeMirror } from 'react-codemirror2';
 // import DropDown from './DropDown';
 
 import './editor.css';
-  require('codemirror/addon/fold/foldgutter.css');
- require('codemirror/addon/fold/foldcode.js');
-  require('codemirror/addon/fold/foldgutter.js');
-  require('codemirror/addon/fold/brace-fold.js');
-  require('codemirror/addon/fold/xml-fold.js');
-  require('codemirror/addon/fold/indent-fold.js');
-  require('codemirror/addon/fold/markdown-fold.js');
-  require('codemirror/addon/fold/comment-fold.js');
 require('codemirror/mode/css/css');
 require('codemirror/mode/javascript/javascript');
 require('codemirror/mode/htmlmixed/htmlmixed');
@@ -31,20 +23,13 @@ require('codemirror/addon/search/match-highlighter.js');
 require('codemirror/addon/dialog/dialog.css');
 require('codemirror/addon/search/matchesonscrollbar.css');
 require('codemirror/lib/codemirror.js');
-require('codemirror/mode/xml/xml.js');
 require('codemirror/addon/dialog/dialog.js');
-require('codemirror/addon/search/searchcursor.js');
-require('codemirror/addon/search/search.js');
 require('codemirror/addon/scroll/annotatescrollbar.js');
 require('codemirror/addon/search/matchesonscrollbar.js');
-require('codemirror/addon/search/jump-to-line.js');
 
 export default function Editor(props) {
 
-    React.useEffect(() => {
-        console.log(props.files)
-    },[props.files]);
-
+    
   const cssOptions = {
       mode: 'css',
       lineNumbers: true,
@@ -164,15 +149,24 @@ export default function Editor(props) {
                                      <i className="fa fa-ellipsis-v"></i>
                                  </span>
                                  <div
+
+                                     style={{ cursor: 'pointer' }}
                                      className="dropdown-menu dropdown-menu-right"
                                      aria-labelledby="navbar-success_dropdown_css_uploader">
-                                     <a
-                                         style={{ cursor: 'pointer' }}
+                                     <span
                                          className="dropdown-item"
                                          href="/#"
                                          onClick={(e) => props.uploadFileFromSystem(e, 'css')}>
-                                         Upload File
-                                </a>
+                                        <i className="fa fa-file-upload"></i> Upload File
+                                </span>
+                                <span className="dropdown-item" href="/#" onClick={(e) => props.clearEditorrContent(e,'css')}>
+                                  <i className="fa fa-trash"></i>  Clear
+                                </span>
+                                <span className="dropdown-item" href="/#" onClick={(e) => props.addExternalCDN(e,'css')}>
+                                  <i className="fa fa-link"></i> Add External CDN
+                                </span>
+                                
+                                
 
 
                                  </div>
@@ -225,17 +219,18 @@ export default function Editor(props) {
                                      <i className="fa fa-ellipsis-v"></i>
                                  </span>
                                  <div
+                                     style={{ cursor: 'pointer' }}
                                      className="dropdown-menu dropdown-menu-right"
                                      aria-labelledby="navbar-success_dropdown_css_uploader">
-                                     <a
-                                         style={{ cursor: 'pointer' }}
+                                     <span
                                          className="dropdown-item"
-                                         href="/#"
                                          onClick={(e) => props.uploadFileFromSystem(e, 'html')}>
-                                         Upload File
-                                </a>
-
-
+                                 <i className="fa fa-file-upload"></i> Upload File
+                                </span>
+                                <span className="dropdown-item" onClick={(e) => props.clearEditorrContent(e,'html')}>
+                                  <i className="fa fa-trash"></i>  Clear
+                                </span>
+                                
                                  </div>
                              </li>
                          ) : ''}
@@ -286,16 +281,24 @@ export default function Editor(props) {
                                      <i className="fa fa-ellipsis-v"></i>
                                  </span>
                                  <div
+                                     style={{ cursor: 'pointer' }}
                                      className="dropdown-menu dropdown-menu-right"
                                      aria-labelledby="navbar-success_dropdown_javascript_uploader">
                                      <a
-                                         style={{ cursor: 'pointer' }}
+                                         
                                          className="dropdown-item"
                                          href="/#"
                                          onClick={(e) => props.uploadFileFromSystem(e, 'js')}>
-                                         Upload File
+                                <i className="fa fa-file-upload"></i> Upload File
                                 </a>
+                                <div className="dropdown-item" onClick={(e) => props.clearEditorrContent(e,'js')}>
+                                  <i className="fa fa-trash"></i>  Clear
+                                </div>
+                                <div className="dropdown-item" href="/#" onClick={(e) => props.addExternalCDN(e,'js')}>
 
+                                  <i className="fa fa-link"></i>  Add External CDN
+                                </div>
+                                
 
                                  </div>
                              </li>

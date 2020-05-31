@@ -128,6 +128,9 @@ const MainClassLayout = ({
         started: null,
         starting: null,
         connected:true,
+        currentEditorSelection:'',
+        CSS_CDN:[],
+        JS_CDN:[]
     });
 
     const [editorUploadState, setEditorUploadState ] = useState({
@@ -188,16 +191,15 @@ const MainClassLayout = ({
     const [starRating, setStarRating] = useState(0)
 
     React.useEffect(() => {
-        console.log('added event')
         const elem = document.querySelector("#editor_file_uploader_input");
          elem.addEventListener("change", handleUploadInputChange, { once: true, capture: true, passive: true});
         
         return function() {
-            console.log('removed eevent');
         elem.removeEventListener("change", handleUploadInputChange, true);
         }
 
     },[editorUploadState])
+
     React.useEffect(() => {
 
         socket.on('attedance_ready', (file, list) => {
@@ -209,7 +211,7 @@ const MainClassLayout = ({
                 '_blank'
             )
         })
-    },[])
+    },[classroomD.kid])
     React.useEffect(() => {
         const requestData = {
             classroom_id: cid || data.classroom_id,
@@ -586,6 +588,8 @@ const MainClassLayout = ({
                             { file: 'html', ...html },
                             { file: 'js', ...js },
                         ],
+                        CSS_CDN: css.externalCDN,
+                        JS_CDN: js.externalCDN
                     }
                 })
 
@@ -838,6 +842,8 @@ const MainClassLayout = ({
         pinnedMessages,
         onClassroomVerify,
         classroomD,
+        attendanceState,
+        SocketConnection
     ])
 
 
@@ -907,12 +913,20 @@ const MainClassLayout = ({
     const handlePreview = e => {
         const previewFrame = document.getElementById('preview_iframe')
         // var preview =  previewFrame.contentDocument || previewFrame.contentWindow.document;
-        let styles, html, script
+        let styles, html, script ;
 
         styles = codemarkastate.previewContent.css.content
         html = codemarkastate.previewContent.html.content
         script = codemarkastate.previewContent.js.content
 
+        let extercssCDN = '', externaljsCDN ='';
+        codemarkastate.CSS_CDN.forEach(cdn => {
+       extercssCDN += `<link href=${cdn.url} rel="stylesheet"/> \n` 
+      })
+      codemarkastate.JS_CDN.forEach(cdn => {
+        externaljsCDN += `<script src=${cdn.url}></script> \n` 
+       })
+  
         const getGeneratedPageURL = ({ html, css, js }) => {
             const getBlobURL = (code, type) => {
                 const blob = new Blob([code], { type })
@@ -930,12 +944,15 @@ const MainClassLayout = ({
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    ${ extercssCDN }
         ${ css && `<link rel="stylesheet" type="text/css" href="${ cssURL }" />` }
-        ${ js && `<script src="${ jsURL }"></script>` }
       </head>
       <body>
         ${ html || '' }
       </body>
+      ${ externaljsCDN }
+      ${ js && `<script src="${ jsURL }"></script>` }
+
     </html>
   `
 
@@ -1030,7 +1047,8 @@ const MainClassLayout = ({
                 username,
                 topic,
                 started,
-                kid,
+                kid:data.classroom_id,
+                shortUrl:classroomD.shortUrl,
                 cd}
             })
         } else {
@@ -1347,7 +1365,6 @@ const MainClassLayout = ({
     }
 
     function handleUploadInputChange(e) {
-        alert('changed');
         if(e.target && e.target.files[0]){
             
             const file = e.target.files[0];
@@ -1358,7 +1375,6 @@ const MainClassLayout = ({
             const reader = new FileReader();
             reader.addEventListener('load', (event) => {
                 let content = event.target.result;
-                console.log(fileType)
 
                 const fileTypeSupported = ['javascript','x-javascript','script','html','css'].some(t => t === fileType.toLowerCase());
 
@@ -1418,12 +1434,11 @@ const MainClassLayout = ({
                 }
             })
 
-            reader.addEventListener('progress', (event) => {
-                if (event.loaded && event.total) {
-                    const percent = (event.loaded / event.total) * 100;
-                    console.log('Progress: ', Math.round(percent));
-                }
-            })
+            // reader.addEventListener('progress', (event) => {
+            //     if (event.loaded && event.total) {
+            //         const percent = (event.loaded / event.total) * 100;
+            //     }
+            // })
 
             reader.readAsText(file);
 
@@ -1442,13 +1457,50 @@ const MainClassLayout = ({
           
     }
 
+    const handleClearEditorrContent = (e,editorName) => {
+        e.preventDefault();
+        setcodemarkaState(s => {
+            const newFileContent = s.editors.map(editor => {
+                if(editor.file === editorName){
+                    const emitObj = {
+                        file: editorName,
+                        content:`/**
+                                * Content cleared by ${username},waiting for changes..
+                                \n
+                                /**`,
+                        class: data.classroom_id,
+                        user: userid,
+                        id: editor.id,
+                        editedBy: userid,
+                        kid: data.classroom_id,
+                        type:'upload'
+                    };
+                    socket.emit('editorChanged', emitObj)
+
+                    return {...editor,content:''}
+                } else return editor;
+            });
+
+            return {...s,editors: newFileContent}
+        })
+    }
+    const handleAddExternalCDN  = (e, editorName) => {
+        e.preventDefault();
+
+        setcodemarkaState(s => {
+            return {...s,currentEditorSelection: editorName}
+        });
+        setcodemarkaState(s => {
+            document.querySelector('#settingsModal').click()
+            return s;
+        })
+    }
     return (
         <div>
             <Seo
                 title={`${name} :: codemarka classroom`}
                 metaDescription={description}>
-                <script src="https://unpkg.com/jshint@2.9.6/dist/jshint.js"></script>
-                <script src="https://unpkg.com/jsonlint@1.6.3/web/jsonlint.js"></script>
+                <script src="https://unpkg.com/jshint@2.11.1/dist/jshint.js"></script>
                 <script src="https://unpkg.com/csslint@1.0.5/dist/csslint.js"></script>
             </Seo>
             <ToastContainer />
@@ -1456,16 +1508,13 @@ const MainClassLayout = ({
                 previewBtnClicked={handlePreview}
                 classroomid={data.classroom_id}
             />
-           { owner ? (
-               <button title="Upload" type="button" onClick={handleuploadFileFromSystem} className="upload_btn" >
-                <i className="fa fa-3x fa-file"></i>
-            </button>
-           ) : '' } 
 
             <ClassRoomSettingsModal
                 codemarkastate={codemarkastate}
-                socket={codemarkastate}
+                socket={socket}
+                toast={toast}
                 cdata={classroomD}
+                currentEditorSelection={codemarkastate.currentEditorSelection}
             />
             <AttendanceCollector
                 isSubmittingAttendance={attendanceState.isSubmittingAttendance}
@@ -1501,6 +1550,7 @@ const MainClassLayout = ({
                 classReport={handleclassReport}
                 number={codemarkastate.numberInClass}
                 owner={owner}
+                classStarted={classroomD.status === 2 ? true : false }
                 endClass={handleEndClass}
                 startClass={handlestartClass}
                 gravatarUrl={gravatarUrl}
@@ -1787,7 +1837,7 @@ const MainClassLayout = ({
             <button
                 id="add_user_modal_btn"
                 type="button"
-                className="btn btn-danger d-none"
+                style={{display:'none'}}
                 data-toggle="modal"
                 data-target="#add_user_modal"></button>
 
@@ -1803,7 +1853,7 @@ const MainClassLayout = ({
                         elementType="input"
                         elementConfig={{
                             disabled: owner ? false : true,
-                            placeholder: 'Invite with email or username',
+                            placeholder: 'Invite with email',
                             name: 'add_user_input',
                         }}
                         shouldDisplay={true}
@@ -1948,6 +1998,8 @@ const MainClassLayout = ({
                                 files={codemarkastate.editors}
                                 dropDownSelect={handledropDownSelect}
                                 uploadFileFromSystem={handleuploadFileFromSystem}
+                                clearEditorrContent={handleClearEditorrContent}
+                                addExternalCDN={handleAddExternalCDN}
                             />
                         </div>
                     </div>

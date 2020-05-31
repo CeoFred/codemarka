@@ -13,7 +13,7 @@ import Helmet from '../../components/SEO/helmet';
 import './style/index.css';
 
 import img from '../../media/images/logo/dark.png'
-import header from '../../media/images/group-of-people-watching-on-laptop-1595385.jpg';
+import header from '../../media/images/community-header.jpg';
 
 function Dashboard(props) {
 

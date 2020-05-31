@@ -4,7 +4,7 @@
  * @format
  */
 
-import React,{ useState } from 'react'
+import React,{ useState, useEffect } from 'react'
 import Editors from './Editors/index.jsx';
 import Modes from './Modes/index.jsx';
 import More from './More/index.jsx';
@@ -14,9 +14,12 @@ import'./style.css';
  
 export default function ClassroomModalSettings(props) {
     const [tab, setTab] = useState('Editors')
-    const [component, setComponent] = useState(<Editors />)
+    const [component, setComponent] = useState(<Editors {...props}/>)
 
-
+    useEffect(() => {
+        setComponent(<Editors {...props} />)
+    },[props])
+    
     const handleTabSelection = e => {
         e.preventDefault()
         const E = e.target.innerHTML

@@ -1,9 +1,11 @@
 /** @format */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Button from '../../../Partials/Button'
 import Input from '../../../Partials/Input/Input'
 import Spinner from '../../../Partials/Preloader'
+
+import * as API_URL from "../../../../config/api_url";
 
 const JavascripTab = (props) => {
     const [state, setState] = useState({
@@ -27,7 +29,7 @@ const JavascripTab = (props) => {
             },
         },
         scontrols: {
-            externalJs: {
+            externalCDN: {
                 elementConfig: {
                     placeholder: 'https://somesite.com/script/index.js',
                 },
@@ -39,6 +41,8 @@ const JavascripTab = (props) => {
         formisSubmitted: props.loading ? true : false,
         formErrorMessage: false,
         formErrored: false,
+        externalCDN:[],
+        preprocessor:''
     })
     const inputChangeHandler = (event, controlName) => {
         const updatedControls = {
@@ -51,33 +55,66 @@ const JavascripTab = (props) => {
         }
 
         setState({ ...state, controls: updatedControls })
-        // console.log(updatedControls);
     }
-    const submitHandler = (event) => {
+    
+
+    const mapExternalCDN = () => {
+        return state.externalCDN.map(cdn => {
+            return <div key={cdn.id} className="badge badge-soft-warning d-block"> {cdn.url.slice(0,30)} </div>
+
+        })
+    }
+  
+    const handleExternalCDNInputChange = (e) => {
+        e.preventDefault();
+        setState({...state, scontrols:{...state.scontrols,externalCDN:{...state.scontrols.externalCDN,value: e.target.value}}});
+    }
+   
+  useEffect(() => {
+      
+      props.socket.on('editor_settings_update_feedback',function(status){
+      if(status){
+      setState({ ...state, formisSubmitted: false,externalCDN:status.externalCDN })
+  
+        props.toast.success('Settings updated successfully');
+      } else {
+      setState({ ...state, formisSubmitted: false })
+  
+        props.toast.error('Settings Failed to upate.');
+      }
+  
+      });
+  },[]);
+  
+  useEffect(() => {
+      
+      const request = new Request(`${API_URL.GET_CLASSROOM_JS_SETTINGS}/${props.cdata.kid}`, {
+          method: 'GET',
+          cache: 'default',
+          mode: 'cors'
+        });
+  
+        fetch(request).then(data => data.json()).then((d) => {
+            setState(s => {
+                return {...s,externalCDN: d.data.externalCDN}
+            });
+        });
+  },[])
+  
+  const submitHandler = (event) => {
         event.preventDefault()
+          
         const formisSubmitted = true
         setState({ ...state, formisSubmitted })
-
-        const formData = {}
-
-        if (state.formisValid) {
-            for (const formElementIdentifier in state.controls) {
-                formData[formElementIdentifier] =
-                    state.controls[formElementIdentifier].value
-            }
-            // eslint-disable-next-line no-undef
-            props.onCreate(formData)
-        } else {
-            setState({
-                ...state,
-                alertType: 'error',
-                formErrored: true,
-                formErrorMessage:
-                    'Form Validation Failed, please check inputs and try again',
-            })
-            return false
-        }
+  
+        const externalCDN =  state.scontrols.externalCDN.value.split(',');
+        const preprocessor = state.controls.preprocessor.value;
+          if(props.codemarkastate.owner){
+            props.socket.emit('editor_settings_changed',{preprocessor,externalCDN,classroom:props.cdata.kid,editor:'js'})
+          }
     }
+  
+
 
     const formElementArray = []
     for (const key in state.controls) {
@@ -97,37 +134,43 @@ const JavascripTab = (props) => {
                     changed={(event) =>
                         inputChangeHandler(event, formElement.id)
                     }
-                    shouldDisplay={true}
+                    shouldDisplay={props.codemarkastate.owner}
 
                     label={formElement.config.label}
                 />
             ))}
-
-            <div className="mt-2 mb-2">
-                <b>Add External Scripts</b>
-                <p>
-                    Any URL's (comma seperated) added here will be added as
-                    links in their order, and before the JS in the editor.
-                </p>
-                <Input
-                    key="external-js"
-                    elementConfig={state.scontrols.externalJs.elementConfig}
-                    elementType={state.scontrols.externalJs.elementType}
-                    value={state.scontrols.externalJs.value}
-                    changed={(event) =>
-                        inputChangeHandler(event, 'externalJs')
-                    }
-                />
-            </div>
-            <Button
-                block={false}
-                textColor="#fff"
-                color="success"
-                size="sm"
-                clicked={submitHandler}
-                disabled={state.formisSubmitted}>
-                {state.formisSubmitted ? <Spinner /> : 'Save'}
-            </Button>
+        <div className="mt-2 mb-2">
+          <b>External Stylesheets</b>
+              {mapExternalCDN()}
+        </div>
+        {props.codemarkastate.owner ? (
+              <div className="mt-2 mb-2">
+              <b>Add External Scripts</b>
+              <p>
+                  Any URL's (comma seperated) added here will be added as
+                  links in their order, and before the JS in the editor.
+              </p>
+              <Input
+                  key="external-js"
+                  elementConfig={state.scontrols.externalCDN.elementConfig}
+                  elementType={state.scontrols.externalCDN.elementType}
+                  value={state.scontrols.externalCDN.value}
+                  changed={handleExternalCDNInputChange}
+                  shouldDisplay={props.codemarkastate.owner}
+              />
+              
+          <Button
+              block={false}
+              textColor="#fff"
+              color="success"
+              size="sm"
+              clicked={submitHandler}
+              disabled={state.formisSubmitted}>
+              {state.formisSubmitted ? <Spinner /> : 'Save'}
+          </Button>
+          </div>
+        ) : ''}
+          
         </form>
     )
     return <div>{form}</div>
