@@ -27,11 +27,12 @@
     "start": "react-scripts start",
     "dual": "concurrently \"npm start \" \"cd ../colab-server & npm run watch-debug\"",
     "build": "rm -rf ./build && react-scripts build",
-    "deploy": "rm -rf ./build && react-scripts build && firebase deploy",
+    "deploy-prod": "rm -rf ./build && react-scripts build && git commit -am 'production ready' && git push  && firebase deploy",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "client-install": "npm install --prefix client",
-    "lint": "eslint --quiet --color --fix --quiet -f stylish --ext js,jsx src"
+    "lint": "eslint --quiet --color --fix --quiet -f stylish --ext js,jsx src",
+    "deploy-dev":"rm -rf ./build && react-scripts build && netlify deploy --prod"
   },
   "eslintConfig": {
     "extends": "react-app"
