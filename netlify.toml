@@ -2,5 +2,5 @@
   from = "/*"
   to = "/index.html"
   status = 200
-  force = false
+  force = true
   conditions = {Language = ["en"], Country = ["US"], Role = ["admin"]}
