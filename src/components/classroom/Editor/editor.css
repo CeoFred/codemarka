@@ -9,9 +9,9 @@ div.editors__container {
 }
 
 div.CodeMirror {
-    height: 87vh;
+    height: 92vh;
     padding-left: 0;
-    max-height: 87vh;
+    max-height: 92vh;
     padding-top:39px;
 }
 

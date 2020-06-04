@@ -27,7 +27,6 @@
     border: none;
     background: none;
     padding: 4px;
-    font-size:10px;
     animation: preview 2s infinite;
     transition: box-shadow 0.6s linear;
     animation-timing-function: ease-in-out;

@@ -15,6 +15,56 @@
       width: 50px;
       height: 50px;
 }
+.local_video {
+  position: fixed;
+  /* color: #fff; */
+  z-index: 99;
+  right: 0;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  cursor: pointer;
+  border: none;
+  font-size: 10px;
+  padding: 10px;
+  bottom: 70px;
+  border-radius: 50%;
+  width: 250px;
+  height: 250px;
+}
+
+.remote_video {
+  position: fixed;
+  /* color: #fff; */
+  z-index: 99;
+  right: 0;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  cursor: pointer;
+  border: none;
+  font-size: 10px;
+  padding: 10px;
+  bottom: 170px;
+  border-radius: 50%;
+  width: 250px;
+  height: 250px;
+}
+.audio_switch_button {
+  background-color: #fff;
+     position: fixed;
+     color: #000;
+     z-index: 99;
+     right: 0;
+     margin-bottom: 80px;
+     margin-right: 20px;
+     cursor: pointer;
+     border: none;
+     font-size: 10px;
+     padding: 10px;
+     bottom: 70px;
+     border-radius: 50%;
+     width: 50px;
+     height: 50px;
+}
 
 .audio_broadcast_btn-started {
   background-color: #5cffb3;
