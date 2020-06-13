@@ -1543,12 +1543,14 @@ const MainClassLayout = ({
                 list={attendanceState.list}
                 submit={handleAttendanceSubmission}
             />
-            {/* <AudioVideo 
-            socket={socket} 
+            <AudioVideo 
+            socket={socketRef.current} 
             userkid={userid} 
+            isOwner={owner}
             users={codemarkastate.users} 
+            kid={classroomD.kid}
             onAlert={handleAudioVideoAlert}
-            /> */}
+            />
             
             {classNotification}
             <span
