@@ -27,21 +27,22 @@ export default function AudioVideoBroadcast(props) {
     useEffect(() => {
         socketRef.current = props.socket
         isHost.current = props.isOwner
-        const host =
-            process.env.NODE_ENV === 'production' ||
-            process.env.NODE_ENV === 'test'
-                ? 'https://code-marka.herokuapp.com'
-                : 'localhost'
-        const port =
-            process.env.NODE_ENV === 'production' ||
-            process.env.NODE_ENV === 'test'
-                ? 443
-                : 2001
+        // const host =
+        //     process.env.NODE_ENV !== 'production' ||
+        //     process.env.NODE_ENV !== 'test'
+        //         ? 'https://codemarka-peerserver.herokuapp.com/'
+        //         : 'localhost'
+        // const port =
+        //     process.env.NODE_ENV === 'production' ||
+        //     process.env.NODE_ENV === 'test'
+        //         ? 9000
+        //         : 443
         const peer = new Peer(props.userkid, {
-            host,
-            port,
-            path: '/peerjs',
-            debug: 0,
+            host: 'peerjs-server.herokuapp.com',
+            port: 443,
+            debug: 3,
+            key: 'peerjs',
+            secure: true,
             config: {
                 iceServers: [
                     { url: 'stun:stun1.l.google.com:19302' },
