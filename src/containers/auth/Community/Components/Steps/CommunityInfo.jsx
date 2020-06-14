@@ -87,9 +87,11 @@ const mappedCountry = countyJson.map((country) => {
              updatedConrols[key].valid = true;
              updatedConrols[key].touched = true;
            }
-           setFormControlState({...formControls,contols:updatedConrols,formisvalid: true});
+           setFormControlState(s => {
+              return {...s,controls:updatedConrols,formisvalid: true}
+            });
          }
-     }, [oldData, formControls]);
+     }, [oldData]);
      
       const handleInputChage = (e) => {
           const controlName = e.target.name

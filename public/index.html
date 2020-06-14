@@ -36,11 +36,11 @@
   <link rel="stylesheet" href="%PUBLIC_URL%/assets/libs/" />
   <meta name="msapplication-TileColor" content="#172839">
   <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-  <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/quick-website.css" />
-  <link rel="stylesheet" href="%PUBLIC_URL%/assets/libs/@fontawesome/fontawesome-free/css/all.min.css" />
-  <link rel="font" href="%PUBLIC_URL%/assets/fonts/Nunito-Light" />
-  <link rel="stylesheet" href="%PUBLIC_URL%/assets/libs/select2/dist/css/select2.min.css">
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" async/>
+  <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/quick-website.css" async/>
+  <link rel="stylesheet" href="%PUBLIC_URL%/assets/libs/@fontawesome/fontawesome-free/css/all.min.css" async/>
+  <link rel="font" href="%PUBLIC_URL%/assets/fonts/Nunito-Light" async/>
+  <link rel="preload" as="style" rel="stylesheet" href="%PUBLIC_URL%/assets/libs/select2/dist/css/select2.min.css" async>
 
   <title> Codemarka - Learning, Building and collaboration in real time. </title>
   <meta property="og:title" content="Codemarka - Learning, Building and collaboration in real time.">
@@ -60,11 +60,11 @@
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
 
-  <script src=%PUBLIC_URL%/assets/libs/jquery/dist/jquery.min.js> </script> <script
-    src=%PUBLIC_URL%/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js> </script>
+  <script src=%PUBLIC_URL%/assets/libs/jquery/dist/jquery.min.js async> </script> <script
+    src=%PUBLIC_URL%/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js async> </script>
      <script
-    src=%PUBLIC_URL%/assets/js/quick-website.js> </script> <script
-    src="%PUBLIC_URL%/assets/libs/select2/dist/js/select2.min.js"></script>
+    src=%PUBLIC_URL%/assets/js/quick-website.js async> </script> <script
+    src="%PUBLIC_URL%/assets/libs/select2/dist/js/select2.min.js async"></script>
 <script>
 if (!window.location.port && typeof window.__REACT_DEVTOOLS_GLOBAL_HOOK__ === 'object') {
 window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = function () {}

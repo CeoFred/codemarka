@@ -30,6 +30,7 @@ import Navigation from '../../components/classroom/UI/NavBar'
 import Convo from './Conversation'
 import Editor from '../../components/classroom/Editor/Editor'
 import Preview from '../../components/classroom/Editor/Preview'
+import AudioVideo from '../../components/classroom/AudioVideo/index';
 import Seo from '../../components/SEO/helmet'
 import Modal from '../../components/Partials/Modals/Modal'
 import Input from '../../components/Partials/Input/Input'
@@ -56,6 +57,8 @@ const socket = io(`${ host }classrooms`, {
     reconnectionDelayMax: 6000,
     reconnectionAttempts: 9
 })
+
+
 toast.configure({
     autoClose: 6000,
     draggable: true
@@ -103,6 +106,8 @@ const MainClassLayout = ({
         list:[],
         downloadStatus:""
     });
+    const socketRef = useRef(socket);
+
 
     const [codemarkastate, setcodemarkaState] = useState({
         messages: [],
@@ -212,6 +217,11 @@ const MainClassLayout = ({
             )
         })
     },[classroomD.kid])
+
+    React.useEffect(() => {
+        socketRef.current = socket
+    },[socket.connected])
+
     React.useEffect(() => {
         const requestData = {
             classroom_id: cid || data.classroom_id,
@@ -1495,6 +1505,11 @@ const MainClassLayout = ({
             return s;
         })
     }
+
+    const handleAudioVideoAlert = (message) => {
+        toast.success(message);
+    }
+
     return (
         <div>
             <Seo
@@ -1511,7 +1526,7 @@ const MainClassLayout = ({
 
             <ClassRoomSettingsModal
                 codemarkastate={codemarkastate}
-                socket={socket}
+                socket={socketRef.current}
                 toast={toast}
                 cdata={classroomD}
                 currentEditorSelection={codemarkastate.currentEditorSelection}
@@ -1528,6 +1543,16 @@ const MainClassLayout = ({
                 list={attendanceState.list}
                 submit={handleAttendanceSubmission}
             />
+            <AudioVideo 
+            socket={socketRef.current} 
+            userkid={userid} 
+            isOwner={owner}
+            isBroadcasting={classroomD.isBroadcasting}
+            users={codemarkastate.users} 
+            kid={classroomD.kid}
+            onAlert={handleAudioVideoAlert}
+            />
+            
             {classNotification}
             <span
                 className="d-none"
@@ -1973,10 +1998,10 @@ const MainClassLayout = ({
                 handleAddUserIconClicked={handleAddUserIconClicked}
             />
 
-            <div style={{ width: '100%', height: '87vh' }}>
-                <div className="container-fluid ">
-                    <div className="row">
-                        <div className="col-2 p-0 d-none d-md-block d-lg-block">
+            <div style={{ width: '100%', height: '92vh' }}>
+                <div className="container-fluid h-100">
+                    <div className="row h-100">
+                        <div className="col-2 p-0 d-none d-md-block d-lg-block h-100">
                             <Convo
                                 typing={codemarkastate.typingState}
                                 username={username}
@@ -1988,10 +2013,10 @@ const MainClassLayout = ({
                                 userSpecificMessages={userSpecificMessages}
                                 user={userid}
                                 owner={ownerid}
-                                isOnline={SocketConnection.connected}
+                                isOnline={socketRef.current.connected}
                             />
                         </div>
-                        <div className="p-0 col-12 col-md-10 col-lg-10">
+                        <div className="p-0 col-12 col-md-10 col-lg-10 h-100">
                             <Editor
                                 readOnly={codemarkastate.editorPriviledge}
                                 handleEditorChange={editorChanged}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import logo from '../../../media/images/colab-04.png'
+import logo from '../../../media/images/logo/codemarka-classroom-logo.png'
 import './index.css';
 function NavBar(props) {
     const attendanceIsValid = props.isCollectingAttendance && props.hasCollectedAttendance;
@@ -8,23 +8,22 @@ function NavBar(props) {
     return (
         <nav
             className="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-dark"
-            style={{ height: '13vh' }}>
+            style={{ height: '8vh',padding:0 }}>
             <div className="container-fluid">
                 <a className="navbar-brand" href="/">
-                    <img height="30px" src={logo} alt="codemarka_logo" />
+                    <img style={{height:'2rem',maxHeight:'3rem' }} src={logo} alt="codemarka_logo" />
                 </a>
                 <span className="navbar-brand ml-2">
                     <img
-                        height="30px"
-                        style={{ borderRadius: '50%' }}
+                        style={{ borderRadius: '50%',height:'2rem',maxHeight:'3rem' }}
                         src={props.gravatarUrl}
-                        alt={'gvt'}
+                        alt={'gravatar'}
                     />
                 </span>
-                <span className="navbar-brand">
-                    {props.topic}
+                <span className="navbar-brand" style={{fontSize:'1rem'}}>
+                    <b><i className="fa fa-info-circle" style={{fontSize:'13px'}}></i>{' '}{props.topic}</b>
                     <br />
-                    <small>by: {props.name}</small>
+                    <small><i className="fa fa-at"></i>{' '}{props.name.toLowerCase()}</small>
                 </span>
                 <button
                     className="navbar-toggler"
@@ -190,7 +189,7 @@ function NavBar(props) {
                                 </a>
                                 {props.owner ? (
                                     <div>
-                                      {props.classStarted ? (<a
+                                      {!props.classStarted ? (<a
                                             style={{ cursor: 'pointer' }}
                                             onClick={props.startClass}
                                             href="/#"

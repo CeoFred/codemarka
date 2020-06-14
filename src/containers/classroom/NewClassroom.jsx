@@ -152,9 +152,9 @@ function NewClassroom(props) {
                     required: true,
                     minLength: 1
                 },
-                valid: !props.isCommunityAccount,
+                valid: false,
                 touched: false,
-                display: props.isCommunityAccount
+                display: true
 
             },
             classType: {
