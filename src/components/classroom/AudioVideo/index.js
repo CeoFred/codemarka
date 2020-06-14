@@ -13,7 +13,7 @@ export default function AudioVideoBroadcast(props) {
     const roomID = props.kid
     const peersRef = useRef([])
     const peerConnections = useRef({})
-
+    const peerRef = useRef()
     const [peers, setPeers] = useState([])
 
     const usersRef = useRef()
@@ -27,11 +27,11 @@ export default function AudioVideoBroadcast(props) {
     useEffect(() => {
         socketRef.current = props.socket
         isHost.current = props.isOwner
-        // const host =
-        //     process.env.NODE_ENV !== 'production' ||
-        //     process.env.NODE_ENV !== 'test'
-        //         ? 'https://codemarka-peerserver.herokuapp.com/'
-        //         : 'localhost'
+        const usingAudio =
+            process.env.NODE_ENV === 'production' ||
+            process.env.NODE_ENV === 'test'
+                ? true
+                : false
         // const port =
         //     process.env.NODE_ENV === 'production' ||
         //     process.env.NODE_ENV === 'test'
@@ -40,7 +40,7 @@ export default function AudioVideoBroadcast(props) {
         const peer = new Peer(props.userkid, {
             host: 'peerjs-server.herokuapp.com',
             port: 443,
-            debug: 3,
+            // debug: 3,
             key: 'peerjs',
             secure: true,
             config: {
@@ -54,6 +54,24 @@ export default function AudioVideoBroadcast(props) {
                 ],
             },
         })
+        peerRef.current = peer
+
+        console.log(isBroadCasting, props)
+        if (props.isBroadcasting && !isBroadCasting && props.isOwner) {
+            navigator.mediaDevices
+                .getUserMedia({
+                    video: true,
+                    audio: usingAudio,
+                })
+                .then((mediaStream) => {
+                    setIsBroadCasting(true)
+                    hostVideo.current.srcObject = mediaStream
+                    localStream.current = mediaStream
+                    usersRef.current
+                        .filter((u) => u.kid !== props.userkid)
+                        .forEach((user) => callUser(user))
+                })
+        }
 
         socketRef.current.on('broadcast_status', (status, id) => {
             if (status) {
@@ -66,7 +84,7 @@ export default function AudioVideoBroadcast(props) {
                     navigator.mediaDevices
                         .getUserMedia({
                             video: true,
-                            audio: false,
+                            audio: usingAudio,
                         })
                         .then((mediaStream) => {
                             hostVideo.current.srcObject = mediaStream
@@ -76,7 +94,9 @@ export default function AudioVideoBroadcast(props) {
                                 .filter((user) => user.kid !== props.userkid)
                                 .forEach((user) => {
                                     console.log('calling user ', user)
-                                    const conn = peer.connect(user.kid)
+                                    const conn = peerRef.current.connect(
+                                        user.kid
+                                    )
 
                                     conn.on('open', () => {
                                         console.log(
@@ -88,26 +108,44 @@ export default function AudioVideoBroadcast(props) {
                                             metadata: user,
                                         }
 
-                                        const call = peer.call(
+                                        const call = peerRef.current.call(
                                             user.kid,
                                             mediaStream
                                         )
 
+                                        call.on('close', () => {
+                                            document
+                                                .querySelector(`#${user.kid}`)
+                                                .remove()
+                                        })
+
                                         call.on('stream', function (stream) {
                                             console.log('got remote stream')
+                                            console.log(
+                                                peerConnections.current[user.id]
+                                            )
                                             peerConnections.current[user.id] = {
                                                 ...peerConnections.current[
                                                     user.id
                                                 ],
                                                 stream,
                                             }
+                                            setPeers((p) => {
+                                                return [
+                                                    ...p,
+                                                    {
+                                                        ...peerConnections
+                                                            .current[user.id],
+                                                    },
+                                                ]
+                                            })
                                             var videoDivContainer = document.createElement(
                                                 'div'
                                             )
                                             videoDivContainer.classList.add(
                                                 'remote-participant-video-container'
                                             )
-                                            videoDivContainer.id = user.id
+                                            videoDivContainer.id = user.kid
                                             var videoLabel = document.createElement(
                                                 'div'
                                             )
@@ -169,30 +207,47 @@ export default function AudioVideoBroadcast(props) {
             }
         })
 
+        socketRef.current.on('call_me', (user) => {
+            console.log('calling me', user)
+            if (isHost.current && user.kid !== props.userkid) {
+                // call user
+                callUser(user)
+            } else if (isHost.current && user.kid === props.userkid) {
+                // call  back everyone
+                setIsBroadCasting(true)
+                props.onAlert('Broadcast has resumed.')
+                usersRef.current
+                    .filter((user) => user.kid !== props.userkid)
+                    .forEach((user) => {
+                        callUser(user)
+                    })
+            }
+        })
+
         socketRef.current.on('operation_failed', (reason) => {
             props.onAlert(reason)
             setIsBroadCasting((br) => false)
         })
 
-        peer.on('open', function (id) {
+        peerRef.current.on('open', function (id) {
             PeerId.current = id
             console.log('my peer id is', PeerId.current)
         })
 
-        peer.on('connection', function (conn) {
+        peerRef.current.on('connection', function (conn) {
             console.log('received connection from', conn)
             conn.on('open', function () {
                 console.log('connection opened')
             })
         })
 
-        peer.on('call', function (call) {
+        peerRef.current.on('call', function (call) {
             // Answer the call, providing our mediaStream
 
             navigator.mediaDevices
                 .getUserMedia({
                     video: true,
-                    audio: false,
+                    audio: usingAudio,
                 })
                 .then((mediaStream) => {
                     localVideo.current.srcObject = mediaStream
@@ -221,6 +276,51 @@ export default function AudioVideoBroadcast(props) {
         }
     }
 
+    function callUser(user) {
+        delete peerConnections.current[user.kid]
+
+        const conn = peerRef.current.connect(user.kid)
+        if (conn) {
+            conn.on('open', () => {
+                console.log('connection opened for user ', user)
+
+                peerConnections.current[user.kid] = {
+                    metadata: user,
+                }
+
+                const call = peerRef.current.call(user.kid, localStream.current)
+
+                call.on('stream', function (stream) {
+                    console.log('got remote stream')
+
+                    peerConnections.current[user.kid] = {
+                        ...peerConnections.current[user.kid],
+                        stream,
+                    }
+                    setPeers((p) => {
+                        return [...p, { ...peerConnections.current[user.kid] }]
+                    })
+                    var videoDivContainer = document.createElement('div')
+                    videoDivContainer.classList.add(
+                        'remote-participant-video-container'
+                    )
+                    videoDivContainer.id = user.kid
+                    var videoLabel = document.createElement('div')
+                    videoLabel.classList.add('video-label')
+                    videoLabel.innerText = user.username
+                    var videlem = document.createElement('video')
+                    videlem.srcObject = stream
+                    videlem.autoplay = true
+                    videlem.playsInline = true
+                    videoDivContainer.appendChild(videlem)
+                    videoDivContainer.appendChild(videoLabel)
+                    document
+                        .getElementById('remote-streams-container')
+                        .appendChild(videoDivContainer)
+                })
+            })
+        }
+    }
     return (
         <div>
             {/* <button
@@ -233,7 +333,7 @@ export default function AudioVideoBroadcast(props) {
                 <div className="host-video-container">
                     <video
                         ref={hostVideo}
-                        muted
+                        muted={isHost.current ? true : false}
                         className="host-video"
                         autoPlay
                         playsInline></video>

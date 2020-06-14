@@ -1547,6 +1547,7 @@ const MainClassLayout = ({
             socket={socketRef.current} 
             userkid={userid} 
             isOwner={owner}
+            isBroadcasting={classroomD.isBroadcasting}
             users={codemarkastate.users} 
             kid={classroomD.kid}
             onAlert={handleAudioVideoAlert}
