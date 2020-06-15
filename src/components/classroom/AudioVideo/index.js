@@ -40,7 +40,7 @@ export default function AudioVideoBroadcast(props) {
         const peer = new Peer(props.userkid, {
             host: 'peerjs-server.herokuapp.com',
             port: 443,
-            // debug: 3,
+            debug: 3,
             key: 'peerjs',
             secure: true,
             config: {
@@ -322,53 +322,58 @@ export default function AudioVideoBroadcast(props) {
         }
     }
     return (
-        <div>
+        <div className="h-100">
             {/* <button
                     type="button"
                     className={`audio_switch_button`}>
                     <i className="fa fa-microphone fa-2x"></i>
                 </button> */}
             <div className="participant-host-video-container">
-                <span className="hide">Hide</span>
-                <div className="host-video-container">
-                    <video
-                        ref={hostVideo}
-                        muted={isHost.current ? true : false}
-                        className="host-video"
-                        autoPlay
-                        playsInline></video>
-                    <div className="video-label">
-                        {isHost.current ? 'You' : 'Host'}
-                    </div>
-                </div>
+                <span className="hide">
+                    <i className="fa fa-video mr-2"></i> Video chat
+                </span>
 
-                {!isHost.current ? (
-                    <div className="local-video-container">
+                <div className="video-container">
+                    <div className="host-video-container">
                         <video
-                            ref={localVideo}
-                            muted
-                            className="local-video"
+                            ref={hostVideo}
+                            muted={isHost.current ? true : false}
+                            className="host-video"
                             autoPlay
                             playsInline></video>
-                        <div className="video-label">You</div>
+                        <div className="video-label">
+                            {isHost.current ? 'You' : 'Host'}
+                        </div>
                     </div>
+                    {!isHost.current ? (
+                        <div className="local-video-container">
+                            <video
+                                ref={localVideo}
+                                muted
+                                className="local-video"
+                                autoPlay
+                                playsInline></video>
+                            <div className="video-label">You</div>
+                        </div>
+                    ) : (
+                        <div id="remote-streams-container"></div>
+                    )}
+                </div>
+            </div>
+            <div className="video-chat-actions-container">
+                {isHost.current ? (
+                    <button
+                        type="button"
+                        onClick={handleBroadcasting}
+                        className={`btn w-100 btn-sm btn-outline-${
+                            isBroadCasting === true ? 'success' : 'info'
+                        }`}>
+                        {isBroadCasting ? 'End Video' : 'Call In '}
+                    </button>
                 ) : (
-                    <div id="remote-streams-container"></div>
+                    ''
                 )}
             </div>
-
-            {isHost.current ? (
-                <button
-                    type="button"
-                    onClick={handleBroadcasting}
-                    className={`audio_broadcast_btn-${
-                        isBroadCasting === true ? 'started' : 'ended'
-                    }`}>
-                    <i className="fa fa-broadcast-tower fa-2x"></i>
-                </button>
-            ) : (
-                ''
-            )}
         </div>
     )
 }

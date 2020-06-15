@@ -107,7 +107,7 @@ const MainClassLayout = ({
         downloadStatus:""
     });
     const socketRef = useRef(socket);
-
+    const audioVideoRef = useRef();
 
     const [codemarkastate, setcodemarkaState] = useState({
         messages: [],
@@ -1543,15 +1543,6 @@ const MainClassLayout = ({
                 list={attendanceState.list}
                 submit={handleAttendanceSubmission}
             />
-            <AudioVideo 
-            socket={socketRef.current} 
-            userkid={userid} 
-            isOwner={owner}
-            isBroadcasting={classroomD.isBroadcasting}
-            users={codemarkastate.users} 
-            kid={classroomD.kid}
-            onAlert={handleAudioVideoAlert}
-            />
             
             {classNotification}
             <span
@@ -2016,7 +2007,8 @@ const MainClassLayout = ({
                                 isOnline={socketRef.current.connected}
                             />
                         </div>
-                        <div className="p-0 col-12 col-md-10 col-lg-10 h-100">
+                        
+                        <div className="p-0 col-8 col-md-8 col-lg-8 h-100">
                             <Editor
                                 readOnly={codemarkastate.editorPriviledge}
                                 handleEditorChange={editorChanged}
@@ -2026,6 +2018,19 @@ const MainClassLayout = ({
                                 clearEditorrContent={handleClearEditorrContent}
                                 addExternalCDN={handleAddExternalCDN}
                             />
+                        </div>
+                        <div className="col-2 p-0 d-none d-md-block d-lg-block h-100">
+                        <AudioVideo 
+            socket={socketRef.current} 
+            userkid={userid} 
+            isOwner={owner}
+            ref={audioVideoRef}
+            isBroadcasting={classroomD.isBroadcasting}
+            users={codemarkastate.users} 
+            kid={classroomD.kid}
+            onAlert={handleAudioVideoAlert}
+            />
+            
                         </div>
                     </div>
                 </div>

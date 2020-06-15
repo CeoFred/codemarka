@@ -99,29 +99,28 @@
 }
 
 .participant-host-video-container{
-  background-color: #3a4d6469;
-  position: fixed;
+  background-color: #101010f5;
+  position: relative;
   color: #fff;
-  z-index: 999;
-  right: 0;
-  margin-bottom:0px;
-  margin-right: 80px;
-  cursor: pointer;
   border: none;
   font-size: 10px;
-  padding: 10px;
-  bottom: 20px;
-  width: 38rem;
-  height: 30vh;
-  max-height:30vh;
+  width: 100%;
+  height: 93%;
+  min-height: 93%;
   display: flex;
-  overflow-y: hidden;
-  overflow-x: auto;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  align-items: flex-start;
+  align-content: flex-start;
+  overflow-y: auto;
 }
-
+.video-container {
+  position: absolute;
+  top:3rem;
+}
 video {
   height: 100%;
-  width: 15rem;
+  width: 100%;
 }
 .host-video-container {
   height: 10rem;
@@ -155,14 +154,30 @@ video.local-video {
   width: auto;
 }
 .hide{
-  position: absolute;
-  top:0;
-  right:0;
   font-weight: bolder;
-  padding-right: 10px;
+  position: fixed;
+  height: 47px;
+  background-color: #ed7489;
+  width: 100%;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  z-index:999
 }
 .remote-participant-video-container{
   height: 10rem;
   border:2px solid;
   margin: 10px;
+}
+.video-chat-actions-container {
+  position: absolute;
+  bottom:0;
+  width: 100%;
+  height: 3rem; 
+  font-size: small;
+  display: flex;
+  align-items: center;
+background-color: black;
+padding:0 16px;
 }
