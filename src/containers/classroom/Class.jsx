@@ -1320,18 +1320,19 @@ const MainClassLayout = ({
         setAttendanceState({...attendanceState, downloadStatus:"loading"});
     }
 
-    const editorChanged = (e, o, v, t) => {
+    const editorChanged = (event, value,editorName) => {
         let editorFileId
 
+        console.log(event,value,editorName);
         codemarkastate.editors.forEach(element => {
-            if (element.file === t) {
+            if (element.file === editorName) {
                 editorFileId = element.id
             }
         })
 
         const emitObj = {
-            file: t,
-            content: v,
+            file: editorName,
+            content: value,
             class: data.classroom_id,
             user: userid,
             id: editorFileId,
@@ -1345,33 +1346,18 @@ const MainClassLayout = ({
                 ...c,
                 previewContent: {
                     ...c.previewContent,
-                    [t]: { content: v, id: editorFileId }
+                    [editorName]: { content: value, id: editorFileId }
                 }
             }
         })
 
-        if (o.origin === '+input') {
-            if (o.text[0].trim() !== '' && o.text[0].trim().length === 1) {
-                socket.emit('editorChanged', emitObj)
-            }
-        }
+          socket.emit("editorChanged", emitObj);
 
-        if (o.origin === '+delete') {
-            if (o.removed[0].trim() !== '') {
-                socket.emit('editorChanged', emitObj)
-            }
-        }
+
+        
         // if(o.origin === 'cut' && o.removed[0] !== ""){
-        //   socket.emit("editorChanged", emitObj);
         // }
 
-        if (o.origin === 'paste') {
-            if (o.text[0] && o.text[1] !== '') {
-                // socket.emit("editorChanged", emitObj);
-            }
-            // console.log(o, o.text,e);
-            // const text = o.text.join('')
-        }
     }
 
     function handleUploadInputChange(e) {

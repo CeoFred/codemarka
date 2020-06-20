@@ -124,12 +124,10 @@ video {
 }
 .host-video-container {
   height: 10rem;
-  border:2px solid;
   margin: 10px;
 }
 .local-video-container {
   height: 10rem;
-  border:2px solid;
   margin: 10px;
 }
 
@@ -146,12 +144,13 @@ video.local-video {
   flex-direction: column;
 }
 .video-label{
-  margin:0;
-  position: absolute;
-  top:0;
-  padding: 10px;
-  background-color: #ed7489;
-  width: auto;
+  margin: 0;
+    position: absolute;
+    top: 0;
+    padding: 7px;
+    background-color: #ed7489;
+    width: auto;
+    border-bottom-right-radius: 7px;
 }
 .hide{
   font-weight: bolder;
