@@ -1,241 +1,335 @@
+/** @format */
+
 // @monaco-editor/react is Monaco editor wrapper for easy/one-line integration with React
 // applications without need of webpack (or other module bundler)
 // configuration files.
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react'
 
-import { ControlledEditor as Editor} from "@monaco-editor/react";
-import './monaco.css';
+import { ControlledEditor as Editor } from '@monaco-editor/react'
+import './monaco.css'
 
 function CodemarkaEditor(props) {
-  const [isEditorReady, setIsEditorReady] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState('html');
-  const currentLanguageIndex = useRef(1);
-  const readOnlyRef = useRef(props.readOnly);
+    const [isEditorReady, setIsEditorReady] = useState(false)
+    const [currentLanguage, setCurrentLanguage] = useState('html')
+    const currentLanguageIndex = useRef(1)
+    const readOnlyRef = useRef(props.readOnly)
 
-  const mapLanguageToIndex = {
-    0: 'css',
-    1: 'html',
-    2: 'js'
+    const mapLanguageToIndex = {
+        0: 'css',
+        1: 'html',
+        2: 'js',
+    }
+    const [value, setValue] = useState('')
+
+    const handleEditorChange = (ev, value) => {
+        setValue(value)
+        props.handleEditorChange(
+            ev,
+            value,
+            mapLanguageToIndex[currentLanguageIndex.current]
+        )
+    }
+
+    useEffect(() => {
+        if (props.files.length) {
+            setValue(props.files[currentLanguageIndex.current].content)
+        }
+    }, [props.files])
+
+    const config = {
+        acceptSuggestionOnCommitCharacter: true,
+        acceptSuggestionOnEnter: 'on',
+        accessibilitySupport: 'auto',
+        autoIndent: false,
+        automaticLayout: true,
+        codeLens: true,
+        colorDecorators: true,
+        contextmenu: true,
+        cursorBlinking: 'blink',
+        cursorSmoothCaretAnimation: false,
+        cursorStyle: 'line',
+        disableLayerHinting: false,
+        disableMonospaceOptimizations: false,
+        dragAndDrop: false,
+        fixedOverflowWidgets: false,
+        folding: true,
+        foldingStrategy: 'auto',
+        fontLigatures: true,
+        formatOnPaste: true,
+        formatOnType: false,
+        hideCursorInOverviewRuler: false,
+        highlightActiveIndentGuide: true,
+        links: true,
+        mouseWheelZoom: false,
+        multiCursorMergeOverlapping: true,
+        multiCursorModifier: 'alt',
+        overviewRulerBorder: true,
+        overviewRulerLanes: 2,
+        quickSuggestions: true,
+        quickSuggestionsDelay: 100,
+        readOnly: !readOnlyRef.current,
+        renderControlCharacters: false,
+        renderFinalNewline: true,
+        renderIndentGuides: true,
+        renderLineHighlight: 'all',
+        renderWhitespace: 'none',
+        revealHorizontalRightPadding: 30,
+        roundedSelection: true,
+        rulers: [],
+        scrollBeyondLastColumn: 5,
+        scrollBeyondLastLine: true,
+        selectOnLineNumbers: true,
+        selectionClipboard: true,
+        selectionHighlight: true,
+        showFoldingControls: 'mouseover',
+        smoothScrolling: false,
+        suggestOnTriggerCharacters: true,
+        wordBasedSuggestions: true,
+        wordSeparators: '~!@#$%^&*()-=+[{]}|;:\'",.<>/?',
+        wordWrap: 'off',
+        wordWrapBreakAfterCharacters: '\t})]?|&,;',
+        wordWrapBreakBeforeCharacters: '{([+',
+        wordWrapBreakObtrusiveCharacters: '.',
+        wordWrapColumn: 80,
+        wordWrapMinified: true,
+        wrappingIndent: 'none',
+    }
+
+    function handleChangeLanguageTab(e, tab) {
+        setValue(props.files[tab].content)
+        currentLanguageIndex.current = tab
+        setCurrentLanguage(
+            mapLanguageToIndex[tab] === 'js'
+                ? 'javascript'
+                : mapLanguageToIndex[tab]
+        )
+    }
+
+    function handleEditorDidMount() {
+        setIsEditorReady(true)
+    }
+
+    return (
+        <>
+            <div className="editors__container">
+                <div className="row h-100 p-0 m-0">
+                    <div className="editor_tabs" style={{ height: '7%' }}>
+                        <span
+                            className={`html_tab ${
+                                currentLanguageIndex.current === 1
+                                    ? 'active_tab'
+                                    : ''
+                            }`}
+                            onClick={(e) => handleChangeLanguageTab(e, 1)}>
+                            <i
+                                className="fab fa-html5"
+                                style={{ color: '#c77d31' }}></i>{' '}
+                            index.html
+                            {props.readOnly ? (
+                                <li
+                                    title="html file actions"
+                                    className="nav-item dropdown">
+                                    <span
+                                        className="nav-link nav-link-icon"
+                                        id="navbar-success_dropdown_css_uploader"
+                                        role="button"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
+                                        <i className="fa fa-ellipsis-v"></i>
+                                    </span>
+                                    <div
+                                        style={{ cursor: 'pointer' }}
+                                        className="dropdown-menu dropdown-menu-right"
+                                        aria-labelledby="navbar-success_dropdown_css_uploader">
+                                        <span
+                                            className="dropdown-item"
+                                            onClick={(e) =>
+                                                props.uploadFileFromSystem(
+                                                    e,
+                                                    'html'
+                                                )
+                                            }>
+                                            <i className="fa fa-file-upload"></i>{' '}
+                                            Upload File
+                                        </span>
+                                        <span
+                                            className="dropdown-item"
+                                            onClick={(e) =>
+                                                props.clearEditorrContent(
+                                                    e,
+                                                    'html'
+                                                )
+                                            }>
+                                            <i className="fa fa-trash"></i>{' '}
+                                            Clear
+                                        </span>
+                                    </div>
+                                </li>
+                            ) : (
+                                ''
+                            )}
+                        </span>
+                        <span
+                            className={`css_tab ${
+                                currentLanguageIndex.current === 0
+                                    ? 'active_tab'
+                                    : ''
+                            }`}
+                            onClick={(e) => handleChangeLanguageTab(e, 0)}>
+                            <i
+                                className="fab fa-css3-alt"
+                                style={{ color: 'cornflowerblue' }}></i>{' '}
+                            index.css
+                            {props.readOnly ? (
+                                <li
+                                    title="css file actions"
+                                    className="nav-item dropdown">
+                                    <span
+                                        className="nav-link nav-link-icon"
+                                        id="navbar-success_dropdown_css_uploader"
+                                        role="button"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
+                                        <i className="fa fa-ellipsis-v"></i>
+                                    </span>
+                                    <div
+                                        style={{ cursor: 'pointer' }}
+                                        className="dropdown-menu dropdown-menu-right"
+                                        aria-labelledby="navbar-success_dropdown_css_uploader">
+                                        <span
+                                            className="dropdown-item"
+                                            href="/#"
+                                            onClick={(e) =>
+                                                props.uploadFileFromSystem(
+                                                    e,
+                                                    'css'
+                                                )
+                                            }>
+                                            <i className="fa fa-file-upload"></i>{' '}
+                                            Upload File
+                                        </span>
+                                        <span
+                                            className="dropdown-item"
+                                            href="/#"
+                                            onClick={(e) =>
+                                                props.clearEditorrContent(
+                                                    e,
+                                                    'css'
+                                                )
+                                            }>
+                                            <i className="fa fa-trash"></i>{' '}
+                                            Clear
+                                        </span>
+                                        <span
+                                            className="dropdown-item"
+                                            href="/#"
+                                            onClick={(e) =>
+                                                props.addExternalCDN(e, 'css')
+                                            }>
+                                            <i className="fa fa-link"></i> Add
+                                            External CDN
+                                        </span>
+                                    </div>
+                                </li>
+                            ) : (
+                                ''
+                            )}
+                        </span>
+                        <span
+                            className={`javascript-tab ${
+                                currentLanguageIndex.current === 2
+                                    ? 'active_tab'
+                                    : ''
+                            }`}
+                            onClick={(e) => handleChangeLanguageTab(e, 2)}>
+                            <i
+                                className="fab fa-js-square"
+                                style={{ color: '#f5f555' }}></i>{' '}
+                            index.js
+                            {props.readOnly ? (
+                                <li
+                                    title="javascript file actions"
+                                    className="nav-item dropdown">
+                                    <span
+                                        className="nav-link nav-link-icon"
+                                        id="navbar-success_dropdown_javascript_uploader"
+                                        role="button"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
+                                        <i className="fa fa-ellipsis-v"></i>
+                                    </span>
+                                    <div
+                                        style={{ cursor: 'pointer' }}
+                                        className="dropdown-menu dropdown-menu-right"
+                                        aria-labelledby="navbar-success_dropdown_javascript_uploader">
+                                        <a
+                                            className="dropdown-item"
+                                            href="/#"
+                                            onClick={(e) =>
+                                                props.uploadFileFromSystem(
+                                                    e,
+                                                    'js'
+                                                )
+                                            }>
+                                            <i className="fa fa-file-upload"></i>{' '}
+                                            Upload File
+                                        </a>
+                                        <div
+                                            className="dropdown-item"
+                                            onClick={(e) =>
+                                                props.clearEditorrContent(
+                                                    e,
+                                                    'js'
+                                                )
+                                            }>
+                                            <i className="fa fa-trash"></i>{' '}
+                                            Clear
+                                        </div>
+                                        <div
+                                            className="dropdown-item"
+                                            href="/#"
+                                            onClick={(e) =>
+                                                props.addExternalCDN(e, 'js')
+                                            }>
+                                            <i className="fa fa-link"></i> Add
+                                            External CDN
+                                        </div>
+                                    </div>
+                                </li>
+                            ) : (
+                                ''
+                            )}
+                        </span>
+                    </div>
+                    <input
+                        type="file"
+                        id="editor_file_uploader_input"
+                        className="d-none"
+                    />
+                    <div style={{ height: '93%',maxHeight:'93%',width:'100%',position:'relative' }}>
+                        <Editor
+                            theme="dark"
+                            options={config}
+                            height={'100%'}
+                            width={'100%'}
+                            onChange={handleEditorChange}
+                            language={currentLanguage}
+                            loading={<i className="fa fa-file-code fa-3x"></i>}
+                            value={value}
+                            editorDidMount={handleEditorDidMount}
+                        />
+                    </div>
+                </div>
+            </div>
+        </>
+    )
 }
-  const [value, setValue] = useState('');
- 
-  const handleEditorChange = (ev, value) => {
-    setValue(value);
-    props.handleEditorChange(ev,value,mapLanguageToIndex[currentLanguageIndex.current]);
-  };
 
-  useEffect(() => {
-      if(props.files.length){
-        setValue(props.files[currentLanguageIndex.current].content)
-      }
-  },[props.files])
-
-
-  const config = {
-    "acceptSuggestionOnCommitCharacter": true,
-    "acceptSuggestionOnEnter": "on",
-    "accessibilitySupport": "auto",
-    "autoIndent": false,
-    "automaticLayout": true,
-    "codeLens": true,
-    "colorDecorators": true,
-    "contextmenu": true,
-    "cursorBlinking": "blink",
-    "cursorSmoothCaretAnimation": false,
-    "cursorStyle": "line",
-    "disableLayerHinting": false,
-    "disableMonospaceOptimizations": false,
-    "dragAndDrop": false,
-    "fixedOverflowWidgets": false,
-    "folding": true,
-    "foldingStrategy": "auto",
-    "fontLigatures": false,
-    "formatOnPaste": false,
-    "formatOnType": false,
-    "hideCursorInOverviewRuler": false,
-    "highlightActiveIndentGuide": true,
-    "links": true,
-    "mouseWheelZoom": false,
-    "multiCursorMergeOverlapping": true,
-    "multiCursorModifier": "alt",
-    "overviewRulerBorder": true,
-    "overviewRulerLanes": 2,
-    "quickSuggestions": true,
-    "quickSuggestionsDelay": 100,
-    "readOnly": readOnlyRef.current,
-    "renderControlCharacters": false,
-    "renderFinalNewline": true,
-    "renderIndentGuides": true,
-    "renderLineHighlight": "all",
-    "renderWhitespace": "none",
-    "revealHorizontalRightPadding": 30,
-    "roundedSelection": true,
-    "rulers": [],
-    "scrollBeyondLastColumn": 5,
-    "scrollBeyondLastLine": true,
-    "selectOnLineNumbers": true,
-    "selectionClipboard": true,
-    "selectionHighlight": true,
-    "showFoldingControls": "mouseover",
-    "smoothScrolling": false,
-    "suggestOnTriggerCharacters": true,
-    "wordBasedSuggestions": true,
-    "wordSeparators": "~!@#$%^&*()-=+[{]}|;:'\",.<>/?",
-    "wordWrap": "off",
-    "wordWrapBreakAfterCharacters": "\t})]?|&,;",
-    "wordWrapBreakBeforeCharacters": "{([+",
-    "wordWrapBreakObtrusiveCharacters": ".",
-    "wordWrapColumn": 80,
-    "wordWrapMinified": true,
-    "wrappingIndent": "none"
-  }
-
-  
-
-  function handleChangeLanguageTab(e,tab){
-    setValue(props.files[tab].content);
-    currentLanguageIndex.current = tab;
-    setCurrentLanguage(mapLanguageToIndex[tab] === 'js' ? 'javascript' : mapLanguageToIndex[tab]);
-  }
-
-  function handleEditorDidMount() {
-    setIsEditorReady(true);
-  }
-
-  return (
-    <>
-         <div className="editors__container">
-             <div className="row h-100 p-0 m-0">
-                 <div className="editor_tabs">
-                     <span className={`html_tab ${currentLanguageIndex.current === 1 ? 'active_tab' : ''}`} onClick={(e) => handleChangeLanguageTab(e,1)}><i className="fab fa-html5" style={{color:'#c77d31'}}></i> index.html
-                     
-                         {props.readOnly ? (
-                             <li title="html file actions" className="nav-item dropdown">
-                                 <span
-                                     className="nav-link nav-link-icon"
-                                     id="navbar-success_dropdown_css_uploader"
-                                     role="button"
-                                     data-toggle="dropdown"
-                                     aria-haspopup="true"
-                                     aria-expanded="false">
-                                     <i className="fa fa-ellipsis-v"></i>
-                                 </span>
-                                 <div
-                                     style={{ cursor: 'pointer' }}
-                                     className="dropdown-menu dropdown-menu-right"
-                                     aria-labelledby="navbar-success_dropdown_css_uploader">
-                                     <span
-                                         className="dropdown-item"
-                                         onClick={(e) => props.uploadFileFromSystem(e, 'html')}>
-                                 <i className="fa fa-file-upload"></i> Upload File
-                                </span>
-                                <span className="dropdown-item" onClick={(e) => props.clearEditorrContent(e,'html')}>
-                                  <i className="fa fa-trash"></i>  Clear
-                                </span>
-                                
-                                 </div>
-                             </li>
-                         ) : ''}
-                     </span>
-                     <span className={`css_tab ${currentLanguageIndex.current === 0 ? 'active_tab' : ''}`} onClick={(e) => handleChangeLanguageTab(e,0)}><i className="fab fa-css3-alt" style={{color:'cornflowerblue'}}></i> index.css
-                     {props.readOnly ? (
-                             <li title="css file actions" className="nav-item dropdown">
-                                 <span
-                                     className="nav-link nav-link-icon"
-                                     id="navbar-success_dropdown_css_uploader"
-                                     role="button"
-                                     data-toggle="dropdown"
-                                     aria-haspopup="true"
-                                     aria-expanded="false">
-                                     <i className="fa fa-ellipsis-v"></i>
-                                 </span>
-                                 <div
-
-                                     style={{ cursor: 'pointer' }}
-                                     className="dropdown-menu dropdown-menu-right"
-                                     aria-labelledby="navbar-success_dropdown_css_uploader">
-                                     <span
-                                         className="dropdown-item"
-                                         href="/#"
-                                         onClick={(e) => props.uploadFileFromSystem(e, 'css')}>
-                                        <i className="fa fa-file-upload"></i> Upload File
-                                </span>
-                                <span className="dropdown-item" href="/#" onClick={(e) => props.clearEditorrContent(e,'css')}>
-                                  <i className="fa fa-trash"></i>  Clear
-                                </span>
-                                <span className="dropdown-item" href="/#" onClick={(e) => props.addExternalCDN(e,'css')}>
-                                  <i className="fa fa-link"></i> Add External CDN
-                                </span>
-                                
-                                
-
-
-                                 </div>
-                             </li>
-                         ) : ''}
-                     </span>
-                     <span className={`javascript-tab ${currentLanguageIndex.current === 2 ? 'active_tab' : ''}`} onClick={(e) => handleChangeLanguageTab(e,2)}><i className="fab fa-js-square" style={{color:'#f5f555'}}></i> index.js
-                     
-//                          {props.readOnly ? (
-                             <li title="javascript file actions" className="nav-item dropdown">
-                                 <span
-                                     className="nav-link nav-link-icon"
-                                     id="navbar-success_dropdown_javascript_uploader"
-                                     role="button"
-                                     data-toggle="dropdown"
-                                     aria-haspopup="true"
-                                     aria-expanded="false">
-                                     <i className="fa fa-ellipsis-v"></i>
-                                 </span>
-                                 <div
-                                     style={{ cursor: 'pointer' }}
-                                     className="dropdown-menu dropdown-menu-right"
-                                     aria-labelledby="navbar-success_dropdown_javascript_uploader">
-                                     <a
-                                         
-                                         className="dropdown-item"
-                                         href="/#"
-                                         onClick={(e) => props.uploadFileFromSystem(e, 'js')}>
-                                <i className="fa fa-file-upload"></i> Upload File
-                                </a>
-                                <div className="dropdown-item" onClick={(e) => props.clearEditorrContent(e,'js')}>
-                                  <i className="fa fa-trash"></i>  Clear
-                                </div>
-                                <div className="dropdown-item" href="/#" onClick={(e) => props.addExternalCDN(e,'js')}>
-
-                                  <i className="fa fa-link"></i>  Add External CDN
-                                </div>
-                                
-
-                                 </div>
-                             </li>
-                         ) : ''}
-                     </span>
-
-                 </div>
-                 <input type="file" id="editor_file_uploader_input" className="d-none"/>
-
-                 <Editor
-        theme="dark"    
-        options={config}
-        onChange={handleEditorChange}
-        language={currentLanguage}
-        loading={(<i className="fa fa-file-code fa-3x"></i>)}
-        value={value}
-        editorDidMount={handleEditorDidMount}
-      />
-             </div>
-       </div>
-      
-    </>
-  );
-}
-
-
-export default CodemarkaEditor;
-
-
+export default CodemarkaEditor
 
 // /* eslint-disable no-undef */
 // import React from 'react'
@@ -268,7 +362,6 @@ export default CodemarkaEditor;
 
 // export default function Editor(props) {
 
-    
 //   const cssOptions = {
 //       mode: 'css',
 //       lineNumbers: true,
@@ -295,7 +388,7 @@ export default CodemarkaEditor;
 //       foldGutter: true,
 //       lint: true
 //   }
-  
+
 //   const htmlOptions = {
 //       lineNumbers: true,
 //       mode: 'htmlmixed',
@@ -355,7 +448,7 @@ export default CodemarkaEditor;
 //   if(files){
 
 //  editors = files.map((f, i) => {
-     
+
 //      if (f.file === 'css') {
 //          return (
 //              <div className="col-md-4 col-12 h-100 pl-0 pr-0" key={i}>
@@ -404,9 +497,6 @@ export default CodemarkaEditor;
 //                                 <span className="dropdown-item" href="/#" onClick={(e) => props.addExternalCDN(e,'css')}>
 //                                   <i className="fa fa-link"></i> Add External CDN
 //                                 </span>
-                                
-                                
-
 
 //                                  </div>
 //                              </li>
@@ -445,7 +535,7 @@ export default CodemarkaEditor;
 //                      </span>
 
 //                      <span className="float-right">
-                         
+
 //                          {props.readOnly ? (
 //                              <li title="html file actions" className="nav-item dropdown">
 //                                  <span
@@ -469,7 +559,7 @@ export default CodemarkaEditor;
 //                                 <span className="dropdown-item" onClick={(e) => props.clearEditorrContent(e,'html')}>
 //                                   <i className="fa fa-trash"></i>  Clear
 //                                 </span>
-                                
+
 //                                  </div>
 //                              </li>
 //                          ) : ''}
@@ -507,7 +597,7 @@ export default CodemarkaEditor;
 //                      </span>
 
 //                      <span className="float-right">
-                         
+
 //                          {props.readOnly ? (
 //                              <li title="javascript file actions" className="nav-item dropdown">
 //                                  <span
@@ -524,7 +614,7 @@ export default CodemarkaEditor;
 //                                      className="dropdown-menu dropdown-menu-right"
 //                                      aria-labelledby="navbar-success_dropdown_javascript_uploader">
 //                                      <a
-                                         
+
 //                                          className="dropdown-item"
 //                                          href="/#"
 //                                          onClick={(e) => props.uploadFileFromSystem(e, 'js')}>
@@ -537,7 +627,6 @@ export default CodemarkaEditor;
 
 //                                   <i className="fa fa-link"></i>  Add External CDN
 //                                 </div>
-                                
 
 //                                  </div>
 //                              </li>
@@ -558,7 +647,7 @@ export default CodemarkaEditor;
 //  })
 
 //   }
- 
+
 //     return (
 //         <div className="editors__container">
 

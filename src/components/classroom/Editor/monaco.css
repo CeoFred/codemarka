@@ -34,3 +34,13 @@
     color: #fff;
 
 }
+
+.monaco-editor .margin {
+    position: absolute;
+    transform: translate3d(0px, 0px, 0px);
+    contain: strict;
+    top: 0px;
+    height: 100%!important;
+    width: 66px;
+    background-color: #202124;
+}

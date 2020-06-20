@@ -162,7 +162,7 @@ video.local-video {
   display: flex;
   align-items: center;
   padding-left: 10px;
-  z-index:999
+  z-index:99
 }
 .remote-participant-video-container{
   height: 10rem;
