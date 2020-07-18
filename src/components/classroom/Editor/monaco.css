@@ -4,16 +4,13 @@
     height: 46px;
     align-items: center;
     justify-content: space-around;
-    background-color: #1f2d3d;
+    background-color: #273444;
 }
 
 .editor_tabs span {
     width: 33.33%;
-    /* border: 2px solid black; */
-    /* margin-bottom: 13px; */
     padding-top: 7px;
     padding-bottom: 7px;
-    margin-right: auto;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -22,17 +19,18 @@
 
 
 .editor_tabs span:hover {
-    background-color: rgb(24, 18, 41);
-    color: #fff;
+    
     cursor: pointer;
 }
 
 
 
 .active_tab{
-    background-color: rgb(24, 18, 41);
+    background-color: rgba(19, 28, 37, 0.83);
     color: #fff;
-
+    border-radius: 6px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .monaco-editor .margin {

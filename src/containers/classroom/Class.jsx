@@ -888,8 +888,8 @@ const MainClassLayout = ({
     const handleMessageSubmit = e => {
         e.preventDefault()
         const getRandomColor = () => {
+
             const letters = [
-                'rgb(188, 190, 219)',
                 '#b99286',
                 '#a4cc99',
                 '#7f82bb',
@@ -897,7 +897,7 @@ const MainClassLayout = ({
             ]
             let color
 
-            color = letters[Math.floor(Math.random() * 5)]
+            color = letters[Math.floor(Math.random() * 4)]
             return color
         }
         if (inputState.value !== '') {
@@ -1323,7 +1323,6 @@ const MainClassLayout = ({
     const editorChanged = (event, value,editorName) => {
         let editorFileId
 
-        console.log(event,value,editorName);
         codemarkastate.editors.forEach(element => {
             if (element.file === editorName) {
                 editorFileId = element.id
@@ -1456,6 +1455,7 @@ const MainClassLayout = ({
     const handleClearEditorrContent = (e,editorName) => {
         e.preventDefault();
         setcodemarkaState(s => {
+            let editorid = ''
             const newFileContent = s.editors.map(editor => {
                 if(editor.file === editorName){
                     const emitObj = {
@@ -1471,13 +1471,14 @@ const MainClassLayout = ({
                         kid: data.classroom_id,
                         type:'upload'
                     };
+                    editorid = editor.id
                     socket.emit('editorChanged', emitObj)
 
-                    return {...editor,content:''}
+                    return {...editor,content:'',}
                 } else return editor;
             });
 
-            return {...s,editors: newFileContent}
+            return {...s,editors: newFileContent,previewContent:{...codemarkastate.previewContent,[editorName]:{content:'',id: editorid}}}
         })
     }
     const handleAddExternalCDN  = (e, editorName) => {
@@ -1998,7 +1999,9 @@ const MainClassLayout = ({
                             <Editor
                                 readOnly={codemarkastate.editorPriviledge}
                                 handleEditorChange={editorChanged}
-                                files={codemarkastate.editors}
+                                files={codemarkastate.previewContent}
+                                userkid={userid}
+                                socket={socketRef.current}
                                 dropDownSelect={handledropDownSelect}
                                 uploadFileFromSystem={handleuploadFileFromSystem}
                                 clearEditorrContent={handleClearEditorrContent}

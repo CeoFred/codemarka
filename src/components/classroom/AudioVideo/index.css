@@ -131,17 +131,12 @@ video {
   margin: 10px;
 }
 
-video.host-video {
+video.host-video, video.local-video {
   background-color: #000;
   display: flex;
   position: relative;
   flex-direction: column;
-}
-video.local-video {
-  background-color: #000;
-  display: flex;
-  position: relative;
-  flex-direction: column;
+  border-radius: 6px;
 }
 .video-label{
   margin: 0;
@@ -154,15 +149,16 @@ video.local-video {
 }
 .hide{
   font-weight: bolder;
-  position: fixed;
-  height: 47px;
-  background-color: #ed7489;
-  width: 100%;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  padding-left: 10px;
-  z-index:99
+    position: absolute;
+    height: 47px;
+    background-color: #162029;
+    width: 100%;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    /* z-index: 99; */
+    border-radius: 6px;
 }
 .remote-participant-video-container{
   height: 10rem;

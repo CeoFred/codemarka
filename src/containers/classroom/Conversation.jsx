@@ -62,7 +62,7 @@ export default function Conversation(props) {
                             }`}
                         key={m.msgId.toString()}
                         id={m.msgId}
-                        style={{ borderLeft: `2px solid ${m.color ? m.color : 'white'}` }}
+                        style={ props.owner === m.by ? { border: `0px` }: { borderRight: `5px solid ${m.color ? m.color : 'white'}` }}
                         >
                         <div
                             style={{ color: `${m.color ? m.color : 'white'}` }}
@@ -85,16 +85,14 @@ export default function Conversation(props) {
                             m.by === props.user ? 'sent' : 'received'
                             }`}
                         key={m.msgId.toString()}
+                        style={ props.owner === m.by ? { border: `0px` }: { borderRight: `5px solid ${m.color ? m.color : 'white'}` }}
 
-                        style={{ borderLeft: `2px solid ${m.color ? m.color : 'white'}` }}
                         id={m.msgId}>
                         <div
                             style={{ color: `${m.color ? m.color : 'white'}` }}
                             className="font-weight-800 user-by">
                             {m.by !== props.user
-                                ? m.name +
-                                `${props.owner === m.by ? '(admin)' : ''}`
-                                : ''}
+                                ? m.name : ''}
                         </div>
                         {wrapURLs(m.msg, true, m.msgId)}
                         <span className="metadata">

@@ -27,6 +27,7 @@ div.messages {
     /* height: 100%; */
     /* margin-bottom: 70px; */
     /* padding-top: 50px; */
+    padding:0;
     height: 74.9vh;
 }
 
@@ -89,7 +90,6 @@ div.messages {
     margin-top: 10px;
     border-top-right-radius: 10px;
     position: relative;
-    animation: message 2s ease;
 } */
 .message {
     color: #fff;
@@ -99,9 +99,7 @@ div.messages {
     padding: 8px;
     position: relative;
     margin: 8px 0;
-    width: 100%;
-    word-wrap: break-word;
-    /* z-index: -1; */
+    animation: message 2s ease;
 }
 
 .message:first-child {
@@ -109,10 +107,10 @@ div.messages {
 }
 
 .message.received {
-    background: rgb(73, 136, 145);
+    background: rgb(44, 56, 72);
     border-radius: 0px 5px 5px 5px;
     float: left;
-    border-left: 3px solid;
+    width: 90%;
 }
 
 .message.received .metadata {
@@ -127,19 +125,18 @@ div.messages {
 } */
 
 .message.sent {
-    background: #719eb0;
-    border-radius: 5px 0px 5px 5px;
+    background: #2c3848;
+    border-radius: 5px 0px 0px 5px;
     float: right;
+    width: 90%;
 }
 
 a {
-    color: #9b1a6f;
-    font-weight: bold;
+    color: #4f60b5;
+    font-weight: normal;
 }
 .user-by {    
     font-size: 1rem;
-    text-transform: capitalize;
-    margin-bottom: 5px;
 }
 /* .message.sent:after {
     border-width: 0px 0 10px 10px;
@@ -149,10 +146,8 @@ a {
 } */
 
 .message_extra {
-    /* width: auto; */
-    padding: 3px;
     text-align: center;
-    color: #e22baa;
+    color: #ff5c75;
     font-weight: bolder;
     clear: both;
     line-height: 18px;
@@ -160,10 +155,6 @@ a {
     padding: 4px;
     position: relative;
     margin: 8px 0;
-    max-width: 85%;
-    word-wrap: break-word;
-    /* background-color: #e22baa; */
-    border-radius: 15px;
 }
 
 .metadata {
@@ -175,9 +166,9 @@ a {
 }
 
 .metadata .time {
-    color: rgba(0, 0, 0, .45);
-    font-size: 11px;
+    color: #eff2f75e;
     display: inline-block;
+    font-size: x-small;
 }
 
 .metadata .tick {

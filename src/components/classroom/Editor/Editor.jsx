@@ -12,7 +12,9 @@ import './monaco.css'
 function CodemarkaEditor(props) {
     const [isEditorReady, setIsEditorReady] = useState(false)
     const [currentLanguage, setCurrentLanguage] = useState('html')
+    const socket = useRef(props.socket)
     const currentLanguageIndex = useRef(1)
+    const editorValue = useRef()
     const readOnlyRef = useRef(props.readOnly)
 
     const mapLanguageToIndex = {
@@ -20,22 +22,51 @@ function CodemarkaEditor(props) {
         1: 'html',
         2: 'js',
     }
-    const [value, setValue] = useState('')
 
-    const handleEditorChange = (ev, value) => {
-        setValue(value)
-        props.handleEditorChange(
-            ev,
-            value,
-            mapLanguageToIndex[currentLanguageIndex.current]
-        )
+    const handleEditorChange = (ev, val) => {
+        if (val != editorValue.current) {
+            // value.current = (val)
+            props.handleEditorChange(
+                ev,
+                val,
+                mapLanguageToIndex[currentLanguageIndex.current]
+            )
+        }
     }
 
     useEffect(() => {
-        if (props.files.length) {
-            setValue(props.files[currentLanguageIndex.current].content)
+        console.log('new files', props.files)
+        if (props.files.html && !isEditorReady) {
+            setIsEditorReady(true)
+            editorValue.current = props.files.html.content
         }
     }, [props.files])
+
+    useEffect(() => {
+        //listen to file changes
+        socket.current.on('class_files_updated', (data) => {
+            console.log(data);
+            const EditorName = data.file
+            const updatedContentForEditor = data.content
+            const FileEditorsKid = data.user
+
+            if (FileEditorsKid !== props.userkid) {
+                // checking if other users are in the currently changed tab
+                // if it's so, update the content of the current editor
+                // else show the updated astericks
+                if (
+                    mapLanguageToIndex[currentLanguageIndex.current] ===
+                    EditorName
+                ) {
+                    editorValue.current = updatedContentForEditor
+                } else {
+                    document.getElementById(
+                        `${EditorName}_updated_message_container`
+                    ).innerHTML = '*'
+                }
+            }
+        })
+    }, [])
 
     const config = {
         acceptSuggestionOnCommitCharacter: true,
@@ -57,7 +88,7 @@ function CodemarkaEditor(props) {
         foldingStrategy: 'auto',
         fontLigatures: true,
         formatOnPaste: true,
-        formatOnType: false,
+        formatOnType: true,
         hideCursorInOverviewRuler: false,
         highlightActiveIndentGuide: true,
         links: true,
@@ -97,13 +128,11 @@ function CodemarkaEditor(props) {
     }
 
     function handleChangeLanguageTab(e, tab) {
-        setValue(props.files[tab].content)
+        const lang = mapLanguageToIndex[tab];
+        document.getElementById(`${lang}_updated_message_container`).innerHTML = ''
+        editorValue.current = props.files[lang].content
         currentLanguageIndex.current = tab
-        setCurrentLanguage(
-            mapLanguageToIndex[tab] === 'js'
-                ? 'javascript'
-                : mapLanguageToIndex[tab]
-        )
+        setCurrentLanguage(lang === 'js' ? 'javascript' : lang)
     }
 
     function handleEditorDidMount() {
@@ -125,7 +154,12 @@ function CodemarkaEditor(props) {
                             <i
                                 className="fab fa-html5"
                                 style={{ color: '#c77d31' }}></i>{' '}
-                            index.html
+                            <div>
+                                index.html{' '}
+                                <b
+                                    id="html_updated_message_container"
+                                    className="text-success"></b>{' '}
+                            </div>
                             {props.readOnly ? (
                                 <li
                                     title="html file actions"
@@ -181,7 +215,12 @@ function CodemarkaEditor(props) {
                             <i
                                 className="fab fa-css3-alt"
                                 style={{ color: 'cornflowerblue' }}></i>{' '}
-                            index.css
+                            <div>
+                                style.css{' '}
+                                <b
+                                    id="css_updated_message_container"
+                                    className="text-success"></b>{' '}
+                            </div>
                             {props.readOnly ? (
                                 <li
                                     title="css file actions"
@@ -248,7 +287,12 @@ function CodemarkaEditor(props) {
                             <i
                                 className="fab fa-js-square"
                                 style={{ color: '#f5f555' }}></i>{' '}
-                            index.js
+                            <div>
+                                script.js{' '}
+                                <b
+                                    id="js_updated_message_container"
+                                    className="text-success"></b>{' '}
+                            </div>
                             {props.readOnly ? (
                                 <li
                                     title="javascript file actions"
@@ -310,18 +354,30 @@ function CodemarkaEditor(props) {
                         id="editor_file_uploader_input"
                         className="d-none"
                     />
-                    <div style={{ height: '93%',maxHeight:'93%',width:'100%',position:'relative' }}>
-                        <Editor
-                            theme="dark"
-                            options={config}
-                            height={'100%'}
-                            width={'100%'}
-                            onChange={handleEditorChange}
-                            language={currentLanguage}
-                            loading={<i className="fa fa-file-code fa-3x"></i>}
-                            value={value}
-                            editorDidMount={handleEditorDidMount}
-                        />
+                    <div
+                        style={{
+                            height: '93%',
+                            maxHeight: '93%',
+                            width: '100%',
+                            position: 'relative',
+                        }}>
+                        {isEditorReady ? (
+                            <Editor
+                                theme="dark"
+                                options={config}
+                                height={'100%'}
+                                width={'100%'}
+                                onChange={handleEditorChange}
+                                language={currentLanguage}
+                                loading={
+                                    <i className="fa fa-file-code fa-3x"></i>
+                                }
+                                value={editorValue.current}
+                                editorDidMount={handleEditorDidMount}
+                            />
+                        ) : (
+                            'Fetching files...'
+                        )}
                     </div>
                 </div>
             </div>
