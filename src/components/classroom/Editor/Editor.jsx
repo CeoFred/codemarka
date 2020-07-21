@@ -12,6 +12,7 @@ import './monaco.css'
 function CodemarkaEditor(props) {
     const [isEditorReady, setIsEditorReady] = useState(false)
     const [currentLanguage, setCurrentLanguage] = useState('html')
+    const [valuestate,setCurrentEditorValue] = useState('');
     const socket = useRef(props.socket)
     const currentLanguageIndex = useRef(1)
     const editorValue = useRef()
@@ -24,6 +25,7 @@ function CodemarkaEditor(props) {
     }
 
     const handleEditorChange = (ev, val) => {
+        console.log(ev,val,'Editor Changed')
         if (val != editorValue.current) {
             // value.current = (val)
             props.handleEditorChange(
@@ -35,9 +37,10 @@ function CodemarkaEditor(props) {
     }
 
     useEffect(() => {
-        console.log('new files', props.files)
+        // console.log('new files', props.files)
         if (props.files.html && !isEditorReady) {
             setIsEditorReady(true)
+            setCurrentEditorValue(props.files.html.content);
             editorValue.current = props.files.html.content
         }
     }, [props.files])
@@ -45,11 +48,25 @@ function CodemarkaEditor(props) {
     useEffect(() => {
         //listen to file changes
         socket.current.on('class_files_updated', (data) => {
-            console.log(data);
+            // console.log(data);
             const EditorName = data.file
             const updatedContentForEditor = data.content
             const FileEditorsKid = data.user
 
+            if(data.type === 'upload'){
+                    if (
+                        String(mapLanguageToIndex[currentLanguageIndex.current]) ===
+                        String(EditorName)
+                    ) {
+                        setCurrentEditorValue(updatedContentForEditor);
+                        editorValue.current = updatedContentForEditor
+                    } else {
+                        document.getElementById(
+                            `${EditorName}_updated_message_container`
+                        ).innerHTML = '*'
+                    }
+            } else {
+                
             if (FileEditorsKid !== props.userkid) {
                 // checking if other users are in the currently changed tab
                 // if it's so, update the content of the current editor
@@ -58,12 +75,16 @@ function CodemarkaEditor(props) {
                     mapLanguageToIndex[currentLanguageIndex.current] ===
                     EditorName
                 ) {
-                    editorValue.current = updatedContentForEditor
+
+                    editorValue.current = updatedContentForEditor;
+                    setCurrentEditorValue(updatedContentForEditor);
+
                 } else {
                     document.getElementById(
                         `${EditorName}_updated_message_container`
                     ).innerHTML = '*'
                 }
+            }
             }
         })
     }, [])
@@ -135,7 +156,7 @@ function CodemarkaEditor(props) {
         setCurrentLanguage(lang === 'js' ? 'javascript' : lang)
     }
 
-    function handleEditorDidMount() {
+    function handleEditorDidMount(ed) {
         setIsEditorReady(true)
     }
 
@@ -372,7 +393,7 @@ function CodemarkaEditor(props) {
                                 loading={
                                     <i className="fa fa-file-code fa-3x"></i>
                                 }
-                                value={editorValue.current}
+                                value={valuestate}
                                 editorDidMount={handleEditorDidMount}
                             />
                         ) : (

@@ -40,15 +40,11 @@ function Trending() {
                                         style={{height:'100%'}}
                                 >
                                 <div className="card-body py-4" style={{height:'70%'}}>
+                                <span className="avatar avatar-sm bg-success rounded-circle">
+                                    <img src={rd.gravatarUrl} alt={rd.name}/>
+                                </span>
                                     <small className="d-block text-sm mb-2">
                                             {truncateString(tr.name.toUpperCase(),20)} {' '}
-                                      (
-                                        {tr.classVisibility === 'Public' ? (
-                                            <i className="fa fa-unlock"></i>
-                                        ) : (
-                                            <i className="fa fa-lock"></i>
-                                        )}
-                                        )
                                     </small>
                                     <b
                                         className="h5 stretched-link lh-150" style={{fontSize:'0.78rem'}}>

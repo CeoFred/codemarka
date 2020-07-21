@@ -338,7 +338,7 @@ export default function AudioVideoBroadcast(props) {
         }
     }
     return (
-        <div className="h-100">
+        <div className="h-100" style={{ backgroundColor: '#0f0f0f' }}>
             {/* <button
                     type="button"
                     className={`audio_switch_button`}>

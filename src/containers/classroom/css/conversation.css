@@ -45,6 +45,8 @@ div.messages {
 .r-message{
     font-size: 0.8rem;
     font-weight: lighter;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 .dot-online{
     height: 10px;
