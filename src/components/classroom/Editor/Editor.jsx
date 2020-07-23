@@ -16,13 +16,17 @@ function CodemarkaEditor(props) {
     const socket = useRef(props.socket)
     const currentLanguageIndex = useRef(1)
     const editorValue = useRef()
-    const readOnlyRef = useRef(props.readOnly)
+    const [readOnlyRef,setReadOnlyRef] = useState(true)
 
     const mapLanguageToIndex = {
         0: 'css',
         1: 'html',
         2: 'js',
     }
+
+    useEffect(() => {
+        setReadOnlyRef(props.readOnly);
+    }, [props.readOnly])
 
     const handleEditorChange = (ev, val) => {
         console.log(ev,val,'Editor Changed')
@@ -58,8 +62,9 @@ function CodemarkaEditor(props) {
                         String(mapLanguageToIndex[currentLanguageIndex.current]) ===
                         String(EditorName)
                     ) {
-                        setCurrentEditorValue(updatedContentForEditor);
                         editorValue.current = updatedContentForEditor
+                        setCurrentEditorValue(updatedContentForEditor);
+
                     } else {
                         document.getElementById(
                             `${EditorName}_updated_message_container`
@@ -120,7 +125,7 @@ function CodemarkaEditor(props) {
         overviewRulerLanes: 2,
         quickSuggestions: true,
         quickSuggestionsDelay: 100,
-        readOnly: !readOnlyRef.current,
+        readOnly: !readOnlyRef,
         renderControlCharacters: false,
         renderFinalNewline: true,
         renderIndentGuides: true,
@@ -393,7 +398,7 @@ function CodemarkaEditor(props) {
                                 loading={
                                     <i className="fa fa-file-code fa-3x"></i>
                                 }
-                                value={valuestate}
+                                value={editorValue.current}
                                 editorDidMount={handleEditorDidMount}
                             />
                         ) : (

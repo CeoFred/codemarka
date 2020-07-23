@@ -41,7 +41,12 @@ export default function Conversation(props) {
     if (props.messages && props.messages.length > 0) {
 
         messageRef.current = props.messages.map((m, i) => {
-
+            const stylesObj = {
+                self: {border: `0px` },
+                others:{ borderRight: `5px solid ${m.color ? m.color : 'white'}` }
+            }
+            const style = String(props.owner) === String(m.by) ? stylesObj.self : stylesObj.others 
+           
             const date = new Date(m.oTime)
             const time = formatToTimeZone(date, 'h:mm a', { timeZone })
 
@@ -68,7 +73,7 @@ export default function Conversation(props) {
                             }`}
                         key={m.msgId.toString()}
                         id={m.msgId}
-                        style={ props.owner === m.by ? { border: `0px` }: { borderRight: `5px solid ${m.color ? m.color : 'white'}` }}
+                        style={ style }
                         >
                         <div
                             style={{ color: `${m.color ? m.color : 'white'}` }}
@@ -91,8 +96,7 @@ export default function Conversation(props) {
                             m.by === props.user ? 'sent' : 'received'
                             }`}
                         key={m.msgId.toString()}
-                        style={ props.owner === m.by ? { border: `0px` }: { borderRight: `5px solid ${m.color ? m.color : 'white'}` }}
-
+                        style={ style }
                         id={m.msgId}>
                         <div
                             style={{ color: `${m.color ? m.color : 'white'}` }}

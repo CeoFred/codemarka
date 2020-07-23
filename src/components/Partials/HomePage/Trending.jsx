@@ -36,13 +36,11 @@ function Trending() {
                         <div className="col-md-3" style={{maxHeight: '300px'}} key={ tr.kid }>
                             <div style={{maxHeight:'100%',height:'100%'}} className="card bg-section-dark text-white hover-translate-y-n3 hover-shadow-lg overflow-hidden">
                                 <a  
-                                        href={ `c/classroom/${ tr.kid }` }
+                                        href={ `c/classroom/${ tr.room_kid }` }
                                         style={{height:'100%'}}
                                 >
                                 <div className="card-body py-4" style={{height:'70%'}}>
-                                <span className="avatar avatar-sm bg-success rounded-circle">
-                                    <img src={rd.gravatarUrl} alt={rd.name}/>
-                                </span>
+                                    <img src={tr.img} className="avatar  rounded-circle" alt={rd.name}/>
                                     <small className="d-block text-sm mb-2">
                                             {truncateString(tr.name.toUpperCase(),20)} {' '}
                                     </small>
@@ -50,6 +48,7 @@ function Trending() {
                                         className="h5 stretched-link lh-150" style={{fontSize:'0.78rem'}}>
                                             {truncateString(tr.topic,20)}
                                     </b>
+                    <div>@{tr.owner}</div>
                                         <p className={{marginTop:'1rem'}}>{truncateString(tr.description.toLowerCase(),40)}</p>
                                 </div>
                                 <div className="card-footer border-0 delimiter-top" style={{height:'30%'}}>
@@ -60,7 +59,7 @@ function Trending() {
                                             </span>
                                                 <span className="text-sm mb-0 avatar-content" style={{ color: '#fff' }}>
                                                     <i style={{ color:'#2dca8c'}} className="fas fa-users"></i>{' '}
-                                                {tr.students.length}
+                                                {tr.students}
                                             </span>
                                         </div>
                                         <div className="col text-right text-right">
@@ -72,7 +71,7 @@ function Trending() {
                                                     }
                                                     className="action-item">
                                                     <i className="fa fa-heart mr-1 text-danger"></i>{' '}
-                                                    {tr.likes.length}
+                                                    {tr.likes}
                                                 </a>
                                                 <a
                                                     href="/likee#"
