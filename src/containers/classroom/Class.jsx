@@ -42,6 +42,7 @@ import { DOWNLOAD_CLASSROOM_ATTENDANCE } from '../../config/api_url';
 import AttendanceCollector from '../../components/classroom/Attendance/index.jsx';
 
 // import AudioBroadcast from '../../components/classroom/Audio/Audio';
+import CodeBlockModal from '../../components/classroom/Conversation_Partials/CodeBlocks/index';
 
 import { CLASSROOM_FILE_DOWNLOAD } from '../../config/api_url'
 import './css/Environment.css'
@@ -90,6 +91,9 @@ const MainClassLayout = ({
         lastSentMessage: null
     })
 
+    const [userMessageColor, setUserMessageColor] = useState('#000');
+
+
     const [attendanceState, setAttendanceState] = useState({
         hasCollectedAttendance: false,
         isCollectingAttendance: classroomD.isTakingAttendance,
@@ -135,7 +139,9 @@ const MainClassLayout = ({
         connected:true,
         currentEditorSelection:'',
         CSS_CDN:[],
-        JS_CDN:[]
+        JS_CDN:[],
+        isShowingMentions: false,
+        mentionSearchString:null
     });
 
     const [editorUploadState, setEditorUploadState ] = useState({
@@ -222,6 +228,24 @@ const MainClassLayout = ({
         socketRef.current = socket
     },[socket.connected])
 
+    React.useEffect(() => {
+        const getRandomColor = () => {
+
+            const letters = [
+                '#b99286',
+                '#a4cc99',
+                '#7f82bb',
+                '#b3cc6e'
+            ]
+            let color
+
+            color = letters[Math.floor(Math.random() * 4)]
+            return color
+        }
+        const userMessageColor = getRandomColor();
+        setUserMessageColor(userMessageColor);
+
+    },[socket.connected])
     React.useEffect(() => {
         const requestData = {
             classroom_id: cid || data.classroom_id,
@@ -379,6 +403,11 @@ const MainClassLayout = ({
                     const nnc = msg.newuserslist.filter((u) => {
                         return u.kid !== userid
                     })
+                    socket.emit('user_typing_cleared', {
+                        username:msg.name,
+                        userid: msg.for,
+                        classroomid: msg.roomId
+                    })
                     return {
                         ...c,
                         messages: oldmsg,
@@ -500,6 +529,12 @@ const MainClassLayout = ({
                     })
                     const newTypingState = c.typingState.filter((user) => {
                         return String(user.kid) !== String(msg.for)
+                    })
+
+                    socket.emit('user_typing_cleared', {
+                        username:msg.name,
+                        userid: msg.for,
+                        classroomid: msg.roomId
                     })
 
                     return {
@@ -859,9 +894,36 @@ const MainClassLayout = ({
 
     const handleInputChange = e => {
         e.preventDefault()
-        const value = e.target.value
-        if(value.length > 100) {
-            const reduced = String(value).slice(0,100);
+        const value = e.target.value;
+
+        const splittedValue =  value.split(' ');
+
+        const lastSplittedIndex =  splittedValue.length - 1;
+
+        const lastSplittedIndexContainsAtSymbol = splittedValue[lastSplittedIndex].includes('@');
+
+        const remainingStringInSplittedValue = splittedValue[lastSplittedIndex].replace('@','');
+
+        const lastSplittedIndexValue = splittedValue[lastSplittedIndex];
+
+        const indexOfSpecialSymbolInString = value.indexOf(lastSplittedIndex);
+
+        const beforelastChar = value[indexOfSpecialSymbolInString - 1]
+
+
+        if(lastSplittedIndexContainsAtSymbol){
+
+            if(beforelastChar === ' ' || beforelastChar ===  undefined){
+                console.log('mention time')
+                setcodemarkaState({...codemarkastate, isShowingMentions: true, mentionSearchString:remainingStringInSplittedValue})
+            }
+        } else {
+            setcodemarkaState({...codemarkastate, isShowingMentions: false,mentionSearchString: null})
+
+        }
+
+        if(value.length > 500) {
+            const reduced = String(value).slice(0,500);
             setInputState({ ...inputState,  reduced})
             alert('Reduce the noise, type less. Use pinned messagees for longer texts.');
 
@@ -887,19 +949,7 @@ const MainClassLayout = ({
 
     const handleMessageSubmit = e => {
         e.preventDefault()
-        const getRandomColor = () => {
 
-            const letters = [
-                '#b99286',
-                '#a4cc99',
-                '#7f82bb',
-                '#b3cc6e'
-            ]
-            let color
-
-            color = letters[Math.floor(Math.random() * 4)]
-            return color
-        }
         if (inputState.value !== '') {
             setInputState({
                 ...inputState,
@@ -913,7 +963,7 @@ const MainClassLayout = ({
                 kid,
                 message: inputState.value,
                 time: new Date(),
-                messageColor: getRandomColor()
+                messageColor: userMessageColor
             }
             socket.emit('newMessage', msg_data)
         }
@@ -1320,6 +1370,63 @@ const MainClassLayout = ({
         setAttendanceState({...attendanceState, downloadStatus:"loading"});
     }
 
+    const handleUserSelected = (e,username) => {
+        e.preventDefault()
+        
+        const usernameAttached = `@${username} `;
+        const currentTextAreaValue = inputState.value
+
+        let newTextAreaValue = currentTextAreaValue;
+        
+            if(codemarkastate.mentionSearchString && codemarkastate.mentionSearchString.length > 0){
+                
+                //find last @symbol and replace
+                const splittedValue =  currentTextAreaValue.split(' ');
+
+                const lastSplittedIndex =  splittedValue.length - 1;
+        
+                const lastSplittedIndexContainsAtSymbol = splittedValue[lastSplittedIndex].includes('@');
+        
+                if(lastSplittedIndexContainsAtSymbol){
+                    const newReplaceSymbolContent = splittedValue[lastSplittedIndex] = usernameAttached;
+                    splittedValue[lastSplittedIndex] = newReplaceSymbolContent;
+                    newTextAreaValue =  splittedValue.join(' ')
+                }
+            } else {
+                if(codemarkastate.mentionSearchString === null){
+                    newTextAreaValue = `${currentTextAreaValue}@${username} `;
+                } else {
+                   newTextAreaValue = `${currentTextAreaValue}${username} `;
+                }
+            } 
+        
+        setInputState({...inputState,value:newTextAreaValue }) ;
+        setcodemarkaState({...codemarkastate, isShowingMentions: false,mentionSearchString: null})
+        document.querySelector('#input_area').focus()
+
+    }
+
+
+    const handleShowMentions = (e) => {
+        setcodemarkaState({...codemarkastate, isShowingMentions: !codemarkastate.isShowingMentions});
+    }
+
+    const handleAddCodeBlock = (e) => {
+        document.querySelector('#codeblockModal').click()
+    }
+
+    const handleShowEmojiPicker = (e) => {
+
+    }
+
+    const handleImageUpload = (e) => {
+
+    }
+
+    const handleAddURL = (e) => {
+        document.querySelector('#hyperlinkModal').click()
+
+    }
     const editorChanged = (event, value,editorName) => {
         let editorFileId
 
@@ -1976,12 +2083,17 @@ const MainClassLayout = ({
                 handleAddUserIconClicked={handleAddUserIconClicked}
             />
 
+            <CodeBlockModal socket={socketRef.current}/>
+
             <div style={{ width: '100%', height: '92vh' }}>
                 <div className="container-fluid h-100">
                     <div className="row h-100">
                         <div className="col-2 p-0 d-none d-md-block d-lg-block h-100">
+
                             <Convo
                                 typing={codemarkastate.typingState}
+                                users={codemarkastate.users}
+                                userSelected={handleUserSelected}
                                 username={username}
                                 inputValue={inputState.value}
                                 handleInputChange={handleInputChange}
@@ -1990,8 +2102,15 @@ const MainClassLayout = ({
                                 messages={codemarkastate.messages}
                                 userSpecificMessages={userSpecificMessages}
                                 user={userid}
+                                mentionSearchString={codemarkastate.mentionSearchString}
+                                shouldDisplay={codemarkastate.isShowingMentions}
                                 owner={ownerid}
+                                showMentions={handleShowMentions}
                                 isOnline={socketRef.current.connected}
+                                addCodeBlock={handleAddCodeBlock}
+                                showEmojiPicker={handleShowEmojiPicker}
+                                uploadImage={handleImageUpload}
+                                addURL={handleAddURL}
                             />
                         </div>
                         

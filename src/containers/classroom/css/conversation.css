@@ -16,7 +16,24 @@ div.input_container {
     position: absolute;
     bottom: 0;
     left: 0;
-    height: 52px;
+    height: 78px;
+}
+
+.action-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+    font-size: medium;
+    font-weight: lighter;
+    padding-right: 5px;
+    cursor: pointer;
+}
+
+.action-container span {
+    margin: 0 5px;
+    color: #fff;
+    font-weight: lighter!important;
 }
 
 div.messages {
@@ -28,7 +45,7 @@ div.messages {
     /* margin-bottom: 70px; */
     /* padding-top: 50px; */
     padding:0;
-    height: 74.9vh;
+    height: 70.9vh;
 }
 
 .user-bar .name {

@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
-import React,{ useEffect, useRef } from 'react';
+import React,{ useRef } from 'react';
 import { formatToTimeZone } from 'date-fns-timezone';
+import Mentions from '../../components/classroom/Conversation_Partials/Mentions/index';
 
 import './css/conversation.css';
 
@@ -10,20 +11,21 @@ export default function Conversation(props) {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
    
     var wrapURLs = function (text, new_window, id) {
-        // var url_pattern = /(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}\-\x{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?/gm;
+        var url_pattern = /(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}\-\x{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?/gm;
        
         var emailRegex = /[\w|.]+[@]+\w+[.]+[\w|.]*$/gm;
         var target = (new_window === true || new_window == null) ? '_blank' : '';
-
-        let rt = text.replace(/^(http?|https?):\/\/[^\s$.?#"].[^\s]*$/gm, function (url) {
+        // var oldRegez = /^(http?|https?):\/\/[^\s$.?#"].[^\s]*$/gm;
+        let rt = text.replace(url_pattern, function (url) {
             var protocol_pattern = /^(?:(?:https?|ftp):\/\/)/i;
             var href = protocol_pattern.test(url) ? url : 'http://' + url;
 
             return `<a href="${href}" target="${target}"> ${url} </a>`;
         });
+        const mentionReqex = /@+[\w]*/gm;
 
-        rt = rt.replace(emailRegex, function(mail){
-            return  `<a href="mailto:${mail}" target="${target}"> ${mail} </a>`
+        rt = rt.replace(mentionReqex, function(username){
+            return  `<b style="color:gold"> ${username} </b>`
         })
 
         return (<div className="r-message" dangerouslySetInnerHTML={{ __html: rt }} />);
@@ -41,14 +43,31 @@ export default function Conversation(props) {
     if (props.messages && props.messages.length > 0) {
 
         messageRef.current = props.messages.map((m, i) => {
+
+            // function getTime(time){
+                
+            // }
+            const date = new Date(m.oTime)
+            const time = formatToTimeZone(date, 'h:mm a', { timeZone })
+
+
+            // let prevMessage = m[i] - 1;
+            // let nextMessage = m[i] + 1;
+
+            // prevMessage = prevMessage ? prevMessage : null;
+            // nextMessage = nextMessage ? nextMessage : null;
+
+            // const previousMessageIsFromUser = prevMessage && prevMessage.by !== "server"; 
+            // const nextMessageIsFromUser = nextMessage && nextMessage.by !== "server";
+
+            // const equalTimeStampWithPreviousMessage = String(prevMessage.time)
+
             const stylesObj = {
                 self: {border: `0px` },
                 others:{ borderRight: `5px solid ${m.color ? m.color : 'white'}` }
             }
-            const style = String(props.owner) === String(m.by) ? stylesObj.self : stylesObj.others 
+            const style = String(props.user) === String(m.by) ? stylesObj.self : stylesObj.others 
            
-            const date = new Date(m.oTime)
-            const time = formatToTimeZone(date, 'h:mm a', { timeZone })
 
             if (m.by.toLowerCase() === 'server' && m.type) {
                 if (m.for === props.user) {
@@ -167,10 +186,12 @@ export default function Conversation(props) {
                 {messageRef.current}
             </div>
 
+            <Mentions users={props.users} userSelected={props.userSelected} mentionSearchString={props.mentionSearchString} shouldDisplay={props.shouldDisplay}/>
+
             {/* input text area */}
             <div className="input_container bg-dark">
                 <textarea
-
+                    style={{fontSize:'small',padding:'.5rem .25rem'}}
                     resize="none"
                     id="input_area"
                     onBlur={props.inputBlur}
@@ -181,6 +202,15 @@ export default function Conversation(props) {
                     placeholder="Write a message"
                     className="form-control"
                 ></textarea>
+                <div className="action-container">
+                    <span onClick={props.showMentions}><i className="fa fa-at"></i></span>
+                    <span onClick={props.showEmojiPicker}><i className="fa fa-smile"></i></span>
+                    <span onClick={props.addCodeBlock}><i className="fa fa-code"></i></span>
+                    <span onClick={props.uploadImage}><i className="fa fa-image"></i></span>
+                    <span onClick={props.uploadFiles}><i className="fa fa-file-alt"></i></span>
+                    <span onClick={props.addURL}><i className="fa fa-paperclip"></i></span>
+
+                </div>  
             </div>
         </div>
     );
