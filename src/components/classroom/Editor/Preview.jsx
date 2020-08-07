@@ -12,7 +12,7 @@ export default function Preview(props) {
                     <div className="modal-content h-100">
                         <div className="modal-body" style={{padding:0}}>
                             <div className="row h-100vh w-100" style={{margin:0}}>
-                                <div className="col-12 text-center w-100">
+                                <div className="col-12 text-center w-100 p-0">
                                     <iframe title="preview" className="w-100 h-100" id="preview_iframe"/>
                                 </div>
                             </div>
