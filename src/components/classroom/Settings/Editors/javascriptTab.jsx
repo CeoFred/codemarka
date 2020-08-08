@@ -74,17 +74,21 @@ const JavascripTab = (props) => {
       
       props.socket.on('editor_settings_update_feedback',function(status){
       if(status){
-      setState({ ...state, formisSubmitted: false,externalCDN:status.externalCDN })
+      setState(s => { 
+          return { ...s, formisSubmitted: false,externalCDN:status.externalCDN }
+      })
   
         props.toast.success('Settings updated successfully');
       } else {
-      setState({ ...state, formisSubmitted: false })
+      setState(s => {
+          return { ...s, formisSubmitted: false }
+        })
   
         props.toast.error('Settings Failed to upate.');
       }
   
       });
-  },[]);
+  });
   
   useEffect(() => {
       
@@ -99,7 +103,7 @@ const JavascripTab = (props) => {
                 return {...s,externalCDN: d.data.externalCDN}
             });
         });
-  },[])
+  },[props.cdata.kid])
   
   const submitHandler = (event) => {
         event.preventDefault()

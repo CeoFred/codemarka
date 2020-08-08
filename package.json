@@ -27,7 +27,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "dual": "concurrently \"npm start \" \"cd ../colab-server & npm run watch-debug\"",
+    "dual": "concurrently \"npm start \" \"cd ../codemarka-server & npm run watch-debug\"",
     "build": "rm -rf ./build && react-scripts build",
     "deploy-prod": "rm -rf ./build && react-scripts build  && firebase deploy",
     "test": "react-scripts test",

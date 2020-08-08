@@ -1025,9 +1025,8 @@ const MainClassLayout = ({
             js: script
         })
 
-        if (styles && html && script) {
+            console.log(url)
             previewFrame.src = url
-        }
     }
 
     let classNotification

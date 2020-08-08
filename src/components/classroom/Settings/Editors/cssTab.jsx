@@ -77,7 +77,7 @@ useEffect(() => {
     }
 
     });
-},[]);
+});
 
 useEffect(() => {
     
@@ -92,7 +92,7 @@ useEffect(() => {
               return {...s,externalCDN: d.data.externalCDN}
           });
       });
-},[])
+})
 
 const submitHandler = (event) => {
       event.preventDefault()

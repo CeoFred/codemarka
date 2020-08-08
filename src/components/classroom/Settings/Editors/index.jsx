@@ -14,22 +14,21 @@ export default function Main(props) {
      },[props.currentEditorSelection])
  
      useEffect(() => {
-        
-        switch (editor) {
-            case 'HTML':
-                setEditorShowing(<HtmlTab {...props} />)
-                break
-            case 'JS':
-                setEditorShowing(<JavascriptTab {...props} />)
-                break
-            case 'CSS':
-                setEditorShowing(<CssTab {...props} />)
-                break
-            default:
-                setEditorShowing(<HtmlTab {...props} />)
-                break
-        }
-     },[editor]);
+         switch (editor) {
+             case 'HTML':
+                 setEditorShowing(<HtmlTab {...props} />)
+                 break
+             case 'JS':
+                 setEditorShowing(<JavascriptTab {...props} />)
+                 break
+             case 'CSS':
+                 setEditorShowing(<CssTab {...props} />)
+                 break
+             default:
+                 setEditorShowing(<HtmlTab {...props} />)
+                 break
+         }
+     }, [editor, setEditorShowing, props])
     
     const switchEditorTabs = (e) => {
         e.preventDefault();

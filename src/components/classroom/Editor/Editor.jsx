@@ -12,7 +12,7 @@ import './monaco.css'
 function CodemarkaEditor(props) {
     const [isEditorReady, setIsEditorReady] = useState(false)
     const [currentLanguage, setCurrentLanguage] = useState('html')
-    const [valuestate,setCurrentEditorValue] = useState('');
+    const [,setCurrentEditorValue] = useState('');
     const socket = useRef(props.socket)
     const currentLanguageIndex = useRef(1)
     const editorValue = useRef()
@@ -30,7 +30,7 @@ function CodemarkaEditor(props) {
 
     const handleEditorChange = (ev, val) => {
         console.log(ev,val,'Editor Changed')
-        if (val != editorValue.current) {
+        if (val !== editorValue.current) {
             // value.current = (val)
             props.handleEditorChange(
                 ev,
@@ -47,7 +47,7 @@ function CodemarkaEditor(props) {
             setCurrentEditorValue(props.files.html.content);
             editorValue.current = props.files.html.content
         }
-    }, [props.files])
+    }, [props.files, isEditorReady])
 
     useEffect(() => {
         //listen to file changes
@@ -92,7 +92,7 @@ function CodemarkaEditor(props) {
             }
             }
         })
-    }, [])
+    }, [props.userkid, mapLanguageToIndex])
 
     const config = {
         acceptSuggestionOnCommitCharacter: true,

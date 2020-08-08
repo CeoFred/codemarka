@@ -105,7 +105,6 @@ const url = getGeneratedPageURL({
   JS_CDN: externalCDN_JS
 })
 
-    if(styles && html && script) {
       previewFrame.src = url
       function resizeIFrameToFitContent( iFrame ) {
 
@@ -115,7 +114,6 @@ const url = getGeneratedPageURL({
 
     resizeIFrameToFitContent(previewFrame);
 
-    }
     
       })
 

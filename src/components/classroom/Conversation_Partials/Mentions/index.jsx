@@ -48,12 +48,13 @@ function Mentions(props) {
         <div className="mention-list" style={{ display: isDisplaying }}>
             {users.map((user) => {
                 return (
-                    <a
-                        href="#"
+                    <span
+                       
                         key={`mention--user-${user.kid}`}
                         class="mention-list-item"
                         onClick={(e) => initUerSelected(e, user.username)}>
                         <img
+                            alt={user.display}
                             className="mentions-avatar avatar"
                             src={user.display}
                             style={{borderRadius:'20%!important'}}
@@ -61,7 +62,7 @@ function Mentions(props) {
                         <span>
                             <span class="dot-online"></span> @{user.username}{' '}
                         </span>
-                    </a>
+                    </span>
                 )
             })}
         </div>

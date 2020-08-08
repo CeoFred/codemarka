@@ -1,5 +1,4 @@
 import React,{ useRef, Fragment, useState, useEffect } from 'react'
-import TextArea from '../../../Partials/Input/Input';
 import { ControlledEditor as Editor } from '@monaco-editor/react'
 
 import './style.css';
@@ -7,7 +6,7 @@ import './style.css';
 function CodeBlockModal(props){
 
 const socketConnection = useRef(props.socket);
-const [codeblock,setCodeBlock] = useState('')
+const [,setCodeBlock] = useState('')
 useEffect(() => {
     socketConnection.current = props.socket;
 },[props.socket]);
