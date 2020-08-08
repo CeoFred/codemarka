@@ -1712,11 +1712,9 @@ const MainClassLayout = ({
                                                 <p>
                                                     Your classroom session is
                                                     yet to begin, click on start
-                                                    now and open the doors. You
-                                                    can still start this
-                                                    classroom later by clicking
-                                                    the settings icon and locate
-                                                    the actions button.
+                                                    now to open the doors. You
+                                                    can start this
+                                                    classroom later.
                                                 </p>
                                                 <div className="modal-footer">
                                                     <button
@@ -1817,8 +1815,7 @@ const MainClassLayout = ({
                                         </h5>
                                         <p>
                                             We recieved a signal to end this
-                                            session, if this should not be,
-                                            please contect the admin. Meanwhile
+                                            session.Meanwhile
                                             you can still download files for
                                             this classroom before you exit.
                                         </p>
@@ -2113,7 +2110,7 @@ const MainClassLayout = ({
                             />
                         </div>
                         
-                        <div className="p-0 col-8 col-md-8 col-lg-8 h-100">
+                        <div className="p-0 col-12 col-md-8 col-lg-8 h-100">
                             <Editor
                                 readOnly={codemarkastate.editorPriviledge}
                                 handleEditorChange={editorChanged}

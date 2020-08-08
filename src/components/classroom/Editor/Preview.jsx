@@ -4,7 +4,7 @@ export default function Preview(props) {
 
     function closeModal() {
         document.querySelector('#modal_1').style.display = 'none'
-        document.querySelector('.modal-backdrop').style.display = 'none'
+        document.querySelector('modal-backdrop').style.display = 'none'
 
     }
     return (
