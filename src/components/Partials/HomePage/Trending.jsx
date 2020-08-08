@@ -42,7 +42,7 @@ function Trending() {
                                 <div className="card-body py-4" style={{height:'70%'}}>
                                     <img src={tr.img} className="avatar  rounded-circle" alt={rd.name}/>
                                     <small className="d-block text-sm mt-1 mb-2">
-                                            {truncateString(tr.name.toUpperCase(),30)} {' '}
+                                            {truncateString(tr.name.toUpperCase(),40)} {' '}
                                     </small>
                                     <b
                                         className="h5 stretched-link lh-150" style={{fontSize:'0.78rem'}}>

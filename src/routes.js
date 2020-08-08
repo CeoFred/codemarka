@@ -40,7 +40,7 @@ const EmalVerification = React.lazy(() =>
 const CommunityAccountRegistration = React.lazy(() =>
     import('./containers/auth/Community/index.jsx')
 )
-
+const UserEditProfile = React.lazy(() => import('./containers/users/Edit'));
 const contactUs = React.lazy(() => import('./containers/public/Contact'))
 
 const ClassRoomPreview = React.lazy(() =>
@@ -53,7 +53,7 @@ const Communities = React.lazy(() => import('./containers/community/all.jsx'));
 const Blog = React.lazy(() => import('./containers/public/Blog'))
 const BlogMayRelease = React.lazy(() => import('./containers/public/Blog/BlogMayRelease'))
 const BlogJuneRelease = React.lazy(() => import('./containers/public/Blog/BlogJuneRelease'))
-
+const UserProfile = React.lazy(() => import('./containers/users/Profile'));
 
 const Routes = (props) => {
 
@@ -92,11 +92,7 @@ const Routes = (props) => {
                 component={ForgotPassword}
                 path={url.AUTH_FORGOT_PASSWORD}
             />
-            <Route
-                exact
-                component={ForgotPassword}
-                path={url.CLASSROOMS}
-            />
+            <Route exact component={ForgotPassword} path={url.CLASSROOMS} />
             <Redirect from={url.CLASSROOMS} to={url.AUTH_SIGN_IN} />
             <Route
                 exact
@@ -115,31 +111,50 @@ const Routes = (props) => {
                 path={url.AUTH_CHANGE_PASSWORD}
             />
             <Route exact component={classrooom} path={url.CLASSROOM} />
-            <Route exact component={SingleCommunity} path={url.ROUTE_COMMUNITY_SINGLE} />
+            <Route
+                exact
+                component={SingleCommunity}
+                path={url.ROUTE_COMMUNITY_SINGLE}
+            />
 
-        {props.isAutheticated ? (
+            {props.isAutheticated ? (
                 <>
-                <Route exact component={oauthSuccess} path={url.OAUTH_URL} />
-                <Route exact component={Communities} path={url.COMMUNITY_INDEX} />
-
-                <Route
-                    exact
-                    component={ChangePassword}
-                    path={url.AUTH_CHANGE_PASSWORD}
-                />
-                <Route exact component={logout} path={url.AUTH_LOGOUT} />
-                <Route
-                    exact
-                    component={newclassroom}
-                    path={url.CLASSROOM_NEW}
-                />
-                <Route
-                    exact
-                    component={classPreviewNewTab}
-                    path={url.CLASSROOM_PREVIEW_NEW_TAB}
-                />
+                    <Route
+                        exact
+                        component={oauthSuccess}
+                        path={url.OAUTH_URL}
+                    />
+                    <Route
+                        exact
+                        component={Communities}
+                        path={url.COMMUNITY_INDEX}
+                    />
+                    <Route exact path={url.USER_PROFILE_EDIT} component={UserEditProfile} />
+                    <Route
+                        exact
+                        component={UserProfile}
+                        path={url.USER_PROFILE + ':username'}
+                    />
+                    <Route
+                        exact
+                        component={ChangePassword}
+                        path={url.AUTH_CHANGE_PASSWORD}
+                    />
+                    <Route exact component={logout} path={url.AUTH_LOGOUT} />
+                    <Route
+                        exact
+                        component={newclassroom}
+                        path={url.CLASSROOM_NEW}
+                    />
+                    <Route
+                        exact
+                        component={classPreviewNewTab}
+                        path={url.CLASSROOM_PREVIEW_NEW_TAB}
+                    />
                 </>
-        ):''}
+            ) : (
+                ''
+            )}
 
             <Route component={NotFound} />
         </Switch>

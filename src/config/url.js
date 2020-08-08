@@ -28,7 +28,8 @@ export const COMMUNITY_ACCOUNT_SIGNUP_PAGE = '/auth/signup/community'
 
 export const ACCOUNT_SETTINGS = '/user/account/settings'
 export const ACCOUNT_BILLING = '/user/account/billing'
-export const USER_PROFILE = '/user/account/profile'
+export const USER_PROFILE = '/u/' //:username
+export const USER_PROFILE_EDIT = '/u/profile/edit'
 export const COMMUNITY_DASHBOARD = '/community/dashboard/:kid'
 export const COMMUNITY_INDEX =  '/communities/'
 export const COMMUNITY_SINGLE = '/community/'

@@ -35,17 +35,16 @@ function NavigationBarItems(props) {
                     <Link
                         className="nav-link"
                         style={{ fontWeight: 'normal' }}
-                        to={url.CLASSROOM_NEW}>
-                        Create
+                        to={url.COMMUNITY_INDEX}>
+                        Communities
                     </Link>
                 </li>
-
                 <li className="nav-item ">
                     <Link
-                        className="nav-link"
-                        style={{ fontWeight: 'normal' }}
-                        to={url.COMMUNITY_INDEX}>
-                        Join a Community
+                        className="nav-link btn btn-sm btn-success "
+                        style={{ fontWeight: 'normal', borderRadius: '6px' }}
+                        to={url.CLASSROOM_NEW}>
+                        Create
                     </Link>
                 </li>
 
@@ -76,46 +75,28 @@ function NavigationBarItems(props) {
                         <h6 class="dropdown-header px-0 mb-2 text-primary">
                             Hi, {displayName}
                         </h6>
-                        {/* {isCommunityAccount ? (
-                            <Link
-                                to={url.COMMUNITY_DASHBOARD + accountid}
-                                class="dropdown-item">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="1em"
-                                    height="1em"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    class="feather feather-activity">
-                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                                </svg>{' '}
-                                <span>Dashboard</span>
-                            </Link>
-                        ) : (
-                            <Link to={url.USER_PROFILE} class="dropdown-item">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="1em"
-                                    height="1em"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    class="feather feather-user">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>{' '}
-                                <span>My profile</span>{' '}
-                            </Link>
-                        )} */}
 
-                        {/* <Link to={url.ACCOUNT_BILLING} class="dropdown-item">
+                        <Link
+                            to={url.USER_PROFILE + `${displayName}`}
+                            class="dropdown-item">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="1em"
+                                height="1em"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="feather feather-user">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>{' '}
+                            <span>My profile</span>{' '}
+                        </Link>
+
+                        <Link to={url.ACCOUNT_BILLING} class="dropdown-item">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="1em"
@@ -155,7 +136,7 @@ function NavigationBarItems(props) {
                                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                             </svg>{' '}
                             <span>Settings</span>{' '}
-                        </Link> */}
+                        </Link>
                         <a href={url.AUTH_LOGOUT} class="dropdown-item">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -176,6 +157,20 @@ function NavigationBarItems(props) {
                         </a>
                     </div>
                 </li>
+                <div class="order-lg-4 ml-lg-3">
+                    <a
+                        className=""
+                        href="#modal-profile"
+                        role="button"
+                        data-toggle="modal">
+                        <span class="avatar rounded-circle">
+                            <img
+                                alt="Image placeholder"
+                                src={props.user.displayImg}
+                            />
+                        </span>
+                    </a>
+                </div>
             </ul>
         )
     } else {

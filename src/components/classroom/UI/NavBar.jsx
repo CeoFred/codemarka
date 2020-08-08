@@ -94,7 +94,7 @@ function NavBar(props) {
                         ) : ''}
                         
 
-                        <li title="Notifications" className="nav-item dropdown">
+                        <li title="Github" className="nav-item dropdown">
                             <span
                                 className="nav-link nav-link-icon"
                                 id="navbar-success_dropdown_1"
@@ -102,16 +102,16 @@ function NavBar(props) {
                                 data-toggle="dropdown"
                                 aria-haspopup="true"
                                 aria-expanded="false">
-                                <i className="fa fa-bell"></i>
+                                <i className="fab fa-github"></i>
                                 <span className="nav-link-inner--text d-lg-none">
-                                    Notifications
+                                    Github
                                 </span>
                             </span>
                             <div
                                 className="dropdown-menu dropdown-menu-right"
                                 aria-labelledby="navbar-success_dropdown_1">
                                 <span className="dropdown-item">
-                                    No notifications
+                                    Not connected
                                 </span>
                             </div>
                         </li>
