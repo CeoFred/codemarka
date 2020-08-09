@@ -1,16 +1,45 @@
 /** @format */
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import * as APPURL from '../../config/url'
+import * as APIURL from '../../config/api_url'
+
 import { useSelector } from 'react-redux'
 import DashboardTab from '../../components/Partials/User/DashboardTab'
 import Helmet from '../../components/SEO/helmet'
 
-export default function Profile() {
-    const { app, auth } = useSelector((state) => state)
+export default function Profile(props) {
+    const { auth } = useSelector((state) => state)
 
+    const [userProfileData, setUserProfileData] = useState({profile:{},social:{}})
+    const jwt = localStorage.getItem('wx1298')
+    useEffect(() => {
+        // Example POST method implementation:
+        async function postData(url = '') {
+            // Default options are marked with *
+            const response = await fetch(url, {
+                method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                mode: 'cors', // no-cors, *cors, same-origin
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: 'same-origin', // include, *same-origin, omit
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${jwt}`,
+                },
+                redirect: 'follow', // manual, *follow, error
+                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            })
+            return response.json() // parses JSON response into native JavaScript objects
+        }
+
+        postData(`${APIURL.GET_USER_DATA}${auth.user.accountid}`, {
+            answer: 42,
+        }).then((data) => {
+           setUserProfileData(data.data) // JSON data parsed by `data.json()` call
+        })
+    }, [props.match.params.username])
     return (
         <div className="header-container-fluid">
             <Helmet title="Profile" metaDescription="" />
@@ -18,7 +47,7 @@ export default function Profile() {
                 <div className="col ml-n3 ml-md-n2">
                     <img
                         alt="Img"
-                        src={auth.user.displayImg}
+                        src={userProfileData.profile.picture}
                         className="avatar avatar-xl rounded-circle"
                     />
                     <h2 className="mb-0">
@@ -57,8 +86,9 @@ export default function Profile() {
                                                             <img
                                                                 alt="Img"
                                                                 src={
-                                                                    auth.user
-                                                                        .displayImg
+                                                                    userProfileData
+                                                                        .profile
+                                                                        .picture
                                                                 }
                                                             />
                                                         </a>
@@ -108,7 +138,8 @@ export default function Profile() {
                                                 <div class="row">
                                                     <div class="col-4 text-center">
                                                         <span class="h5 mb-0">
-                                                            0
+                                                            {userProfileData.publicClassCreated +
+                                                                userProfileData.privateClassCreated}
                                                         </span>{' '}
                                                         <span class="d-block text-sm">
                                                             Classrooms
@@ -116,7 +147,9 @@ export default function Profile() {
                                                     </div>
                                                     <div class="col-4 text-center">
                                                         <span class="h5 mb-0">
-                                                            0
+                                                            {
+                                                                userProfileData.following
+                                                            }
                                                         </span>{' '}
                                                         <span class="d-block text-sm">
                                                             Following
@@ -124,7 +157,9 @@ export default function Profile() {
                                                     </div>
                                                     <div class="col-4 text-center">
                                                         <span class="h5 mb-0">
-                                                            0
+                                                            {
+                                                                userProfileData.followers
+                                                            }
                                                         </span>{' '}
                                                         <span class="d-block text-sm">
                                                             Followers
@@ -165,28 +200,38 @@ export default function Profile() {
                                                     <div class="col-auto">
                                                         <span class="text-sm">
                                                             <a href="http://twitter.com/">
-                                                                emma.stone
+                                                                Follow
                                                             </a>
                                                         </span>
                                                     </div>
                                                 </div>
                                                 <hr class="my-3" />
-                                                <div class="row align-items-center">
-                                                    <div class="col">
-                                                        <h6 class="text-sm mb-0">
-                                                            <i class="fab fa-linkedin mr-2"></i>
-                                                            Linkedin
-                                                        </h6>
+
+                                                {userProfileData.social
+                                                    .linkedin ? (
+                                                    <div class="row align-items-center">
+                                                        <div class="col">
+                                                            <h6 class="text-sm mb-0">
+                                                                <a
+                                                                    href={`${userProfileData.social.linkedin}`}>
+                                                                    <i class="fab fa-linkedin mr-2"></i>
+                                                                    Linkedin
+                                                                </a>
+                                                            </h6>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <a
+                                                                href="https://linkedin.com/in"
+                                                                class="text-sm">
+                                                                Connect
+                                                            </a>
+                                                        </div>
+                                                        <hr class="my-3" />
                                                     </div>
-                                                    <div class="col-auto">
-                                                        <a
-                                                            href="https://linkedin.com/in"
-                                                            class="text-sm">
-                                                            Connect
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <hr class="my-3" />
+                                                ) : (
+                                                    ''
+                                                )}
+
                                                 <div class="row align-items-center">
                                                     <div class="col">
                                                         <h6 class="text-sm mb-0">

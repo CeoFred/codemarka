@@ -11,7 +11,8 @@ export const USER_SIGN_UP = `${ host }auth/user/signup`;
 export const USER_SIGN_IN = `${ host }auth/user/signin`;
 export const AUTO_LOGIN_USER = `${ host }auth/user/token/verify`;
 export const ACCOUNT_RECOVERY =  `${ host }auth/user/account/recovery`;
-export const ACCOUNT_PASSWORD_RESET = `${ host }auth/user/account/password/reset`
+export const ACCOUNT_PASSWORD_RESET = `${ host }auth/user/account/password/reset`;
+export const GET_USER_DATA = `${host}user/u/` //:kid
 // Oauth
 
 export const GITHUB_AUTH_URL = `${ host }auth/github`;
