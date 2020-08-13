@@ -23,54 +23,35 @@ export default function AudioVideoBroadcast(props) {
         usersRef.current = props.users
     }, [props.users])
 
-    useEffect(() => {
-        socketRef.current = props.socket
-        isHost.current = props.isOwner
-        const usingAudio =
-            process.env.NODE_ENV === 'production' ||
-            process.env.NODE_ENV === 'test'
-                ? true
-                : false
-        // const port =
-        //     process.env.NODE_ENV === 'production' ||
-        //     process.env.NODE_ENV === 'test'
-        //         ? 9000
-        //         : 443
-        const peer = new Peer(props.userkid, {
-            host: 'peerjs-server.herokuapp.com',
-            port: 443,
-            debug: 3,
-            key: 'peerjs',
-            secure: true,
-            config: {
-                iceServers: [
-                    { url: 'stun:stun1.l.google.com:19302' },
-                    {
-                        url: 'turn:numb.viagenie.ca',
-                        credential: 'muazkh',
-                        username: 'webrtc@live.com',
-                    },
-                ],
-            },
-        })
-        peerRef.current = peer
 
-        console.log(isBroadCasting, props)
-        if (props.isBroadcasting && !isBroadCasting && props.isOwner) {
-            navigator.mediaDevices
-                .getUserMedia({
-                    video: true,
-                    audio: usingAudio,
-                })
-                .then((mediaStream) => {
-                    setIsBroadCasting(true)
-                    hostVideo.current.srcObject = mediaStream
-                    localStream.current = mediaStream
-                    usersRef.current
-                        .filter((u) => u.kid !== props.userkid)
-                        .forEach((user) => callUser(user))
-                })
-        }
+    useEffect(() => {
+         socketRef.current = props.socket
+         isHost.current = props.isOwner
+     
+          const peer = new Peer(props.userkid, {
+              host: 'peerjs-server.herokuapp.com',
+              port: 443,
+              debug: 3,
+              key: 'peerjs',
+              secure: true,
+              config: {
+                  iceServers: [
+                      { url: 'stun:stun1.l.google.com:19302' },
+                      {
+                          url: 'turn:numb.viagenie.ca',
+                          credential: 'muazkh',
+                          username: 'webrtc@live.com',
+                      },
+                  ],
+              },
+          })
+          peerRef.current = peer
+
+    }, []);
+
+
+    useEffect(() => {
+       
 
         socketRef.current.on('broadcast_status', (status, id) => {
             if (status) {
@@ -83,7 +64,7 @@ export default function AudioVideoBroadcast(props) {
                     navigator.mediaDevices
                         .getUserMedia({
                             video: true,
-                            audio: usingAudio,
+                            audio: true,
                         })
                         .then((mediaStream) => {
                             hostVideo.current.srcObject = mediaStream
@@ -221,19 +202,21 @@ export default function AudioVideoBroadcast(props) {
         })
 
         socketRef.current.on('call_me', (user) => {
-            if (isHost.current && user.kid !== props.userkid) {
-                // call user
-                callUser(user)
-            } else if (isHost.current && user.kid === props.userkid) {
-                // call  back everyone
-                setIsBroadCasting(true)
-                props.onAlert('Resuming broadcast.')
-                usersRef.current
-                    .filter((user) => user.kid !== props.userkid)
-                    .forEach((user) => {
-                        callUser(user)
-                    })
-            }
+           if (props.isBroadcasting && !isBroadCasting && props.isOwner) {
+               navigator.mediaDevices
+                   .getUserMedia({
+                       video: true,
+                       audio: true,
+                   })
+                   .then((mediaStream) => {
+                       setIsBroadCasting(true)
+                       hostVideo.current.srcObject = mediaStream
+                       localStream.current = mediaStream
+                       usersRef.current
+                           .filter((u) => u.kid !== props.userkid)
+                           .forEach((user) => callUser(user))
+                   })
+           }
         })
 
         socketRef.current.on('operation_failed', (reason) => {
@@ -258,7 +241,7 @@ export default function AudioVideoBroadcast(props) {
             navigator.mediaDevices
                 .getUserMedia({
                     video: true,
-                    audio: usingAudio,
+                    audio: true,
                 })
                 .then((mediaStream) => {
                     localVideo.current.srcObject = mediaStream
@@ -273,6 +256,7 @@ export default function AudioVideoBroadcast(props) {
                         )
                         hostVideo.current.srcObject = remoteStream
                     })
+
                 })
         })
     }, [])
