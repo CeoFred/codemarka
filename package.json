@@ -29,7 +29,7 @@
     "start": "react-scripts start",
     "dual": "concurrently \"npm start \" \"cd ../codemarka-server & npm run watch-debug\"",
     "build": "rm -rf ./build && react-scripts build",
-    "deploy-prod": "rm -rf ./build && react-scripts build  && firebase deploy",
+    "deploy-prod": "rm -rf ./build && react-scripts build  && firebase deploy --only hosting:main",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "client-install": "npm install --prefix client",
