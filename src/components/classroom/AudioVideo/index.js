@@ -17,6 +17,8 @@ export default function AudioVideoBroadcast(props) {
     const usersRef = useRef()
     const isHost = useRef()
     const onCall = useRef(false)
+    const hostVideoStatus = useRef(false)
+    const hostAudioStatus = useRef(false)
     const [isBroadCasting, setIsBroadCasting] = useState(false)
 
     useEffect(() => {
@@ -46,11 +48,8 @@ export default function AudioVideoBroadcast(props) {
         })
         peerRef.current = peer
 
-        
         peerRef.current.on('open', function (id) {
-            console.log('Opened')
             PeerId.current = id
-            console.log(props.isBroadcasting, props.isOwner)
             if (props.isBroadcasting && props.isOwner) {
                 navigator.mediaDevices
                     .getUserMedia({
@@ -60,7 +59,9 @@ export default function AudioVideoBroadcast(props) {
                     .then((mediaStream) => {
                         hostVideo.current.srcObject = mediaStream
                         localStream.current = mediaStream
-
+                        setIsBroadCasting((br) => true)
+                        hostVideoStatus.current = true
+                        hostAudioStatus.current = true
                         usersRef.current
                             // .filter((user) => user.kid !== props.userkid)
                             .forEach((user) => {
@@ -72,7 +73,11 @@ export default function AudioVideoBroadcast(props) {
                                             'connection opened for user ',
                                             user
                                         )
-                                        callUser(user);
+                                        callUser(user)
+                                    })
+
+                                    conn.on('close', () => {
+                                        delete peerConnections.current[user.kid]
                                     })
                                 }
                             })
@@ -82,29 +87,31 @@ export default function AudioVideoBroadcast(props) {
     }, [])
 
     useEffect(() => {
-         socketRef.current.on('call_me', (user) => {
-             console.log('should call', user)
-             if (isHost.current) {
-                 navigator.mediaDevices
-                     .getUserMedia({
-                         video: true,
-                         audio: true,
-                     })
-                     .then((mediaStream) => {
-                         setIsBroadCasting(true)
-                         hostVideo.current.srcObject = mediaStream
-                         localStream.current = mediaStream
-                         callUser(user)
-                     })
-             }
-         })
+        socketRef.current.on('call_me', (user) => {
+            console.log('should call', user)
+            if (isHost.current) {
+                navigator.mediaDevices
+                    .getUserMedia({
+                        video: true,
+                        audio: true,
+                    })
+                    .then((mediaStream) => {
+                        setIsBroadCasting(true)
+                        hostVideoStatus.current = true
+                        hostAudioStatus.current = true
+                        hostVideo.current.srcObject = mediaStream
+                        localStream.current = mediaStream
+                        callUser(user)
+                    })
+            }
+        })
         socketRef.current.on('broadcast_status', (status, id) => {
             if (status) {
                 // call users
 
                 if (id === socketRef.current.id)
                     // socketRef.current.emit('start_broadcast', roomID)
-                setIsBroadCasting((br) => true)
+                    setIsBroadCasting((br) => true)
                 if (isHost.current) {
                     navigator.mediaDevices
                         .getUserMedia({
@@ -114,7 +121,8 @@ export default function AudioVideoBroadcast(props) {
                         .then((mediaStream) => {
                             hostVideo.current.srcObject = mediaStream
                             localStream.current = mediaStream
-
+                            hostVideoStatus.current = true
+                            hostAudioStatus.current = true
                             usersRef.current
                                 .filter((user) => user.kid !== props.userkid)
                                 .forEach((user) => {
@@ -159,20 +167,19 @@ export default function AudioVideoBroadcast(props) {
                     localStream.current = null
                 }
                 hostVideo.current.srcObject = null
-
+                localStream.current.getTracks().forEach(function (track) {
+                    track.stop()
+                })
                 setPeers([])
                 peersRef.current = []
                 props.onAlert('Host has ended live broadcast.')
             }
         })
 
-       
-
         socketRef.current.on('operation_failed', (reason) => {
             props.onAlert(reason)
             setIsBroadCasting((br) => false)
         })
-
 
         peerRef.current.on('connection', function (conn) {
             // console.log('received connection from', conn)
@@ -197,14 +204,72 @@ export default function AudioVideoBroadcast(props) {
 
                         call.on('stream', (remoteStream) => {
                             // console.log('received host stream')
-                           
+
                             hostVideo.current.srcObject = remoteStream
-                            onCall.current = true;
+                            onCall.current = true
                             setIsBroadCasting((br) => true)
                         })
                     })
             } else {
                 console.log('Already on call')
+            }
+        })
+
+        peerRef.current.on('close', function () {
+            peerRef.current.destroy()
+            onCall.current = false
+        })
+
+        peerRef.current.on('disconnected', function () {
+            onCall.current = false
+            peerRef.current.reconnect()
+        })
+
+        peerRef.current.on('error', function (e) {
+            const FATAL_ERRORS = [
+                'invalid-id',
+                'invalid-key',
+                'network',
+                'ssl-unavailable',
+                'server-error',
+                'socket-error',
+                'socket-closed',
+                'unavailable-id',
+                'webrtc',
+            ]
+            if (FATAL_ERRORS.includes(e.type)) {
+                if (isHost.current) {
+                    navigator.mediaDevices
+                        .getUserMedia({
+                            video: true,
+                            audio: true,
+                        })
+                        .then((mediaStream) => {
+                            hostVideo.current.srcObject = mediaStream
+                            localStream.current = mediaStream
+                            hostVideoStatus.current = true
+                            hostAudioStatus.current = true
+                            usersRef.current
+                                .filter((user) => user.kid !== props.userkid)
+                                .forEach((user) => {
+                                    console.log('calling user ', user)
+                                    const conn = peerRef.current.connect(
+                                        user.kid
+                                    )
+                                    if (conn) {
+                                        conn.on('open', () => {
+                                            console.log(
+                                                'connection opened for user ',
+                                                user
+                                            )
+                                            callUser(user)
+                                        })
+                                    }
+                                })
+                        })
+                }
+            } else {
+                console.log('Non fatal error: ', e.type)
             }
         })
     }, [])
@@ -219,10 +284,35 @@ export default function AudioVideoBroadcast(props) {
         }
     }
 
+    const switchHostVideo = (e) => {
+        localStream.current.getTracks().forEach(function (track) {
+            //  track.stop()
+            if (track.kind == 'video') {
+                if (hostVideo.current) {
+                    track.stop()
+                    hostVideoStatus.current = false
+                } else {
+                    navigator.mediaDevices
+                        .getUserMedia({
+                            video: true,
+                            audio: true,
+                        })
+                        .then((mediaStream) => {
+                            mediaStream.getVideoTracks().then((track) => {
+                                console.log(track)
+                            })
+                        })
+                }
+            }
+            console.log(track)
+            //  console.log(track)
+        })
+    }
+
     function callUser(user) {
         delete peerConnections.current[user.kid]
 
-        const conn = peerRef.current.connect(user.kid)
+        const conn = peerRef.current.connect(user.kid, { reliable: true })
         if (conn) {
             conn.on('open', () => {
                 // console.log('connection opened for user ', user)
@@ -230,11 +320,10 @@ export default function AudioVideoBroadcast(props) {
                 peerConnections.current[user.kid] = {
                     metadata: user,
                 }
-
                 const call = peerRef.current.call(user.kid, localStream.current)
 
                 call.on('stream', function (stream) {
-                    console.log('User has amswered');
+                    console.log('User has amswered')
 
                     peerConnections.current[user.kid] = {
                         ...peerConnections.current[user.kid],
@@ -254,7 +343,7 @@ export default function AudioVideoBroadcast(props) {
                     videoDivContainer.id = user.kid
                     var videoLabel = document.createElement('div')
                     videoLabel.classList.add('video-label')
-                    videoLabel.innerText = `@${user.username}`;
+                    videoLabel.innerText = `@${user.username}`
                     var videlem = document.createElement('video')
                     videlem.srcObject = stream
                     videlem.autoplay = true
@@ -265,6 +354,17 @@ export default function AudioVideoBroadcast(props) {
                     document
                         .getElementById('remote-streams-container')
                         .appendChild(videoDivContainer)
+                })
+                call.on('error', (e) => {
+                    console.warn('error with stream', e)
+                    if (isHost.current) {
+                        callUser(user)
+                    }
+                })
+
+                call.on('close', function () {
+                    delete peerConnections.current[user.kid]
+                    document.querySelector(`div#${user.kid}`).remove()
                 })
             })
         }
@@ -291,6 +391,15 @@ export default function AudioVideoBroadcast(props) {
                             playsInline></video>
                         <div className="video-label">
                             {isHost.current ? 'You' : 'Host'}
+                        </div>
+
+                        <div className="mediaControls">
+                            <span>
+                                <i className="fa fa-microphone-alt"></i>
+                                <i
+                                    className="fas fa-video"
+                                    onClick={switchHostVideo}></i>
+                            </span>
                         </div>
                     </div>
                     {!isHost.current ? (
