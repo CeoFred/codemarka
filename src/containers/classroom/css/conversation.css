@@ -12,14 +12,14 @@ div.input_container textarea.form-control {
 }
 
 div.input_container {
-        width: 100%;
+    width: 100%;
     position: absolute;
     bottom: 0;
     left: 0;
     height: 78px;
 }
 
-.action-container{
+.action-container {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -44,12 +44,12 @@ div.messages {
     /* height: 100%; */
     /* margin-bottom: 70px; */
     /* padding-top: 50px; */
-    padding:0;
+    padding: 0;
     height: 70.9vh;
 }
 
 .user-bar .name {
-       font-size: 17px;
+    font-size: 17px;
     font-weight: 600;
     text-overflow: ellipsis;
     letter-spacing: 0.3px;
@@ -59,22 +59,24 @@ div.messages {
     padding-left: 1rem;
 }
 
-.r-message{
+.r-message {
     font-size: 0.8rem;
     font-weight: lighter;
     word-wrap: break-word;
     overflow-wrap: break-word;
 }
-.dot-online{
+
+.dot-online {
     height: 10px;
-    width:10px;
+    width: 10px;
     background-color: rgb(47, 255, 75);
     border-radius: 50%;
     display: inline-block;
 }
-.dot-offline{
+
+.dot-offline {
     height: 10px;
-    width:10px;
+    width: 10px;
     background-color: rgb(209, 40, 40);
     border-radius: 50%;
     display: inline-block;
@@ -100,7 +102,6 @@ div.messages {
     width: 100%;
 }
 
-
 /* div.message {
     height: auto;
     width: 100%;
@@ -110,6 +111,7 @@ div.messages {
     border-top-right-radius: 10px;
     position: relative;
 } */
+
 .message {
     color: #fff;
     clear: both;
@@ -154,9 +156,11 @@ a {
     color: #4f60b5;
     font-weight: normal;
 }
-.user-by {    
+
+.user-by {
     font-size: 1rem;
 }
+
 /* .message.sent:after {
     border-width: 0px 0 10px 10px;
     border-color: transparent transparent transparent #5b6a7d;
@@ -228,7 +232,6 @@ a {
     transform: perspective(800px) rotateY(-179.9deg);
 }
 
-
 /* .message:after {
     position: absolute;
     content: "";
@@ -250,15 +253,11 @@ div.message_content {
     font-size: 15px;
     color: #fff;
     /* float: left; */
-
 }
-
-
 
 .message.received .metadata {
     padding: 0 0 0 16px;
 }
-
 
 /* div.message::after{
     content: '';
@@ -268,31 +267,33 @@ div.message_content {
     border: 2px solid black;
     margin-top: 50px;
 } */
+
 @keyframes message {
     from {
         /* height: 0px; */
         opacity: 0.2;
     }
-
     to {
         /* height: auto; */
         opacity: 1;
-
     }
 }
 
 /* width */
+
 ::-webkit-scrollbar {
     width: 5px;
 }
 
 /* Track */
+
 ::-webkit-scrollbar-track {
     box-shadow: inset 0 0 2px grey;
     border-radius: 10px;
 }
 
 /* Handle */
+
 ::-webkit-scrollbar-thumb {
     background: grey;
     border-radius: 10px;
@@ -305,7 +306,21 @@ div.user-bar {
     width: 100%;
     height: 4rem;
     background-color: #2c3848;
-        display: flex;
+    display: flex;
     align-items: center;
     justify-content: space-around;
+}
+
+.mentions_username_profile {
+    display: none;
+    position: absolute;
+    z-index: 99;
+}
+
+.mentions_username:hover~.mentions_username_profile {
+    display: block;
+}
+
+.mentions_username_profile:hover{
+    display: block;
 }

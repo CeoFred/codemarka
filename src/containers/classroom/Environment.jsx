@@ -96,9 +96,6 @@ function Environment(props) {
                 />
             )
         }
-        if (colabstate.isSmallScreen) {
-            return <SmallScreen />
-        }
         if (!props.class_verified && !props.validation_error_message) {
             return checking
         } else if (props.validation_error_message && !props.class_verified) {

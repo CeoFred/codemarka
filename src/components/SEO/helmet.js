@@ -21,13 +21,13 @@ export default function helmet({follow = true,lang,title,metaDescription,pathnam
                     name: 'description',
                     content:
                         metaDescription  ? metaDescription :
-                        'Collaborative and virtual environment for technical workshop in real time.'
+                        'A virtual and collaborative environment for code lovers.'
                 },
                 {
                     property: 'og:title',
                     content: title
                         ? title
-                        : 'Codemarka - '
+                        : 'Codemarka'
                 },
                 {
                     property: 'og:url',
@@ -38,7 +38,7 @@ export default function helmet({follow = true,lang,title,metaDescription,pathnam
                     property: 'og:description',
                     content:
                         metaDescription ? metaDescription :
-                                               'Collaborative and virtual environment for technical workshop in real time.'
+                                               'A virtual and collaborative environment for code lovers.'
                 },
                 {
                     property: 'og:type',
@@ -76,7 +76,7 @@ export default function helmet({follow = true,lang,title,metaDescription,pathnam
                     name: 'twitter:description',
                     content:
                         metaDescription ? metaDescription : 
-                        'Collaborative and virtual environment for technical workshop in real time.'
+                        'A virtual and collaborative environment for code lovers.'
                 }
             ] }>
             {children}
@@ -86,7 +86,7 @@ export default function helmet({follow = true,lang,title,metaDescription,pathnam
             />
             <meta
                 name="robots"
-                content={ follow ? 'follow' : 'nofollow,noindex' }
+                content={ 'follow' }
             />
         </Helmet>
     )

@@ -29,7 +29,6 @@ function CodemarkaEditor(props) {
     }, [props.readOnly])
 
     const handleEditorChange = (ev, val) => {
-        console.log(ev,val,'Editor Changed')
         if (val !== editorValue.current) {
             // value.current = (val)
             props.handleEditorChange(
@@ -98,7 +97,7 @@ function CodemarkaEditor(props) {
         acceptSuggestionOnCommitCharacter: true,
         acceptSuggestionOnEnter: 'on',
         accessibilitySupport: 'auto',
-        autoIndent: false,
+        autoIndent: true,
         automaticLayout: true,
         codeLens: true,
         colorDecorators: true,
@@ -108,7 +107,7 @@ function CodemarkaEditor(props) {
         cursorStyle: 'line',
         disableLayerHinting: false,
         disableMonospaceOptimizations: false,
-        dragAndDrop: false,
+        dragAndDrop: true,
         fixedOverflowWidgets: false,
         folding: true,
         foldingStrategy: 'auto',
@@ -161,8 +160,23 @@ function CodemarkaEditor(props) {
         setCurrentLanguage(lang === 'js' ? 'javascript' : lang)
     }
 
-    function handleEditorDidMount(ed) {
+    function handleEditorDidMount(_,ed) {
         setIsEditorReady(true)
+        console.log(ed)
+        ed._domElement.addEventListener('keyup',function(e) {
+            console.log(e);
+            const element = e.target;
+            var div = document.createElement('div')
+            div.textContent = "Sup, y'all?"
+            div.style = element.style;
+            div.setAttribute('class', 'typing_status')
+            console.log(div.style);
+            element.appendChild(div);
+        })
+
+        ed._domElement.addEventListener('change',function(e){
+            console.log(e)
+        })
     }
 
     return (

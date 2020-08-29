@@ -171,7 +171,9 @@ export default function AudioVideoBroadcast(props) {
                     track.stop()
                 })
                 setPeers([])
+             
                 peersRef.current = []
+                onCall.current = false
                 props.onAlert('Host has ended live broadcast.')
             }
         })
@@ -190,7 +192,6 @@ export default function AudioVideoBroadcast(props) {
 
         peerRef.current.on('call', function (call) {
             // Answer the call, providing our mediaStream
-            if (!onCall.current) {
                 navigator.mediaDevices
                     .getUserMedia({
                         video: true,
@@ -204,15 +205,26 @@ export default function AudioVideoBroadcast(props) {
 
                         call.on('stream', (remoteStream) => {
                             // console.log('received host stream')
-
                             hostVideo.current.srcObject = remoteStream
                             onCall.current = true
                             setIsBroadCasting((br) => true)
                         })
+
+                         call.on('error', (e) => {
+                            onCall.current = false
+                         })
+
+                         call.on('close', function () {
+                            onCall.current = false
+                            console.log('closed')
+                         })
+
+                         call.on('disconnected', function(){
+                            onCall.current = false
+                            console.log('disconnected');
+                         })
                     })
-            } else {
-                console.log('Already on call')
-            }
+           
         })
 
         peerRef.current.on('close', function () {
@@ -267,6 +279,9 @@ export default function AudioVideoBroadcast(props) {
                                     }
                                 })
                         })
+                } else {
+                    onCall.current = false
+
                 }
             } else {
                 console.log('Non fatal error: ', e.type)
@@ -393,14 +408,14 @@ export default function AudioVideoBroadcast(props) {
                             {isHost.current ? 'You' : 'Host'}
                         </div>
 
-                        <div className="mediaControls">
+                        {/* <div className="mediaControls">
                             <span>
                                 <i className="fa fa-microphone-alt"></i>
                                 <i
                                     className="fas fa-video"
                                     onClick={switchHostVideo}></i>
                             </span>
-                        </div>
+                        </div> */}
                     </div>
                     {!isHost.current ? (
                         <div className="local-video-container">
