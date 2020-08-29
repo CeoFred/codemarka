@@ -115,3 +115,8 @@ iframe {
     color: #fff;
     background-color: #50b5ff !important;
 }
+
+.pending__uploaded__image {
+    width: 100%;
+    opacity: 0.3;
+}

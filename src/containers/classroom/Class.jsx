@@ -37,6 +37,8 @@ import Input from '../../components/Partials/Input/Input'
 import Spinner from '../../components/Partials/Preloader'
 import ParticipantModal from '../../components/classroom/Participants/Modal'
 import ClassRoomSettingsModal from '../../components/classroom/Settings/index.jsx';
+import EmojiPicker from '../../components/classroom/Emoji/picker';
+import ImagePreview from '../../components/classroom/ImagePreview/index';
 
 import { DOWNLOAD_CLASSROOM_ATTENDANCE } from '../../config/api_url';
 import AttendanceCollector from '../../components/classroom/Attendance/index.jsx';
@@ -93,6 +95,12 @@ const MainClassLayout = ({
 
     const [userMessageColor, setUserMessageColor] = useState('#000');
 
+    const [isDisplayingEmoji, setisDisplayingEmoji] = useState(false);
+    const [isUploadingImage, setIsUploadingImage] = useState(false);
+    const [imagePreviewConfig, setImagePreviewConfig] = useState({
+        shouldDisplay: false,
+        url: '',
+    })
 
     const [attendanceState, setAttendanceState] = useState({
         hasCollectedAttendance: false,
@@ -329,6 +337,15 @@ const MainClassLayout = ({
                 }
             })
 
+            socket.on('image_upload_complete',(result,data) => {
+               toast.success('Image Upload Successful', {
+                   position: toast.POSITION.BOTTOM_CENTER,
+               })
+
+                document.getElementById('upload__codemarka__progressing').remove()
+
+            })
+
 
             socket.on('attendance_reminder', () => {
                 if (owner) {
@@ -509,7 +526,13 @@ const MainClassLayout = ({
                         const ele = c.messages[lastIndex].msgId
                         const lelem = document.getElementById(ele)
 
-                        lelem.scrollIntoView(false)
+              setTimeout(() => {
+                  lelem.scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'end',
+                      inline: 'nearest',
+                  })
+              }, 1000)
                     }
                     return c
                 })
@@ -891,6 +914,11 @@ const MainClassLayout = ({
         SocketConnection
     ])
 
+    const handleEmojiInput = (__emoji_object) => {
+        const { emoji } = __emoji_object;
+            setInputState(s =>{ return { ...s.inputState, value: s.value+' '+emoji }})
+
+    }
 
     const handleInputChange = e => {
         e.preventDefault()
@@ -1415,10 +1443,50 @@ const MainClassLayout = ({
     }
 
     const handleShowEmojiPicker = (e) => {
-
+        setisDisplayingEmoji(!isDisplayingEmoji);
     }
 
     const handleImageUpload = (e) => {
+        document.getElementById('picture_input_upload').click();
+    }
+
+    const handleImageUploadChange = (e) => {
+        setIsUploadingImage(true);
+
+        const file = e.target.files[0];
+         var reader = new FileReader();
+
+         const messagesContainer = document.getElementById('fala')
+       
+         reader.onload = function (e) {
+             console.log(e.target);
+              const preview = document.createElement('img');
+              preview.src = e.target.result;
+              preview.classList.add('pending__uploaded__image');
+              preview.id = 'upload__codemarka__progressing';
+             socketRef.current.binary(true).emit('image_upload', {
+                 data: e.target.result,
+                 name: file.name,
+                 by: userid,
+                 type: 'image',
+                 time: new Date(),
+                 messageColor: userMessageColor,
+                 room: classroomD.kid,
+             })
+              messagesContainer.appendChild(preview);
+            
+              setTimeout(() => {
+                    preview.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'end',
+                        inline: 'nearest',
+                    })
+              messagesContainer.scrollTop = messagesContainer.scrollHeight
+                    
+              }, 500);
+         }
+
+         reader.readAsDataURL(file)
 
     }
 
@@ -1603,6 +1671,15 @@ const MainClassLayout = ({
         toast.success(message);
     }
 
+    const handleImagePreview = (e,url) => {
+        setImagePreviewConfig({shouldDisplay: true,url})
+    }
+
+    const handleclosePreview = (e) => {
+        setImagePreviewConfig({ shouldDisplay: false, url:'' })
+
+    }
+
     return (
         <div>
             <Seo
@@ -1616,7 +1693,10 @@ const MainClassLayout = ({
                 previewBtnClicked={handlePreview}
                 classroomid={data.classroom_id}
             />
-
+            <ImagePreview
+                config={imagePreviewConfig}
+                closePreview={handleclosePreview}
+            />
             <ClassRoomSettingsModal
                 codemarkastate={codemarkastate}
                 socket={socketRef.current}
@@ -1636,7 +1716,7 @@ const MainClassLayout = ({
                 list={attendanceState.list}
                 submit={handleAttendanceSubmission}
             />
-            
+
             {classNotification}
             <span
                 className="d-none"
@@ -1659,7 +1739,7 @@ const MainClassLayout = ({
                 classReport={handleclassReport}
                 number={codemarkastate.numberInClass}
                 owner={owner}
-                classStarted={classroomD.status === 2 ? true : false }
+                classStarted={classroomD.status === 2 ? true : false}
                 endClass={handleEndClass}
                 startClass={handlestartClass}
                 gravatarUrl={gravatarUrl}
@@ -1713,8 +1793,8 @@ const MainClassLayout = ({
                                                     Your classroom session is
                                                     yet to begin, click on start
                                                     now to open the doors. You
-                                                    can start this
-                                                    classroom later.
+                                                    can start this classroom
+                                                    later.
                                                 </p>
                                                 <div className="modal-footer">
                                                     <button
@@ -1815,9 +1895,9 @@ const MainClassLayout = ({
                                         </h5>
                                         <p>
                                             We recieved a signal to end this
-                                            session.Meanwhile
-                                            you can still download files for
-                                            this classroom before you exit.
+                                            session.Meanwhile you can still
+                                            download files for this classroom
+                                            before you exit.
                                         </p>
                                     </div>
                                 ) : (
@@ -1943,7 +2023,7 @@ const MainClassLayout = ({
             <button
                 id="add_user_modal_btn"
                 type="button"
-                style={{display:'none'}}
+                style={{ display: 'none' }}
                 data-toggle="modal"
                 data-target="#add_user_modal"></button>
 
@@ -2079,13 +2159,24 @@ const MainClassLayout = ({
                 handleAddUserIconClicked={handleAddUserIconClicked}
             />
 
-            <CodeBlockModal socket={socketRef.current}/>
+            <CodeBlockModal socket={socketRef.current} />
 
             <div style={{ width: '100%', height: '92vh' }}>
                 <div className="container-fluid h-100">
                     <div className="row h-100">
                         <div className="col-2 p-0 d-none d-md-block d-lg-block h-100">
+                            <EmojiPicker
+                                shouldDisplay={isDisplayingEmoji}
+                                handleInputChange={handleEmojiInput}
+                            />
 
+                            <input
+                                type="file"
+                                id="picture_input_upload"
+                                hidden
+                                accept="image/png, image/jpeg"
+                                onChange={handleImageUploadChange}
+                            />
                             <Convo
                                 typing={codemarkastate.typingState}
                                 users={codemarkastate.users}
@@ -2098,7 +2189,10 @@ const MainClassLayout = ({
                                 messages={codemarkastate.messages}
                                 userSpecificMessages={userSpecificMessages}
                                 user={userid}
-                                mentionSearchString={codemarkastate.mentionSearchString}
+                                mentionSearchString={
+                                    codemarkastate.mentionSearchString
+                                }
+                                handleImagePreview={handleImagePreview}
                                 shouldDisplay={codemarkastate.isShowingMentions}
                                 owner={ownerid}
                                 showMentions={handleShowMentions}
@@ -2109,7 +2203,7 @@ const MainClassLayout = ({
                                 addURL={handleAddURL}
                             />
                         </div>
-                        
+
                         <div className="p-0 col-12 col-md-8 col-lg-8 h-100">
                             <Editor
                                 readOnly={codemarkastate.editorPriviledge}
@@ -2118,23 +2212,24 @@ const MainClassLayout = ({
                                 userkid={userid}
                                 socket={socketRef.current}
                                 dropDownSelect={handledropDownSelect}
-                                uploadFileFromSystem={handleuploadFileFromSystem}
+                                uploadFileFromSystem={
+                                    handleuploadFileFromSystem
+                                }
                                 clearEditorrContent={handleClearEditorrContent}
                                 addExternalCDN={handleAddExternalCDN}
                             />
                         </div>
                         <div className="col-2 p-0 d-none d-md-block d-lg-block h-100">
-                        <AudioVideo 
-            socket={socketRef.current} 
-            userkid={userid} 
-            isOwner={owner}
-            ref={audioVideoRef}
-            isBroadcasting={classroomD.isBroadcasting}
-            users={codemarkastate.users} 
-            kid={classroomD.kid}
-            onAlert={handleAudioVideoAlert}
-            />
-            
+                            <AudioVideo
+                                socket={socketRef.current}
+                                userkid={userid}
+                                isOwner={owner}
+                                ref={audioVideoRef}
+                                isBroadcasting={classroomD.isBroadcasting}
+                                users={codemarkastate.users}
+                                kid={classroomD.kid}
+                                onAlert={handleAudioVideoAlert}
+                            />
                         </div>
                     </div>
                 </div>

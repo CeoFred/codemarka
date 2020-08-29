@@ -12,6 +12,7 @@
     "codemirror": "^5.48.0",
     "date-fns": "2.8.1",
     "date-fns-timezone": "0.1.4",
+    "emoji-picker-react": "^3.2.2",
     "peerjs": "1.2.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
