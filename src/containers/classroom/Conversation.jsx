@@ -88,10 +88,7 @@ export default function Conversation(props) {
 
     if (props.messages && props.messages.length > 0) {
         messageRef.current = props.messages.map((m, i) => {
-            console.log(m)
-            // function getTime(time){
-
-            // }
+           
             const date = new Date(m.oTime)
             const time = formatToTimeZone(date, 'h:mm a', { timeZone })
 

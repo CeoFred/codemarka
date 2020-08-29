@@ -1,24 +1,25 @@
-/* .picker-container {
-  position: fixed;
+.picker-container {
+  display: block;
+  position: relative;
+  height: 100%;
+  width: 100%;
   z-index: 99;
-  bottom: 20px;
-  left: 15rem;
-} */
+}
 
 aside.emoji-picker-react {
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  height: 300px;
-  width: 249px;
-  font-family: sans-serif;
-  border: 1px solid #efefef;
-  border-radius: 5px;
-  box-sizing: border-box;
-  box-shadow:none!important;
-  overflow: hidden;
-  position: fixed;
-  z-index: 99;
-  left: 15rem;
-  bottom:20px;
+  background: #fff!important;
+  display: flex!important;
+  flex-direction: column!important;
+  height: 320px!important;
+  width: 280px!important;
+  font-family: sans-serif!important;
+  border: 1px solid #efefef!important;
+  border-radius: 5px!important;
+  box-sizing: border-box!important;
+  box-shadow: none!important;
+  overflow: hidden!important;
+  position: fixed!important;
+  z-index: 9999!important;
+  left: 17%!important;
+  bottom: 10%!important;
 }

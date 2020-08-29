@@ -12,7 +12,7 @@ export default function Preview(props) {
             <button
                 title="Preview"
                 type="button"
-                onClick={props.previewBtnClicked}
+                onClick={ props.previewBtnClicked }
                 data-toggle="modal"
                 data-target="#modal_1"
                 className="preview_btn">
@@ -26,38 +26,29 @@ export default function Preview(props) {
                 role="dialog"
                 aria-labelledby="modal_1"
                 aria-hidden="true">
+               
                 <div
-                    style={{
-                        height: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                    }}>
-                    <div
                         className="modal-dialog modal-lg"
-                        style={{ height: '80%', width: '70%' }}
+                        style={ {display: 'flex',height: '100%',maxWidth: '100%'} }
                         role="document">
-                        <div
-                            className="modal-content h-100"
-                            style={{ borderRadius: '6px' }}>
-                            <div className="modal-body" style={{ padding: 0 }}>
-                                <div
-                                    className="row h-100 w-100"
-                                    style={{ margin: 0 }}>
-                                    <div className="col-12 text-center w-100">
-                                        <iframe
+                    <div
+                            className="modal-content"
+                            style={ {background:'transparent'} }
+                           >
+                        <div className="modal-body" style={ {padding:0,margin:50} }>
+                              
+                            <iframe
                                             title="preview"
                                             className="w-100 h-100"
                                             id="preview_iframe"
+                                            style={ {borderRadius:'5px'} }
                                         />
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
 
                 <button
-                    onClick={closeModal}
+                    onClick={ closeModal }
                    className="close_preview_button">
                     <i className="fa fa-window-close fa-2x"></i>
                 </button>
@@ -65,7 +56,7 @@ export default function Preview(props) {
                     target="_blank"
                     title="Open new tab"
                     rel="noopener noreferrer"
-                    href={`/c/classroom/preview/${props.classroomid}`}
+                    href={ `/c/classroom/preview/${ props.classroomid }` }
                     className="open_new_tab_btn">
                     <i className="fa fa-external-link-square-alt fa-2x"></i>
                 </a>

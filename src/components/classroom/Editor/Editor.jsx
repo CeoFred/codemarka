@@ -66,7 +66,7 @@ function CodemarkaEditor(props) {
 
                     } else {
                         document.getElementById(
-                            `${EditorName}_updated_message_container`
+                            `${ EditorName }_updated_message_container`
                         ).innerHTML = '*'
                     }
             } else {
@@ -85,7 +85,7 @@ function CodemarkaEditor(props) {
 
                 } else {
                     document.getElementById(
-                        `${EditorName}_updated_message_container`
+                        `${ EditorName }_updated_message_container`
                     ).innerHTML = '*'
                 }
             }
@@ -154,7 +154,7 @@ function CodemarkaEditor(props) {
 
     function handleChangeLanguageTab(e, tab) {
         const lang = mapLanguageToIndex[tab];
-        document.getElementById(`${lang}_updated_message_container`).innerHTML = ''
+        document.getElementById(`${ lang }_updated_message_container`).innerHTML = ''
         editorValue.current = props.files[lang].content
         currentLanguageIndex.current = tab
         setCurrentLanguage(lang === 'js' ? 'javascript' : lang)
@@ -162,7 +162,6 @@ function CodemarkaEditor(props) {
 
     function handleEditorDidMount(_,ed) {
         setIsEditorReady(true)
-        console.log(ed)
         ed._domElement.addEventListener('keyup',function(e) {
             console.log(e);
             const element = e.target;
@@ -175,7 +174,7 @@ function CodemarkaEditor(props) {
         })
 
         ed._domElement.addEventListener('change',function(e){
-            console.log(e)
+            // console.log(e)
         })
     }
 
@@ -183,85 +182,42 @@ function CodemarkaEditor(props) {
         <>
             <div className="editors__container">
                 <div className="row h-100 p-0 m-0">
-                    <div className="editor_tabs" style={{ height: '7%' }}>
-                        <span
-                            className={`html_tab ${
-                                currentLanguageIndex.current === 1
-                                    ? 'active_tab'
-                                    : ''
-                            }`}
-                            onClick={(e) => handleChangeLanguageTab(e, 1)}>
-                            <i
-                                className="fab fa-html5"
-                                style={{ color: '#c77d31' }}></i>{' '}
-                            <div>
-                                index.html{' '}
-                                <b
-                                    id="html_updated_message_container"
-                                    className="text-success"></b>{' '}
-                            </div>
-                            {props.readOnly ? (
-                                <li
-                                    title="html file actions"
-                                    className="nav-item dropdown">
-                                    <span
-                                        className="nav-link nav-link-icon"
-                                        id="navbar-success_dropdown_css_uploader"
-                                        role="button"
-                                        data-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false">
-                                        <i className="fa fa-ellipsis-v"></i>
-                                    </span>
-                                    <div
-                                        style={{ cursor: 'pointer' }}
-                                        className="dropdown-menu dropdown-menu-right"
-                                        aria-labelledby="navbar-success_dropdown_css_uploader">
-                                        <span
-                                            className="dropdown-item"
-                                            onClick={(e) =>
-                                                props.uploadFileFromSystem(
-                                                    e,
-                                                    'html'
-                                                )
-                                            }>
-                                            <i className="fa fa-file-upload"></i>{' '}
-                                            Upload File
-                                        </span>
-                                        <span
-                                            className="dropdown-item"
-                                            onClick={(e) =>
-                                                props.clearEditorrContent(
-                                                    e,
-                                                    'html'
-                                                )
-                                            }>
-                                            <i className="fa fa-trash"></i>{' '}
-                                            Clear
-                                        </span>
-                                    </div>
-                                </li>
-                            ) : (
-                                ''
-                            )}
-                        </span>
-                        <span
-                            className={`css_tab ${
-                                currentLanguageIndex.current === 0
-                                    ? 'active_tab'
-                                    : ''
-                            }`}
-                            onClick={(e) => handleChangeLanguageTab(e, 0)}>
-                            <i
-                                className="fab fa-css3-alt"
-                                style={{ color: 'cornflowerblue' }}></i>{' '}
-                            <div>
-                                style.css{' '}
-                                <b
-                                    id="css_updated_message_container"
-                                    className="text-success"></b>{' '}
-                            </div>
-                            {props.readOnly ? (
+                    <div className="editor_tabs" style={ { height: '7%' } }>
+                        <div className="tabs">
+                            <span
+                                className={ `html_tab ${
+                                    currentLanguageIndex.current === 1
+                                        ? 'active_tab'
+                                        : ''
+                                }` }
+                                onClick={ (e) => handleChangeLanguageTab(e, 1) }>
+                                <i
+                                    className="fab fa-html5"
+                                    style={ { color: '#c77d31' } }></i>{' '}
+                                <div>
+                                    <b
+                                        id="html_updated_message_container"
+                                        className="text-success"></b>{' '}
+                                </div>
+                            </span>
+                            <span
+                                className={ `css_tab ${
+                                    currentLanguageIndex.current === 0
+                                        ? 'active_tab'
+                                        : ''
+                                }` }
+                                onClick={ (e) => handleChangeLanguageTab(e, 0) }>
+                                <i
+                                    className="fab fa-css3-alt"
+                                    style={ {
+                                        color: 'cornflowerblue',
+                                    } }></i>{' '}
+                                <div>
+                                    <b
+                                        id="css_updated_message_container"
+                                        className="text-success"></b>{' '}
+                                </div>
+                                {/* {props.readOnly ? (
                                 <li
                                     title="css file actions"
                                     className="nav-item dropdown">
@@ -281,12 +237,7 @@ function CodemarkaEditor(props) {
                                         <span
                                             className="dropdown-item"
                                             href="/#"
-                                            onClick={(e) =>
-                                                props.uploadFileFromSystem(
-                                                    e,
-                                                    'css'
-                                                )
-                                            }>
+                                           >
                                             <i className="fa fa-file-upload"></i>{' '}
                                             Upload File
                                         </span>
@@ -315,79 +266,40 @@ function CodemarkaEditor(props) {
                                 </li>
                             ) : (
                                 ''
-                            )}
-                        </span>
-                        <span
-                            className={`javascript-tab ${
-                                currentLanguageIndex.current === 2
-                                    ? 'active_tab'
-                                    : ''
-                            }`}
-                            onClick={(e) => handleChangeLanguageTab(e, 2)}>
+                            )} */}
+                            </span>
+                            <span
+                                className={ `javascript-tab ${
+                                    currentLanguageIndex.current === 2
+                                        ? 'active_tab'
+                                        : ''
+                                }` }
+                                onClick={ (e) => handleChangeLanguageTab(e, 2) }>
+                                <i
+                                    className="fab fa-js-square"
+                                    style={ { color: '#f5f555' } }></i>{' '}
+                                <div>
+                                    <b
+                                        id="js_updated_message_container"
+                                        className="text-success"></b>{' '}
+                                </div>
+                            </span>
+                        </div>
+
+                        <div className="extra_actions">
                             <i
-                                className="fab fa-js-square"
-                                style={{ color: '#f5f555' }}></i>{' '}
-                            <div>
-                                script.js{' '}
-                                <b
-                                    id="js_updated_message_container"
-                                    className="text-success"></b>{' '}
-                            </div>
-                            {props.readOnly ? (
-                                <li
-                                    title="javascript file actions"
-                                    className="nav-item dropdown">
-                                    <span
-                                        className="nav-link nav-link-icon"
-                                        id="navbar-success_dropdown_javascript_uploader"
-                                        role="button"
-                                        data-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false">
-                                        <i className="fa fa-ellipsis-v"></i>
-                                    </span>
-                                    <div
-                                        style={{ cursor: 'pointer' }}
-                                        className="dropdown-menu dropdown-menu-right"
-                                        aria-labelledby="navbar-success_dropdown_javascript_uploader">
-                                        <a
-                                            className="dropdown-item"
-                                            href="/#"
-                                            onClick={(e) =>
-                                                props.uploadFileFromSystem(
-                                                    e,
-                                                    'js'
-                                                )
-                                            }>
-                                            <i className="fa fa-file-upload"></i>{' '}
-                                            Upload File
-                                        </a>
-                                        <div
-                                            className="dropdown-item"
-                                            onClick={(e) =>
-                                                props.clearEditorrContent(
-                                                    e,
-                                                    'js'
-                                                )
-                                            }>
-                                            <i className="fa fa-trash"></i>{' '}
-                                            Clear
-                                        </div>
-                                        <div
-                                            className="dropdown-item"
-                                            href="/#"
-                                            onClick={(e) =>
-                                                props.addExternalCDN(e, 'js')
-                                            }>
-                                            <i className="fa fa-link"></i> Add
-                                            External CDN
-                                        </div>
-                                    </div>
-                                </li>
-                            ) : (
-                                ''
-                            )}
-                        </span>
+                                className="fa fa-cloud-upload-alt"
+                                onClick={ (e) =>
+                                    props.uploadFileFromSystem(e, 'css')
+                                }></i>
+                            <a
+                                target="_blank"
+                                title="Open new tab"
+                                rel="noopener noreferrer"
+                                href={ `/c/classroom/preview/${ props.classroomid }` }
+                            
+                                class="fas fa-external-link-alt"></a>
+                        </div>
                     </div>
                     <input
                         type="file"
@@ -395,25 +307,25 @@ function CodemarkaEditor(props) {
                         className="d-none"
                     />
                     <div
-                        style={{
+                        style={ {
                             height: '93%',
                             maxHeight: '93%',
                             width: '100%',
                             position: 'relative',
-                        }}>
+                        } }>
                         {isEditorReady ? (
                             <Editor
                                 theme="dark"
-                                options={config}
-                                height={'100%'}
-                                width={'100%'}
-                                onChange={handleEditorChange}
-                                language={currentLanguage}
+                                options={ config }
+                                height={ '100%' }
+                                width={ '100%' }
+                                onChange={ handleEditorChange }
+                                language={ currentLanguage }
                                 loading={
                                     <i className="fa fa-file-code fa-3x"></i>
                                 }
-                                value={editorValue.current}
-                                editorDidMount={handleEditorDidMount}
+                                value={ editorValue.current }
+                                editorDidMount={ handleEditorDidMount }
                             />
                         ) : (
                             'Fetching files...'

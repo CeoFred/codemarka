@@ -61,7 +61,6 @@ const socket = io(`${ host }classrooms`, {
     reconnectionAttempts: 9
 })
 
-
 toast.configure({
     autoClose: 6000,
     draggable: true
@@ -107,16 +106,16 @@ const MainClassLayout = ({
         isCollectingAttendance: classroomD.isTakingAttendance,
         isSubmittingAttendance: false,
         userAttendanceData: {
-            email:"",
-            gender:"",
-            lastName:"",
-            firstName:"",
-            phone:"",
-            kid:"",
-            classExpertiseLevel:""
+            email:'',
+            gender:'',
+            lastName:'',
+            firstName:'',
+            phone:'',
+            kid:'',
+            classExpertiseLevel:''
         },
         list:[],
-        downloadStatus:""
+        downloadStatus:''
     });
     const socketRef = useRef(socket);
     const audioVideoRef = useRef();
@@ -210,11 +209,11 @@ const MainClassLayout = ({
     const [starRating, setStarRating] = useState(0)
 
     React.useEffect(() => {
-        const elem = document.querySelector("#editor_file_uploader_input");
-         elem.addEventListener("change", handleUploadInputChange, { once: true, capture: true, passive: true});
+        const elem = document.querySelector('#editor_file_uploader_input');
+         elem.addEventListener('change', handleUploadInputChange, { once: true, capture: true, passive: true});
         
         return function() {
-        elem.removeEventListener("change", handleUploadInputChange, true);
+        elem.removeEventListener('change', handleUploadInputChange, true);
         }
 
     },[editorUploadState])
@@ -226,7 +225,7 @@ const MainClassLayout = ({
                 return {...state,list,downloadStatus:''}
             })
             window.open(
-                `${DOWNLOAD_CLASSROOM_ATTENDANCE}/${classroomD.kid}/${file}`,
+                `${ DOWNLOAD_CLASSROOM_ATTENDANCE }/${ classroomD.kid }/${ file }`,
                 '_blank'
             )
         })
@@ -297,6 +296,48 @@ const MainClassLayout = ({
                 }
             })
 
+            socket.on('new_image_message',(data) => {
+
+               const updateMessage = new Promise((resolve, reject) => {
+                    resolve(
+                        setcodemarkaState((c) => {
+                            const oldmsg = c.messages
+                            oldmsg.push(data)
+                            const newuserTypingList = c.typingState.filter(
+                                (typist) => {
+                                    return typist.id !== data.by
+                                }
+                            )
+                            return {
+                                ...c,
+                                messages: oldmsg,
+                                typingState: newuserTypingList,
+                            }
+                        })
+                    )
+                })
+
+                updateMessage.then(d => {
+                    setcodemarkaState(c => {
+          
+              setTimeout(() => {
+                      const len = c.messages.length
+                      const lastIndex = len - 1
+
+                      const ele = c.messages[lastIndex].msgId
+                      const lelem = document.getElementById(ele)
+                      lelem.scrollIntoView({
+                          behavior: 'smooth',
+                          block: 'end',
+                          inline: 'nearest',
+                      })
+              }, 1000);
+                        return c;
+                    })
+       
+                })
+            });
+
             socket.on('has_attendance_recorded', (data) => {
                 setAttendanceState({
                     ...attendanceState,
@@ -345,7 +386,6 @@ const MainClassLayout = ({
                 document.getElementById('upload__codemarka__progressing').remove()
 
             })
-
 
             socket.on('attendance_reminder', () => {
                 if (owner) {
@@ -506,36 +546,42 @@ const MainClassLayout = ({
 
             //listen for new messages
             socket.on('nM', (data) => {
-                setcodemarkaState((c) => {
-                    const oldmsg = c.messages
-                    oldmsg.push(data)
-                    const newuserTypingList = c.typingState.filter((typist) => {
-                        return typist.id !== data.by
-                    })
-                    return {
-                        ...c,
-                        messages: oldmsg,
-                        typingState: newuserTypingList,
-                    }
-                })
-                setcodemarkaState((c) => {
-                    if (c.messages) {
-                        const len = c.messages.length
-                        const lastIndex = len - 1
+                        const updateMessage = new Promise((resolve, reject) => {
+                            resolve(
+                                setcodemarkaState((c) => {
+                                    const oldmsg = c.messages
+                                    oldmsg.push(data)
+                                    const newuserTypingList = c.typingState.filter(
+                                        (typist) => {
+                                            return typist.id !== data.by
+                                        }
+                                    )
+                                    return {
+                                        ...c,
+                                        messages: oldmsg,
+                                        typingState: newuserTypingList,
+                                    }
+                                })
+                            )
+                        })
 
-                        const ele = c.messages[lastIndex].msgId
-                        const lelem = document.getElementById(ele)
+                        updateMessage.then((d) => {
+                            setcodemarkaState((c) => {
+                                setTimeout(() => {
+                                    const len = c.messages.length
+                                    const lastIndex = len - 1
 
-              setTimeout(() => {
-                  lelem.scrollIntoView({
-                      behavior: 'smooth',
-                      block: 'end',
-                      inline: 'nearest',
-                  })
-              }, 1000)
-                    }
-                    return c
-                })
+                                    const ele = c.messages[lastIndex].msgId
+                                    const lelem = document.getElementById(ele)
+                                    lelem.scrollIntoView({
+                                        behavior: 'smooth',
+                                        block: 'end',
+                                        inline: 'nearest',
+                                    })
+                                }, 1000)
+                                return c
+                            })
+                        })
             })
 
             //listen for members leaving
@@ -761,7 +807,7 @@ const MainClassLayout = ({
 
             socket.on('user_waved', ({ from, to }) => {
                 if (userid === to.kid) {
-                    toast.info(`${from} waved at you`)
+                    toast.info(`${ from } waved at you`)
                 }
             })
 
@@ -916,7 +962,7 @@ const MainClassLayout = ({
 
     const handleEmojiInput = (__emoji_object) => {
         const { emoji } = __emoji_object;
-            setInputState(s =>{ return { ...s.inputState, value: s.value+' '+emoji }})
+            setInputState(s =>{ return { ...s.inputState, value: s.value+emoji }})
 
     }
 
@@ -938,7 +984,6 @@ const MainClassLayout = ({
 
         const beforelastChar = value[indexOfSpecialSymbolInString - 1]
 
-
         if(lastSplittedIndexContainsAtSymbol){
 
             if(beforelastChar === ' ' || beforelastChar ===  undefined){
@@ -954,7 +999,6 @@ const MainClassLayout = ({
             const reduced = String(value).slice(0,500);
             setInputState({ ...inputState,  reduced})
             alert('Reduce the noise, type less. Use pinned messagees for longer texts.');
-
 
         } else if (e.target.value.trim().length > 0) {
             socket.emit('user_typing', {
@@ -997,7 +1041,6 @@ const MainClassLayout = ({
         }
     }
 
-
     const handlePreview = e => {
         const previewFrame = document.getElementById('preview_iframe')
         // var preview =  previewFrame.contentDocument || previewFrame.contentWindow.document;
@@ -1009,10 +1052,10 @@ const MainClassLayout = ({
 
         let extercssCDN = '', externaljsCDN ='';
         codemarkastate.CSS_CDN.forEach(cdn => {
-       extercssCDN += `<link href=${cdn.url} rel="stylesheet"/> \n` 
+       extercssCDN += `<link href=${ cdn.url } rel="stylesheet"/> \n` 
       })
       codemarkastate.JS_CDN.forEach(cdn => {
-        externaljsCDN += `<script src=${cdn.url}></script> \n` 
+        externaljsCDN += `<script src=${ cdn.url }></script> \n` 
        })
   
         const getGeneratedPageURL = ({ html, css, js }) => {
@@ -1153,7 +1196,7 @@ const MainClassLayout = ({
                     placeholder: 'Pin Message Here...',
                     name: 'text__area__msg__pin'
                 } }
-                shouldDisplay={true}
+                shouldDisplay={ true }
                 value={ ClassroomPinnedInformation.value }
                 inputType="textarea"
                 changed={ handlePinTextAreaChange }
@@ -1394,13 +1437,13 @@ const MainClassLayout = ({
     const handledownloadAttendance = () => {
         socket.emit('download_attendance_init', classroomD.kid)
         
-        setAttendanceState({...attendanceState, downloadStatus:"loading"});
+        setAttendanceState({...attendanceState, downloadStatus:'loading'});
     }
 
     const handleUserSelected = (e,username) => {
         e.preventDefault()
         
-        const usernameAttached = `@${username} `;
+        const usernameAttached = `@${ username } `;
         const currentTextAreaValue = inputState.value
 
         let newTextAreaValue = currentTextAreaValue;
@@ -1421,9 +1464,9 @@ const MainClassLayout = ({
                 }
             } else {
                 if(codemarkastate.mentionSearchString === null){
-                    newTextAreaValue = `${currentTextAreaValue}@${username} `;
+                    newTextAreaValue = `${ currentTextAreaValue }@${ username } `;
                 } else {
-                   newTextAreaValue = `${currentTextAreaValue}${username} `;
+                   newTextAreaValue = `${ currentTextAreaValue }${ username } `;
                 }
             } 
         
@@ -1432,7 +1475,6 @@ const MainClassLayout = ({
         document.querySelector('#input_area').focus()
 
     }
-
 
     const handleShowMentions = (e) => {
         setcodemarkaState({...codemarkastate, isShowingMentions: !codemarkastate.isShowingMentions});
@@ -1459,7 +1501,6 @@ const MainClassLayout = ({
          const messagesContainer = document.getElementById('fala')
        
          reader.onload = function (e) {
-             console.log(e.target);
               const preview = document.createElement('img');
               preview.src = e.target.result;
               preview.classList.add('pending__uploaded__image');
@@ -1524,9 +1565,7 @@ const MainClassLayout = ({
             }
         })
 
-          socket.emit("editorChanged", emitObj);
-
-
+          socket.emit('editorChanged', emitObj);
         
         // if(o.origin === 'cut' && o.removed[0] !== ""){
         // }
@@ -1543,13 +1582,13 @@ const MainClassLayout = ({
 
             const reader = new FileReader();
             reader.addEventListener('load', (event) => {
-                let content = event.target.result;
+                const content = event.target.result;
 
                 const fileTypeSupported = ['javascript','x-javascript','script','html','css'].some(t => t === fileType.toLowerCase());
 
                 if(!fileTypeSupported){
                     
-                    toast.error(`File type not supported for environment,only HTML,CSS and Javascript Files, Try again.`)
+                    toast.error('File type not supported for environment,only HTML,CSS and Javascript Files, Try again.')
                     setEditorUploadState({uploading: false, file:''});
                 } else {
                     let editorFileId;
@@ -1571,7 +1610,6 @@ const MainClassLayout = ({
                         type:'upload'
                     };
 
-
                     setcodemarkaState(c => {
                        const nEArray = c.editors.map(e => {
                             if(e.file === fileType){
@@ -1591,10 +1629,9 @@ const MainClassLayout = ({
                         }
                     });
 
-
                     socket.emit('editorChanged', emitObj)
 
-                    toast.success(`Upload Completed. File - ${fileType}`,{ position:'bottom-center'} )
+                    toast.success(`Upload Completed. File - ${ fileType }`,{ position:'bottom-center'} )
 
                     setEditorUploadState({uploading: false, file:''});
 
@@ -1616,7 +1653,6 @@ const MainClassLayout = ({
         }
 
     }
-
     
     const handleuploadFileFromSystem = (e,file) => {
         e.preventDefault();
@@ -1635,7 +1671,7 @@ const MainClassLayout = ({
                     const emitObj = {
                         file: editorName,
                         content:`/**
-                                * Content cleared by ${username},waiting for changes..
+                                * Content cleared by ${ username },waiting for changes..
                                 \n
                                 /**`,
                         class: data.classroom_id,
@@ -1683,38 +1719,40 @@ const MainClassLayout = ({
     return (
         <div>
             <Seo
-                title={`${name} :: codemarka classroom`}
-                metaDescription={description}>
-                <script src="https://unpkg.com/jshint@2.11.1/dist/jshint.js"></script>
-                <script src="https://unpkg.com/csslint@1.0.5/dist/csslint.js"></script>
-            </Seo>
+                title={ `${ name } :: codemarka classroom` }
+                metaDescription={ description }></Seo>
             <ToastContainer />
             <Preview
-                previewBtnClicked={handlePreview}
-                classroomid={data.classroom_id}
+                previewBtnClicked={ handlePreview }
+                classroomid={ data.classroom_id }
             />
             <ImagePreview
-                config={imagePreviewConfig}
-                closePreview={handleclosePreview}
+                config={ imagePreviewConfig }
+                closePreview={ handleclosePreview }
             />
+            <EmojiPicker
+                shouldDisplay={ isDisplayingEmoji }
+                handleInputChange={ handleEmojiInput }
+            />
+
             <ClassRoomSettingsModal
-                codemarkastate={codemarkastate}
-                socket={socketRef.current}
-                toast={toast}
-                cdata={classroomD}
-                currentEditorSelection={codemarkastate.currentEditorSelection}
+                codemarkastate={ codemarkastate }
+                socket={ socketRef.current }
+                toast={ toast }
+                cdata={ classroomD }
+                currentEditorSelection={ codemarkastate.currentEditorSelection }
             />
             <AttendanceCollector
-                isSubmittingAttendance={attendanceState.isSubmittingAttendance}
-                isCollectingAttendance={attendanceState.isCollectingAttendance}
-                hasCollectedAttendance={attendanceState.hasCollectedAttendance}
-                attendanceList={attendanceState.userAttendanceData}
-                isOwner={owner}
-                downloadStatus={attendanceState.downloadStatus}
-                sendReminder={handleSendReminder}
-                downloadAttendance={handledownloadAttendance}
-                list={attendanceState.list}
-                submit={handleAttendanceSubmission}
+                isSubmittingAttendance={ attendanceState.isSubmittingAttendance }
+                isCollectingAttendance={ attendanceState.isCollectingAttendance }
+                hasCollectedAttendance={ attendanceState.hasCollectedAttendance }
+                attendanceList={ attendanceState.userAttendanceData }
+                isOwner={ owner }
+                downloadStatus={ attendanceState.downloadStatus }
+                sendReminder={ handleSendReminder }
+                downloadAttendance={ handledownloadAttendance }
+                list={ attendanceState.list }
+                submit={ handleAttendanceSubmission }
             />
 
             {classNotification}
@@ -1728,23 +1766,23 @@ const MainClassLayout = ({
             </span>
 
             <Navigation
-                name={name}
-                downloadLink={classfilesdownloadlink}
-                favourite={addClassToFavourite}
-                isFavourite={codemarkastate.favourite}
-                topic={topic}
-                exitClassGracefully={handleexitClassGracefully}
-                classroomid={data.classroom_id}
-                testConnection={handletestConnection}
-                classReport={handleclassReport}
-                number={codemarkastate.numberInClass}
-                owner={owner}
-                classStarted={classroomD.status === 2 ? true : false}
-                endClass={handleEndClass}
-                startClass={handlestartClass}
-                gravatarUrl={gravatarUrl}
-                isCollectingAttendance={attendanceState.isCollectingAttendance}
-                hasCollectedAttendance={attendanceState.hasCollectedAttendance}
+                name={ name }
+                downloadLink={ classfilesdownloadlink }
+                favourite={ addClassToFavourite }
+                isFavourite={ codemarkastate.favourite }
+                topic={ topic }
+                exitClassGracefully={ handleexitClassGracefully }
+                classroomid={ data.classroom_id }
+                testConnection={ handletestConnection }
+                classReport={ handleclassReport }
+                number={ codemarkastate.numberInClass }
+                owner={ owner }
+                classStarted={ classroomD.status === 2 ? true : false }
+                endClass={ handleEndClass }
+                startClass={ handlestartClass }
+                gravatarUrl={ gravatarUrl }
+                isCollectingAttendance={ attendanceState.isCollectingAttendance }
+                hasCollectedAttendance={ attendanceState.hasCollectedAttendance }
             />
 
             <button
@@ -1820,7 +1858,7 @@ const MainClassLayout = ({
                                         <div className="row">
                                             <div
                                                 className="col-md-12 mt-5 text-center d-flex justify-content-center align-items-center flex-column"
-                                                style={{ paddingLeft: '15px' }}>
+                                                style={ { paddingLeft: '15px' } }>
                                                 <h6 className="h2 mb-1 text-success">
                                                     <b>You are all set!</b>
                                                 </h6>
@@ -1908,7 +1946,7 @@ const MainClassLayout = ({
                         <div className="modal-footer">
                             <a
                                 className="btn btn-sm btn-primary"
-                                href={classfilesdownloadlink}>
+                                href={ classfilesdownloadlink }>
                                 Download Files
                             </a>
                             <a className="btn btn-sm btn-white" href="/?#">
@@ -1928,7 +1966,7 @@ const MainClassLayout = ({
                 Exit
             </button>
             <div
-                className={'modal modal-danger fade'}
+                className={ 'modal modal-danger fade' }
                 id="exitClass"
                 tabIndex="-1"
                 role="dialog"
@@ -1990,7 +2028,7 @@ const MainClassLayout = ({
                                 <button
                                     type="button"
                                     className="btn btn-sm btn-white"
-                                    onClick={HandleClassShutdown}>
+                                    onClick={ HandleClassShutdown }>
                                     End now
                                 </button>
                             </div>
@@ -2005,8 +2043,8 @@ const MainClassLayout = ({
                 targetid="exit_class_modal_cont"
                 type="default"
                 size="sm"
-                titleIcon={<i className="fa fa-thumbs-up"></i>}
-                title={' Rate this classroom '}>
+                titleIcon={ <i className="fa fa-thumbs-up"></i> }
+                title={ ' Rate this classroom ' }>
                 {addStars}
             </Modal>
 
@@ -2014,8 +2052,8 @@ const MainClassLayout = ({
                 targetid="pinned_modal_cont"
                 type="default"
                 size="sm"
-                titleIcon={<i className="fa fa-pen-nib"></i>}
-                title={'Pinned Messages'}>
+                titleIcon={ <i className="fa fa-pen-nib"></i> }
+                title={ 'Pinned Messages' }>
                 {getPinnedMessages()}
                 {owner ? addPinTextArea : ''}
             </Modal>
@@ -2023,7 +2061,7 @@ const MainClassLayout = ({
             <button
                 id="add_user_modal_btn"
                 type="button"
-                style={{ display: 'none' }}
+                style={ { display: 'none' } }
                 data-toggle="modal"
                 data-target="#add_user_modal"></button>
 
@@ -2031,26 +2069,26 @@ const MainClassLayout = ({
                 targetid="add_user_modal"
                 type="default"
                 size="sm"
-                titleIcon={<i className="fa fa-users"></i>}
-                title={'Invite people'}>
+                titleIcon={ <i className="fa fa-users"></i> }
+                title={ 'Invite people' }>
                 <form>
                     <Input
                         name="add_user_input"
                         elementType="input"
-                        elementConfig={{
+                        elementConfig={ {
                             disabled: owner ? false : true,
                             placeholder: 'Invite with email',
                             name: 'add_user_input',
-                        }}
-                        shouldDisplay={true}
-                        value={userInvitationData.value}
+                        } }
+                        shouldDisplay={ true }
+                        value={ userInvitationData.value }
                         inputType="input"
-                        changed={handleuserInvitationDataChange}
+                        changed={ handleuserInvitationDataChange }
                     />
                     <button
                         type="submit"
-                        onClick={handleUserInviteSubmit}
-                        disabled={codemarkastate.submitted}
+                        onClick={ handleUserInviteSubmit }
+                        disabled={ codemarkastate.submitted }
                         className="btn btn-sm float-right btn-success">
                         {codemarkastate.submitted ? (
                             <Spinner />
@@ -2063,11 +2101,11 @@ const MainClassLayout = ({
                     <div>
                         {userInvitationData.socketFeedback !== null ? (
                             <span
-                                className={`${
+                                className={ `${
                                     userInvitationData.socketFeedbackStatus
                                         ? 'text-success'
                                         : 'text-danger'
-                                }`}>
+                                }` }>
                                 {' '}
                                 {userInvitationData.socketFeedback}{' '}
                             </span>
@@ -2086,7 +2124,7 @@ const MainClassLayout = ({
                     owner ? (
                         <button
                             type="submit"
-                            onClick={handleClassInfoUpdate}
+                            onClick={ handleClassInfoUpdate }
                             className="btn btn-sm float-left btn-soft-primary">
                             {ClassroomInformation.submitted ? (
                                 <Spinner />
@@ -2099,19 +2137,19 @@ const MainClassLayout = ({
                     )
                 }
                 title="classroom Information">
-                <form onSubmit={handleClassInfoUpdate}>
+                <form onSubmit={ handleClassInfoUpdate }>
                     <Input
                         name="cname"
                         label="Classroom Name"
                         elementType="input"
-                        elementConfig={{
+                        elementConfig={ {
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'cname',
-                        }}
-                        shouldDisplay={true}
-                        value={ClassroomInformation.cname.value}
-                        changed={(e) =>
+                        } }
+                        shouldDisplay={ true }
+                        value={ ClassroomInformation.cname.value }
+                        changed={ (e) =>
                             handleClassroomInformationInputChange(e, 'cname')
                         }
                     />
@@ -2119,28 +2157,28 @@ const MainClassLayout = ({
                         name="ctopic"
                         label="Classroom Topic"
                         elementType="input"
-                        elementConfig={{
+                        elementConfig={ {
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'ctopic',
-                        }}
-                        shouldDisplay={true}
-                        value={ClassroomInformation.ctopic.value}
-                        changed={(e) =>
+                        } }
+                        shouldDisplay={ true }
+                        value={ ClassroomInformation.ctopic.value }
+                        changed={ (e) =>
                             handleClassroomInformationInputChange(e, 'ctopic')
                         }
                     />
                     <Input
                         label="Classroom Description"
                         elementType="textarea"
-                        elementConfig={{
+                        elementConfig={ {
                             disabled: owner ? false : true,
                             placeholder: 'Classroom Name',
                             name: 'cdesc',
-                        }}
-                        shouldDisplay={true}
-                        value={ClassroomInformation.cdesc.value}
-                        changed={(e) =>
+                        } }
+                        shouldDisplay={ true }
+                        value={ ClassroomInformation.cdesc.value }
+                        changed={ (e) =>
                             handleClassroomInformationInputChange(e, 'cdesc')
                         }
                     />
@@ -2148,87 +2186,83 @@ const MainClassLayout = ({
             </Modal>
 
             <ParticipantModal
-                users={codemarkastate.users}
-                toogleUserEditAccess={handletoogleUserEditAccess}
-                owner={owner}
-                ownerid={ownerid}
-                userid={userid}
-                sendUserPrivateMessage={handlePrivateMessaging}
-                blockUser={handleUserBlocking}
-                waveAtUser={handlewaveAtUser}
-                handleAddUserIconClicked={handleAddUserIconClicked}
+                users={ codemarkastate.users }
+                toogleUserEditAccess={ handletoogleUserEditAccess }
+                owner={ owner }
+                ownerid={ ownerid }
+                userid={ userid }
+                sendUserPrivateMessage={ handlePrivateMessaging }
+                blockUser={ handleUserBlocking }
+                waveAtUser={ handlewaveAtUser }
+                handleAddUserIconClicked={ handleAddUserIconClicked }
             />
 
-            <CodeBlockModal socket={socketRef.current} />
+            <CodeBlockModal socket={ socketRef.current } />
 
-            <div style={{ width: '100%', height: '92vh' }}>
+            <div style={ { width: '100%', height: '92vh' } }>
                 <div className="container-fluid h-100">
                     <div className="row h-100">
                         <div className="col-2 p-0 d-none d-md-block d-lg-block h-100">
-                            <EmojiPicker
-                                shouldDisplay={isDisplayingEmoji}
-                                handleInputChange={handleEmojiInput}
-                            />
-
                             <input
                                 type="file"
                                 id="picture_input_upload"
                                 hidden
                                 accept="image/png, image/jpeg"
-                                onChange={handleImageUploadChange}
+                                onChange={ handleImageUploadChange }
                             />
                             <Convo
-                                typing={codemarkastate.typingState}
-                                users={codemarkastate.users}
-                                userSelected={handleUserSelected}
-                                username={username}
-                                inputValue={inputState.value}
-                                handleInputChange={handleInputChange}
-                                sendMessage={handleMessageSubmit}
-                                focused={inputState.isFocused}
-                                messages={codemarkastate.messages}
-                                userSpecificMessages={userSpecificMessages}
-                                user={userid}
+                                typing={ codemarkastate.typingState }
+                                users={ codemarkastate.users }
+                                userSelected={ handleUserSelected }
+                                username={ username }
+                                inputValue={ inputState.value }
+                                handleInputChange={ handleInputChange }
+                                sendMessage={ handleMessageSubmit }
+                                focused={ inputState.isFocused }
+                                messages={ codemarkastate.messages }
+                                userSpecificMessages={ userSpecificMessages }
+                                user={ userid }
                                 mentionSearchString={
                                     codemarkastate.mentionSearchString
                                 }
-                                handleImagePreview={handleImagePreview}
-                                shouldDisplay={codemarkastate.isShowingMentions}
-                                owner={ownerid}
-                                showMentions={handleShowMentions}
-                                isOnline={socketRef.current.connected}
-                                addCodeBlock={handleAddCodeBlock}
-                                showEmojiPicker={handleShowEmojiPicker}
-                                uploadImage={handleImageUpload}
-                                addURL={handleAddURL}
+                                handleImagePreview={ handleImagePreview }
+                                shouldDisplay={ codemarkastate.isShowingMentions }
+                                owner={ ownerid }
+                                showMentions={ handleShowMentions }
+                                isOnline={ socketRef.current.connected }
+                                addCodeBlock={ handleAddCodeBlock }
+                                showEmojiPicker={ handleShowEmojiPicker }
+                                uploadImage={ handleImageUpload }
+                                addURL={ handleAddURL }
                             />
                         </div>
 
                         <div className="p-0 col-12 col-md-8 col-lg-8 h-100">
                             <Editor
-                                readOnly={codemarkastate.editorPriviledge}
-                                handleEditorChange={editorChanged}
-                                files={codemarkastate.previewContent}
-                                userkid={userid}
-                                socket={socketRef.current}
-                                dropDownSelect={handledropDownSelect}
+                                readOnly={ codemarkastate.editorPriviledge }
+                                handleEditorChange={ editorChanged }
+                                files={ codemarkastate.previewContent }
+                                userkid={ userid }
+                                socket={ socketRef.current }
+                                dropDownSelect={ handledropDownSelect }
                                 uploadFileFromSystem={
                                     handleuploadFileFromSystem
                                 }
-                                clearEditorrContent={handleClearEditorrContent}
-                                addExternalCDN={handleAddExternalCDN}
+                                classroomid={ data.classroom_id }
+                                clearEditorrContent={ handleClearEditorrContent }
+                                addExternalCDN={ handleAddExternalCDN }
                             />
                         </div>
                         <div className="col-2 p-0 d-none d-md-block d-lg-block h-100">
                             <AudioVideo
-                                socket={socketRef.current}
-                                userkid={userid}
-                                isOwner={owner}
-                                ref={audioVideoRef}
-                                isBroadcasting={classroomD.isBroadcasting}
-                                users={codemarkastate.users}
-                                kid={classroomD.kid}
-                                onAlert={handleAudioVideoAlert}
+                                socket={ socketRef.current }
+                                userkid={ userid }
+                                isOwner={ owner }
+                                ref={ audioVideoRef }
+                                isBroadcasting={ classroomD.isBroadcasting }
+                                users={ codemarkastate.users }
+                                kid={ classroomD.kid }
+                                onAlert={ handleAudioVideoAlert }
                             />
                         </div>
                     </div>
