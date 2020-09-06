@@ -1,7 +1,8 @@
 /** @format */
 
 import React from 'react'
-import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
+import { NavLink } from 'react-router-dom'
 import * as APP_URL from '../../../config/url';
 import { useSelector } from 'react-redux'
 function DashboardTab(props) {
@@ -15,26 +16,32 @@ function DashboardTab(props) {
                     <div className="row justify-content-center">
                         <div className="col-lg-9">
                             <div className="row align-items-center">
-                                <div className="col-auto">{props.children}</div>
-                              
+                                <div className="col-auto w-100">
+                                    {props.children}
+                                </div>
                             </div>
                             <div className="mt-4">
                                 <ul className="nav nav-tabs overflow-x">
                                     <li className="nav-item">
-                                        <Link
-                                            to={APP_URL.USER_PROFILE + auth.user.displayName}
-                                            className="nav-link active">
+                                        <NavLink
+                                            activeClassName="active"
+                                            to={
+                                                APP_URL.USER_PROFILE +
+                                                auth.user.displayName
+                                            }
+                                            className="nav-link">
                                             Profile
-                                        </Link>
+                                        </NavLink>
                                     </li>
                                     <li className="nav-item">
-                                        <Link
-                                            to={APP_URL.USER_PROFILE_EDIT}
+                                        <NavLink
+                                            activeClassName="active"
+                                            to={ APP_URL.USER_PROFILE_EDIT }
                                             className="nav-link">
                                             Settings
-                                        </Link>
+                                        </NavLink>
                                     </li>
-                                    <li className="nav-item">
+                                    {/* <li className="nav-item">
                                         <a
                                             href="billing.html"
                                             className="nav-link">
@@ -64,11 +71,11 @@ function DashboardTab(props) {
                                     </li>
                                     <li className="nav-item">
                                         <a
-                                            href="notifications.html"
+                                            href=""
                                             className="nav-link">
                                             Classrooms
                                         </a>
-                                    </li>
+                                    </li> */}
                                 </ul>
                             </div>
                         </div>
@@ -78,5 +85,7 @@ function DashboardTab(props) {
         </div>
     )
 }
-
+DashboardTab.propTypes = {
+    children: PropTypes.any.isRequired,
+}
 export default DashboardTab

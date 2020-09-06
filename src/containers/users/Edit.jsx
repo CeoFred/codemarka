@@ -1,24 +1,52 @@
+/* eslint-disable no-undef */
 /** @format */
 
-import React from 'react'
+import React,{ useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 
-import * as APPURL from '../../config/url'
+import * as API_URL from '../../config/api_url'
 import { useSelector } from 'react-redux'
 import DashboardTab from '../../components/Partials/User/DashboardTab'
 import Helmet from '../../components/SEO/helmet'
 
 export default function Profile() {
     const { app, auth } = useSelector((state) => state)
+    const [profile, setProfile] = useState({})
+    console.log(auth);
+     const jwt = localStorage.getItem('wx1298')
 
+     async function fetch__(url = '', method = 'POST') {
+         // Default options are marked with *
+         const response = await fetch(url, {
+             method, // *GET, POST, PUT, DELETE, etc.
+             mode: 'cors', // no-cors, *cors, same-origin
+             cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+             credentials: 'same-origin', // include, *same-origin, omit
+             headers: {
+                 'Content-Type': 'application/json',
+                 Authorization: `Bearer ${ jwt }`,
+             },
+             redirect: 'follow', // manual, *follow, error
+             referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+         })
+         return response.json() // parses JSON response into native JavaScript objects
+     }
+
+     useEffect(() => {
+        const userInformation = API_URL.GET_USER_DATA + auth.user.displayName
+
+        fetch__(userInformation,'GET').then(data => {
+            setProfile(data.data);
+        })
+     }, [auth.user.token])
     return (
         <div className="header-container-fluid">
-            <Helmet title="Profile" metaDescription="" />
+            <Helmet title="Edit Profile" metaDescription="" />
             <DashboardTab user={auth}>
                 <span class="surtitle">Your account</span>
                 <h1 class="h2 mb-0">Settings</h1>
             </DashboardTab>
-            
+
             <div class="slice slice-sm bg-section-secondary">
                 <div class="container">
                     <div class="row justify-content-center">
@@ -83,6 +111,13 @@ export default function Profile() {
                                                         <input
                                                             class="form-control"
                                                             type="text"
+                                                            value={
+                                                                profile.profile
+                                                                    ? profile
+                                                                          .profile
+                                                                          .firstname
+                                                                    : ''
+                                                            }
                                                             placeholder="Enter your first name"
                                                         />
                                                     </div>
@@ -95,6 +130,13 @@ export default function Profile() {
                                                         <input
                                                             class="form-control"
                                                             type="text"
+                                                            value={
+                                                                profile.profile
+                                                                    ? profile
+                                                                          .profile
+                                                                          .lastname
+                                                                    : ''
+                                                            }
                                                             placeholder="Also your last name"
                                                         />
                                                     </div>
@@ -107,6 +149,13 @@ export default function Profile() {
                                                             Birthday
                                                         </label>{' '}
                                                         <input
+                                                            value={
+                                                                profile.profile
+                                                                    ? profile
+                                                                          .profile
+                                                                          .birthday
+                                                                    : ''
+                                                            }
                                                             type="text"
                                                             class="form-control flatpickr-input"
                                                             data-toggle="date"
@@ -147,6 +196,13 @@ export default function Profile() {
                                                         <input
                                                             class="form-control"
                                                             type="email"
+                                                            value={
+                                                                profile.profile
+                                                                    ? profile
+                                                                          .profile
+                                                                          .email
+                                                                    : ''
+                                                            }
                                                             placeholder="name@exmaple.com"
                                                         />{' '}
                                                         <small class="form-text text-muted mt-2">
@@ -163,6 +219,13 @@ export default function Profile() {
                                                             Phone
                                                         </label>{' '}
                                                         <input
+                                                            value={
+                                                                profile.profile
+                                                                    ? profile
+                                                                          .profile
+                                                                          .phone
+                                                                    : ''
+                                                            }
                                                             class="form-control"
                                                             type="text"
                                                             placeholder="+40-777 245 549"
