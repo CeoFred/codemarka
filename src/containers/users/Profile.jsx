@@ -45,6 +45,7 @@ export default function Profile(props) {
 
         postData(`${ APIURL.GET_USER_DATA }${ String(props.match.params.username).replace(' ','') }`,'GET').then((data) => {
             setUserProfileData(data.data) // JSON data parsed by `data.json()` call
+            console.log(data);
         })
     }, [props.match.params.username])
 
@@ -81,7 +82,7 @@ export default function Profile(props) {
                         className="avatar avatar-xl rounded-circle"
                     />
                     <h2 className="mb-0">
-                        <b>{auth.user.displayName}</b>
+                        <b>{userProfileData.username}</b>
                     </h2>
                     <span className="text-muted d-block">
                         {userProfileData.title}

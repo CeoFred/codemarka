@@ -14,6 +14,7 @@ export const ACCOUNT_RECOVERY =  `${ host }auth/user/account/recovery`;
 export const ACCOUNT_PASSWORD_RESET = `${ host }auth/user/account/password/reset`;
 export const GET_USER_DATA = `${ host }user/u/` //:kid
 export const FOLLOW_USER = `${ host }user/follow/`;
+export const UPDATE_USER_INFORMATION = `${ host }auth/user/profile/update`
 // Oauth
 
 export const GITHUB_AUTH_URL = `${ host }auth/github`;

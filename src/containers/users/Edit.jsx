@@ -2,21 +2,25 @@
 /** @format */
 
 import React,{ useEffect, useState} from 'react'
-import { Link } from 'react-router-dom'
-
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import * as API_URL from '../../config/api_url'
 import { useSelector } from 'react-redux'
 import DashboardTab from '../../components/Partials/User/DashboardTab'
 import Helmet from '../../components/SEO/helmet'
-
-export default function Profile() {
-    const { app, auth } = useSelector((state) => state)
+import countries from '../../utility/country.json';
+toast.configure({
+    autoClose: 6000,
+    draggable: true,
+})
+export default function EditProfile() {
+    const {  auth } = useSelector((state) => state)
     const [profile, setProfile] = useState({})
-    console.log(auth);
+    const [isSaving,setIsSaving] =  useState(false);
+
      const jwt = localStorage.getItem('wx1298')
 
-     async function fetch__(url = '', method = 'POST') {
-         // Default options are marked with *
+     async function fetch__(url = '', method = 'POST', body) {
          const response = await fetch(url, {
              method, // *GET, POST, PUT, DELETE, etc.
              mode: 'cors', // no-cors, *cors, same-origin
@@ -26,6 +30,7 @@ export default function Profile() {
                  'Content-Type': 'application/json',
                  Authorization: `Bearer ${ jwt }`,
              },
+             body: body ?  JSON.stringify(body) : undefined,
              redirect: 'follow', // manual, *follow, error
              referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
          })
@@ -38,11 +43,47 @@ export default function Profile() {
         fetch__(userInformation,'GET').then(data => {
             setProfile(data.data);
         })
-     }, [auth.user.token])
+     }, [auth.user.token]);
+
+     const updateProfileInformation = (e) => {
+            setIsSaving(true)
+
+         const updateUserInformation = API_URL.UPDATE_USER_INFORMATION;
+
+        fetch__(updateUserInformation,'PATCH',{profile:profile.profile,social: profile.social}).then(response => {
+            setTimeout(() => {
+                 setIsSaving(false)
+                 toast.success(<div>Action Successful</div>, {
+                     position: 'bottom-center',
+                 })
+            }, 1500);
+           
+        }).catch(err => {
+            setIsSaving(false)
+             toast.danger(<div>Action Failed</div>, {
+                 position: 'bottom-center',
+             })
+
+        })
+     }
+
+     const handleInputChage = (e) => {
+        setProfile({...profile,profile: {...profile.profile,[e.target.id]: e.target.value}});
+     }
+
+     const handleSocialsChange = (e) => {
+                 setProfile({
+                     ...profile,
+                     social: {
+                         ...profile.social,
+                         [e.target.id]: e.target.value,
+                     },
+                 })
+     }
     return (
         <div className="header-container-fluid">
             <Helmet title="Edit Profile" metaDescription="" />
-            <DashboardTab user={auth}>
+            <DashboardTab user={ auth }>
                 <span class="surtitle">Your account</span>
                 <h1 class="h2 mb-0">Settings</h1>
             </DashboardTab>
@@ -118,6 +159,10 @@ export default function Profile() {
                                                                           .firstname
                                                                     : ''
                                                             }
+                                                            id="firstname"
+                                                            onInput={
+                                                                handleInputChage
+                                                            }
                                                             placeholder="Enter your first name"
                                                         />
                                                     </div>
@@ -130,6 +175,10 @@ export default function Profile() {
                                                         <input
                                                             class="form-control"
                                                             type="text"
+                                                            id="lastname"
+                                                            onInput={
+                                                                handleInputChage
+                                                            }
                                                             value={
                                                                 profile.profile
                                                                     ? profile
@@ -156,9 +205,12 @@ export default function Profile() {
                                                                           .birthday
                                                                     : ''
                                                             }
-                                                            type="text"
-                                                            class="form-control flatpickr-input"
-                                                            data-toggle="date"
+                                                            onChange={
+                                                                handleInputChage
+                                                            }
+                                                            id="birthday"
+                                                            type="date"
+                                                            class="form-control"
                                                             placeholder="Select your birth date"
                                                         />
                                                     </div>
@@ -168,10 +220,13 @@ export default function Profile() {
                                                         <label class="form-control-label">
                                                             Gender
                                                         </label>{' '}
-                                                        <select class="custom-select">
-                                                            <option
-                                                                disabled="disabled"
-                                                                selected="selected">
+                                                        <select
+                                                            onChange={
+                                                                handleInputChage
+                                                            }
+                                                            class="custom-select"
+                                                            id="gender">
+                                                            <option value="0">
                                                                 Select option
                                                             </option>
                                                             <option value="1">
@@ -196,14 +251,12 @@ export default function Profile() {
                                                         <input
                                                             class="form-control"
                                                             type="email"
-                                                            value={
-                                                                profile.profile
-                                                                    ? profile
-                                                                          .profile
-                                                                          .email
+                                                            disabled
+                                                            placeholder={
+                                                                profile
+                                                                    ? profile.email
                                                                     : ''
                                                             }
-                                                            placeholder="name@exmaple.com"
                                                         />{' '}
                                                         <small class="form-text text-muted mt-2">
                                                             This is the main
@@ -219,6 +272,10 @@ export default function Profile() {
                                                             Phone
                                                         </label>{' '}
                                                         <input
+                                                            id="phone"
+                                                            onInput={
+                                                                handleInputChage
+                                                            }
                                                             value={
                                                                 profile.profile
                                                                     ? profile
@@ -232,13 +289,6 @@ export default function Profile() {
                                                         />
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="mt-3">
-                                                <button
-                                                    type="button"
-                                                    class="btn btn-sm btn-primary">
-                                                    Save
-                                                </button>
                                             </div>
                                         </form>
                                     </div>
@@ -257,19 +307,18 @@ export default function Profile() {
                                                         <input
                                                             class="form-control"
                                                             type="text"
+                                                            onInput={
+                                                                handleInputChage
+                                                            }
+                                                            id="address"
+                                                            value={
+                                                                profile.profile
+                                                                    ? profile
+                                                                          .profile
+                                                                          .address
+                                                                    : ''
+                                                            }
                                                             placeholder="Enter your home address"
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        <label class="form-control-label">
-                                                            Number
-                                                        </label>{' '}
-                                                        <input
-                                                            class="form-control"
-                                                            type="tel"
-                                                            placeholder="No."
                                                         />
                                                     </div>
                                                 </div>
@@ -283,7 +332,18 @@ export default function Profile() {
                                                         <input
                                                             class="form-control"
                                                             type="text"
+                                                            id="city"
+                                                            onInput={
+                                                                handleInputChage
+                                                            }
                                                             placeholder="City"
+                                                            value={
+                                                                profile.profile
+                                                                    ? profile
+                                                                          .profile
+                                                                          .city
+                                                                    : ''
+                                                            }
                                                         />
                                                     </div>
                                                 </div>
@@ -293,70 +353,27 @@ export default function Profile() {
                                                             Country
                                                         </label>{' '}
                                                         <select
-                                                            class="form-control select2-hidden-accessible"
-                                                            data-toggle="select"
-                                                            title="Country"
-                                                            data-live-search="true"
-                                                            data-live-search-placeholder="Country"
-                                                            data-select2-id="1"
-                                                            tabindex="-1"
-                                                            aria-hidden="true">
-                                                            <option data-select2-id="3">
-                                                                Romania
-                                                            </option>
-                                                            <option>
-                                                                United Stated
-                                                            </option>
-                                                            <option>
-                                                                France
-                                                            </option>
-                                                            <option>
-                                                                Greece
-                                                            </option>
-                                                            <option>
-                                                                Italy
-                                                            </option>
-                                                            <option>
-                                                                Norway
-                                                            </option>
+                                                            onChange={
+                                                                handleInputChage
+                                                            }
+                                                            id="country"
+                                                            class="form-control"
+                                                            title="Country">
+                                                            {countries.map(
+                                                                (country) => {
+                                                                    return (
+                                                                        <option
+                                                                            value={
+                                                                                country.code
+                                                                            }>
+                                                                            {
+                                                                                country.name
+                                                                            }
+                                                                        </option>
+                                                                    )
+                                                                }
+                                                            )}
                                                         </select>
-                                                        <span
-                                                            class="select2 select2-container select2-container--default"
-                                                            dir="ltr"
-                                                            data-select2-id="2"
-                                                            style={{
-                                                                width:
-                                                                    '209.984px',
-                                                            }}>
-                                                            <span class="selection">
-                                                                <span
-                                                                    class="select2-selection select2-selection--single"
-                                                                    role="combobox"
-                                                                    aria-haspopup="true"
-                                                                    aria-expanded="false"
-                                                                    title="Country"
-                                                                    tabindex="0"
-                                                                    aria-disabled="false"
-                                                                    aria-labelledby="select2-n37s-container">
-                                                                    <span
-                                                                        class="select2-selection__rendered"
-                                                                        id="select2-n37s-container"
-                                                                        role="textbox"
-                                                                        aria-readonly="true"
-                                                                        title="Romania">
-                                                                        Romania
-                                                                    </span>
-                                                                    <span
-                                                                        class="select2-selection__arrow"
-                                                                        role="presentation">
-                                                                        <b role="presentation"></b>
-                                                                    </span>
-                                                                </span>
-                                                            </span>
-                                                            <span
-                                                                class="dropdown-wrapper"
-                                                                aria-hidden="true"></span>
-                                                        </span>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
@@ -365,25 +382,148 @@ export default function Profile() {
                                                             ZIP
                                                         </label>{' '}
                                                         <input
+                                                            id="zip"
                                                             class="form-control"
                                                             type="tel"
+                                                            onInput={
+                                                                handleInputChage
+                                                            }
+                                                            value={
+                                                                profile.profile
+                                                                    ? profile
+                                                                          .profile
+                                                                          .zip
+                                                                    : ''
+                                                            }
                                                             placeholder="ZIP"
                                                         />
                                                     </div>
                                                 </div>
                                             </div>
+                                        </form>
+                                    </div>
+                                    <hr />
+
+                                    <div>
+                                        <h5 class="mb-3">Socials</h5>
+                                        <form>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label">
+                                                            Facebook
+                                                        </label>{' '}
+                                                        <input
+                                                            class="form-control"
+                                                            type="text"
+                                                            onInput={
+                                                                handleSocialsChange
+                                                            }
+                                                            id="facebook"
+                                                            value={
+                                                                profile.social
+                                                                    ? profile
+                                                                          .social
+                                                                          .facebook
+                                                                    : ''
+                                                            }
+                                                            placeholder="Facebook username"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label">
+                                                            Twitter
+                                                        </label>{' '}
+                                                        <input
+                                                            class="form-control"
+                                                            type="text"
+                                                            onInput={
+                                                                handleSocialsChange
+                                                            }
+                                                            id="twitter"
+                                                            value={
+                                                                profile.social
+                                                                    ? profile
+                                                                          .social
+                                                                          .twitter
+                                                                    : ''
+                                                            }
+                                                            placeholder="Twitter username"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label">
+                                                            Linkedin
+                                                        </label>{' '}
+                                                        <input
+                                                            class="form-control"
+                                                            type="text"
+                                                            onInput={
+                                                                handleSocialsChange
+                                                            }
+                                                            id="linkedin"
+                                                            value={
+                                                                profile.social
+                                                                    ? profile
+                                                                          .social
+                                                                          .linkedin
+                                                                    : ''
+                                                            }
+                                                            placeholder="Linkedin username"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label">
+                                                            Github
+                                                        </label>{' '}
+                                                        <input
+                                                            class="form-control"
+                                                            type="text"
+                                                            onInput={
+                                                                handleSocialsChange
+                                                            }
+                                                            id="github"
+                                                            value={
+                                                                profile.social
+                                                                    ? profile
+                                                                          .social
+                                                                          .github
+                                                                    : ''
+                                                            }
+                                                            placeholder="Github username"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <div class="mt-3">
                                                 <button
                                                     type="button"
+                                                    disabled={ isSaving }
+                                                    onClick={
+                                                        updateProfileInformation
+                                                    }
                                                     class="btn btn-sm btn-primary">
-                                                    Save
+                                                    {isSaving
+                                                        ? 'Updating..'
+                                                        : 'Save'}
                                                 </button>
                                             </div>
                                         </form>
                                     </div>
                                     <hr />
                                     <div>
-                                        <div class="page-inner-header mb-4">
+                                        {/* <div class="page-inner-header mb-4">
                                             <h5 class="mb-1">Delete account</h5>
                                             <p class="text-muted mb-0">
                                                 Once you delete your account,
@@ -401,7 +541,7 @@ export default function Profile() {
                                                     Delete your account
                                                 </button>
                                             </div>
-                                        </div>
+                                        </div> */}
                                         <div
                                             class="modal fade"
                                             id="modal_account_deactivate"

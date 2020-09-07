@@ -12,12 +12,12 @@ function NavigationBarItems(props) {
 
     if (props.isAuthenticated) {
         return (
-            <ul className="navbar-nav ml-auto">
+            <ul className="navbar-nav ml-auto align-items-center">
                 <li className="nav-item">
                     <Link
                         className="nav-link"
-                        style={{ fontWeight: 'normal' }}
-                        to={url.HOME}>
+                        style={ { fontWeight: 'normal' } }
+                        to={ url.HOME }>
                         Home
                     </Link>
                 </li>
@@ -25,8 +25,8 @@ function NavigationBarItems(props) {
                 <li className="nav-item">
                     <Link
                         className="nav-link"
-                        style={{ fontWeight: 'normal' }}
-                        to={url.BLOG}>
+                        style={ { fontWeight: 'normal' } }
+                        to={ url.BLOG }>
                         Blog
                     </Link>
                 </li>
@@ -34,42 +34,35 @@ function NavigationBarItems(props) {
                 <li className="nav-item ">
                     <Link
                         className="nav-link"
-                        style={{ fontWeight: 'normal' }}
-                        to={url.COMMUNITY_INDEX}>
+                        style={ { fontWeight: 'normal' } }
+                        to={ url.COMMUNITY_INDEX }>
                         Communities
                     </Link>
                 </li>
                 <li className="nav-item ">
                     <Link
                         className="nav-link btn btn-sm btn-success "
-                        style={{ fontWeight: 'normal', borderRadius: '6px' }}
-                        to={url.CLASSROOM_NEW}>
+                        style={ { fontWeight: 'normal', borderRadius: '6px' } }
+                        to={ url.CLASSROOM_NEW }>
                         Create
                     </Link>
                 </li>
 
                 <li class="nav-item dropdown dropdown-animate">
                     <a
-                        class="nav-link nav-link-icon px-2"
+                        class="nav-link nav-link-icon"
                         href="#!"
                         role="button"
                         data-toggle="dropdown"
                         aria-haspopup="true"
                         aria-expanded="false">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="1em"
-                            height="1em"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            class="feather feather-settings">
-                            <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                        </svg>
+                       
+                        <span class="avatar rounded-circle">
+                            <img
+                                    alt="Image placeholder"
+                                    src={ props.user.displayImg }
+                                />
+                        </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right dropdown-menu-arrow p-3">
                         <h6 class="dropdown-header px-0 mb-2 text-primary">
@@ -77,7 +70,7 @@ function NavigationBarItems(props) {
                         </h6>
 
                         <Link
-                            to={url.USER_PROFILE + `${displayName}`}
+                            to={ url.USER_PROFILE + `${ displayName }` }
                             class="dropdown-item">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -96,7 +89,7 @@ function NavigationBarItems(props) {
                             <span>My profile</span>{' '}
                         </Link>
 
-                        <Link to={url.ACCOUNT_BILLING} class="dropdown-item">
+                        {/* <Link to={url.ACCOUNT_BILLING} class="dropdown-item">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="1em"
@@ -136,8 +129,8 @@ function NavigationBarItems(props) {
                                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                             </svg>{' '}
                             <span>Settings</span>{' '}
-                        </Link>
-                        <a href={url.AUTH_LOGOUT} class="dropdown-item">
+                        </Link> */}
+                        <a href={ url.AUTH_LOGOUT } class="dropdown-item">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="1em"
@@ -157,20 +150,6 @@ function NavigationBarItems(props) {
                         </a>
                     </div>
                 </li>
-                <div class="order-lg-4 ml-lg-3">
-                    <a
-                        className=""
-                        href="#modal-profile"
-                        role="button"
-                        data-toggle="modal">
-                        <span class="avatar rounded-circle">
-                            <img
-                                alt="Image placeholder"
-                                src={props.user.displayImg}
-                            />
-                        </span>
-                    </a>
-                </div>
             </ul>
         )
     } else {
@@ -179,31 +158,31 @@ function NavigationBarItems(props) {
                 <li className="nav-item">
                     <Link
                         className="nav-link"
-                        style={{ fontWeight: 'normal' }}
-                        to={url.HOME}>
+                        style={ { fontWeight: 'normal' } }
+                        to={ url.HOME }>
                         Home
                     </Link>
                 </li>
                 <li className="nav-item">
                     <Link
                         className="nav-link"
-                        style={{ fontWeight: 'normal' }}
-                        to={url.BLOG}>
+                        style={ { fontWeight: 'normal' } }
+                        to={ url.BLOG }>
                         Blog
                     </Link>
                 </li>
                 <li className="nav-item ">
                     <Link
                         className="nav-link"
-                        style={{ fontWeight: 'normal' }}
-                        to={url.ABOUT}>
+                        style={ { fontWeight: 'normal' } }
+                        to={ url.ABOUT }>
                         About
                     </Link>
                 </li>
                 <li className="nav-item ">
                     <Link
                         className="nav-link"
-                        style={{ fontWeight: 'normal' }}
+                        style={ { fontWeight: 'normal' } }
                         to="/#pricing">
                         Pricing
                     </Link>
@@ -212,8 +191,8 @@ function NavigationBarItems(props) {
                 <li className="nav-item ">
                     <Link
                         className="nav-link"
-                        style={{ fontWeight: 'normal' }}
-                        to={url.AUTH_SIGN_IN}>
+                        style={ { fontWeight: 'normal' } }
+                        to={ url.AUTH_SIGN_IN }>
                         Login
                     </Link>
                 </li>
