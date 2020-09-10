@@ -45,19 +45,21 @@ function Mentions(props) {
     }
 
     return (
-        <div className="mention-list" style={{ display: isDisplaying }}>
+        <div className="mention-list" id="mentions_container" style={ { display: isDisplaying } }>
             {users.map((user) => {
                 return (
                     <span
-                       
-                        key={`mention--user-${user.kid}`}
+                        tabindex="0"
+                        role="button"
+                        aria-pressed="false"
+                        key={ `mention--user-${ user.kid }` }
                         class="mention-list-item"
-                        onClick={(e) => initUerSelected(e, user.username)}>
+                        onClick={ (e) => initUerSelected(e, user.username) }>
                         <img
-                            alt={user.display}
+                            alt={ user.display }
                             className="mentions-avatar avatar"
-                            src={user.display}
-                            style={{borderRadius:'20%!important'}}
+                            src={ user.display }
+                            style={ { borderRadius: '20%!important' } }
                         />
                         <span>
                             <span class="dot-online"></span> @{user.username}{' '}

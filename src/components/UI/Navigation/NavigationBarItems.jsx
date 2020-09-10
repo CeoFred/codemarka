@@ -56,12 +56,11 @@ function NavigationBarItems(props) {
                         data-toggle="dropdown"
                         aria-haspopup="true"
                         aria-expanded="false">
-                       
                         <span class="avatar rounded-circle">
                             <img
-                                    alt="Image placeholder"
-                                    src={ props.user.displayImg }
-                                />
+                                alt={ displayName }
+                                src={ props.user.displayImg }
+                            />
                         </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right dropdown-menu-arrow p-3">

@@ -14,9 +14,11 @@
     align-items: center;
     width: 60px;
 }
+
 .tabs {
     display: flex;
 }
+
 .editor_tabs span {
     width: auto;
     /* padding-top: 7px; */
@@ -49,4 +51,21 @@
     height: 100%!important;
     width: 66px;
     background-color: #202124;
+}
+
+.user_indicatorContainer {
+    height: 40px;
+    width: auto;
+    color: #fff;
+    position: fixed;
+    z-index: 999;
+    border-left: 2px solid cyan;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.indicator_content {
+    float: left;
+    background-color: grey;
 }

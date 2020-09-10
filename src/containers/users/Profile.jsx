@@ -1,4 +1,9 @@
-/* eslint-disable no-undef */
+/**
+ * /* eslint-disable no-undef
+ *
+ * @format
+ */
+
 /** @format */
 
 import React, { useEffect, useState } from 'react'
@@ -22,52 +27,90 @@ export default function Profile(props) {
         profile: {},
         social: {},
     })
-         const jwt = localStorage.getItem('wx1298')
 
-         async function postData(url = '',method = 'POST') {
-             // Default options are marked with *
-             const response = await fetch(url, {
-                 method, // *GET, POST, PUT, DELETE, etc.
-                 mode: 'cors', // no-cors, *cors, same-origin
-                 cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                 credentials: 'same-origin', // include, *same-origin, omit
-                 headers: {
-                     'Content-Type': 'application/json',
-                     Authorization: `Bearer ${ jwt }`,
-                 },
-                 redirect: 'follow', // manual, *follow, error
-                 referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-             })
-             return response.json() // parses JSON response into native JavaScript objects
-         }
+    const [config, setConfig] = useState({ isFollingUser: null })
+
+    const jwt = localStorage.getItem('wx1298')
+
+    async function postData(url = '', method = 'POST') {
+        // Default options are marked with *
+        const response = await fetch(url, {
+            method, // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${ jwt }`,
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        })
+        return response.json() // parses JSON response into native JavaScript objects
+    }
     useEffect(() => {
         // Example POST method implementation:
 
-        postData(`${ APIURL.GET_USER_DATA }${ String(props.match.params.username).replace(' ','') }`,'GET').then((data) => {
-            setUserProfileData(data.data) // JSON data parsed by `data.json()` call
-            console.log(data);
+        postData(
+            `${ APIURL.GET_USER_DATA }${ String(
+                props.match.params.username
+            ).replace(' ', '') }`,
+            'GET'
+        ).then((data) => {
+            setUserProfileData(data.data)
+            const usersFollowers = data.data.followers;
+            const isFollowing = usersFollowers.some(
+                (user) => user.kid == auth.user.accountid
+            )
+            setConfig({ isFollingUser:isFollowing })
+
+            console.log(isFollowing)
         })
     }, [props.match.params.username])
 
     const handleFollowUser = (e) => {
-        e.preventDefault();
-            const followUserUrl = APIURL.FOLLOW_USER + userProfileData.kid;
-                postData(followUserUrl).then(data => {
-                  if(data.status){
-   toast.success(
-       <div>
-           Action Successful
-       </div>,{
-           position:'bottom-center'
-       }
-   )
-                  } else {
-                        toast.danger(<div>Action Failed</div>, {
-                            position: 'bottom-center',
-                        })
-                  }
+        e.preventDefault()
+        const followUserUrl = APIURL.FOLLOW_USER + userProfileData.kid
+        postData(followUserUrl).then((data) => {
+            if (data.status) {
+                toast.success(<div>Action Successful</div>, {
+                    position: 'bottom-center',
                 })
-        }
+                if(data.data){
+                     setUserProfileData(data.data)
+
+                }
+
+                setConfig({ isFollingUser: true })
+
+            } else {
+                toast.danger(<div>Action Failed</div>, {
+                    position: 'bottom-center',
+                })
+            }
+        })
+    }
+
+    const handleUnfollow = (e) => {
+           e.preventDefault()
+           const followUserUrl = APIURL.UNFOLLOW_USER + userProfileData.kid
+           postData(followUserUrl).then((data) => {
+               if (data.status) {
+                   toast.success(<div>Action Successful</div>, {
+                       position: 'bottom-center',
+                   })
+                     if (data.data) {
+                         setUserProfileData(data.data)
+                     }
+                     setConfig({ isFollingUser: false })
+
+               } else {
+                   toast.danger(<div>Action Failed</div>, {
+                       position: 'bottom-center',
+                   })
+               }
+           })
+    }
     return (
         <div className="header-container-fluid">
             <Helmet
@@ -225,10 +268,14 @@ export default function Profile(props) {
                                                             <button
                                                                 type="button"
                                                                 onClick={
-                                                                    handleFollowUser
+                                                                    config.isFollingUser
+                                                                        ? handleUnfollow
+                                                                        : handleFollowUser
                                                                 }
                                                                 class="btn btn-xs btn-secondary rounded-pill">
-                                                                Follow
+                                                                {config.isFollingUser
+                                                                        ? 'Unfollow'
+                                                                        : 'follow'}
                                                             </button>
                                                         ) : (
                                                             ''

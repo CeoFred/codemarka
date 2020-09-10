@@ -1477,7 +1477,14 @@ const MainClassLayout = ({
     }
 
     const handleShowMentions = (e) => {
-        setcodemarkaState({...codemarkastate, isShowingMentions: !codemarkastate.isShowingMentions});
+
+        setcodemarkaState(s =>
+           { 
+                if(!s.isShowingMentions){
+                    document.querySelector('#mentions_container').focus();
+                }   
+            return {...s, isShowingMentions: !s.isShowingMentions}
+        });
     }
 
     const handleAddCodeBlock = (e) => {

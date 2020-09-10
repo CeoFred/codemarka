@@ -81,3 +81,10 @@
 [0808/114438.581:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
 [0808/114438.581:ERROR:process_reader_win.cc(123)] NtOpenThread: {Access Denied} A process has requested access to an object, but has not been granted those access rights. (0xc0000022)
 [0808/114438.581:ERROR:exception_snapshot_win.cc(98)] thread ID 10700 not found in process
+[0908/172604.401:ERROR:scoped_process_suspend.cc(31)] NtSuspendProcess: An attempt was made to access an exiting process. (0xc000010a)
+[0908/172604.505:ERROR:process_info.cc(118)] ReadProcessMemory bool __cdecl crashpad::(anonymous namespace)::ReadStruct(HANDLE, crashpad::WinVMAddress, T *) [T = crashpad::process_types::PEB<crashpad::process_types::internal::Traits64>]: Only part of a ReadProcessMemory or WriteProcessMemory request was completed. (0x12B)
+[0908/172604.506:ERROR:process_info.cc(551)] ReadProcessData failed
+[0908/172604.522:ERROR:process_info.cc(329)] VirtualQueryEx: Access is denied. (0x5)
+[0908/172604.546:ERROR:process_info.cc(556)] ReadMemoryInfo failed
+[0908/172604.546:ERROR:process_memory_win.cc(39)] Failed to initialize ProcessInfo.
+[0908/172604.546:ERROR:scoped_process_suspend.cc(40)] NtResumeProcess: An attempt was made to access an exiting process. (0xc000010a)

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /** @format */
 
 // @monaco-editor/react is Monaco editor wrapper for easy/one-line integration with React
@@ -5,7 +6,7 @@
 // configuration files.
 
 import React, { useState, useEffect, useRef } from 'react'
-
+import { useSelector } from 'react-redux'
 import { ControlledEditor as Editor } from '@monaco-editor/react'
 import './monaco.css'
 
@@ -16,7 +17,9 @@ function CodemarkaEditor(props) {
     const socket = useRef(props.socket)
     const currentLanguageIndex = useRef(1)
     const editorValue = useRef()
+    
     const [readOnlyRef,setReadOnlyRef] = useState(true)
+    const { auth } = useSelector((state) => state);
 
     const mapLanguageToIndex = {
         0: 'css',
@@ -152,6 +155,67 @@ function CodemarkaEditor(props) {
         wrappingIndent: 'none',
     }
 
+    useEffect(() => {
+       socket.current.on('new_indicator_position', data => {
+           if(auth.user.accountid !== data.user.accountid){
+
+const myEditor = document.getElementById('main_editor_container')
+
+ // incoming editor width and height
+ const usersEditorWidth = data.usersEditorCordinates.width 
+ const userEditorsHeight = data.usersEditorCordinates.height
+
+ // my editors height
+ const myEditorsWidth = myEditor.getBoundingClientRect().width;
+ const myEditorsHeight = myEditor.getBoundingClientRect().height;
+
+ // incoming indicator top and
+ const usersXIndicatorPosition = data.indicatorCordinatesRelativeToEditor.left
+ const usersYIndicatorPosition = data.indicatorCordinatesRelativeToEditor.top
+
+    // const inputCordinates = e.target.getBoundingClientRect()
+    //       const editorContainer = document.getElementById(
+    //           'main_editor_container'
+    //       )
+    //       const editorCordinates = editorContainer.getBoundingClientRect();
+          
+    //       const inputCordinatesWithoutExtraOffsets = {
+    //           top: (inputCordinates.top - editorCordinates.top)/editorCordinates.height * 100,
+    //           left: (inputCordinates.left - editorCordinates.left)/editorCordinates.width * 100
+    //       }
+
+ const indicatorsPositionY =   ((myEditorsHeight * usersYIndicatorPosition) / userEditorsHeight)
+ const indicatorsPositionX =   ((myEditorsWidth * usersXIndicatorPosition) / usersEditorWidth)
+
+ console.log('my cordinates are ', indicatorsPositionX, indicatorsPositionY)
+
+ let indicatorContainer = document.getElementById('indicatorContainer_func')
+   
+ if (indicatorContainer) {
+     indicatorContainer.style.top = `${ indicatorsPositionY + myEditor.getBoundingClientRect().top  }px`
+     indicatorContainer.style.left = `${ indicatorsPositionX + myEditor.getBoundingClientRect().left }px`
+ } else {
+     indicatorContainer = document.createElement('div')
+     indicatorContainer.classList.add('user_indicatorContainer')
+     indicatorContainer.id = 'indicatorContainer_func'
+     indicatorContainer.style.top = `${ indicatorsPositionY + myEditor.getBoundingClientRect().top }px`
+     indicatorContainer.style.left = `${ indicatorsPositionX + myEditor.getBoundingClientRect().left }px`
+
+     const indicatorContent = document.createElement('div')
+     indicatorContent.classList.add('indicator_content')
+     indicatorContent.innerText = data.user.displayName
+
+     indicatorContainer.appendChild(indicatorContent)
+     document.getElementById('env-container').appendChild(indicatorContainer)
+ }
+      console.log(indicatorContainer)
+      console.log(indicatorContainer.getBoundingClientRect())
+ 
+           }
+          
+        });
+    },[])
+
     function handleChangeLanguageTab(e, tab) {
         const lang = mapLanguageToIndex[tab];
         document.getElementById(`${ lang }_updated_message_container`).innerHTML = ''
@@ -161,20 +225,29 @@ function CodemarkaEditor(props) {
     }
 
     function handleEditorDidMount(_,ed) {
+        // console.log(ed);
         setIsEditorReady(true)
-        ed._domElement.addEventListener('keyup',function(e) {
-            console.log(e);
-            const element = e.target;
-            var div = document.createElement('div')
-            div.textContent = "Sup, y'all?"
-            div.style = element.style;
-            div.setAttribute('class', 'typing_status')
-            console.log(div.style);
-            element.appendChild(div);
-        })
+        ed._domElement.addEventListener('input',function(e) {
+         const inputCordinates = e.target.getBoundingClientRect()
+          const editorContainer = document.getElementById(
+              'main_editor_container'
+          )
+          const editorCordinates = editorContainer.getBoundingClientRect();
+          
+          const inputCordinatesWithoutExtraOffsets = {
+              top: (inputCordinates.top - editorCordinates.top)/editorCordinates.height * 100,
+              left: (inputCordinates.left - editorCordinates.left)/editorCordinates.width * 100
+          }
+          console.log(inputCordinatesWithoutExtraOffsets, editorCordinates)
 
-        ed._domElement.addEventListener('change',function(e){
-            // console.log(e)
+         if (!readOnlyRef.current) {
+            //  socket.current.emit('indicator_position_changed', {
+            //      indicatorCordinatesRelativeToEditor: inputCordinatesWithoutExtraOffsets,
+            //      usersEditorCordinates: editorContainer.getBoundingClientRect(),
+            //      user: auth.user,
+            //  })
+         }
+            
         })
     }
 
@@ -307,6 +380,7 @@ function CodemarkaEditor(props) {
                         className="d-none"
                     />
                     <div
+                        id="main_editor_container"
                         style={ {
                             height: '93%',
                             maxHeight: '93%',

@@ -1,3 +1,12 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
+/* eslint-disable react/prop-types */
+/**
+ * /* eslint-disable no-undef
+ *
+ * @format
+ */
+
 /**
  * /* eslint-disable react/prop-types
  *
@@ -15,11 +24,30 @@ export default function Conversation(props) {
 
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
+    const copyCode = (e, code) => {
+        navigator.permissions
+            .query({ name: 'clipboard-write' })
+            .then((result) => {
+                if (result.state == 'granted' || result.state == 'prompt') {
+                    /* write to the clipboard now */
+                    navigator.clipboard.writeText(code).then(
+                        function () {
+                            /* clipboard successfully set */
+                            alert('Copied code to clipboard')
+                        },
+                        function () {
+                            /* clipboard write failed */
+                        }
+                    )
+                }
+            })
+    }
+
     var wrapURLs = function (text, new_window, id) {
         var url_pattern = /(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}\-\x{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?/gm
         let hasHTML = false
-        let tabFound = text.replace('\t', '')
-        let newLine = tabFound.replace('\n', '')
+        const tabFound = text.replace('\t', '')
+        const newLine = tabFound.replace('\n', '')
         text = newLine
         const htmlRegex = /<.+?>/g
 
@@ -29,7 +57,13 @@ export default function Conversation(props) {
         })
 
         if (hasHTML) {
-            return <code>{rt}</code>
+            return (
+                <code
+                    style={ { cursor: 'pointer' } }
+                    onClick={ (e) => copyCode(e, rt) }>
+                    {rt}
+                </code>
+            )
         }
 
         // var emailRegex = /[\w|.]+[@]+\w+[.]+[\w|.]*$/gm;
@@ -39,28 +73,31 @@ export default function Conversation(props) {
             var protocol_pattern = /^(?:(?:https?|ftp):\/\/)/i
             var href = protocol_pattern.test(url) ? url : 'http://' + url
 
-            return `<a href="${href}" target="${target}"> ${url} </a>`
+            return `<a href="${ href }" target="${ target }"> ${ url } </a>`
         })
         const mentionReqex = /@+[\w]*/gm
 
         rt = rt.replace(mentionReqex, function (username) {
             const userFound = props.users.filter((user) => {
                 return (
-                    String(`@${user.username.trim()}`) ===
+                    String(`@${ user.username.trim() }`) ===
                     String(username.trim())
                 )
             })
             if (userFound.length) {
-                return `<b><a style="color:gold;cursor:pointer" href="/u/${userFound[0].username}" class="mentions_username"> ${username}</a>
+                return `<b style="
+    background: black;
+    padding: 2px;
+    border-radius: 6px;
+"><a style="color:gold;cursor:pointer" href="/u/${ userFound[0].username }" class="mentions_username"> ${ username }</a>
              <div class="mentions_username_profile">
                 <div class="card shadow-none">
     <div class="p-3 d-flex" style="align-items:center">
                   <a href="#" class="avatar rounded-circle hover-scale-105">
-    <img alt="Image placeholder" src="${userFound[0].avatar}" class="">
+    <img alt="Image placeholder" src="${ userFound[0].avatar }" class="">
 
 </a>
         <div>
-            <span class="h6">${userFound[0].username}</span>
          
         </div>
     </div>
@@ -73,7 +110,7 @@ export default function Conversation(props) {
         return (
             <div
                 className="r-message"
-                dangerouslySetInnerHTML={{ __html: rt }}
+                dangerouslySetInnerHTML={ { __html: rt } }
             />
         )
     }
@@ -88,25 +125,12 @@ export default function Conversation(props) {
 
     if (props.messages && props.messages.length > 0) {
         messageRef.current = props.messages.map((m, i) => {
-           
             const date = new Date(m.oTime)
             const time = formatToTimeZone(date, 'h:mm a', { timeZone })
-
-            // let prevMessage = m[i] - 1;
-            // let nextMessage = m[i] + 1;
-
-            // prevMessage = prevMessage ? prevMessage : null;
-            // nextMessage = nextMessage ? nextMessage : null;
-
-            // const previousMessageIsFromUser = prevMessage && prevMessage.by !== "server";
-            // const nextMessageIsFromUser = nextMessage && nextMessage.by !== "server";
-
-            // const equalTimeStampWithPreviousMessage = String(prevMessage.time)
-
             const stylesObj = {
-                self: { border: `0px` },
+                self: { border: '0px' },
                 others: {
-                    borderRight: `5px solid ${m.color ? m.color : 'white'}`,
+                    borderRight: `5px solid ${ m.color ? m.color : 'white' }`,
                 },
             }
             const style =
@@ -119,15 +143,15 @@ export default function Conversation(props) {
                     return (
                         <div
                             className="message_extra"
-                            key={m.msgId}
-                            id={m.msgId}>
+                            key={ m.msgId }
+                            id={ m.msgId }>
                             You
                             {m.type === 'sLeft' ? ' left' : ' Joined'}
                         </div>
                     )
                 }
                 return (
-                    <div className="message_extra" key={m.msgId} id={m.msgId}>
+                    <div className="message_extra" key={ m.msgId } id={ m.msgId }>
                         {m.name}
                         {m.type === 'sLeft' ? ' left' : ' Joined'}
                     </div>
@@ -135,26 +159,26 @@ export default function Conversation(props) {
             } else if (m.by === 'server' && m.type === 'oldMsgUpdate') {
                 return (
                     <div
-                        className={`message ${
+                        className={ `message ${
                             m.by === props.user ? 'sent' : 'received'
-                        }`}
-                        key={m.msgId.toString()}
-                        id={m.msgId}
-                        style={style}>
+                        }` }
+                        key={ m.msgId.toString() }
+                        id={ m.msgId }
+                        style={ style }>
                         <div
-                            style={{ color: `${m.color ? m.color : 'white'}` }}
+                            style={ { color: `${ m.color ? m.color : 'white' }` } }
                             className="font-weight-800 user-by">
                             {m.by !== props.user
                                 ? m.name +
-                                  `${props.owner === m.by ? '(admin)' : ''}`
+                                  `${ props.owner === m.by ? '(admin)' : '' }`
                                 : ''}
                         </div>
                         {m.type == 'image' ? (
                             <div>
                                 <img
-                                    src={m.result.secure_url}
-                                    style={{ width: '100%', cursor: 'pointer' }}
-                                    onClick={(e) =>
+                                    src={ m.result.secure_url }
+                                    style={ { width: '100%', cursor: 'pointer' } }
+                                    onClick={ (e) =>
                                         props.handleImagePreview(
                                             e,
                                             m.result.secure_url
@@ -174,24 +198,24 @@ export default function Conversation(props) {
             } else {
                 return (
                     <div
-                        className={`message ${
+                        className={ `message ${
                             m.by === props.user ? 'sent' : 'received'
-                        }`}
-                        key={m.msgId.toString()}
-                        style={style}
-                        id={m.msgId}>
+                        }` }
+                        key={ m.msgId.toString() }
+                        style={ style }
+                        id={ m.msgId }>
                         <div
-                            style={{ color: `${m.color ? m.color : 'white'}` }}
+                            style={ { color: `${ m.color ? m.color : 'white' }` } }
                             className="font-weight-800 user-by">
                             {m.by !== props.user ? m.name : ''}
                         </div>
                         {m.type == 'image' ? (
                             <div>
                                 <img
-                                    src={m.result.secure_url}
-                                    alt={m.result.public_id}
-                                    style={{ width: '100%',cursor:'pointer' }}
-                                    onClick={(e) =>
+                                    src={ m.result.secure_url }
+                                    alt={ m.result.public_id }
+                                    style={ { width: '100%', cursor: 'pointer' } }
+                                    onClick={ (e) =>
                                         props.handleImagePreview(
                                             e,
                                             m.result.secure_url
@@ -255,19 +279,19 @@ export default function Conversation(props) {
                         {props.username.length > 19 ? '...' : ''}
                     </div>
                     <div
-                        style={{
+                        style={ {
                             marginTop: '-10px',
                             color: '#fff',
                             fontSize: '1rem',
                             fontWeight: 200,
-                        }}>
+                        } }>
                         {props.isOnline ? 'online' : 'offline'}{' '}
                         <span
-                            className={`dot-${
+                            className={ `dot-${
                                 props.isOnline ? 'online' : 'offline'
-                            }`}></span>
+                            }` }></span>
                     </div>
-                    <div className="text-white" style={{ fontSize: 10 }}>
+                    <div className="text-white" style={ { fontSize: 10 } }>
                         {getTyping()}
                     </div>
                 </span>
@@ -278,36 +302,37 @@ export default function Conversation(props) {
             </div>
 
             <Mentions
-                users={props.users}
-                userSelected={props.userSelected}
-                mentionSearchString={props.mentionSearchString}
-                shouldDisplay={props.shouldDisplay}
+                users={ props.users }
+                userSelected={ props.userSelected }
+                mentionSearchString={ props.mentionSearchString }
+                shouldDisplay={ props.shouldDisplay }
             />
 
             {/* input text area */}
             <div className="input_container bg-dark">
+                <textarea id="copy_board_textarea" hidden></textarea>
                 <textarea
-                    style={{ fontSize: 'small', padding: '.5rem .25rem' }}
+                    style={ { fontSize: 'small', padding: '.5rem .25rem' } }
                     resize="none"
                     id="input_area"
-                    onBlur={props.inputBlur}
-                    onFocus={props.inputFocused}
-                    value={props.inputValue}
-                    onChange={props.handleInputChange}
-                    onKeyDown={inputKeyDown}
+                    onBlur={ props.inputBlur }
+                    onFocus={ props.inputFocused }
+                    value={ props.inputValue }
+                    onChange={ props.handleInputChange }
+                    onKeyDown={ inputKeyDown }
                     placeholder="Write a message"
                     className="form-control"></textarea>
                 <div className="action-container">
-                    <span onClick={props.showMentions}>
+                    <span onClick={ props.showMentions }>
                         <i className="fa fa-at"></i>
                     </span>
-                    <span onClick={props.showEmojiPicker}>
+                    <span onClick={ props.showEmojiPicker }>
                         <i className="fa fa-smile"></i>
                     </span>
                     {/* <span onClick={props.addCodeBlock}>
                         <i className="fa fa-code"></i>
                     </span> */}
-                    <span onClick={props.uploadImage}>
+                    <span onClick={ props.uploadImage }>
                         <i className="fa fa-image"></i>
                     </span>
                     {/* <span onClick={props.uploadFiles}>

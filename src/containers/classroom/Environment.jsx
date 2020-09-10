@@ -163,7 +163,11 @@ function Environment(props) {
             }
         }
     }
-    return <div className="env--container">{getContent()}</div>
+    return (
+        <div className="env--container" id="env-container">
+            {getContent()}
+        </div>
+    )
 }
 
 const mapStateToProps = ({ auth, classroom }) => {
