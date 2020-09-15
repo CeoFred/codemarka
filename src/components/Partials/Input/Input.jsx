@@ -68,7 +68,7 @@ if(props.elementType === 'input'){
             <div className="input-group input-group-merge">
                 {inputElement}
 
-                <div class="form-text text-muted mt-2">
+                <div class="form-text mt-2 text-success">
                     <small>{props.elementConfig.inputhelpertext}</small>
                 </div>
             </div>

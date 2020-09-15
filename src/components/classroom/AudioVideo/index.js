@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable react/prop-types */
 /** @format */
 
 import React, { useEffect, useRef, useState } from 'react'
@@ -348,8 +350,8 @@ export default function AudioVideoBroadcast(props) {
                     // setPeers((p) => {
                     //     return [...p, { ...peerConnections.current[user.kid] }]
                     // })
-                    if (document.querySelector(`div#${user.kid}`)) {
-                        document.querySelector(`div#${user.kid}`).remove()
+                    if (document.querySelector(`div#${ user.kid }`)) {
+                        document.querySelector(`div#${ user.kid }`).remove()
                     }
                     var videoDivContainer = document.createElement('div')
                     videoDivContainer.classList.add(
@@ -358,7 +360,7 @@ export default function AudioVideoBroadcast(props) {
                     videoDivContainer.id = user.kid
                     var videoLabel = document.createElement('div')
                     videoLabel.classList.add('video-label')
-                    videoLabel.innerText = `@${user.username}`
+                    videoLabel.innerText = `@${ user.username }`
                     var videlem = document.createElement('video')
                     videlem.srcObject = stream
                     videlem.autoplay = true
@@ -379,13 +381,13 @@ export default function AudioVideoBroadcast(props) {
 
                 call.on('close', function () {
                     delete peerConnections.current[user.kid]
-                    document.querySelector(`div#${user.kid}`).remove()
+                    document.querySelector(`div#${ user.kid }`).remove()
                 })
             })
         }
     }
     return (
-        <div className="h-100" style={{ backgroundColor: '#0f0f0f' }}>
+        <div className="h-100" style={ { backgroundColor: '#0f0f0f' } }>
             {/* <button
                     type="button"
                     className={`audio_switch_button`}>
@@ -399,8 +401,8 @@ export default function AudioVideoBroadcast(props) {
                 <div className="video-container">
                     <div className="host-video-container">
                         <video
-                            ref={hostVideo}
-                            muted={isHost.current ? true : false}
+                            ref={ hostVideo }
+                            muted={ isHost.current ? true : false }
                             className="host-video"
                             autoPlay
                             playsInline></video>
@@ -420,7 +422,7 @@ export default function AudioVideoBroadcast(props) {
                     {!isHost.current ? (
                         <div className="local-video-container">
                             <video
-                                ref={localVideo}
+                                ref={ localVideo }
                                 muted
                                 className="local-video"
                                 autoPlay
@@ -436,10 +438,10 @@ export default function AudioVideoBroadcast(props) {
                 <div className="video-chat-actions-container">
                     <button
                         type="button"
-                        onClick={handleBroadcasting}
-                        className={`btn w-100 btn-sm btn-outline-${
+                        onClick={ handleBroadcasting }
+                        className={ `btn w-100 btn-sm btn-outline-${
                             isBroadCasting === true ? 'success' : 'info'
-                        }`}>
+                        }` }>
                         {isBroadCasting ? 'Hang Up' : 'Call In '}
                     </button>
                 </div>

@@ -17,14 +17,14 @@ export default function FooterBar() {
         <div>
             <footer
                 id="footer-main"
-                style={ { display: display ? 'block' : 'none' } }>
+                style={{ display: display ? 'block' : 'none' }}>
                 <div className="footer footer-dark">
                     <div className="container">
                         <div className="row pt-md">
                             <div className="col-lg-3 mb-5 mb-lg-0">
                                 <div
                                     className="card bg-dark border-none"
-                                    style={ { border: 'none' } }>
+                                    style={{ border: 'none' }}>
                                     <div className="card-body p-0">
                                         <p className="text-sm mb-2">
                                             Build , learn and collaborate with
@@ -55,14 +55,14 @@ export default function FooterBar() {
                                     </li>
                                 </ul>
                             </div>
-                            <div className="col-lg-3 col-sm-12 mb-5 mb-lg-0">
+                            <div className="col-lg-3 col-4 col-sm-4 mb-5 mb-lg-0">
                                 <h6 className="heading mb-3">Company</h6>
                                 <ul className="list-unstyled">
                                     <li>
                                         <a href="/#">Terms</a>
                                     </li>
                                     <li>
-                                        <a href="/#">Privacy</a>
+                                        <a href="/#">Faq</a>
                                     </li>
                                     <li>
                                         <a href="/public/contact-us">Support</a>
@@ -70,17 +70,25 @@ export default function FooterBar() {
                                 </ul>
                             </div>
 
-                            <div className="col-lg-3 col-sm-12 mb-5 mb-lg-0">
+                            <div className="col-lg-3 col-4 col-sm-4 mb-5 mb-lg-0">
                                 <h6 className="heading mb-3">Socials</h6>
                                 <ul className="list-unstyled">
                                     <li>
-                                        <a href="https://twitter.com/codemarka">Twitter</a>
+                                        <a
+                                            href="https://twitter.com/codemarka"
+                                            target="_blank" nofollow="true">
+                                            Twitter
+                                        </a>
                                     </li>
                                     <li>
-                                        <a href="/#">Facebook</a>
+                                        <a
+                                            href="https://fb.me/codemarka.dev"
+                                            target="_blank">
+                                            Facebook
+                                        </a>
                                     </li>
                                     <li>
-                                        <a href="/#">Instagram</a>
+                                        <a href="https://www.linkedin.com/company/codemarka" target="_blank">Linkedin</a>
                                     </li>
                                 </ul>
                             </div>
@@ -90,9 +98,8 @@ export default function FooterBar() {
                                 <div className="copyright text-sm font-weight-bold text-center text-md-left">
                                     © 2020{' '}
                                     <a
-                                        href={ window.location.origin }
-                                        className="font-weight-bold"
-                                        >
+                                        href={window.location.origin}
+                                        className="font-weight-bold">
                                         codemarka{' '}
                                     </a>
                                     . All rights reserved.

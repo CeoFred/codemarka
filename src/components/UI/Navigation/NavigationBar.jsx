@@ -19,7 +19,7 @@ export default function NavigationBar() {
     return (
         <div style={{ display: display ? 'block' : 'none' }}>
             <nav
-                className="navbar navbar-main navbar-expand-lg navbar-sticky navbar-dark bg-dark"
+                className="navbar navbar-main navbar-expand-md navbar-fixed navbar-dark bg-dark"
                 id="navbar-main">
                 <div className="container">
                     <Link className="navbar-brand" to="/">

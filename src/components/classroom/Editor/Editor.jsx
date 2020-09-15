@@ -184,22 +184,33 @@ const myEditor = document.getElementById('main_editor_container')
     //           left: (inputCordinates.left - editorCordinates.left)/editorCordinates.width * 100
     //       }
 
- const indicatorsPositionY =   ((myEditorsHeight * usersYIndicatorPosition) / userEditorsHeight)
- const indicatorsPositionX =   ((myEditorsWidth * usersXIndicatorPosition) / usersEditorWidth)
+ const indicatorsPositionY =
+     (myEditorsHeight * usersYIndicatorPosition) / userEditorsHeight
+ const indicatorsPositionX =
+     (myEditorsWidth * usersXIndicatorPosition) / usersEditorWidth 
 
- console.log('my cordinates are ', indicatorsPositionX, indicatorsPositionY)
+     const percentFromTop = myEditor.getBoundingClientRect().top/ window.innerHeight * 100
+     const percentFromLeft = myEditor.getBoundingClientRect().left/ window.innerWidth * 100
+
+ console.log(
+     'my cordinates are ',
+     indicatorsPositionX,
+     indicatorsPositionY,
+     percentFromTop,
+     percentFromLeft
+ )
 
  let indicatorContainer = document.getElementById('indicatorContainer_func')
    
  if (indicatorContainer) {
-     indicatorContainer.style.top = `${ indicatorsPositionY + myEditor.getBoundingClientRect().top  }px`
-     indicatorContainer.style.left = `${ indicatorsPositionX + myEditor.getBoundingClientRect().left }px`
+     indicatorContainer.style.top = `${ indicatorsPositionY + percentFromTop }%`
+     indicatorContainer.style.left = `${ indicatorsPositionX + percentFromLeft }%`
  } else {
      indicatorContainer = document.createElement('div')
      indicatorContainer.classList.add('user_indicatorContainer')
      indicatorContainer.id = 'indicatorContainer_func'
-     indicatorContainer.style.top = `${ indicatorsPositionY + myEditor.getBoundingClientRect().top }px`
-     indicatorContainer.style.left = `${ indicatorsPositionX + myEditor.getBoundingClientRect().left }px`
+     indicatorContainer.style.top = `${ indicatorsPositionY + percentFromTop }%`
+     indicatorContainer.style.left = `${ indicatorsPositionX + percentFromLeft }%`
 
      const indicatorContent = document.createElement('div')
      indicatorContent.classList.add('indicator_content')
@@ -241,11 +252,11 @@ const myEditor = document.getElementById('main_editor_container')
           console.log(inputCordinatesWithoutExtraOffsets, editorCordinates)
 
          if (!readOnlyRef.current) {
-            //  socket.current.emit('indicator_position_changed', {
-            //      indicatorCordinatesRelativeToEditor: inputCordinatesWithoutExtraOffsets,
-            //      usersEditorCordinates: editorContainer.getBoundingClientRect(),
-            //      user: auth.user,
-            //  })
+             socket.current.emit('indicator_position_changed', {
+                 indicatorCordinatesRelativeToEditor: inputCordinatesWithoutExtraOffsets,
+                 usersEditorCordinates: editorContainer.getBoundingClientRect(),
+                 user: auth.user,
+             })
          }
             
         })
