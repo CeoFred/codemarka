@@ -15,6 +15,9 @@ export const CLASSROOM = '/c/classroom/:classroom'
 export const CLASSROOM_NEW = '/classroom/create'
 export const PROTECTED_CLASSROOM_PREVIEW = '/c/classroom/setup/:classroomKid'
 export const CLASSROOM_PREVIEW_NEW_TAB = '/c/classroom/preview/:classroomKid';
+export const CLASSROOM_NOT_FOUND = '/error/classroom/not-found'
+export const REPORT_CLASSROOM = '/classroom/report/:kid';
+export const ASK_A_QUESTION = '/classroom/question/:kid';
 
 // Authentication
 export const AUTH_SIGN_IN  = '/auth/signin';

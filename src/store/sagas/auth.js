@@ -122,7 +122,7 @@ export function* authLoginUserSaga({ email, password }) {
 export function* autoLoginUserSaga() {
     const loggingOut = yield store.getState().auth.loggingOut;
     if(loggingOut){
-        yield put(actions.autoAuthFailed("logging out."))
+        yield put(actions.autoAuthFailed('logging out.'))
     } else {
 
         const kid = yield localStorage.getItem(userIdAlias);
@@ -171,7 +171,6 @@ export function* autoLoginUserSaga() {
         }
     }
     
-
 }
 
 export function* accountRecovery({ email }){

@@ -56,16 +56,20 @@ if(props.elementType === 'input'){
     break;
 
     default:
-    inputElement = <input
-    { ...props.elementConfig }
-     className={ InputClasses.join(' ') } 
-      value={ props.value }
-       onChange={ props.changed } />;
+    inputElement = (
+        <input
+            { ...props.elementConfig }
+            className={ InputClasses.join(' ') }
+            value={ props.value }
+            type={ props.elementType }
+            onChange={ props.changed }
+        />
+    )
     }
     if (props.shouldDisplay) {
         return <div className="form-group">
             <label className="form-control-label">{props.label}{props.validation && props.validation.required ? (<span className="text-danger pl-2">*   </span>) : ''}</label>
-            <div className="input-group input-group-merge">
+            <div className="input-group">
                 {inputElement}
 
                 <div class="form-text mt-2 text-success">

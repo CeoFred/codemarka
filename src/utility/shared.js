@@ -1,4 +1,5 @@
-import { isFuture, isPast,isToday } from "date-fns";
+import { isFuture, isPast,isToday } from 'date-fns';
+import { formatToTimeZone } from 'date-fns-timezone'
 
 export const fetch  = (url='',method='GET',data={}) => {
     
@@ -26,7 +27,6 @@ export const updateObject = (oldObject, UpdatedProperties) => {
 export const checkValidity = (value,rules) => {
 
     let isValid = true;
-
 
 // add other rules
 if(rules.isEmail){
@@ -75,4 +75,18 @@ return isValid;
 
 export const resolvePromise = (promise) => {
     return promise.then(data => data).catch(error => error);
+}
+
+export const convertToReadableDateFormat = (UTC,format,specifiedTimeZone) => {
+    const usersTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
+     const dateTime = new Date(UTC)
+     const dtime = formatToTimeZone(
+         dateTime,
+         format ? format : 'Do MMMM YYYY - h:mm A',
+         {
+             timeZone: specifiedTimeZone ? specifiedTimeZone : usersTimeZone,
+         }
+     )
+     return dtime;
 }

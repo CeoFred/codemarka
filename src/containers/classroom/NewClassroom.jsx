@@ -267,7 +267,6 @@ if(props.isCommunityAccount){
         return false;
     }
 }
-            
             // eslint-disable-next-line no-undef
             props.onCreate(formData)
         } else {

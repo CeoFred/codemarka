@@ -3,6 +3,7 @@
 
 import React, { useEffect, useState, useRef } from 'react'
 import * as APIURL from '../../config/api_url'
+
 import { formatToTimeZone } from 'date-fns-timezone'
 
 export default function FetchUpcomingClass() {
@@ -48,7 +49,7 @@ export default function FetchUpcomingClass() {
                                                 <div className="text-right">
                                                     <div className="actions mr-n2">
                                                         <a
-                                                            href={`/c/classroom/${comm.kid}`}
+                                                            href={ `/c/classroom/${ comm.kid }` }
                                                             className="action-item">
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"
@@ -70,51 +71,57 @@ export default function FetchUpcomingClass() {
                                                                     y2="3"></line>
                                                             </svg>
                                                         </a>
-                                                        <div
-                                                            className="dropdown action-item"
-                                                            data-toggle="dropdown"
-                                                            aria-expanded="false">
-                                                            <a
-                                                                href="#"
-                                                                className="action-item">
-                                                                <svg
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    width="1em"
-                                                                    height="1em"
-                                                                    viewBox="0 0 24 24"
-                                                                    fill="none"
-                                                                    stroke="currentColor"
-                                                                    stroke-width="2"
-                                                                    stroke-linecap="round"
-                                                                    stroke-linejoin="round"
-                                                                    className="feather feather-more-horizontal">
-                                                                    <circle
-                                                                        cx="12"
-                                                                        cy="12"
-                                                                        r="1"></circle>
-                                                                    <circle
-                                                                        cx="19"
-                                                                        cy="12"
-                                                                        r="1"></circle>
-                                                                    <circle
-                                                                        cx="5"
-                                                                        cy="12"
-                                                                        r="1"></circle>
-                                                                </svg>
-                                                            </a>
-                                                            <div className="dropdown-menu dropdown-menu-right">
-                                                                <a
-                                                                    href="#"
-                                                                    className="dropdown-item">
-                                                                    Remind Me
-                                                                </a>{' '}
-                                                                <a
-                                                                    href="#"
-                                                                    className="dropdown-item">
-                                                                    Report
-                                                                </a>
-                                                            </div>
-                                                        </div>
+                                                        <a
+                                                            className="action-item"
+                                                            href={ `/classroom/report/${ comm.kid }` }
+                                                            title="Report classroom">
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                width="1em"
+                                                                height="1em"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                stroke-width="2"
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                class="feather feather-x-circle">
+                                                                <circle
+                                                                    cx="12"
+                                                                    cy="12"
+                                                                    r="10"></circle>
+                                                                <line
+                                                                    x1="15"
+                                                                    y1="9"
+                                                                    x2="9"
+                                                                    y2="15"></line>
+                                                                <line
+                                                                    x1="9"
+                                                                    y1="9"
+                                                                    x2="15"
+                                                                    y2="15"></line>
+                                                            </svg>
+                                                        </a>
+
+                                                        <a
+                                                            className="action-item"
+                                                            title="Ask a question"
+                                                            href={ `/classroom/question/${ comm.kid }` }>
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                width="1em"
+                                                                height="1em"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                stroke-width="2"
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                class="feather feather-mail">
+                                                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                                                <polyline points="22,6 12,13 2,6"></polyline>
+                                                            </svg>
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>

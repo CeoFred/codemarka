@@ -100,7 +100,7 @@ function Environment(props) {
             return checking
         } else if (props.validation_error_message && !props.class_verified) {
             clearClassRoomData()
-            return <Redirect to="/classError/notFound/" />
+            return <Redirect to="/error/classroom/not-found" />
         } else if (
             props.isAuthenticated &&
             status &&
@@ -186,7 +186,7 @@ const mapStateToProps = ({ auth, classroom }) => {
         class_pinnedMessages: classroom.pinnedMessages,
         blocked: classroom.blocked,
         status: classroom.status,
-        startTimeFull: classroom.startTimeFull,
+        startTimeFull: classroom.schedule || classroom.startTimeFull,
         cid: classroom._id,
         kid: classroom.Kid,
         gravatarUrl: classroom.gravatarUrl,

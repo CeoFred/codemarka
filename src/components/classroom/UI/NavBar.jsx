@@ -8,22 +8,39 @@ function NavBar(props) {
     return (
         <nav
             className="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-dark"
-            style={{ height: '8vh',padding:0 }}>
+            style={ { height: '8vh', padding: 0 } }>
             <div className="container-fluid">
                 <a className="navbar-brand" href="/">
-                    <img style={{height:'2rem',maxHeight:'3rem' }} src={logo} alt="codemarka_logo" />
+                    <img
+                        style={ { height: '2rem', maxHeight: '3rem' } }
+                        src={ logo }
+                        alt="codemarka_logo"
+                    />
                 </a>
                 <span className="navbar-brand ml-2">
                     <img
-                        style={{ borderRadius: '50%',height:'2rem',maxHeight:'3rem' }}
-                        src={props.gravatarUrl}
-                        alt={'gravatar'}
+                        style={ {
+                            borderRadius: '50%',
+                            height: '2rem',
+                            maxHeight: '3rem',
+                            width: '2rem',
+                            maxWidth: '2rem',
+                        } }
+                        src={ props.gravatarUrl }
+                        alt={ 'gravatar' }
                     />
                 </span>
-                <span className="navbar-brand" style={{fontSize:'1rem'}}>
-                    <b><i className="fa fa-info-circle" style={{fontSize:'13px'}}></i>{' '}{props.topic}</b>
+                <span className="navbar-brand" style={ { fontSize: '1rem' } }>
+                    <b>
+                        <i
+                            className="fa fa-info-circle"
+                            style={ { fontSize: '13px' } }></i>{' '}
+                        {props.topic}
+                    </b>
                     <br />
-                    <small><i className="fa fa-at"></i>{' '}{props.name.toLowerCase()}</small>
+                    <small>
+                        <i className="fa fa-at"></i> {props.name.toLowerCase()}
+                    </small>
                 </span>
                 <button
                     className="navbar-toggler"
@@ -40,7 +57,7 @@ function NavBar(props) {
                         <li className="nav-item" title="download files">
                             <a
                                 className="nav-link nav-link-icon"
-                                href={props.downloadLink}>
+                                href={ props.downloadLink }>
                                 <i className="fa fa-file-download"></i>
                             </a>
                         </li>
@@ -62,13 +79,13 @@ function NavBar(props) {
                         </li>
                         <li title="favourite" className="nav-item">
                             <a
-                                onClick={props.favourite}
+                                onClick={ props.favourite }
                                 className="nav-link nav-link-icon"
                                 href="/#">
                                 <i
-                                    className={`fa fa-star ${
+                                    className={ `fa fa-star ${
                                         props.isFavourite ? 'bg-gold' : ''
-                                    }`}></i>
+                                    }` }></i>
                                 <span className="nav-link-inner--text d-lg-none">
                                     Favorite
                                 </span>
@@ -85,14 +102,20 @@ function NavBar(props) {
                                     className="nav-link nav-link-icon"
                                     id="navbar-success_dropdown_1"
                                     role="button">
-                                    <i className={`fa fa-clipboard-list ${attendanceIsValid ? 'text-success' : ''}`}></i>
+                                    <i
+                                        className={ `fa fa-clipboard-list ${
+                                            attendanceIsValid
+                                                ? 'text-success'
+                                                : ''
+                                        }` }></i>
                                     <span className="nav-link-inner--text d-lg-none">
                                         Attendance
-                                </span>
+                                    </span>
                                 </span>
                             </li>
-                        ) : ''}
-                        
+                        ) : (
+                            ''
+                        )}
 
                         <li title="Github" className="nav-item dropdown">
                             <span
@@ -172,37 +195,40 @@ function NavBar(props) {
                                 className="dropdown-menu dropdown-menu-right"
                                 aria-labelledby="navbar-success_dropdown_1">
                                 <a
-                                    style={{ cursor: 'pointer' }}
+                                    style={ { cursor: 'pointer' } }
                                     className="dropdown-item"
                                     href="/#"
-                                    onClick={props.exitClassGracefully}>
+                                    onClick={ props.exitClassGracefully }>
                                     Exit
                                 </a>
 
                                 <div className="dropdown-divider"></div>
                                 <a
-                                    style={{ cursor: 'pointer' }}
+                                    style={ { cursor: 'pointer' } }
                                     className="dropdown-item"
                                     href="/#"
-                                    onClick={props.testConnection}>
+                                    onClick={ props.testConnection }>
                                     Test connection
                                 </a>
                                 {props.owner ? (
                                     <div>
-                                      {!props.classStarted ? (<a
-                                            style={{ cursor: 'pointer' }}
-                                            onClick={props.startClass}
-                                            href="/#"
-                                            className="dropdown-item text-success">
-                                            Start Class
-                                        </a>) : ( <a
-                                            style={{ cursor: 'pointer' }}
-                                            className="dropdown-item text-danger"
-                                            href="/#"
-                                            onClick={props.endClass}>
-                                            End Class
-                                        </a>) }  
-                                       
+                                        {!props.classStarted ? (
+                                            <a
+                                                style={ { cursor: 'pointer' } }
+                                                onClick={ props.startClass }
+                                                href="/#"
+                                                className="dropdown-item text-success">
+                                                Start Class
+                                            </a>
+                                        ) : (
+                                            <a
+                                                style={ { cursor: 'pointer' } }
+                                                className="dropdown-item text-danger"
+                                                href="/#"
+                                                onClick={ props.endClass }>
+                                                End Class
+                                            </a>
+                                        )}
                                     </div>
                                 ) : (
                                     ''

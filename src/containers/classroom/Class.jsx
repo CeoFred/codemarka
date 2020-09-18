@@ -43,9 +43,8 @@ import ImagePreview from '../../components/classroom/ImagePreview/index';
 import { DOWNLOAD_CLASSROOM_ATTENDANCE } from '../../config/api_url';
 import AttendanceCollector from '../../components/classroom/Attendance/index.jsx';
 
-// import AudioBroadcast from '../../components/classroom/Audio/Audio';
 import CodeBlockModal from '../../components/classroom/Conversation_Partials/CodeBlocks/index';
-
+import ClassInformationModal from '../../components/classroom/Modals/ClassroomInformation'
 import { CLASSROOM_FILE_DOWNLOAD } from '../../config/api_url'
 import './css/Environment.css'
 
@@ -177,19 +176,6 @@ const MainClassLayout = ({
     }
     const [SocketConnection, setSocketConnection] = useState({
         connected: socket.connected
-    })
-
-    const [ClassroomInformation, setClassroomInformation] = useState({
-        cname: {
-            value: name
-        },
-        cdesc: {
-            value: description
-        },
-        ctopic: {
-            value: topic
-        },
-        submitted: false
     })
 
     const [
@@ -756,14 +742,6 @@ const MainClassLayout = ({
                 }
             })
 
-            socket.on('newClassInformation', (doc) => {
-                toast.success('Class Information updated!')
-                setClassroomInformation((c) => {
-                    return { ...c, submitted: false }
-                })
-                onClassroomVerify(doc.kid)
-            })
-
             socket.on('blocking_user_success', ({ user, by, newStudents }) => {
                 setcodemarkaState((s) => {
                     return {
@@ -1124,14 +1102,6 @@ const MainClassLayout = ({
         socket.emit('user_waving', user)
     }
 
-    const handleClassroomInformationInputChange = (e, inputname) => {
-        const v = e.target.value
-
-        setClassroomInformation(input => {
-            return { ...input, [inputname]: { value: v } }
-        })
-    }
-
     const handlePinTextAreaChange = e => {
         e.preventDefault()
         const v = e.target.value
@@ -1210,18 +1180,6 @@ const MainClassLayout = ({
         </form>
     )
 
-    const handleClassInfoUpdate = e => {
-        e.preventDefault()
-
-        setClassroomInformation(input => {
-            return { ...input, submitted: true }
-        })
-        if (owner) {
-            socket.emit('classInformationUpdate', ClassroomInformation)
-        } else {
-            toast.error('No Access to perfom this action')
-        }
-    }
     const classfilesdownloadlink = `${ CLASSROOM_FILE_DOWNLOAD }${ data.classroom_id }`
 
     const getPinnedMessages = () => {
@@ -2123,75 +2081,6 @@ const MainClassLayout = ({
                 </form>
             </Modal>
 
-            <Modal
-                targetid="details_modal_cont"
-                type="default"
-                size="sm"
-                buttonExtra={
-                    owner ? (
-                        <button
-                            type="submit"
-                            onClick={ handleClassInfoUpdate }
-                            className="btn btn-sm float-left btn-soft-primary">
-                            {ClassroomInformation.submitted ? (
-                                <Spinner />
-                            ) : (
-                                'Save'
-                            )}
-                        </button>
-                    ) : (
-                        false
-                    )
-                }
-                title="classroom Information">
-                <form onSubmit={ handleClassInfoUpdate }>
-                    <Input
-                        name="cname"
-                        label="Classroom Name"
-                        elementType="input"
-                        elementConfig={ {
-                            disabled: owner ? false : true,
-                            placeholder: 'Classroom Name',
-                            name: 'cname',
-                        } }
-                        shouldDisplay={ true }
-                        value={ ClassroomInformation.cname.value }
-                        changed={ (e) =>
-                            handleClassroomInformationInputChange(e, 'cname')
-                        }
-                    />
-                    <Input
-                        name="ctopic"
-                        label="Classroom Topic"
-                        elementType="input"
-                        elementConfig={ {
-                            disabled: owner ? false : true,
-                            placeholder: 'Classroom Name',
-                            name: 'ctopic',
-                        } }
-                        shouldDisplay={ true }
-                        value={ ClassroomInformation.ctopic.value }
-                        changed={ (e) =>
-                            handleClassroomInformationInputChange(e, 'ctopic')
-                        }
-                    />
-                    <Input
-                        label="Classroom Description"
-                        elementType="textarea"
-                        elementConfig={ {
-                            disabled: owner ? false : true,
-                            placeholder: 'Classroom Name',
-                            name: 'cdesc',
-                        } }
-                        shouldDisplay={ true }
-                        value={ ClassroomInformation.cdesc.value }
-                        changed={ (e) =>
-                            handleClassroomInformationInputChange(e, 'cdesc')
-                        }
-                    />
-                </form>
-            </Modal>
-
             <ParticipantModal
                 users={ codemarkastate.users }
                 toogleUserEditAccess={ handletoogleUserEditAccess }
@@ -2205,7 +2094,12 @@ const MainClassLayout = ({
             />
 
             <CodeBlockModal socket={ socketRef.current } />
-
+            <ClassInformationModal
+                owner={ owner }
+                socket={ socketRef.current }
+                onClassroomVerify={ onClassroomVerify }
+                toast={ toast }
+            />
             <div style={ { width: '100%', height: '92vh' } }>
                 <div className="container-fluid h-100">
                     <div className="row h-100">
