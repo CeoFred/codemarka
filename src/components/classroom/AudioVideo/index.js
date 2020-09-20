@@ -1,12 +1,21 @@
 /* eslint-disable no-undef */
+/**
+ * /* eslint-disable no-undef
+ *
+ * @format
+ */
+
 /* eslint-disable react/prop-types */
 /** @format */
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useLayoutEffect } from 'react'
+import { connect } from 'react-redux'
 import Peer from 'peerjs'
+
+import * as classroomActions from '../../../store/actions/classRoom'
 import './index.css'
 
-export default function AudioVideoBroadcast(props) {
+function AudioVideoBroadcast(props) {
     const socketRef = useRef()
     const localVideo = useRef()
     const localStream = useRef()
@@ -18,14 +27,96 @@ export default function AudioVideoBroadcast(props) {
     const [, setPeers] = useState([])
     const usersRef = useRef()
     const isHost = useRef()
+    const mutedAll = useRef(false)
     const onCall = useRef(false)
     const hostVideoStatus = useRef(false)
     const hostAudioStatus = useRef(false)
     const [isBroadCasting, setIsBroadCasting] = useState(false)
+    const [inputOutputSettings, setInputOutputSettings] = useState({
+        audioinput: [],
+        audiooutput: [],
+        videoinput: [],
+    })
+    const AudioVideoContraints = useRef({
+        audio: {
+            deviceId: { exact: undefined },
+        },
+        video: {
+            deviceId: { exact: undefined },
+        },
+        audioOutput:{
+            deviceId : undefined
+        }
+    })
 
     useEffect(() => {
         usersRef.current = props.users
     }, [props.users])
+
+    /**
+     * Effect to run when audio input or output source is
+     * changed.
+     */
+    useEffect(() => {
+        if (props.defaultInputOutput) {
+            if (props.defaultInputOutput.audioinput) {
+                if (
+                    props.defaultInputOutput.audioinput.deviceId !==
+                    AudioVideoContraints.current.audio.deviceId
+                ){
+                     AudioVideoContraints.current.audio.deviceId = {
+                         exact: props.defaultInputOutput.audioinput.deviceId,
+                     }
+                     if(isHost.current && isBroadCasting){
+                            navigator.mediaDevices
+                                .getUserMedia({
+                                    video: AudioVideoContraints.current.video,
+                                    audio: AudioVideoContraints.current.audio,
+                                })
+                                .then((mediaStream) => {
+                                 var audioTrack = window.stream.getAudioTracks()
+                                 if (audioTrack.length > 0) {
+                                     window.stream.removeTrack(audioTrack[0])
+                                     const newStream = mediaStream.getAudioTracks();
+                                     window.stream.addTrack(newStream[0]);
+                                 }
+                                 
+                                })
+                                .catch((err) => {
+                                    console.log(err)
+                                })
+                     }
+                }
+               
+            }
+            if (props.defaultInputOutput.videoinput) {
+               if (
+                   props.defaultInputOutput.videoinput.deviceId !==
+                   AudioVideoContraints.current.video.deviceId
+               ) {
+                   AudioVideoContraints.current.video.deviceId = {
+                       exact: props.defaultInputOutput.videoinput.deviceId,
+                   }
+                   //call users again
+                   if (isHost.current && isBroadCasting) {
+                       HostcallUsers()
+                   }
+                   
+               }
+            }
+        } else {
+            AudioVideoContraints.current.audio.deviceId = {
+                exact: undefined,
+            }
+            AudioVideoContraints.current.audio.deviceId = {
+                exact: undefined,
+            }
+        }
+    }, [props.defaultInputOutput])
+
+    useEffect(() => {
+        props.setInputDevices(inputOutputSettings)
+    }, [inputOutputSettings])
 
     useEffect(() => {
         socketRef.current = props.socket
@@ -34,12 +125,12 @@ export default function AudioVideoBroadcast(props) {
         const peer = new Peer(props.userkid, {
             host: 'peerjs-server.herokuapp.com',
             port: 443,
-            // debug: 3,
+            debug: 3,
             key: 'peerjs',
             secure: true,
             config: {
                 iceServers: [
-                    { url: 'stun:stun1.l.google.com:19302' },
+                    { url: 'stun:stun.I.google.com:19302' },
                     {
                         url: 'turn:numb.viagenie.ca',
                         credential: 'muazkh',
@@ -52,50 +143,30 @@ export default function AudioVideoBroadcast(props) {
 
         peerRef.current.on('open', function (id) {
             PeerId.current = id
+            console.log('peerjs connection opened ', id)
             if (props.isBroadcasting && props.isOwner) {
-                navigator.mediaDevices
-                    .getUserMedia({
-                        video: true,
-                        audio: true,
-                    })
-                    .then((mediaStream) => {
-                        hostVideo.current.srcObject = mediaStream
-                        localStream.current = mediaStream
-                        setIsBroadCasting((br) => true)
-                        hostVideoStatus.current = true
-                        hostAudioStatus.current = true
-                        usersRef.current
-                            // .filter((user) => user.kid !== props.userkid)
-                            .forEach((user) => {
-                                console.log('calling user ', user)
-                                const conn = peerRef.current.connect(user.kid)
-                                if (conn) {
-                                    conn.on('open', () => {
-                                        console.log(
-                                            'connection opened for user ',
-                                            user
-                                        )
-                                        callUser(user)
-                                    })
-
-                                    conn.on('close', () => {
-                                        delete peerConnections.current[user.kid]
-                                    })
-                                }
-                            })
-                    })
+                HostcallUsers()
             }
+        })
+
+        peerRef.current.on('error', function(e){
+            console.log(e);
+        });
+
+        peerRef.current.on('close', function(){
+            console.log('closed connection')
         })
     }, [])
 
     useEffect(() => {
         socketRef.current.on('call_me', (user) => {
             console.log('should call', user)
-            if (isHost.current) {
+            if (isHost.current && user.kid !== props.userkid) {
+                updateDeviceList()
                 navigator.mediaDevices
                     .getUserMedia({
-                        video: true,
-                        audio: true,
+                        video: AudioVideoContraints.current.video,
+                        audio: AudioVideoContraints.current.audio,
                     })
                     .then((mediaStream) => {
                         setIsBroadCasting(true)
@@ -109,40 +180,10 @@ export default function AudioVideoBroadcast(props) {
         })
         socketRef.current.on('broadcast_status', (status, id) => {
             if (status) {
-                // call users
-
-                if (id === socketRef.current.id)
-                    // socketRef.current.emit('start_broadcast', roomID)
-                    setIsBroadCasting((br) => true)
+                if (id === socketRef.current.id) setIsBroadCasting((br) => true)
                 if (isHost.current) {
-                    navigator.mediaDevices
-                        .getUserMedia({
-                            video: true,
-                            audio: true,
-                        })
-                        .then((mediaStream) => {
-                            hostVideo.current.srcObject = mediaStream
-                            localStream.current = mediaStream
-                            hostVideoStatus.current = true
-                            hostAudioStatus.current = true
-                            usersRef.current
-                                .filter((user) => user.kid !== props.userkid)
-                                .forEach((user) => {
-                                    console.log('calling user ', user)
-                                    const conn = peerRef.current.connect(
-                                        user.kid
-                                    )
-                                    if (conn) {
-                                        conn.on('open', () => {
-                                            console.log(
-                                                'connection opened for user ',
-                                                user
-                                            )
-                                            callUser(user)
-                                        })
-                                    }
-                                })
-                        })
+                    console.log(AudioVideoContraints.current)
+                    HostcallUsers();
                 }
             } else {
                 props.onAlert('Failed to start broadcast,try again')
@@ -164,16 +205,13 @@ export default function AudioVideoBroadcast(props) {
                     while (node.firstChild) {
                         node.removeChild(node.lastChild)
                     }
-                } else {
-                    localVideo.current.srcObject = null
-                    localStream.current = null
+                    window.stream.getTracks().forEach(function (track) {
+                        track.stop()
+                    })
                 }
                 hostVideo.current.srcObject = null
-                localStream.current.getTracks().forEach(function (track) {
-                    track.stop()
-                })
                 setPeers([])
-             
+
                 peersRef.current = []
                 onCall.current = false
                 props.onAlert('Host has ended live broadcast.')
@@ -186,7 +224,7 @@ export default function AudioVideoBroadcast(props) {
         })
 
         peerRef.current.on('connection', function (conn) {
-            // console.log('received connection from', conn)
+            console.log('received connection from ', conn)
             conn.on('open', function () {
                 // console.log('connection opened')
             })
@@ -194,39 +232,44 @@ export default function AudioVideoBroadcast(props) {
 
         peerRef.current.on('call', function (call) {
             // Answer the call, providing our mediaStream
-                navigator.mediaDevices
-                    .getUserMedia({
-                        video: true,
-                        audio: true,
+            console.log('received a call ', call)
+                updateDeviceList()
+            navigator.mediaDevices
+                .getUserMedia({
+                    video: AudioVideoContraints.current.video,
+                    audio: AudioVideoContraints.current.audio,
+                })
+                .then((mediaStream) => {
+                    window.stream = mediaStream;
+                    localVideo.current.srcObject = mediaStream
+                    localStream.current = mediaStream
+
+                    call.answer(mediaStream)
+
+                    call.on('stream', (remoteStream) => {
+                        hostVideo.current.srcObject = remoteStream
+                        onCall.current = true
+                        setIsBroadCasting((br) => true)
                     })
-                    .then((mediaStream) => {
-                        localVideo.current.srcObject = mediaStream
-                        localStream.current = mediaStream
 
-                        call.answer(mediaStream)
-
-                        call.on('stream', (remoteStream) => {
-                            // console.log('received host stream')
-                            hostVideo.current.srcObject = remoteStream
-                            onCall.current = true
-                            setIsBroadCasting((br) => true)
-                        })
-
-                         call.on('error', (e) => {
-                            onCall.current = false
-                         })
-
-                         call.on('close', function () {
-                            onCall.current = false
-                            console.log('closed')
-                         })
-
-                         call.on('disconnected', function(){
-                            onCall.current = false
-                            console.log('disconnected');
-                         })
+                    call.on('error', (e) => {
+                        onCall.current = false
+                        console.log(e)
                     })
-           
+
+                    call.on('close', function () {
+                        onCall.current = false
+                        console.log('closed')
+                    })
+
+                    call.on('disconnected', function () {
+                        onCall.current = false
+                        console.log('disconnected')
+                    })
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         })
 
         peerRef.current.on('close', function () {
@@ -252,43 +295,49 @@ export default function AudioVideoBroadcast(props) {
                 'webrtc',
             ]
             if (FATAL_ERRORS.includes(e.type)) {
-                if (isHost.current) {
-                    navigator.mediaDevices
-                        .getUserMedia({
-                            video: true,
-                            audio: true,
-                        })
-                        .then((mediaStream) => {
-                            hostVideo.current.srcObject = mediaStream
-                            localStream.current = mediaStream
-                            hostVideoStatus.current = true
-                            hostAudioStatus.current = true
-                            usersRef.current
-                                .filter((user) => user.kid !== props.userkid)
-                                .forEach((user) => {
-                                    console.log('calling user ', user)
-                                    const conn = peerRef.current.connect(
-                                        user.kid
-                                    )
-                                    if (conn) {
-                                        conn.on('open', () => {
-                                            console.log(
-                                                'connection opened for user ',
-                                                user
-                                            )
-                                            callUser(user)
-                                        })
-                                    }
-                                })
-                        })
+                if (isHost.current && isBroadCasting) {
+                    HostcallUsers();
                 } else {
                     onCall.current = false
-
                 }
             } else {
                 console.log('Non fatal error: ', e.type)
             }
         })
+    }, [])
+
+    async function updateDeviceList(){
+       await navigator.mediaDevices
+            .enumerateDevices()
+            .then(function (deviceInfos) {
+                for (var i = 0; i !== deviceInfos.length; ++i) {
+                    const deviceInfo = deviceInfos[i]
+                    setInputOutputSettings((s) => {
+                        const deviceType = s[deviceInfo.kind];
+                        const exists = deviceType.some(devices => {
+                            return devices.deviceId === deviceInfo.deviceId && devices.groupId === deviceInfo.groupId && devices.label === deviceInfo.label
+                        });
+                        if(!exists){
+                            s[deviceInfo.kind].push(deviceInfo)
+                          props.setInputDevices(s)
+                        }
+                        return {
+                            ...s,
+                        }
+                    })
+                }
+            })
+            .catch(function (err) {
+                console.log(err)
+            })
+    }
+
+    useEffect(() => {
+        navigator.mediaDevices.ondevicechange = function (event) {
+            updateDeviceList().then(done => {
+                console.log('done updating devices');
+            })
+        }
     }, [])
 
     const handleBroadcasting = () => {
@@ -301,38 +350,40 @@ export default function AudioVideoBroadcast(props) {
         }
     }
 
-    const switchHostVideo = (e) => {
-        localStream.current.getTracks().forEach(function (track) {
-            //  track.stop()
-            if (track.kind == 'video') {
-                if (hostVideo.current) {
-                    track.stop()
-                    hostVideoStatus.current = false
-                } else {
-                    navigator.mediaDevices
-                        .getUserMedia({
-                            video: true,
-                            audio: true,
-                        })
-                        .then((mediaStream) => {
-                            mediaStream.getVideoTracks().then((track) => {
-                                console.log(track)
+    function HostcallUsers(){
+                  updateDeviceList().then(done => {
+                      console.log('done updating media')
+                        navigator.mediaDevices
+                            .getUserMedia({
+                                video: AudioVideoContraints.current.video,
+                                audio: AudioVideoContraints.current.audio,
                             })
-                        })
-                }
-            }
-            console.log(track)
-            //  console.log(track)
-        })
+                            .then((mediaStream) => {
+                                setIsBroadCasting((br) => true)
+                                hostVideoStatus.current = true
+                                hostAudioStatus.current = true
+                                if (window.stream) window.stream = null
+                                window.stream = mediaStream
+                                hostVideo.current.srcObject = window.stream
+                                localStream.current = window.stream
+                                usersRef.current.filter((user) => user.kid !== props.userkid).forEach(filtered => {
+                                    callUser(filtered)
+                                })
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                            })
+                  })
+                
     }
 
     function callUser(user) {
         delete peerConnections.current[user.kid]
-
+        console.log('calling user ',user)
         const conn = peerRef.current.connect(user.kid, { reliable: true })
         if (conn) {
             conn.on('open', () => {
-                // console.log('connection opened for user ', user)
+                console.log('connection opened for user ', user)
 
                 peerConnections.current[user.kid] = {
                     metadata: user,
@@ -347,9 +398,7 @@ export default function AudioVideoBroadcast(props) {
                         stream,
                     }
                     setIsBroadCasting((br) => true)
-                    // setPeers((p) => {
-                    //     return [...p, { ...peerConnections.current[user.kid] }]
-                    // })
+
                     if (document.querySelector(`div#${ user.kid }`)) {
                         document.querySelector(`div#${ user.kid }`).remove()
                     }
@@ -381,10 +430,20 @@ export default function AudioVideoBroadcast(props) {
 
                 call.on('close', function () {
                     delete peerConnections.current[user.kid]
-                    document.querySelector(`div#${ user.kid }`).remove()
+                    if (document.querySelector(`div#${ user.kid }`)) {
+                        document.querySelector(`div#${ user.kid }`).remove()
+                    }
                 })
             })
         }
+    }
+
+    function handleMuteAllUsers(){
+        mutedAll.current = true;
+    }
+
+    function handleUnMuteAllUsers(){
+        mutedAll.current = false;
     }
     return (
         <div className="h-100" style={ { backgroundColor: '#0f0f0f' } }>
@@ -395,7 +454,23 @@ export default function AudioVideoBroadcast(props) {
                 </button> */}
             <div className="participant-host-video-container">
                 <span className="hide">
-                    <i className="fa fa-video mr-2"></i> Video chat
+                    <div>
+                        <i className="fa fa-video mr-2"></i> Video chat
+                    </div>
+                    {/* {isHost.current ? (
+                        <div>
+                            {!mutedAll.current ? (
+                                <i
+                                    className="fa fa-microphone text-success"
+                                    title="Mute All"
+                                    onClick={ handleMuteAllUsers }></i>
+                            ) : (
+                                <i className="fa fa-microphone-slash text-danger" onClick={ handleUnMuteAllUsers } title="Unmute All"></i>
+                            )}{' '}
+                        </div>
+                    ) : (
+                        ''
+                    )}{' '} */}
                 </span>
 
                 <div className="video-container">
@@ -423,9 +498,9 @@ export default function AudioVideoBroadcast(props) {
                         <div className="local-video-container">
                             <video
                                 ref={ localVideo }
-                                muted
                                 className="local-video"
                                 autoPlay
+                                muted
                                 playsInline></video>
                             <div className="video-label">You</div>
                         </div>
@@ -451,3 +526,21 @@ export default function AudioVideoBroadcast(props) {
         </div>
     )
 }
+const matchDispatchToProps = (dispatch) => {
+    return {
+        updateDefaultInputOutput: (data) =>
+            dispatch(classroomActions.setDefaultInputOutputDevices(data)),
+        setInputDevices: (data) =>
+            dispatch(classroomActions.setInputOuputDevices(data)),
+    }
+}
+
+const mapStateToProps = ({ classroom }) => {
+    return {
+        defaultInputOutput: classroom.defaultAudioVideoConfig,
+    }
+}
+export default connect(
+    mapStateToProps,
+    matchDispatchToProps
+)(AudioVideoBroadcast)

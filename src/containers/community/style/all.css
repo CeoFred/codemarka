@@ -1,14 +1,15 @@
-.commuities{
-  background-image: url('../../../media/images/man-wearing-white-long-sleeved-shirt-holding-black-pen-3182781.jpg');
+.commuities {
+  background-image: url('../../../media/images/images.png');
 }
-.search-community-container{
+
+.search-community-container {
   display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 div.community-data-container {
-  display:flex;
+  display: flex;
   justify-content: flex-start;
 }

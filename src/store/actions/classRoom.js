@@ -65,3 +65,17 @@ export const classCreationSuccess = (details) => {
         payload: details
     }
 }
+
+export const setDefaultInputOutputDevices = (data) => {
+    return {
+        type: actionTypes.SET_DEFAULT_INPUT_OUTPUT_DEVICES,
+        data
+    }
+}
+
+export const setInputOuputDevices = (data) => {
+    return {
+        type: actionTypes.SET_INPUT_OUTPUT_DEVICES,
+        data
+    }
+}

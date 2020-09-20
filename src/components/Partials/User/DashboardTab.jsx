@@ -7,7 +7,7 @@ import * as APP_URL from '../../../config/url';
 import { useSelector } from 'react-redux'
 function DashboardTab(props) {
 
-    const { app, auth } = useSelector((state) => state)
+    const {  auth } = useSelector((state) => state)
 
     return (
         <div>

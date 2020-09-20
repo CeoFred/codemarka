@@ -16,18 +16,19 @@ export default function Main(props) {
      useEffect(() => {
          switch (editor) {
              case 'HTML':
-                 setEditorShowing(<HtmlTab {...props} />)
+                 setEditorShowing(<HtmlTab { ...props } />)
                  break
              case 'JS':
-                 setEditorShowing(<JavascriptTab {...props} />)
+                 setEditorShowing(<JavascriptTab { ...props } />)
                  break
              case 'CSS':
-                 setEditorShowing(<CssTab {...props} />)
+                 setEditorShowing(<CssTab { ...props } />)
                  break
              default:
-                 setEditorShowing(<HtmlTab {...props} />)
+                 setEditorShowing(<HtmlTab { ...props } />)
                  break
          }
+        setEditor(editor)
      }, [editor, setEditorShowing, props])
     
     const switchEditorTabs = (e) => {
@@ -36,16 +37,16 @@ export default function Main(props) {
 
         switch (editor) {
             case 'HTML':
-                setEditorShowing(<HtmlTab {...props} />)
+                setEditorShowing(<HtmlTab { ...props } />)
                 break
             case 'JS':
-                setEditorShowing(<JavascriptTab {...props} />)
+                setEditorShowing(<JavascriptTab { ...props } />)
                 break
             case 'CSS':
-                setEditorShowing(<CssTab {...props} />)
+                setEditorShowing(<CssTab { ...props } />)
                 break
             default:
-                setEditorShowing(<HtmlTab {...props} />)
+                setEditorShowing(<HtmlTab { ...props } />)
                 break
         }
         setEditor(editor);
@@ -56,20 +57,20 @@ export default function Main(props) {
               <div className="col-3">
                   <nav class="nav flex-column">
                       <a
-                          class={`nav-link editor-tab-item ${editor === 'HTML' ? 'active' : ''}`}
-                          onClick={switchEditorTabs}
+                          class={ `nav-link editor-tab-item ${ editor === 'HTML' ? 'active' : '' }` }
+                          onClick={ switchEditorTabs }
                           href="#!">
                           HTML
                       </a>
                       <a
-                          class={`nav-link editor-tab-item ${editor === 'CSS' ? 'active' : ''}`}
-                          onClick={switchEditorTabs}
+                          class={ `nav-link editor-tab-item ${ editor === 'CSS' ? 'active' : '' }` }
+                          onClick={ switchEditorTabs }
                           href="#!">
                           CSS
                       </a>
                       <a
-                          class={`nav-link editor-tab-item ${editor === 'JS' ? 'active' : ''}`}
-                          onClick={switchEditorTabs}
+                          class={ `nav-link editor-tab-item ${ editor === 'JS' ? 'active' : '' }` }
+                          onClick={ switchEditorTabs }
                           href="#!">
                           JS
                       </a>

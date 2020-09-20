@@ -9,7 +9,9 @@ const INITIAL_STATE = {
     loading:false,
     classdetails:null,
     validated:false,
-    status:null
+    status:null,
+    defaultAudioVideoConfig:{ audioinput:undefined,videoinput:undefined,audiooutput:undefined},
+    audioVideoDeviceAndConfigs:{}
 }
 
 const classroomCreationInit = (state,action) => {
@@ -99,6 +101,20 @@ const resetClassRoomData = (state, action) => {
         ...INITIAL_STATE
     });
 }
+
+const setDefaultInputOutputDevices = (state, action) => {
+    return helper.updateObject(state, {
+        defaultAudioVideoConfig: {
+                ...action.data,
+        },
+    })
+}
+
+const setInputOutputDevices = (state, action) => {
+    return helper.updateObject(state, {
+        audioVideoDeviceAndConfigs: action.data,
+    })
+}
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
 
@@ -111,6 +127,8 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.CLASSROOM_VERIFICATION_SUCCESS): return classroomVerified(state,action)
         case(actionTypes.CLASSROOM_VERIFICATION_FAILED): return classroomVerificationFailed(state,action)
         case(actionTypes.CLASSROOM_RESET): return resetClassRoomData(state,action)
+        case(actionTypes.SET_DEFAULT_INPUT_OUTPUT_DEVICES): return setDefaultInputOutputDevices(state,action)
+        case(actionTypes.SET_INPUT_OUTPUT_DEVICES): return setInputOutputDevices(state,action)
         default: return state;
     }
 }

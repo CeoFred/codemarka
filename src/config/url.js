@@ -5,7 +5,7 @@ export const VERSION2 = '/public/blog/version-2-launched';
 export const ABOUT = '/public/about-us';
 export const CONTACT = '/public/contact-us';
 export const TERMS_AND_CONDITIONS = '/public/terms-and-condition';
-export const PRIVACY_POLICY = '/public/privacy-policy';
+export const PRIVACY_POLICY = '/public/privacy-and-policy';
 export const OAUTH_FAILED = '/auth/oauth/error';
 
 //classroom
@@ -18,6 +18,7 @@ export const CLASSROOM_PREVIEW_NEW_TAB = '/c/classroom/preview/:classroomKid';
 export const CLASSROOM_NOT_FOUND = '/error/classroom/not-found'
 export const REPORT_CLASSROOM = '/classroom/report/:kid';
 export const ASK_A_QUESTION = '/classroom/question/:kid';
+export const CLASSROOM_QUESTIONS = '/classroom/questions/view/:kid'
 
 // Authentication
 export const AUTH_SIGN_IN  = '/auth/signin';

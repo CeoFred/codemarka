@@ -46,11 +46,13 @@ if(props.elementType === 'input'){
             onChange={ props.changed }
             className={ selectClasses.join(' ') }
             defaultValue={ props.value }>
-            {props.elementConfig.options.map(option => (
-                <option value={ option.value } key={ option.value }>
-                    {option.displayValue}
-                </option>
-            ))}
+            {props.elementConfig.options ? props.elementConfig.options.map(
+                (option) => (
+                    <option value={ option.value } key={ option.key || option.value }>
+                        {option.displayValue}
+                    </option>
+                )
+            ): ''}
         </select>
     )
     break;

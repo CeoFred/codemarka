@@ -18,7 +18,7 @@
  * @format
  */
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef,useLayoutEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import io from 'socket.io-client'
 import { ToastContainer, toast } from 'react-toastify'
@@ -193,7 +193,51 @@ const MainClassLayout = ({
     }
 
     const [starRating, setStarRating] = useState(0)
+    
+    useLayoutEffect(() => {
+        socket.on('new_image_message', (data) => {
+            const updateMessage = new Promise((resolve) => {
+                resolve(
+                    setcodemarkaState((c) => {
+                        const oldmsg = c.messages
+                        oldmsg.push(data)
+                        const newuserTypingList = c.typingState.filter(
+                            (typist) => {
+                                return typist.id !== data.by
+                            }
+                        )
+                        return {
+                            ...c,
+                            messages: oldmsg,
+                            typingState: newuserTypingList,
+                        }
+                    })
+                )
+            })
+        })
 
+        //listen for old message
+        socket.on('updateMsg', (msg) => {
+            setcodemarkaState((c) => {
+                let oldmsg = c.messages
+                oldmsg = msg.msgs.map((element) => {
+                    return element
+                })
+                return {
+                    ...c,
+                    messages: oldmsg,
+                    pinnedMessages: pinnedMessages,
+                }
+            })
+        })
+
+         if (inRoom && owner && !started) {
+             setTimeout(() => {
+             document.querySelector('#dialogueToStart').click()
+             },4000)
+         }
+    }, []);
+    
     React.useEffect(() => {
         const elem = document.querySelector('#editor_file_uploader_input');
          elem.addEventListener('change', handleUploadInputChange, { once: true, capture: true, passive: true});
@@ -230,15 +274,14 @@ const MainClassLayout = ({
                 '#7f82bb',
                 '#b3cc6e'
             ]
-            let color
-
-            color = letters[Math.floor(Math.random() * 4)]
+            const color = letters[Math.floor(Math.random() * 4)]
             return color
         }
-        const userMessageColor = getRandomColor();
-        setUserMessageColor(userMessageColor);
+        const selectedUserColor = getRandomColor();
+        setUserMessageColor(selectedUserColor)
 
     },[socket.connected])
+
     React.useEffect(() => {
         const requestData = {
             classroom_id: cid || data.classroom_id,
@@ -247,28 +290,9 @@ const MainClassLayout = ({
             cdata: classroomD,
         }
 
-        if (inRoom && owner && !started) {
-            document.querySelector('#dialogueToStart').click()
-        }
-
-        if (inRoom !== true && inRoom === null && !codemarkastate.blocked) {
+        if (!inRoom && !codemarkastate.blocked) {
             // set listeners and emitters
             setInRoom(true)
-
-            //listen for old message
-            socket.on('updateMsg', (msg) => {
-                setcodemarkaState((c) => {
-                    let oldmsg = c.messages
-                    oldmsg = msg.msgs.map((element) => {
-                        return element
-                    })
-                    return {
-                        ...c,
-                        messages: oldmsg,
-                        pinnedMessages: pinnedMessages,
-                    }
-                })
-            })
 
             socket.on('collect_attendance', (attendanceList) => {
                 if (!owner) {
@@ -281,48 +305,6 @@ const MainClassLayout = ({
                     document.querySelector('#attendance_modal').click()
                 }
             })
-
-            socket.on('new_image_message',(data) => {
-
-               const updateMessage = new Promise((resolve, reject) => {
-                    resolve(
-                        setcodemarkaState((c) => {
-                            const oldmsg = c.messages
-                            oldmsg.push(data)
-                            const newuserTypingList = c.typingState.filter(
-                                (typist) => {
-                                    return typist.id !== data.by
-                                }
-                            )
-                            return {
-                                ...c,
-                                messages: oldmsg,
-                                typingState: newuserTypingList,
-                            }
-                        })
-                    )
-                })
-
-                updateMessage.then(d => {
-                    setcodemarkaState(c => {
-          
-              setTimeout(() => {
-                      const len = c.messages.length
-                      const lastIndex = len - 1
-
-                      const ele = c.messages[lastIndex].msgId
-                      const lelem = document.getElementById(ele)
-                      lelem.scrollIntoView({
-                          behavior: 'smooth',
-                          block: 'end',
-                          inline: 'nearest',
-                      })
-              }, 1000);
-                        return c;
-                    })
-       
-                })
-            });
 
             socket.on('has_attendance_recorded', (data) => {
                 setAttendanceState({
@@ -364,20 +346,18 @@ const MainClassLayout = ({
                 }
             })
 
-            socket.on('image_upload_complete',(result,data) => {
+            socket.on('image_upload_complete',() => {
                toast.success('Image Upload Successful', {
                    position: toast.POSITION.BOTTOM_CENTER,
                })
-
                 document.getElementById('upload__codemarka__progressing').remove()
-
             })
 
             socket.on('attendance_reminder', () => {
                 if (owner) {
                     toast.success(
                         <div>
-                            Heads Up!
+                            Heads Up! :handball_person:
                             <br />
                             Reminder Sent to all participants.{' '}
                         </div>
@@ -551,23 +531,23 @@ const MainClassLayout = ({
                             )
                         })
 
-                        updateMessage.then((d) => {
-                            setcodemarkaState((c) => {
-                                setTimeout(() => {
-                                    const len = c.messages.length
-                                    const lastIndex = len - 1
+                        // updateMessage.then((d) => {
+                        //     setcodemarkaState((c) => {
+                        //         setTimeout(() => {
+                        //             const len = c.messages.length
+                        //             const lastIndex = len - 1
 
-                                    const ele = c.messages[lastIndex].msgId
-                                    const lelem = document.getElementById(ele)
-                                    lelem.scrollIntoView({
-                                        behavior: 'smooth',
-                                        block: 'end',
-                                        inline: 'nearest',
-                                    })
-                                }, 1000)
-                                return c
-                            })
-                        })
+                        //             const ele = c.messages[lastIndex].msgId
+                        //             const lelem = document.getElementById(ele)
+                        //             lelem.scrollIntoView({
+                        //                 behavior: 'smooth',
+                        //                 block: 'end',
+                        //                 inline: 'nearest',
+                        //             })
+                        //         }, 1000)
+                        //         return c
+                        //     })
+                        // })
             })
 
             //listen for members leaving
@@ -938,6 +918,23 @@ const MainClassLayout = ({
         SocketConnection
     ])
 
+    useLayoutEffect(() => {
+        console.log('updated messages')
+        setcodemarkaState((c) => {
+            const len = c.messages.length
+            const lastIndex = len - 1
+            if (c.messages[lastIndex]) {
+                const ele = c.messages[lastIndex].msgId
+                const lelem = document.getElementById(ele)
+                lelem.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'end',
+                    inline: 'nearest',
+                })
+            }
+            return c
+        })
+    }, [codemarkastate.messages])
     const handleEmojiInput = (__emoji_object) => {
         const { emoji } = __emoji_object;
             setInputState(s =>{ return { ...s.inputState, value: s.value+emoji }})
