@@ -4,8 +4,8 @@ export const BLOG = '/blog';
 export const VERSION2 = '/public/blog/version-2-launched';
 export const ABOUT = '/public/about-us';
 export const CONTACT = '/public/contact-us';
-export const TERMS_AND_CONDITIONS = '/public/terms-and-condition';
-export const PRIVACY_POLICY = '/public/privacy-and-policy';
+export const TERMS_AND_CONDITIONS = '/terms-and-conditions';
+export const PRIVACY_POLICY = '/privacy-and-policy';
 export const OAUTH_FAILED = '/auth/oauth/error';
 
 //classroom
