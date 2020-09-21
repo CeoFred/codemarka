@@ -239,7 +239,7 @@ function Dashboard(props) {
                 <Link
                     to={ `/u/${ mem.username }` }
                     className="hover-scale-105">
-                    <img src={ mem.profileImg } className="avatar avatar-sm rounded-circle"/>
+                    <img src={ mem.profileImg } height="2rem" className="avatar avatar-sm rounded-circle"/>
                 </Link>
             </div>
         )
@@ -289,7 +289,6 @@ function Dashboard(props) {
                               {isOwner || isMember ? (
                                   <span>
                                       Following{' '}
-                                      <i className="fa fa-check pl-2"></i>
                                   </span>
                               ) : (
                                   'Follow'

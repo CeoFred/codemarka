@@ -248,12 +248,7 @@ const MainClassLayout = ({
                 }
             })
         })
-
-         if (inRoom && owner && !started) {
-             setTimeout(() => {
-             document.querySelector('#dialogueToStart').click()
-             },4000)
-         }
+       
     }, []);
     
     React.useEffect(() => {
@@ -307,6 +302,12 @@ const MainClassLayout = ({
             username,
             cdata: classroomD,
         }
+
+          if (inRoom && owner && !started) {
+              setTimeout(() => {
+                  document.querySelector('#dialogueToStart').click()
+              }, 10000)
+          }
 
         if (!inRoom && !codemarkastate.blocked) {
             // set listeners and emitters

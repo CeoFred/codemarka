@@ -251,13 +251,13 @@ const myEditor = document.getElementById('main_editor_container')
           }
           console.log(inputCordinatesWithoutExtraOffsets, editorCordinates)
 
-         if (!readOnlyRef.current) {
-             socket.current.emit('indicator_position_changed', {
-                 indicatorCordinatesRelativeToEditor: inputCordinatesWithoutExtraOffsets,
-                 usersEditorCordinates: editorContainer.getBoundingClientRect(),
-                 user: auth.user,
-             })
-         }
+        //  if (!readOnlyRef.current) {
+        //      socket.current.emit('indicator_position_changed', {
+        //          indicatorCordinatesRelativeToEditor: inputCordinatesWithoutExtraOffsets,
+        //          usersEditorCordinates: editorContainer.getBoundingClientRect(),
+        //          user: auth.user,
+        //      })
+        //  }
             
         })
     }

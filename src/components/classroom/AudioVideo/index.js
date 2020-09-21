@@ -153,7 +153,7 @@ function AudioVideoBroadcast(props) {
 
         peerRef.current.on('open', function (id) {
             PeerId.current = id
-            // console.log('peerjs connection opened ', id)
+            console.log('connection opened ', peer)
             if (props.isBroadcasting && props.isOwner) {
                 HostcallUsers()
             }
@@ -329,7 +329,9 @@ function AudioVideoBroadcast(props) {
         socketRef.current.on('broadcast_end_confirmed', (status) => {
             if (status) {
                 setIsBroadCasting((br) => false)
-
+ window.stream.getTracks().forEach(function (track) {
+     track.stop()
+ })
                 if (isHost.current) {
                     peerConnections.current = {}
                     const node = document.getElementById(
@@ -338,9 +340,7 @@ function AudioVideoBroadcast(props) {
                     while (node.firstChild) {
                         node.removeChild(node.lastChild)
                     }
-                    window.stream.getTracks().forEach(function (track) {
-                        track.stop()
-                    })
+                   
                 }
                 hostVideo.current.srcObject = null
                 setPeers([])
@@ -516,7 +516,7 @@ function AudioVideoBroadcast(props) {
 
     function callUser(user) {
         delete peerConnections.current[user.kid]
-        // console.log('calling user ',user)
+        console.log('calling user ',user)
         const conn = peerRef.current.connect(user.kid, { reliable: true })
         if (conn) {
             conn.on('open', () => {
