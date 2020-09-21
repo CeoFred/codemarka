@@ -33,7 +33,7 @@ import * as classroomActions from '../../../../store/actions/classRoom';
                     name="audiooutput"
                     label="Select Audio Output"
                     elementType="select"
-                    value={ prop.default.audiooutput.deviceId }
+                    value={ props.default.audiooutput ? props.default.audiooutput.deviceId : '' }
                     elementConfig={ {
                         disabled: false,
                         name: 'audiooutput',
@@ -59,7 +59,7 @@ import * as classroomActions from '../../../../store/actions/classRoom';
                     name="audioinput"
                     label="Select Audio Input"
                     elementType="select"
-                    value={ prop.default.audioinput.deviceId }
+                    value={ props.default.audioinput ? props.default.audioinput.deviceId :'' }
                     elementConfig={ {
                         disabled: false,
                         name: 'audioinput',
@@ -83,7 +83,7 @@ import * as classroomActions from '../../../../store/actions/classRoom';
                     name="videoinput"
                     label="Select Video Input"
                     elementType="select"
-                    value={ props.default.videoinput.deviceId }
+                    value={ props.default.videoinput ? props.default.videoinput.deviceId : '' }
                     elementConfig={ {
                         disabled: false,
                         name: 'videoinput',

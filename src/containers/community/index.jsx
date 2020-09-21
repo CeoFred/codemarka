@@ -330,13 +330,14 @@ function Dashboard(props) {
                                   <a
                                       href={ communityDetails.publicWebsite.toString() }
                                       target="_blank"
-                                      rel="noopener noreferrer text-white text-underline">
+                                      className="text-underline"
+                                      rel="noopener noreferrer">
                                       <i
                                           className="fa fa-link mr-2"
                                           style={ { color: '#8492a6' } }></i>
 
                                       {communityDetails.publicWebsite || (
-                                          <b>'No public website'</b>
+                                          <b>No public website</b>
                                       )}
                                   </a>
 

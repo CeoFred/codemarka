@@ -18,7 +18,7 @@
  * @format
  */
 
-import React, { useState, useRef,useLayoutEffect } from 'react'
+import React, { useState, useRef,useLayoutEffect,useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import io from 'socket.io-client'
 import { ToastContainer, toast } from 'react-toastify'
@@ -194,6 +194,9 @@ const MainClassLayout = ({
 
     const [starRating, setStarRating] = useState(0)
     
+    useEffect(() => {
+      
+    }, [codemarkastate.messages])
     useLayoutEffect(() => {
         socket.on('new_image_message', (data) => {
             const updateMessage = new Promise((resolve) => {
@@ -214,6 +217,21 @@ const MainClassLayout = ({
                     })
                 )
             })
+           updateMessage.then(d => {
+               setTimeout(() => {
+                   setcodemarkaState((c) => {
+                       if (c.messages && c.messages.length > 0) {
+                           const len = c.messages.length
+                           const lastIndex = len - 1
+                           const ele = c.messages[lastIndex].msgId
+                           const lelem = document.getElementById(ele)
+
+                           lelem.scrollIntoView(false)
+                       }
+                       return c
+                   })
+               }, 1000);
+           })
         })
 
         //listen for old message
@@ -531,23 +549,23 @@ const MainClassLayout = ({
                             )
                         })
 
-                        // updateMessage.then((d) => {
-                        //     setcodemarkaState((c) => {
-                        //         setTimeout(() => {
-                        //             const len = c.messages.length
-                        //             const lastIndex = len - 1
+                        updateMessage.then((d) => {
+                            setcodemarkaState((c) => {
+                                setTimeout(() => {
+                                    const len = c.messages.length
+                                    const lastIndex = len - 1
 
-                        //             const ele = c.messages[lastIndex].msgId
-                        //             const lelem = document.getElementById(ele)
-                        //             lelem.scrollIntoView({
-                        //                 behavior: 'smooth',
-                        //                 block: 'end',
-                        //                 inline: 'nearest',
-                        //             })
-                        //         }, 1000)
-                        //         return c
-                        //     })
-                        // })
+                                    const ele = c.messages[lastIndex].msgId
+                                    const lelem = document.getElementById(ele)
+                                    lelem.scrollIntoView({
+                                        behavior: 'smooth',
+                                        block: 'end',
+                                        inline: 'nearest',
+                                    })
+                                },0)
+                                return c
+                            })
+                        })
             })
 
             //listen for members leaving
@@ -918,23 +936,6 @@ const MainClassLayout = ({
         SocketConnection
     ])
 
-    useLayoutEffect(() => {
-        console.log('updated messages')
-        setcodemarkaState((c) => {
-            const len = c.messages.length
-            const lastIndex = len - 1
-            if (c.messages[lastIndex]) {
-                const ele = c.messages[lastIndex].msgId
-                const lelem = document.getElementById(ele)
-                lelem.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'end',
-                    inline: 'nearest',
-                })
-            }
-            return c
-        })
-    }, [codemarkastate.messages])
     const handleEmojiInput = (__emoji_object) => {
         const { emoji } = __emoji_object;
             setInputState(s =>{ return { ...s.inputState, value: s.value+emoji }})
