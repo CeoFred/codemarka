@@ -40,7 +40,7 @@ export default function Modal(props) {
                                     type="button"
                                     className="btn btn-secondary"
                                     data-dismiss="modal">
-                                    Close
+                                    {props.closeCaption ? props.closeCaption : 'Close'}
                                 </button>
                             ) : (
                                 ''

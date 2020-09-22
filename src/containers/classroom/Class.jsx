@@ -45,19 +45,20 @@ import AttendanceCollector from '../../components/classroom/Attendance/index.jsx
 
 import CodeBlockModal from '../../components/classroom/Conversation_Partials/CodeBlocks/index';
 import ClassInformationModal from '../../components/classroom/Modals/ClassroomInformation'
+import VideoAndAudioPermission from '../../components/classroom/Modals/VideoAndAudioPermission';
 import { CLASSROOM_FILE_DOWNLOAD } from '../../config/api_url'
 import './css/Environment.css'
 
 const host =
     process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test'
-        ? process.env.REACT_APP_REMOTE_API_URL
-        : process.env.REACT_APP_LOCAL_API_URL
+        ? 'https://code-marka.herokuapp.com'
+        : 'http://localhost:2001'
 
-const socket = io(`${ host }classrooms`, {
+const socket = io('localhost:2001', {
     reconnection: true,
     reconnectionDelay: 6000,
-    reconnectionDelayMax: 6000,
-    reconnectionAttempts: 9
+    reconnectionDelayMax:1000,
+    reconnectionAttempts: 30
 })
 
 toast.configure({
@@ -99,6 +100,7 @@ const MainClassLayout = ({
         shouldDisplay: false,
         url: '',
     })
+    const [accessControlLevel, setAccessControlLevel] = useState(0);
 
     const [attendanceState, setAttendanceState] = useState({
         hasCollectedAttendance: false,
@@ -194,9 +196,6 @@ const MainClassLayout = ({
 
     const [starRating, setStarRating] = useState(0)
     
-    useEffect(() => {
-      
-    }, [codemarkastate.messages])
     useLayoutEffect(() => {
         socket.on('new_image_message', (data) => {
             const updateMessage = new Promise((resolve) => {
@@ -296,18 +295,20 @@ const MainClassLayout = ({
     },[socket.connected])
 
     React.useEffect(() => {
+         if (inRoom && owner && !started) {
+             setTimeout(() => {
+                 document.querySelector('#dialogueToStart').click()
+             }, 10000)
+         }
+    },[inRoom]);
+
+    React.useEffect(() => {
         const requestData = {
             classroom_id: cid || data.classroom_id,
             userId: userid,
             username,
             cdata: classroomD,
-        }
-
-          if (inRoom && owner && !started) {
-              setTimeout(() => {
-                  document.querySelector('#dialogueToStart').click()
-              }, 10000)
-          }
+        }     
 
         if (!inRoom && !codemarkastate.blocked) {
             // set listeners and emitters
@@ -342,7 +343,6 @@ const MainClassLayout = ({
                     isCollectingAttendance: true,
                     isSubmittingAttendance: false,
                 })
-                alert('Attendance Updated!')
             })
 
             socket.on('new_attendance', (list) => {
@@ -352,6 +352,7 @@ const MainClassLayout = ({
                         hasCollectedAttendance: true,
                         list,
                     })
+                    toast.info(`${ list.username } has added their attendance`,{ position: 'bottom-center'});
                 }
             })
 
@@ -493,7 +494,7 @@ const MainClassLayout = ({
 
             socket.on('reconnecting', (attemptNumber) => {
                 connAttempts.current++
-                if (attemptNumber > 3) {
+                if (attemptNumber > 1) {
                     toast.info(
                         'Attempting to reconnect to classroom,please wait...'
                     )
@@ -511,22 +512,21 @@ const MainClassLayout = ({
             })
 
             socket.on('reconnect_error', (error) => {
-                if (connAttempts.current >= 5) {
-                    toast.warn(
-                        'Reconnection failed, try refreshing this window'
-                    )
+                if (connAttempts.current >= 30) {
+                    toast.warn('Reconnection has timedout',{position:'bottom-center'})
+                    setSocketConnection({ connected: false })
                 }
             })
 
-            socket.on('reconnect', (attemptNumber) => {
-                socket.emit('re_join', requestData)
-                if (connAttempts.current >= 5) {
-                    toast.success('connection restored.')
-                }
-                // setcodemarkaState({ ...codemarkastate, connected: true })
+            socket.on('reconnect_failed', () => {
+                    setSocketConnection({ connected: false })
+            })
 
+            socket.on('reconnect', (attemptNumber) => {
+                socket.emit('join', requestData)
+                toast.success('Back Online!', {position:'bottom-center'})
                 connAttempts.current = 0
-                setSocketConnection({ ...SocketConnection, connected: true })
+                setSocketConnection({ connected: true })
             })
 
             //listen for new messages
@@ -2091,6 +2091,7 @@ const MainClassLayout = ({
                 waveAtUser={ handlewaveAtUser }
                 handleAddUserIconClicked={ handleAddUserIconClicked }
             />
+            <VideoAndAudioPermission />
 
             <CodeBlockModal socket={ socketRef.current } />
             <ClassInformationModal

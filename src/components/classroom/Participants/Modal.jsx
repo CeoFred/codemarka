@@ -20,7 +20,7 @@ const Modal = ({
                  <div>
                      <li
                          className="list-group-item  justify-content-between align-items-center"
-                         key={u.id}>
+                         key={ u.id }>
                          <div className="d-inline">
                              <img
                                  alt={
@@ -28,12 +28,12 @@ const Modal = ({
                                      '' +
                                      u.username.toUpperCase()[1]
                                  }
-                                 src={u.avatar}
+                                 src={ u.avatar }
                                  class="avatar  rounded-circle avatar-sm"
                              />
                              <span>
                                  <a
-                                     href={`/user/profile/${u.id}?ref=classroom`}
+                                     href={ `/user/profile/${ u.id }?ref=classroom` }
                                      className="text-dark font-weight-normal pl-3 text-uppercase">
                                      @{u.username}{' '}
                                      {ownerid === u.id ? '(Admin)' : ''}
@@ -42,8 +42,8 @@ const Modal = ({
                                  {owner ? (
                                      <div className="ml-5">
                                          <b
-                                             style={{ cursor: 'pointer' }}
-                                             onClick={(e, user = u) =>
+                                             style={ { cursor: 'pointer' } }
+                                             onClick={ (e, user = u) =>
                                                  sendUserPrivateMessage(e, user)
                                              }
                                              className="text-info p-1">
@@ -51,19 +51,19 @@ const Modal = ({
                                          </b>
 
                                          <b
-                                             onClick={(e, user = u) =>
+                                             onClick={ (e, user = u) =>
                                                  waveAtUser(e, user)
                                              }
-                                             style={{ cursor: 'pointer' }}
+                                             style={ { cursor: 'pointer' } }
                                              className="text-dark p-1">
                                              wave
                                          </b>
 
                                          <b
-                                             onClick={(e, user = u) =>
+                                             onClick={ (e, user = u) =>
                                                  blockUser(e, user)
                                              }
-                                             style={{ cursor: 'pointer' }}
+                                             style={ { cursor: 'pointer' } }
                                              className="text-danger p-1">
                                              block
                                          </b>
@@ -71,18 +71,18 @@ const Modal = ({
                                  ) : (
                                      <div className="ml-5">
                                          <b
-                                             onClick={(e, user = u) =>
+                                             onClick={ (e, user = u) =>
                                                  sendUserPrivateMessage(e, user)
                                              }
-                                             style={{ cursor: 'pointer' }}
+                                             style={ { cursor: 'pointer' } }
                                              className="text-info p-1">
                                              message
                                          </b>
                                          <b
-                                             onClick={(e, user = u) =>
+                                             onClick={ (e, user = u) =>
                                                  waveAtUser(e, user)
                                              }
-                                             style={{ cursor: 'pointer' }}
+                                             style={ { cursor: 'pointer' } }
                                              className="text-dark p-1">
                                              wave
                                          </b>
@@ -94,7 +94,7 @@ const Modal = ({
                              <div>
                                  <select
                                      className="d-inline custom-select"
-                                     onChange={(e) =>
+                                     onChange={ (e) =>
                                          toogleUserEditAccess(e, u)
                                      }>
                                      <option
@@ -157,17 +157,17 @@ const Modal = ({
                         <ul className="list-group">
                             {users__}
                         </ul>
-                     </div>
-                     {owner ? (
-                            <div>
-                                <i
+                    </div>
+                    {owner ? (
+                        <div>
+                            <i
                                     onClick={ handleAddUserIconClicked }
                                     className="float-right fa fa-user-plus fa-1x"
                                     style={ {
                                         margin: 20,
                                         color: '#E91E63'
                                     } }></i>
-                            </div>
+                        </div>
                         ) : (
                             ''
                         )}

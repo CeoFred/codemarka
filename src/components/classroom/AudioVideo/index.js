@@ -1,4 +1,9 @@
-/* eslint-disable no-undef */
+/**
+ * /* eslint-disable no-undef
+ *
+ * @format
+ */
+
 /**
  * /* eslint-disable no-undef
  *
@@ -12,7 +17,6 @@ import React, { useEffect, useRef, useState, useLayoutEffect } from 'react'
 import { connect } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-
 import Peer from 'peerjs'
 
 import * as classroomActions from '../../../store/actions/classRoom'
@@ -30,9 +34,9 @@ function AudioVideoBroadcast(props) {
     const [, setPeers] = useState([])
     const usersRef = useRef()
     const isHost = useRef()
-    const [mutedAll,setMutedAll] = useState(false)
-    const [allUsersVideoOff,setAllUsersvideoOff] = useState(false)
-    const [myVideoState, setMyVideoStatus] = useState(true);
+    const [mutedAll, setMutedAll] = useState(false)
+    const [allUsersVideoOff, setAllUsersvideoOff] = useState(false)
+    const [myVideoState, setMyVideoStatus] = useState(true)
     const onCall = useRef(false)
     const hostVideoStatus = useRef(false)
     const hostAudioStatus = useRef(false)
@@ -49,9 +53,9 @@ function AudioVideoBroadcast(props) {
         video: {
             deviceId: { exact: undefined },
         },
-        audioOutput:{
-            deviceId : undefined
-        }
+        audioOutput: {
+            deviceId: undefined,
+        },
     })
 
     useEffect(() => {
@@ -73,46 +77,43 @@ function AudioVideoBroadcast(props) {
                 if (
                     props.defaultInputOutput.audioinput.deviceId !==
                     AudioVideoContraints.current.audio.deviceId
-                ){
-                     AudioVideoContraints.current.audio.deviceId = {
-                         exact: props.defaultInputOutput.audioinput.deviceId,
-                     }
-                     if(isHost.current && isBroadCasting){
-                            navigator.mediaDevices
-                                .getUserMedia({
-                                    video: AudioVideoContraints.current.video,
-                                    audio: AudioVideoContraints.current.audio,
-                                })
-                                .then((mediaStream) => {
-                                 var audioTrack = window.stream.getAudioTracks()
-                                 if (audioTrack.length > 0) {
-                                     window.stream.removeTrack(audioTrack[0])
-                                     const newStream = mediaStream.getAudioTracks();
-                                     window.stream.addTrack(newStream[0]);
-                                 }
-                                 
-                                })
-                                .catch((err) => {
-                                    console.log(err)
-                                })
-                     }
+                ) {
+                    AudioVideoContraints.current.audio.deviceId = {
+                        exact: props.defaultInputOutput.audioinput.deviceId,
+                    }
+                    if (isHost.current && isBroadCasting) {
+                        navigator.mediaDevices
+                            .getUserMedia({
+                                video: AudioVideoContraints.current.video,
+                                audio: AudioVideoContraints.current.audio,
+                            })
+                            .then((mediaStream) => {
+                                var audioTrack = window.stream.getAudioTracks()
+                                if (audioTrack.length > 0) {
+                                    window.stream.removeTrack(audioTrack[0])
+                                    const newStream = mediaStream.getAudioTracks()
+                                    window.stream.addTrack(newStream[0])
+                                }
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                            })
+                    }
                 }
-               
             }
             if (props.defaultInputOutput.videoinput) {
-               if (
-                   props.defaultInputOutput.videoinput.deviceId !==
-                   AudioVideoContraints.current.video.deviceId
-               ) {
-                   AudioVideoContraints.current.video.deviceId = {
-                       exact: props.defaultInputOutput.videoinput.deviceId,
-                   }
-                   //call users again
-                   if (isHost.current && isBroadCasting) {
-                       HostcallUsers()
-                   }
-                   
-               }
+                if (
+                    props.defaultInputOutput.videoinput.deviceId !==
+                    AudioVideoContraints.current.video.deviceId
+                ) {
+                    AudioVideoContraints.current.video.deviceId = {
+                        exact: props.defaultInputOutput.videoinput.deviceId,
+                    }
+                    //call users again
+                    if (isHost.current && isBroadCasting) {
+                        HostcallUsers()
+                    }
+                }
             }
         } else {
             AudioVideoContraints.current.audio.deviceId = {
@@ -135,16 +136,16 @@ function AudioVideoBroadcast(props) {
         const peer = new Peer(props.userkid, {
             host: 'peerjs-server.herokuapp.com',
             port: 443,
-            // debug: 3,
+            debug: 3,
             key: 'peerjs',
             secure: true,
             config: {
                 iceServers: [
-                    { url: 'stun:stun.I.google.com:19302' },
+                    { url: 'stun:numb.viagenie.ca' },
                     {
-                        url: 'turn:numb.viagenie.ca',
-                        credential: 'muazkh',
-                        username: 'webrtc@live.com',
+                        url: 'turn:turn.azcryptotrade.com:3478',
+                        credential: 'turnadmin',
+                        username: '@P@$$w0rd',
                     },
                 ],
             },
@@ -153,17 +154,17 @@ function AudioVideoBroadcast(props) {
 
         peerRef.current.on('open', function (id) {
             PeerId.current = id
-            console.log('connection opened ', peer)
+            // console.log('connection opened ', peer)
             if (props.isBroadcasting && props.isOwner) {
                 HostcallUsers()
             }
         })
 
-        peerRef.current.on('error', function(e){
-            console.log(e);
-        });
+        peerRef.current.on('error', function (e) {
+            console.log(e)
+        })
 
-        peerRef.current.on('close', function(){
+        peerRef.current.on('close', function () {
             console.log('closed connection')
         })
     }, [])
@@ -193,8 +194,7 @@ function AudioVideoBroadcast(props) {
             if (status) {
                 if (id === socketRef.current.id) setIsBroadCasting((br) => true)
                 if (isHost.current) {
-                    console.log(AudioVideoContraints.current)
-                    HostcallUsers();
+                    HostcallUsers()
                 }
             } else {
                 props.onAlert('Failed to start broadcast,try again')
@@ -203,135 +203,149 @@ function AudioVideoBroadcast(props) {
                 peersRef.current = []
             }
         })
-        socketRef.current.on('turn_video_off_all_successfully',(status) => {
- if (!isHost.current) {
-     toast.info('Your video has been turned off by host', {
-         position: 'bottom-center',
-     })
-     if(window.stream){
-            var videoTrack = window.stream.getVideoTracks()
-            if(videoTrack && videoTrack.length > 0){
-                window.stream.oldVideoTrack = videoTrack
-                videoTrack.forEach((video) => {
-                    window.stream.removeTrack(video)
+        socketRef.current.on('turn_video_off_all_successfully', (status) => {
+            if (!isHost.current) {
+                toast.info('Your video has been turned off by host', {
+                    position: 'bottom-center',
                 })
-                setMyVideoStatus(false)
-            }
-     }
-    } else {
-     if (window.usersStreams) {
-         for (const key in window.usersStreams) {
-             if (window.usersStreams.hasOwnProperty(key)) {
-                 const userTrack = window.usersStreams[key]
-                 var videoTrack = userTrack.getVideoTracks()
-                 if (videoTrack.length > 0) {
-                     userTrack.oldVideoTrack = videoTrack
-                     videoTrack.forEach((video) => {
-                         userTrack.removeTrack(video)
-                     })
-                     if(document.querySelector(`#wrapper-on-muted${ key }`)){
-                         document.querySelector(`#wrapper-on-muted${ key }`).classList.remove('d-none')
-                         document.querySelector(`#wrapper-on-muted${ key }`).classList.add('d-flex')
-
-                     }
-                 }
-             }
-         }
-     }
- }
-        });
-   socketRef.current.on('turn_video_on_all_successfully', (status) => {
-       if (!isHost.current) {
-           toast.info('Your video has been turned on by host', {
-               position: 'bottom-center',
-           })
-           if (window.stream) {
-               var videoTrack = window.stream.oldVideoTrack
-               if (videoTrack && videoTrack.length > 0) {
-                   videoTrack.forEach((video) => {
-                       window.stream.addTrack(video)
-                   })
-                   setMyVideoStatus(true)
-               }
-           }
-       } else {
-           if (window.usersStreams) {
-               for (const key in window.usersStreams) {
-                   if (window.usersStreams.hasOwnProperty(key)) {
-                       const userTrack = window.usersStreams[key]
-                       var videoTrack = userTrack.oldVideoTrack
-                       if (videoTrack.length > 0) {
-                           videoTrack.forEach((video) => {
-                               userTrack.addTrack(video)
-                           })
-                           if (
-                               document.querySelector(`#wrapper-on-muted${ key }`)
-                           ) {
-                               document
-                                   .querySelector(`#wrapper-on-muted${ key }`)
-                                   .classList.add('d-none')
-                               document
-                                   .querySelector(`#wrapper-on-muted${ key }`)
-                                   .classList.remove('d-flex')
-                           }
-                       }
-                   }
-               }
-           }
-       }
-   })
-        socketRef.current.on('muted_successfully',(status) => {
-            if(!isHost.current){
-                    toast.info('Your mic has been muted by host', {
-                        position: 'bottom-center',
-                    })
+                if (window.stream) {
+                    var videoTrack = window.stream.getVideoTracks()
+                    if (videoTrack && videoTrack.length > 0) {
+                        window.stream.oldVideoTrack = videoTrack
+                        videoTrack.forEach((video) => {
+                            window.stream.removeTrack(video)
+                        })
+                        setMyVideoStatus(false)
+                    }
+                }
             } else {
-                  if (window.usersStreams) {
-                      for (const key in window.usersStreams) {
-                          if (window.usersStreams.hasOwnProperty(key)) {
-                              const userTrack = window.usersStreams[key]
-                              var audioTrack = userTrack.getAudioTracks()
-                              if (audioTrack.length > 0) {
-                                  userTrack.oldAudoTrack = audioTrack;
-                                  audioTrack.forEach((audio) => {
-                                    //   console.log(audio)
-                                      userTrack.removeTrack(audio)
-                                  })
-                                  var tracks = userTrack.getAudioTracks()
-                                //   console.log(tracks)
-                              }
-                          }
-                      }
-                  } 
+                if (window.usersStreams) {
+                    for (const key in window.usersStreams) {
+                        if (window.usersStreams.hasOwnProperty(key)) {
+                            const userTrack = window.usersStreams[key]
+                            var videoTrack = userTrack.getVideoTracks()
+                            if (videoTrack.length > 0) {
+                                userTrack.oldVideoTrack = videoTrack
+                                videoTrack.forEach((video) => {
+                                    userTrack.removeTrack(video)
+                                })
+                                if (
+                                    document.querySelector(
+                                        `#wrapper-on-muted${ key }`
+                                    )
+                                ) {
+                                    document
+                                        .querySelector(
+                                            `#wrapper-on-muted${ key }`
+                                        )
+                                        .classList.remove('d-none')
+                                    document
+                                        .querySelector(
+                                            `#wrapper-on-muted${ key }`
+                                        )
+                                        .classList.add('d-flex')
+                                }
+                            }
+                        }
+                    }
+                }
             }
-        });
+        })
+        socketRef.current.on('turn_video_on_all_successfully', (status) => {
+            if (!isHost.current) {
+                toast.info('Your video has been turned on by host', {
+                    position: 'bottom-center',
+                })
+                if (window.stream) {
+                    var videoTrack = window.stream.oldVideoTrack
+                    if (videoTrack && videoTrack.length > 0) {
+                        videoTrack.forEach((video) => {
+                            window.stream.addTrack(video)
+                        })
+                        setMyVideoStatus(true)
+                    }
+                }
+            } else {
+                if (window.usersStreams) {
+                    for (const key in window.usersStreams) {
+                        if (window.usersStreams.hasOwnProperty(key)) {
+                            const userTrack = window.usersStreams[key]
+                            var videoTrack = userTrack.oldVideoTrack
+                            if (videoTrack.length > 0) {
+                                videoTrack.forEach((video) => {
+                                    userTrack.addTrack(video)
+                                })
+                                if (
+                                    document.querySelector(
+                                        `#wrapper-on-muted${ key }`
+                                    )
+                                ) {
+                                    document
+                                        .querySelector(
+                                            `#wrapper-on-muted${ key }`
+                                        )
+                                        .classList.add('d-none')
+                                    document
+                                        .querySelector(
+                                            `#wrapper-on-muted${ key }`
+                                        )
+                                        .classList.remove('d-flex')
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        socketRef.current.on('muted_successfully', (status) => {
+            if (!isHost.current) {
+                toast.info('Your mic has been muted by host', {
+                    position: 'bottom-center',
+                })
+            } else {
+                if (window.usersStreams) {
+                    for (const key in window.usersStreams) {
+                        if (window.usersStreams.hasOwnProperty(key)) {
+                            const userTrack = window.usersStreams[key]
+                            var audioTrack = userTrack.getAudioTracks()
+                            if (audioTrack.length > 0) {
+                                userTrack.oldAudoTrack = audioTrack
+                                audioTrack.forEach((audio) => {
+                                    //   console.log(audio)
+                                    userTrack.removeTrack(audio)
+                                })
+                                var tracks = userTrack.getAudioTracks()
+                                //   console.log(tracks)
+                            }
+                        }
+                    }
+                }
+            }
+        })
         socketRef.current.on('unmuted_successfully', (status) => {
             if (!isHost.current && status) {
-                      
             } else {
-                 if (window.usersStreams) {
-                     for (const key in window.usersStreams) {
-                         if (window.usersStreams.hasOwnProperty(key)) {
-                             const userTrack = window.usersStreams[key]
-                             var audioTrack = userTrack.oldAudoTrack;
-                             if (audioTrack.length > 0) {
-                                 audioTrack.forEach((audio) => {
-                                     console.log(audio)
-                                     userTrack.addTrack(audio)
-                                 })
-                             }
-                         }
-                     }
-                 } 
+                if (window.usersStreams) {
+                    for (const key in window.usersStreams) {
+                        if (window.usersStreams.hasOwnProperty(key)) {
+                            const userTrack = window.usersStreams[key]
+                            var audioTrack = userTrack.oldAudoTrack
+                            if (audioTrack.length > 0) {
+                                audioTrack.forEach((audio) => {
+                                    console.log(audio)
+                                    userTrack.addTrack(audio)
+                                })
+                            }
+                        }
+                    }
+                }
             }
         })
 
         socketRef.current.on('broadcast_end_confirmed', (status) => {
             if (status) {
                 setIsBroadCasting((br) => false)
- window.stream.getTracks().forEach(function (track) {
-     track.stop()
- })
+
                 if (isHost.current) {
                     peerConnections.current = {}
                     const node = document.getElementById(
@@ -340,7 +354,11 @@ function AudioVideoBroadcast(props) {
                     while (node.firstChild) {
                         node.removeChild(node.lastChild)
                     }
-                   
+                }
+                if (window.stream) {
+                    window.stream.getTracks().forEach(function (track) {
+                        track.stop()
+                    })
                 }
                 hostVideo.current.srcObject = null
                 setPeers([])
@@ -357,7 +375,7 @@ function AudioVideoBroadcast(props) {
         })
 
         peerRef.current.on('connection', function (conn) {
-            // console.log('received connection from ', conn)
+            console.log('received connection from ', conn)
             conn.on('open', function () {
                 // console.log('connection opened')
             })
@@ -366,14 +384,20 @@ function AudioVideoBroadcast(props) {
         peerRef.current.on('call', function (call) {
             // Answer the call, providing our mediaStream
             // console.log('received a call ', call)
-                updateDeviceList()
+            updateDeviceList()
+            if(!localStorage.getItem('allowed_media_permission')){
+                 document.getElementById('myAudio').click();
+                document.getElementById('myAudio').play()
+                document.querySelector('#video_permission').click();
+            }
             navigator.mediaDevices
                 .getUserMedia({
                     video: AudioVideoContraints.current.video,
                     audio: AudioVideoContraints.current.audio,
                 })
                 .then((mediaStream) => {
-                    window.stream = mediaStream;
+                    localStorage.setItem('allowed_media_permission',true);
+                    window.stream = mediaStream
                     localVideo.current.srcObject = window.stream
                     localStream.current = window.stream
 
@@ -429,7 +453,7 @@ function AudioVideoBroadcast(props) {
             ]
             if (FATAL_ERRORS.includes(e.type)) {
                 if (isHost.current && isBroadCasting) {
-                    HostcallUsers();
+                    HostcallUsers()
                 } else {
                     onCall.current = false
                 }
@@ -439,20 +463,24 @@ function AudioVideoBroadcast(props) {
         })
     }, [])
 
-    async function updateDeviceList(){
-       await navigator.mediaDevices
+    async function updateDeviceList() {
+        await navigator.mediaDevices
             .enumerateDevices()
             .then(function (deviceInfos) {
                 for (var i = 0; i !== deviceInfos.length; ++i) {
                     const deviceInfo = deviceInfos[i]
                     setInputOutputSettings((s) => {
-                        const deviceType = s[deviceInfo.kind];
-                        const exists = deviceType.some(devices => {
-                            return devices.deviceId === deviceInfo.deviceId && devices.groupId === deviceInfo.groupId && devices.label === deviceInfo.label
-                        });
-                        if(!exists){
+                        const deviceType = s[deviceInfo.kind]
+                        const exists = deviceType.some((devices) => {
+                            return (
+                                devices.deviceId === deviceInfo.deviceId &&
+                                devices.groupId === deviceInfo.groupId &&
+                                devices.label === deviceInfo.label
+                            )
+                        })
+                        if (!exists) {
                             s[deviceInfo.kind].push(deviceInfo)
-                          props.setInputDevices(s)
+                            props.setInputDevices(s)
                         }
                         return {
                             ...s,
@@ -467,15 +495,15 @@ function AudioVideoBroadcast(props) {
 
     useEffect(() => {
         navigator.mediaDevices.ondevicechange = function (event) {
-            updateDeviceList().then(done => {
+            updateDeviceList().then((done) => {
                 // console.log('done updating devices');
             })
         }
     }, [])
 
-       useLayoutEffect(() => {
-          updateDeviceList();
-       }, [])
+    useLayoutEffect(() => {
+        updateDeviceList()
+    }, [])
 
     const handleBroadcasting = () => {
         if (!isBroadCasting) {
@@ -487,36 +515,37 @@ function AudioVideoBroadcast(props) {
         }
     }
 
-    function HostcallUsers(){
-                  updateDeviceList().then(done => {
-                    //   console.log('done updating media')
-                        navigator.mediaDevices
-                            .getUserMedia({
-                                video: AudioVideoContraints.current.video,
-                                audio: AudioVideoContraints.current.audio,
-                            })
-                            .then((mediaStream) => {
-                                setIsBroadCasting((br) => true)
-                                hostVideoStatus.current = true
-                                hostAudioStatus.current = true
-                                if (window.stream) window.stream = null
-                                window.stream = mediaStream
-                                hostVideo.current.srcObject = window.stream
-                                localStream.current = window.stream
-                                usersRef.current.filter((user) => user.kid !== props.userkid).forEach(filtered => {
-                                    callUser(filtered)
-                                })
-                            })
-                            .catch((err) => {
-                                console.log(err)
-                            })
-                  })
-                
+    function HostcallUsers() {
+        updateDeviceList().then((done) => {
+            //   console.log('done updating media')
+            navigator.mediaDevices
+                .getUserMedia({
+                    video: AudioVideoContraints.current.video,
+                    audio: AudioVideoContraints.current.audio,
+                })
+                .then((mediaStream) => {
+                    setIsBroadCasting((br) => true)
+                    hostVideoStatus.current = true
+                    hostAudioStatus.current = true
+                    if (window.stream) window.stream = null
+                    window.stream = mediaStream
+                    hostVideo.current.srcObject = window.stream
+                    localStream.current = window.stream
+                    usersRef.current
+                        .filter((user) => user.kid !== props.userkid)
+                        .forEach((filtered) => {
+                            callUser(filtered)
+                        })
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        })
     }
 
     function callUser(user) {
         delete peerConnections.current[user.kid]
-        console.log('calling user ',user)
+        console.log('calling user ', user)
         const conn = peerRef.current.connect(user.kid, { reliable: true })
         if (conn) {
             conn.on('open', () => {
@@ -529,11 +558,11 @@ function AudioVideoBroadcast(props) {
 
                 call.on('stream', function (stream) {
                     // console.log('User has amswered')
-                    if(window.usersStreams){
-                    window.usersStreams[user.kid] = stream
+                    if (window.usersStreams) {
+                        window.usersStreams[user.kid] = stream
                     } else {
                         window.usersStreams = {
-                            [user.kid]: stream
+                            [user.kid]: stream,
                         }
                     }
                     peerConnections.current[user.kid] = {
@@ -557,7 +586,7 @@ function AudioVideoBroadcast(props) {
                     wrapperOnMuted.innerHTML = `@${ user.username }`
                     wrapperOnMuted.classList.add('wrapper-on-muted')
                     wrapperOnMuted.classList.add('d-none')
-                    wrapperOnMuted.id = `wrapper-on-muted${ user.kid }`;
+                    wrapperOnMuted.id = `wrapper-on-muted${ user.kid }`
                     var videlem = document.createElement('video')
                     videlem.srcObject = stream
                     videlem.autoplay = true
@@ -587,36 +616,46 @@ function AudioVideoBroadcast(props) {
         }
     }
 
-    function handleMuteAllUsers(){
-        if(isHost.current && isBroadCasting){
-        socketRef.current.emit('mute_All', props.kid, new Date())
-        setMutedAll(true)
+    function handleMuteAllUsers() {
+        if (isHost.current && isBroadCasting) {
+            socketRef.current.emit('mute_All', props.kid, new Date())
+            setMutedAll(true)
         }
     }
 
-    function handleUnMuteAllUsers(){
-        if(isHost.current && isBroadCasting){
-        socketRef.current.emit('unmute_All', props.kid, new Date())
-        setMutedAll(false)
+    function handleUnMuteAllUsers() {
+        if (isHost.current && isBroadCasting) {
+            socketRef.current.emit('unmute_All', props.kid, new Date())
+            setMutedAll(false)
         }
     }
-     function handleOffVideoAllUsers() {
-         if (isHost.current && isBroadCasting) {
-             socketRef.current.emit('turn_video_off_all', props.kid, new Date())
-             setAllUsersvideoOff(true)
-         }
-     }
+    function handleOffVideoAllUsers() {
+        if (isHost.current && isBroadCasting) {
+            socketRef.current.emit('turn_video_off_all', props.kid, new Date())
+            setAllUsersvideoOff(true)
+        }
+    }
 
-     function handleOnVideoAllUsers() {
-         if (isHost.current && isBroadCasting) {
-             socketRef.current.emit('turn_video_on_all', props.kid, new Date())
-             setAllUsersvideoOff(false)
-         }
-     }
+    function handleOnVideoAllUsers() {
+        if (isHost.current && isBroadCasting) {
+            socketRef.current.emit('turn_video_on_all', props.kid, new Date())
+            setAllUsersvideoOff(false)
+        }
+    }
     return (
         <div className="h-100" style={ { backgroundColor: '#0f0f0f' } }>
             <ToastContainer />
 
+            <audio id="myAudio" className="d-none">
+                <source
+                    src="https://notificationsounds.com/soundfiles/44c4c17332cace2124a1a836d9fc4b6f/file-sounds-1147-that-was-quick.wav"
+                    type="audio/wav"
+                />
+                <source
+                    src="https://notificationsounds.com/soundfiles/44c4c17332cace2124a1a836d9fc4b6f/file-sounds-1147-that-was-quick.mp3"
+                    type="audio/mpeg"
+                />
+            </audio>
             <div className="participant-host-video-container">
                 <span className="hide d-flex align-items-center justify-content-between">
                     <div>
