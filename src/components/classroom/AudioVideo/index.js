@@ -141,7 +141,7 @@ function AudioVideoBroadcast(props) {
             secure: true,
             config: {
                 iceServers: [
-                    { url: 'stun:numb.viagenie.ca' },
+                    { url: 'stun:stun.l.google.com:19302' },
                     {
                         url: 'turn:turn.azcryptotrade.com:3478',
                         credential: 'turnadmin',
@@ -430,7 +430,7 @@ function AudioVideoBroadcast(props) {
         })
 
         peerRef.current.on('close', function () {
-            peerRef.current.destroy()
+            // peerRef.current.destroy()
             onCall.current = false
         })
 

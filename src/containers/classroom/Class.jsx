@@ -18,7 +18,7 @@
  * @format
  */
 
-import React, { useState, useRef,useLayoutEffect,useEffect } from 'react'
+import React, { useState, useRef,useLayoutEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import io from 'socket.io-client'
 import { ToastContainer, toast } from 'react-toastify'
@@ -54,7 +54,7 @@ const host =
         ? 'https://code-marka.herokuapp.com'
         : 'http://localhost:2001'
 
-const socket = io('localhost:2001', {
+const socket = io(host, {
     reconnection: true,
     reconnectionDelay: 6000,
     reconnectionDelayMax:1000,
@@ -458,17 +458,8 @@ const MainClassLayout = ({
                         numberInClass: nnc.length,
                     }
                 })
-                setcodemarkaState((c) => {
-                    if (c.messages && c.messages.length > 0) {
-                        const len = c.messages.length
-                        const lastIndex = len - 1
-                        const ele = c.messages[lastIndex].msgId
-                        const lelem = document.getElementById(ele)
-
-                        lelem.scrollIntoView(false)
-                    }
-                    return c
-                })
+                var objDiv = document.getElementById('fala')
+                objDiv.scrollTop = objDiv.scrollHeight
             })
 
             socket.on('disconnect', (reason) => {
@@ -551,21 +542,8 @@ const MainClassLayout = ({
                         })
 
                         updateMessage.then((d) => {
-                            setcodemarkaState((c) => {
-                                setTimeout(() => {
-                                    const len = c.messages.length
-                                    const lastIndex = len - 1
-
-                                    const ele = c.messages[lastIndex].msgId
-                                    const lelem = document.getElementById(ele)
-                                    lelem.scrollIntoView({
-                                        behavior: 'smooth',
-                                        block: 'end',
-                                        inline: 'nearest',
-                                    })
-                                },0)
-                                return c
-                            })
+                            var objDiv = document.getElementById('fala')
+                            objDiv.scrollTop = objDiv.scrollHeight
                         })
             })
 
@@ -601,16 +579,8 @@ const MainClassLayout = ({
                 })
 
                 setcodemarkaState((c) => {
-                    if (c.messages) {
-                        const len = c.messages.length
-                        const lastIndex = len - 1
-
-                        const ele = c.messages[lastIndex].msgId
-
-                        const lelem = document.getElementById(ele)
-
-                        lelem.scrollIntoView(false)
-                    }
+                    var objDiv = document.getElementById('fala')
+                    objDiv.scrollTop = objDiv.scrollHeight
                     return c
                 })
             })
