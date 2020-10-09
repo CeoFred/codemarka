@@ -30,6 +30,7 @@ export default function Profile(props) {
 
     const [config, setConfig] = useState({ isFollingUser: null })
     const [loaded, setloaded] = useState(false)
+    const [userFound, setUserFound] = useState(true);
     const jwt = localStorage.getItem('wx1298')
 
     async function postData(url = '', method = 'POST') {
@@ -58,13 +59,17 @@ export default function Profile(props) {
             'GET'
         ).then((data) => {
             setUserProfileData(data.data)
-            const usersFollowers = data.data.followers;
+            if(!data.data){
+                setUserFound(false)
+            } else {
+                
+            const usersFollowers = data.data.followers
             const isFollowing = usersFollowers.some(
                 (user) => user.kid == auth.user.accountid
             )
-            setConfig({ isFollingUser:isFollowing })
-            setloaded(true);
-            // console.log(isFollowing)
+            setConfig({ isFollingUser: isFollowing })
+            setloaded(true)
+            }
         })
     }, [props.match.params.username])
 
@@ -113,7 +118,7 @@ export default function Profile(props) {
     }
     return (
         <div className="header-container-fluid">
-            {loaded ? (
+            {loaded && userFound ? (
                 <div>
                     <Helmet
                         title={ `${ props.match.params.username } - Codemarka ` }
@@ -138,15 +143,20 @@ export default function Profile(props) {
                         <div class="container">
                             <div class="row justify-content-center">
                                 <div class="col-lg-9">
-                                    <div class="mb-4">
-                                        <div class="row align-items-center mb-3">
-                                            <div class="col">
-                                                <h6 class="mb-0">
-                                                    New connections
-                                                </h6>
+                                    {/* {userProfileData.kid ===
+                                    auth.user.accountid ? (
+                                        <div class="mb-4">
+                                            <div class="row align-items-center mb-3">
+                                                <div class="col">
+                                                    <h6 class="mb-0">
+                                                        New connections
+                                                    </h6>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    ) : (
+                                        ''
+                                    )} */}
 
                                     <div>
                                         <div class="row align-items-center mb-3">
@@ -180,8 +190,7 @@ export default function Profile(props) {
                                                                     href="#!"
                                                                     class="d-block h6 mb-0">
                                                                     {
-                                                                        userProfileData
-                                                                            .username
+                                                                        userProfileData.username
                                                                     }
                                                                 </a>{' '}
                                                                 <small class="d-block text-muted">
@@ -409,9 +418,11 @@ export default function Profile(props) {
                         </div>
                     </section>
                 </div>
-            ) : (
-                <Preloader />
-            )}
+            ) : 
+                userFound ? (<Preloader />) : (<div style={ {height:'40vh',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'2rem'} }>
+                    User not Found!
+                </div>)
+            }
         </div>
     )
 }

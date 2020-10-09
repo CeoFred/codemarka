@@ -8,6 +8,42 @@ import { resolvePromise } from '../../utility/shared';
 
 const delay = (ms) => new Promise(res => setTimeout(res, ms))
 const myHeaders =  new Headers(); 
+const userTokenAlias = 'wx1298'
+
+export function* setMessageThreadData(data) {
+    yield put({ type: actionTypes.MESSAGE_THREAD_DATA_SET_DONE, data:data.data })
+
+    const url = APIURLS.FETCH_MESSAGE_THREAD;
+    myHeaders.set('Content-Type', 'Application/json')
+
+    const token = yield localStorage.getItem(userTokenAlias)
+
+    myHeaders.set('Authorization',`Bearer ${ token }`)
+    const messageThreadRequest = yield new Request(url+data.data.classroomId, {
+        method: 'POST',
+        cache: 'default',
+        headers: myHeaders,
+        body: JSON.stringify(data.data),
+        mode: 'cors'
+    });
+    
+    try {
+        const response = yield fetch(messageThreadRequest)
+        const resolvedResponse =  yield call(resolvePromise,response.json())        
+        console.log(resolvedResponse)
+
+        if(resolvedResponse.status === 1){
+             yield put(actions.messageThreadFecthDone(resolvedResponse.message));
+        } else {
+            // yield put(actions.classCreationFailed(resolvedResponse.message))
+         }
+
+    } catch ({ message }) {
+
+        // yield put(actions.authRegisterFailed(message));
+
+    }
+};
 
 export function* createClass(data){
     yield put({ type: actionTypes.CLASSROOM_CREATE_START });

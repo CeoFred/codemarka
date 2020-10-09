@@ -47,6 +47,8 @@ import CodeBlockModal from '../../components/classroom/Conversation_Partials/Cod
 import ClassInformationModal from '../../components/classroom/Modals/ClassroomInformation'
 import VideoAndAudioPermission from '../../components/classroom/Modals/VideoAndAudioPermission';
 import { CLASSROOM_FILE_DOWNLOAD } from '../../config/api_url'
+import ConversationThread from '../../components/classroom/Conversation_Partials/MessageType/Text/Components/MessageThread'
+
 import './css/Environment.css'
 
 const host =
@@ -975,16 +977,26 @@ const MainClassLayout = ({
                 lastSentMessage: e.target.value,
                 value: ''
             })
+            const regex = /\B\@([\w\-]+\s)/ig;
+            const mentions = (String(inputState.value).match(regex));
 
-            const msg_data = {
+            const messageData = {
                 user: userid,
                 class: data.classroom_id,
                 kid,
                 message: inputState.value,
                 time: new Date(),
-                messageColor: userMessageColor
+                messageColor: userMessageColor,
+                isThread: false,
+                reactions:[],
+                isDeleted: false,
+                wasEdited:false,
+                editHistory:[],
+                mentions,
+                hasTags:[],
+                sent: false
             }
-            socket.emit('newMessage', msg_data)
+            socket.emit('newMessage', messageData)
         }
     }
 
@@ -2081,6 +2093,7 @@ const MainClassLayout = ({
                                 accept="image/png, image/jpeg"
                                 onChange={ handleImageUploadChange }
                             />
+                            <ConversationThread />
                             <Convo
                                 typing={ codemarkastate.typingState }
                                 users={ codemarkastate.users }

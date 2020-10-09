@@ -11,7 +11,16 @@ const INITIAL_STATE = {
     validated:false,
     status:null,
     defaultAudioVideoConfig:{ audioinput:undefined,videoinput:undefined,audiooutput:undefined},
-    audioVideoDeviceAndConfigs:{}
+    audioVideoDeviceAndConfigs:{},
+    messageThread:{
+        messages:null,
+        retrieved: false,
+        loading: false,
+        messageId: null,
+        classroomId: null,
+        userid:null,
+        userInfo:null
+    }
 }
 
 const classroomCreationInit = (state,action) => {
@@ -115,6 +124,27 @@ const setInputOutputDevices = (state, action) => {
         audioVideoDeviceAndConfigs: action.data,
     })
 }
+
+const setThreadData = (state, action) => {
+return helper.updateObject(state, {
+    messageThread: { ...state.messageThread, ...action.data, loading: true },
+})
+}
+
+const fetchedMessageThreadSuccessfull = (state, action) => {
+    return helper.updateObject(state, {
+        messageThread: {
+            ...state.messageThread,
+            loading: false,
+            retrieved: true,
+            messages: action.data.messageData.thread,
+            timeSent: action.data.messageData.oTime,
+            message: action.data.messageData.msg,
+            userInfo:{username: action.data.username,image: action.data.image}
+        },
+    })
+}
+
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
 
@@ -129,6 +159,8 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.CLASSROOM_RESET): return resetClassRoomData(state,action)
         case(actionTypes.SET_DEFAULT_INPUT_OUTPUT_DEVICES): return setDefaultInputOutputDevices(state,action)
         case(actionTypes.SET_INPUT_OUTPUT_DEVICES): return setInputOutputDevices(state,action)
+        case(actionTypes.MESSAGE_THREAD_DATA_SET_DONE): return setThreadData(state,action)
+        case(actionTypes.MESSAGE_THREAD_FETCH_DONE): return fetchedMessageThreadSuccessfull(state,action)
         default: return state;
     }
 }

@@ -22,7 +22,7 @@ function DashboardTab(props) {
                             </div>
                             <div className="mt-4">
                                 <ul className="nav nav-tabs overflow-x">
-                                    <li className="nav-item">
+                                    {/* <li className="nav-item">
                                         <NavLink
                                             activeClassName="active"
                                             to={
@@ -40,7 +40,7 @@ function DashboardTab(props) {
                                             className="nav-link">
                                             Settings
                                         </NavLink>
-                                    </li>
+                                    </li> */}
                                     {/* <li className="nav-item">
                                         <a
                                             href="billing.html"

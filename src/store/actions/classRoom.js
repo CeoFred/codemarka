@@ -14,6 +14,19 @@ export function classVerifySuccess(classroom){
     }
 }
 
+export function messageThreadFecthDone(data){
+     return {
+         type: actionTypes.MESSAGE_THREAD_FETCH_DONE,
+         data,
+     }
+}
+export function getMessageThread(data){
+    return {
+        type: actionTypes.SET_MESSAGE_THREAD,
+        data
+    }
+}
+
 export function classResetAll(){
     return {
         type: 'CLASSROOM_RESET'

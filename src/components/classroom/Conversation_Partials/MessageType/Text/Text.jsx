@@ -1,8 +1,39 @@
 /* eslint-disable no-undef */
 /** @format */
 
-import React from 'react'
+import React,{ useState } from 'react'
 import PropTypes from 'prop-types'
+import '../Styles/text.css';
+import MessageActions from './Components/Actions';
+
+function MessageComponent (props) {
+    const { isThread, reactions , isDeleted,msgId,by } = props.message;
+
+    const [showAction, setShowingAction] = useState(false)
+  
+    if(isDeleted)  return (<i className="deleted_message">Message was deleted </i>) 
+    return (
+        <div
+            onMouseLeave={ (e) => setShowingAction(false) }
+            onMouseEnter={ (e) => setShowingAction(true) }
+            id={ props.id }
+            className="main_message_container">
+            <div
+                className="r-message"
+                dangerouslySetInnerHTML={ { __html: props.content } }
+            />
+            {showAction ? (
+                <MessageActions
+                    keepShowingActions={ (e) => setShowingAction(true) }
+                    id={ msgId }
+                    userId = { by }
+                />
+            ) : (
+                ''
+            )}
+        </div>
+    )
+};
 
 function Text(props) {
     const copyCode = (e, code) => {
@@ -65,10 +96,9 @@ function Text(props) {
             })
             if (userFound.length) {
                 return `<b style="
-    background: black;
     padding: 2px;
     border-radius: 6px;
-"><a style="color:gold;cursor:pointer" href="/u/${ userFound[0].username }" class="mentions_username"> ${ username }</a>
+"><a style="color:#aea262;cursor:pointer" href="/u/${ userFound[0].username }" target="_blank" rel="noopener noreferrer" class="mentions_username"> ${ username }</a>
              <div class="mentions_username_profile">
                 <div class="card shadow-none">
     <div class="p-3 d-flex" style="align-items:center">
@@ -86,13 +116,7 @@ function Text(props) {
             } else return username
         })
 
-        return (
-            <div
-                id={ props.message.msgId }
-                className="r-message"
-                dangerouslySetInnerHTML={ { __html: rt } }
-            />
-        )
+        return <MessageComponent { ...props } content={ rt } id={ props.message.msgId } />
     }
     return <React.Fragment>
         {wrapURLs(props.message.msg)}

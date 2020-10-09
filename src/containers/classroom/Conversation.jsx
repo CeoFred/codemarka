@@ -21,7 +21,7 @@
 import React, { useRef,useEffect,useState } from 'react'
 import { formatToTimeZone } from 'date-fns-timezone'
 import Mentions from '../../components/classroom/Conversation_Partials/Mentions/index'
-import TextMessage from '../../components/classroom/Conversation_Partials/MessageType/Text'
+import TextMessage from '../../components/classroom/Conversation_Partials/MessageType/Text/Text'
 import ImageMessage from '../../components/classroom/Conversation_Partials/MessageType/Image'
 import NotificationMessage from '../../components/classroom/Conversation_Partials/MessageType/Notifications'
 import ScrollButton from '../../components/classroom/Conversation_Partials/ScrollTrigger'

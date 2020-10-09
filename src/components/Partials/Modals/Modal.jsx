@@ -5,23 +5,28 @@ export default function Modal(props) {
     return (
         <div>
             <div
-                className={ `modal fade modal-${
-                    props.type
-                } docs-example-modal-${ props.size || 'sm' }` }
+                className={ `modal fade modal-${ props.type } docs-example-modal-${
+                    props.size || 'sm'
+                }` }
                 id={ props.targetid }
                 tabIndex="-1"
                 role="dialog"
                 aria-labelledby="exampleModalLabel"
-                style={ {backgroundColor: 'rgba(8, 8, 8, 0.72)'} }
+                style={ { backgroundColor: 'rgba(8, 8, 8, 0.72)' } }
                 aria-hidden="true">
                 <div
                     className="modal-dialog modal-dialog-centered"
                     role="document">
-                    <div className="modal-content" style={ {height:'auto',overflow:'auto'} }>
+                    <div
+                        className="modal-content"
+                        style={ {
+                            height: 'auto',
+                            overflow: 'auto',
+                            ...props.style,
+                        } }>
                         <div className="modal-header">
                             <h5 className="modal-title" id="exampleModalLabel">
-                                {props.titleIcon || ''} {' '}
-                                {props.title || ''}
+                                {props.titleIcon || ''} {props.title || ''}
                             </h5>
                             <button
                                 type="button"
@@ -40,7 +45,9 @@ export default function Modal(props) {
                                     type="button"
                                     className="btn btn-secondary"
                                     data-dismiss="modal">
-                                    {props.closeCaption ? props.closeCaption : 'Close'}
+                                    {props.closeCaption
+                                        ? props.closeCaption
+                                        : 'Close'}
                                 </button>
                             ) : (
                                 ''

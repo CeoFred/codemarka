@@ -47,3 +47,4 @@ export const GET_CLASSROOM_JS_SETTINGS =  `${ host }classroom/settings/language/
 export const GET_CLASSROOM_HTML_SETTINGS =  `${ host }classroom/language/settings/html`//:classroomkid param
 export const REPORT_CLASSROOM = `${ host }classroom/report`
 export const ASK_A_QUESTION = `${ host }classroom/question`
+export const FETCH_MESSAGE_THREAD =  `${ host }classroom/thread/` // :kid
