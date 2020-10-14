@@ -22,11 +22,15 @@ if(props.elementType === 'input'){
 
     switch(props.elementType){
         case('input'):
-        inputElement =  <input
-         { ...props.elementConfig }
-          className={ InputClasses.join(' ') } 
-           value={ props.value }
-            onChange={ props.changed } />
+        inputElement = (
+            <input
+                onKeyDown={ props.KeyDown }
+                { ...props.elementConfig }
+                className={ InputClasses.join(' ') }
+                value={ props.value }
+                onChange={ props.changed }
+            />
+        )
 
        break;
 
@@ -36,6 +40,7 @@ if(props.elementType === 'input'){
             className={ InputClasses.join(' ') }
             { ...props.elementConfig }
             value={ props.value }
+            onKeyDown={ props.KeyDown }
             onChange={ props.changed }></textarea>
     )
     break;
@@ -44,15 +49,18 @@ if(props.elementType === 'input'){
     inputElement = (
         <select
             onChange={ props.changed }
+            onKeyDown={ props.KeyDown }
             className={ selectClasses.join(' ') }
             defaultValue={ props.value }>
-            {props.elementConfig.options ? props.elementConfig.options.map(
-                (option) => (
-                    <option value={ option.value } key={ option.key || option.value }>
+            {props.elementConfig.options
+                ? props.elementConfig.options.map((option) => (
+                    <option
+                          value={ option.value }
+                          key={ option.key || option.value }>
                         {option.displayValue}
                     </option>
-                )
-            ): ''}
+                  ))
+                : ''}
         </select>
     )
     break;
@@ -65,6 +73,7 @@ if(props.elementType === 'input'){
             value={ props.value }
             type={ props.elementType }
             onChange={ props.changed }
+            onKeyDown={ props.KeyDown }
         />
     )
     }

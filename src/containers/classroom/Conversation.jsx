@@ -121,7 +121,6 @@ export default function Conversation(props) {
         })
 
         const chunkedJSX = []
-
         for (const key in messageBundle) {
             if (messageBundle.hasOwnProperty(key)) {
                 const messages = messageBundle[key]
@@ -132,6 +131,7 @@ export default function Conversation(props) {
                             <TextMessage
                                 message={ message }
                                 users={ props.users }
+                                socket={ props.socket }
                             />
                         )
                     } else if (message.type && message.type === 'image') {
@@ -139,6 +139,7 @@ export default function Conversation(props) {
                             <ImageMessage
                                 handleImagePreview={ props.handleImagePreview }
                                 message={ message }
+                                socket={ props.socket }
                             />
                         )
                     } else {

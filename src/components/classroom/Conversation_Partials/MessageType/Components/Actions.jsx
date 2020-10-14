@@ -2,8 +2,7 @@ import React from 'react'
 
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-// import * as actions from '../../../../../../store/actions/classRoom'
-import * as actionType from '../../../../../../store/actions/Types'
+import * as actionType from '../../../../../store/actions/Types'
 
  function MessageActions(props) {
 
@@ -22,15 +21,18 @@ import * as actionType from '../../../../../../store/actions/Types'
           className="message_actions"
           onMouseEnter={ props.keepShowingActions }
           id={ props.id }>
-          <span
-              onClick={ loadMessageThread }>
+          <span onClick={ loadMessageThread }>
               <i className="fa fa-comment-dots"></i>
           </span>
           <span>
               <i className="fa fa-smile-wink"></i>
           </span>
           <span>
-              <i className="fa fa-ellipsis-v"></i>
+              <i className="fa fa-pencil-alt"></i>
+          </span>
+
+          <span>
+              <i className="fa fa-trash-alt"></i>
           </span>
       </div>
   )

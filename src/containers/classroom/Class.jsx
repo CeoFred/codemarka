@@ -47,7 +47,7 @@ import CodeBlockModal from '../../components/classroom/Conversation_Partials/Cod
 import ClassInformationModal from '../../components/classroom/Modals/ClassroomInformation'
 import VideoAndAudioPermission from '../../components/classroom/Modals/VideoAndAudioPermission';
 import { CLASSROOM_FILE_DOWNLOAD } from '../../config/api_url'
-import ConversationThread from '../../components/classroom/Conversation_Partials/MessageType/Text/Components/MessageThread'
+import ConversationThread from '../../components/classroom/Conversation_Partials/MessageType/Components/MessageThread'
 
 import './css/Environment.css'
 
@@ -233,6 +233,26 @@ const MainClassLayout = ({
                    })
                }, 1000);
            })
+        })
+
+        socket.on('thread_reply', (thread,subscribers) => {
+            setcodemarkaState((c) => {
+                let oldMsg = c.messages;
+                oldMsg = oldMsg.map((message) => {
+                    if(message.msgId === thread[0].messageId && !message.isThread){
+                        return {
+                            ...message,
+                            isThread: true,
+                            subscribers
+                        }
+                    }
+                    return message
+                })
+                return {
+                    ...c,
+                    messages: oldMsg,
+                }
+            })
         })
 
         //listen for old message
@@ -927,8 +947,6 @@ const MainClassLayout = ({
 
         const remainingStringInSplittedValue = splittedValue[lastSplittedIndex].replace('@','');
 
-        const lastSplittedIndexValue = splittedValue[lastSplittedIndex];
-
         const indexOfSpecialSymbolInString = value.indexOf(lastSplittedIndex);
 
         const beforelastChar = value[indexOfSpecialSymbolInString - 1]
@@ -936,7 +954,6 @@ const MainClassLayout = ({
         if(lastSplittedIndexContainsAtSymbol){
 
             if(beforelastChar === ' ' || beforelastChar ===  undefined){
-                console.log('mention time')
                 setcodemarkaState({...codemarkastate, isShowingMentions: true, mentionSearchString:remainingStringInSplittedValue})
             }
         } else {
@@ -993,8 +1010,10 @@ const MainClassLayout = ({
                 wasEdited:false,
                 editHistory:[],
                 mentions,
-                hasTags:[],
-                sent: false
+                hashTags:[],
+                sent: false,
+                thread:[],
+                subscribers:[]
             }
             socket.emit('newMessage', messageData)
         }
@@ -1055,7 +1074,6 @@ const MainClassLayout = ({
             js: script
         })
 
-            console.log(url)
             previewFrame.src = url
     }
 
@@ -2093,7 +2111,7 @@ const MainClassLayout = ({
                                 accept="image/png, image/jpeg"
                                 onChange={ handleImageUploadChange }
                             />
-                            <ConversationThread />
+                            <ConversationThread socket={ socketRef.current } />
                             <Convo
                                 typing={ codemarkastate.typingState }
                                 users={ codemarkastate.users }
@@ -2106,6 +2124,7 @@ const MainClassLayout = ({
                                 messages={ codemarkastate.messages }
                                 userSpecificMessages={ userSpecificMessages }
                                 user={ userid }
+                                socket={ socketRef.current }
                                 mentionSearchString={
                                     codemarkastate.mentionSearchString
                                 }

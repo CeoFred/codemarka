@@ -16,7 +16,7 @@ div.message_actions {
   top: -10px;
   align-items: center;
   justify-content: space-between;
-  width: 3.5rem;
+  width: 5.5rem;
   background: black;
   padding: 4px;
   border-radius: 5px
@@ -71,29 +71,28 @@ div.message_thread_input_container {
 }
 
 .thread_replies_container {
-  background: rgb(44, 56, 72);
+  /* background: rgb(44, 56, 72); */
+  color: #000!important;
 }
 
 .thread_user_container span {
   font-weight: bolder;
   font-size: 1.2rem;
-  display:flex;
-  width:100%;
-  justify-content: space-between;
-  flex-direction: row;
+  width: 100%;
+}
+
+.thread_user_container small {
+  font-size: .7rem;
 }
 
 .thread_reply {
   display: flex;
   flex-direction: column;
-  border-radius: 0px 5px 5px 5px;
   float: left;
   width: 100%;
-  color: #fff;
   clear: both;
   line-height: 18px;
   font-size: .9rem;
-  padding: 8px;
   position: relative;
   animation: message 2s ease;
 }
@@ -109,7 +108,7 @@ div.message_thread_input_container {
 }
 
 .thread_reply .message {
-  color: #fff;
+  color: #000;
   clear: both;
   line-height: 18px;
   font-size: .8rem;
@@ -117,4 +116,87 @@ div.message_thread_input_container {
   animation: message 2s ease;
   padding: 0;
   margin: 0;
+}
+
+.thread_reply_user {
+  display: flex;
+  flex-direction: row;
+}
+
+.thread_reply_user_image {
+  margin-right: 1rem;
+}
+
+.thread_reply_user_image img {
+  height: 30px;
+  border-radius: 5px;
+}
+
+.thread_reply_user_username span {
+  font-weight: bolder;
+}
+
+.message__reply_bar {
+  margin: 4px 0 -2px -5px;
+  display: flex;
+  align-items: center;
+  max-width: 600px;
+  padding: 4px;
+  font-size: 13px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  overflow: hidden;
+  height: 34px;
+}
+
+.thread_message_reply_user_image {
+  height: 24px;
+  width: 24px;
+  margin-right: 4px;
+  flex-shrink: 0;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  position: relative;
+}
+
+.thread_message_reply_user_image img {
+  border-radius: 4px;
+  flex-shrink: 0;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  display: inline-block;
+}
+
+.c-message__reply_bar_description {
+  position: relative;
+  margin-left: 8px;
+  color: rgba(var(--sk_foreground_max_solid, 97, 96, 97), 1);
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.c-message__reply_bar_last_reply {
+  opacity: 1;
+  transition: opacity .2s;
+}
+
+.c-message__reply_bar_view_thread {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity .2s;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+a.thread_link {
+  color: grey!important;
 }

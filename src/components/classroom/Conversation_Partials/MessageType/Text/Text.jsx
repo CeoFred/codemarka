@@ -3,15 +3,29 @@
 
 import React,{ useState } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import * as actionType from '../../../../../store/actions/Types';
 import '../Styles/text.css';
-import MessageActions from './Components/Actions';
+import MessageActions from '../Components/Actions';
+import ThreadReplies from '../Components/ThreadReplies';
 
 function MessageComponent (props) {
-    const { isThread, reactions , isDeleted,msgId,by } = props.message;
+    const { isThread , isDeleted,msgId,by,thread } = props.message;
 
     const [showAction, setShowingAction] = useState(false)
   
     if(isDeleted)  return (<i className="deleted_message">Message was deleted </i>) 
+
+    function handleShowThread(e) {
+        e.preventDefault();
+          document.getElementById('thread_modal_button').click()
+          props.setMessageThread({
+              messageId: msgId,
+              userId: props.userId,
+              classroomId: props.match.params.classroom,
+          })
+    }
     return (
         <div
             onMouseLeave={ (e) => setShowingAction(false) }
@@ -26,7 +40,17 @@ function MessageComponent (props) {
                 <MessageActions
                     keepShowingActions={ (e) => setShowingAction(true) }
                     id={ msgId }
-                    userId = { by }
+                    userId={ by }
+                />
+            ) : (
+                ''
+            )}
+            {isThread ? (
+                <ThreadReplies
+                     msgId={ msgId }
+                    showThread={ handleShowThread }
+                    thread={ thread }
+                    { ...props }
                 />
             ) : (
                 ''
@@ -127,4 +151,17 @@ Text.propTypes = {
     message: PropTypes.isRequired,
 }
 
-export default Text
+const matchDispatchToProps = (dispatch) => {
+    return {
+        setMessageThread: (data) =>
+            dispatch({ type: actionType.SET_MESSAGE_THREAD, data }),
+    }
+}
+
+const mapStateToProps = ({  auth }) => {
+    return {
+        userId: auth.user.accountid,
+    }
+}
+
+export default withRouter(connect(mapStateToProps, matchDispatchToProps)(Text))

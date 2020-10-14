@@ -136,7 +136,7 @@ function AudioVideoBroadcast(props) {
         const peer = new Peer(props.userkid, {
             host: 'peerjs-server.herokuapp.com',
             port: 443,
-            debug: 3,
+            debug: 0,
             key: 'peerjs',
             secure: true,
             config: {
