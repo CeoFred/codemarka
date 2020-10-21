@@ -7,6 +7,12 @@ export function classVerify(classKid){
     }
 }
 
+export function setClassroomSocket(socket){
+    return {
+        type: actionTypes.SET_CLASSROOM_SOCKET_CONNECTION,
+        socket
+    }
+}
 export function classVerifySuccess(classroom){
     return {
         type: actionTypes.CLASSROOM_VERIFICATION_SUCCESS,

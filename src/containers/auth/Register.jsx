@@ -1,4 +1,4 @@
-import React,{ useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
@@ -8,7 +8,6 @@ import Google from '../../components/Partials/Auth/Button/Google';
 
 import Button from '../../components/Partials/Button';
 import Input from '../../components/Partials/Input';
-import Select from '../../components/Partials/Input/Input';
 import Helmet from '../../components/SEO/helmet';
 import Spinner from '../../components/Partials/Preloader';
 import Alert from '../../components/Partials/Alert/Alert';
@@ -87,42 +86,48 @@ function Register(props) {
             onClassroomSwitch('classroom')
         }
     }, [mounted, onResetAll, onClassroomSwitch])
-    
 
-
-  const [ state, setState ] = useState({
-    controls : {
-      username : {
-        value: '',
-        isTouched: false,
-        isValid: false
+  const [state, setState] = useState({
+      controls: {
+          username: {
+              value: '',
+              isTouched: false,
+              isValid: false,
+              required: true,
+          },
+          email: {
+              value: '',
+              isTouched: false,
+              isValid: false,
+              required: true,
+          },
+          password: {
+              value: '',
+              isTouched: false,
+              isValid: false,
+              required: true,
+          },
+          firstname: {
+              value: '',
+              isTouched: false,
+              isValid: false,
+              required: true,
+          },
+          lastname: {
+              value: '',
+              isTouched: false,
+              isValid: false,
+              required: true,
+          },
+          field: {
+              value: '',
+              isTouched: false,
+              required: true,
+          },
       },
-      email: {
-        
-        value: '',
-        isTouched: false,
-        isValid: false
-      },
-      password: {
-        
-        value: '',
-        isTouched: false,
-        isValid: false
-      },
-      techStack: {
-        value: '',
-        isTouched: false,
-        isValid: false
-      },
-      checkbox:{
-        value:false,
-        isTouched:false
-      }
-    },
-    formSubmitted: false,
-    alertMessage:props.message,
-    alertType : Boolean(props.error) === true   ? 'danger' : 'success',
-  
+      formSubmitted: false,
+      alertMessage: props.message,
+      alertType: Boolean(props.error) === true ? 'danger' : 'success',
   })
   
   const handleInputChange = (e,controlName) => {
@@ -136,6 +141,11 @@ function Register(props) {
     setState({ ...state,controls:updatedControls });
   }
 
+  useLayoutEffect(() => {
+      if(props.message || props.error){
+         document.getElementById('register_form').scrollTop = 0;
+      }
+  }, [props.message,props.error])
   const submitHandler = event => {
     event.preventDefault();
 
@@ -149,7 +159,7 @@ function Register(props) {
         formData[ formElementIdentifier ] =
           state.controls[ formElementIdentifier ].value;
       }
-      props.onAuth({ ...formData })
+      props.onAuth(formData)
 
     } else {
 
@@ -209,12 +219,12 @@ if (props.authRegistrationSuccess) {
           <section className="container-fluid">
               <div
                   className="row min-vh-100"
-                  style={{ maxHeight: '100vh', overflow: 'hidden' }}>
+                  style={ { maxHeight: '100vh', overflow: 'hidden' } }>
                   <div className="comm_bg_img col-md-8 col-xl-8 col-lg-8 py-6 py-md-0 h-100vh d-none d-md-flex d-lg-flex d-xl-flex">
                       <div className="details_container">
                           <div className="logo_container">
                               <img
-                                  src={Logo}
+                                  src={ Logo }
                                   height="25"
                                   alt="codemarka_logo"
                               />
@@ -228,7 +238,7 @@ if (props.authRegistrationSuccess) {
                                   <br /> getting a community account today.
                               </p>
                           </div>
-                          <Link to={APPURLS.COMMUNITY_ACCOUNT_SIGNUP_PAGE}>
+                          <Link to={ APPURLS.COMMUNITY_ACCOUNT_SIGNUP_PAGE }>
                               <button
                                   type="button"
                                   class="btn btn-animated btn-primary btn-animated-x">
@@ -244,8 +254,9 @@ if (props.authRegistrationSuccess) {
                   </div>
 
                   <div
+                      id="register_form"
                       className="mt-3 p-3 col-md-4 col-lg-4 col-xl-4 py-6 h-100 py-md-0 oveflow-auto"
-                      style={{ maxHeight: '100vh', overflow: 'auto' }}>
+                      style={ { maxHeight: '100vh', overflow: 'auto' } }>
                       <div>
                           <div className="mb-5 text-center">
                               <h6 className="h3 mb-1 mt-3">
@@ -257,16 +268,38 @@ if (props.authRegistrationSuccess) {
                               {alert}
                           </div>
                           <span className="clearfix" />
-                          <form onSubmit={submitHandler}>
+                          <form onSubmit={ submitHandler }>
                               {/* username input */}
+                              <Input
+                                  type="text"
+                                  placeholder="john"
+                                  label="first name"
+                                  initialPrepend
+                                  initialPrependsvg={ userIconSvg }
+                                  value={ state.controls.firstname.value }
+                                  changed={ (e) =>
+                                      handleInputChange(e, 'firstname')
+                                  }
+                              />
+                              <Input
+                                  type="text"
+                                  placeholder="Doe"
+                                  label="lastname"
+                                  initialPrepend
+                                  initialPrependsvg={ userIconSvg }
+                                  value={ state.controls.lastname.value }
+                                  changed={ (e) =>
+                                      handleInputChange(e, 'lastname')
+                                  }
+                              />
                               <Input
                                   type="text"
                                   placeholder="superuser"
                                   label="username"
                                   initialPrepend
-                                  initialPrependsvg={userIconSvg}
-                                  value={state.controls.username.value}
-                                  changed={(e) =>
+                                  initialPrependsvg={ userIconSvg }
+                                  value={ state.controls.username.value }
+                                  changed={ (e) =>
                                       handleInputChange(e, 'username')
                                   }
                               />
@@ -277,30 +310,30 @@ if (props.authRegistrationSuccess) {
                                   placeholder="someone@someserver.com"
                                   label="Email address"
                                   initialPrepend
-                                  initialPrependsvg={emailIconSvg}
-                                  value={state.controls.email.value}
-                                  changed={(e) => handleInputChange(e, 'email')}
+                                  initialPrependsvg={ emailIconSvg }
+                                  value={ state.controls.email.value }
+                                  changed={ (e) => handleInputChange(e, 'email') }
                               />
                               {/* pasword input */}
                               <Input
                                   type="password"
                                   placeholder="Secret password"
                                   label="password"
-                                  isLoginPasswordInput={false}
+                                  isLoginPasswordInput={ false }
                                   initialPrepend
-                                  initialPrependsvg={initialPrependsvg}
-                                  value={state.controls.password.value}
-                                  changed={(e) =>
+                                  initialPrependsvg={ initialPrependsvg }
+                                  value={ state.controls.password.value }
+                                  changed={ (e) =>
                                       handleInputChange(e, 'password')
                                   }
                               />
 
-                              <Select
-                                  elementType="select"
-                                  changed={(e) => {
-                                      handleInputChange(e, 'techStack')
-                                  }}
-                                  elementConfig={{
+                              <Input
+                                  fieldtype="select"
+                                  changed={ (e) => {
+                                      handleInputChange(e, 'field')
+                                  } }
+                                  elementConfig={ {
                                       options: [
                                           {
                                               value: '',
@@ -317,22 +350,14 @@ if (props.authRegistrationSuccess) {
                                               displayValue:
                                                   'Back End Developer',
                                           },
-                                          {
-                                              value: 'AI',
-                                              displayValue: 'Machine Learning',
-                                          },
-                                          {
-                                              value: 'FS',
-                                              displayValue: 'Fullstack',
-                                          },
                                       ],
-                                  }}
+                                  } }
                               />
                               <div className="mt-4">
                                   <Button
                                       type="submit"
-                                      clicked={submitHandler}
-                                      disabled={props.loading}
+                                      clicked={ submitHandler }
+                                      disabled={ props.loading }
                                       textColor="#fff"
                                       block
                                       color="primary">
@@ -369,7 +394,7 @@ if (props.authRegistrationSuccess) {
                           <div className="mb-4 mt-2 text-center">
                               <small>Already have an account?</small>{' '}
                               <Link
-                                  to={URLS.AUTH_SIGN_IN}
+                                  to={ URLS.AUTH_SIGN_IN }
                                   className="small font-weight-bold">
                                   signin
                               </Link>
@@ -394,9 +419,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-      onAuth: (email, password, username, techStack) =>
+      onAuth: (data) =>
           dispatch(
-              action.authRegisterUser(email, password, username, techStack)
+              action.authRegisterUser({...data})
           ),
       onAlertClose: () => dispatch(action.ClearMessage()),
       onResetAll: () => dispatch(action.authResetAll()),

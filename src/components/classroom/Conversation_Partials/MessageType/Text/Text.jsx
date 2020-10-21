@@ -9,6 +9,8 @@ import * as actionType from '../../../../../store/actions/Types';
 import '../Styles/text.css';
 import MessageActions from '../Components/Actions';
 import ThreadReplies from '../Components/ThreadReplies';
+import MessageReactions from '../Components/MessageReactions';
+import Reactions from '../Components/Reactions'
 
 function MessageComponent (props) {
     const { isThread , isDeleted,msgId,by,thread } = props.message;
@@ -26,6 +28,16 @@ function MessageComponent (props) {
               classroomId: props.match.params.classroom,
           })
     }
+
+     function showReactionComponent(e) {
+         e.preventDefault()
+         props.setMessageThread({
+             messageId: msgId,
+             userId: props.userId,
+             classroomId: props.match.params.classroom,
+         })
+        //  props.showReactionComponent(true);
+     }
     return (
         <div
             onMouseLeave={ (e) => setShowingAction(false) }
@@ -36,9 +48,11 @@ function MessageComponent (props) {
                 className="r-message"
                 dangerouslySetInnerHTML={ { __html: props.content } }
             />
+            {<MessageReactions { ...props } />}
             {showAction ? (
                 <MessageActions
-                    keepShowingActions={ (e) => setShowingAction(true) }
+                    setShowEmoji={ (v) => setShowingEmoji(v) }
+                    keepShowingActions={ (e) => showReactionComponent(e) }
                     id={ msgId }
                     userId={ by }
                 />
@@ -47,7 +61,7 @@ function MessageComponent (props) {
             )}
             {isThread ? (
                 <ThreadReplies
-                     msgId={ msgId }
+                    msgId={ msgId }
                     showThread={ handleShowThread }
                     thread={ thread }
                     { ...props }
@@ -55,6 +69,7 @@ function MessageComponent (props) {
             ) : (
                 ''
             )}
+            <Reactions { ...props } />
         </div>
     )
 };
@@ -155,12 +170,14 @@ const matchDispatchToProps = (dispatch) => {
     return {
         setMessageThread: (data) =>
             dispatch({ type: actionType.SET_MESSAGE_THREAD, data }),
+        hideMessageReactionPicker:(data) =>  dispatch({ type: actionType.SET_DISPLAYING_MESSAGE_REACTION_PICKER, status: data })
     }
 }
 
-const mapStateToProps = ({  auth }) => {
+const mapStateToProps = ({  auth,classroom }) => {
     return {
         userId: auth.user.accountid,
+        ...classroom
     }
 }
 

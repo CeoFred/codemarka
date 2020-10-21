@@ -29,18 +29,18 @@ export function* checkAuthTimeoutSaga(action) {
     yield put()
 }
 
-export function* authRegisterUserSaga({ email, password, username, techStack }) {
+export function* authRegisterUserSaga({ email, password, username, field, firstname, lastname }) {
     yield put({ type: actionTypes.AUTH_USER_SIGNUP_START });
 
     const url = APIURLS.USER_SIGN_UP
     const myHeaders = yield new Headers()
     myHeaders.append('Content-Type', 'Application/json')
-
+    
     const loginRequest = yield new Request(url, {
         method: 'POST',
         cache: 'default',
         headers: myHeaders,
-        body: JSON.stringify({ email, password, username, techStack }),
+        body: JSON.stringify({ email, password, username, field, firstname, lastname }),
         mode: 'cors'
 
     });

@@ -25,6 +25,7 @@ import TextMessage from '../../components/classroom/Conversation_Partials/Messag
 import ImageMessage from '../../components/classroom/Conversation_Partials/MessageType/Image'
 import NotificationMessage from '../../components/classroom/Conversation_Partials/MessageType/Notifications'
 import ScrollButton from '../../components/classroom/Conversation_Partials/ScrollTrigger'
+
 import './css/conversation.css'
 
 export default function Conversation(props) {

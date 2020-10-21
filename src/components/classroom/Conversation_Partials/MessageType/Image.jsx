@@ -29,8 +29,6 @@ function ImageMessage(props) {
             onMouseLeave={ (e) => setShowingAction(false) }
             onMouseEnter={ (e) => setShowingAction(true) }
             style={ {
-                height: '100px',
-                maxHeight: '100px',
                 maxWidth: '100%',
             } }
             className="main_message_container"

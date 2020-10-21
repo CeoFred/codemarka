@@ -1,24 +1,4 @@
-/**
- * /* eslint-disable no-shadow
- *
- * @format
- */
-
-/* eslint-disable no-undef */
-/* eslint-disable react/prop-types */
-/**
- * /* eslint-disable react/prop-types
- *
- * @format
- */
-
-/**
- * /* eslint-disable no-undef
- *
- * @format
- */
-
-import React, { useState, useRef,useLayoutEffect } from 'react'
+import React, {useEffect, useState, useRef,useLayoutEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import io from 'socket.io-client'
 import { ToastContainer, toast } from 'react-toastify'
@@ -42,6 +22,7 @@ import ImagePreview from '../../components/classroom/ImagePreview/index';
 
 import { DOWNLOAD_CLASSROOM_ATTENDANCE } from '../../config/api_url';
 import AttendanceCollector from '../../components/classroom/Attendance/index.jsx';
+import MessageReactions from '../../components/classroom/Conversation_Partials/MessageType/Components/MessageReactions'
 
 import CodeBlockModal from '../../components/classroom/Conversation_Partials/CodeBlocks/index';
 import ClassInformationModal from '../../components/classroom/Modals/ClassroomInformation'
@@ -86,49 +67,50 @@ const MainClassLayout = ({
     cd,
     kid,
     gravatarUrl,
-    classroomD
+    classroomD,
+    setSocket,
 }) => {
     const [inputState, setInputState] = useState({
         value: '',
         isFocused: false,
-        lastSentMessage: null
+        lastSentMessage: null,
     })
 
-    const [userMessageColor, setUserMessageColor] = useState('#000');
+    const [userMessageColor, setUserMessageColor] = useState('#000')
 
-    const [isDisplayingEmoji, setisDisplayingEmoji] = useState(false);
-    const [isUploadingImage, setIsUploadingImage] = useState(false);
+    const [isDisplayingEmoji, setisDisplayingEmoji] = useState(false)
+    const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [imagePreviewConfig, setImagePreviewConfig] = useState({
         shouldDisplay: false,
         url: '',
     })
-    const [accessControlLevel, setAccessControlLevel] = useState(0);
+    const [accessControlLevel, setAccessControlLevel] = useState(0)
 
     const [attendanceState, setAttendanceState] = useState({
         hasCollectedAttendance: false,
         isCollectingAttendance: classroomD.isTakingAttendance,
         isSubmittingAttendance: false,
         userAttendanceData: {
-            email:'',
-            gender:'',
-            lastName:'',
-            firstName:'',
-            phone:'',
-            kid:'',
-            classExpertiseLevel:''
+            email: '',
+            gender: '',
+            lastName: '',
+            firstName: '',
+            phone: '',
+            kid: '',
+            classExpertiseLevel: '',
         },
-        list:[],
-        downloadStatus:''
-    });
-    const socketRef = useRef(socket);
-    const audioVideoRef = useRef();
+        list: [],
+        downloadStatus: '',
+    })
+    const socketRef = useRef(socket)
+    const audioVideoRef = useRef()
 
     const [codemarkastate, setcodemarkaState] = useState({
         messages: [],
         editors: [],
         previewContent: {
             html: null,
-            css: null
+            css: null,
         },
         owner,
         users: [],
@@ -146,26 +128,30 @@ const MainClassLayout = ({
         ended: false,
         started: null,
         starting: null,
-        connected:true,
-        currentEditorSelection:'',
-        CSS_CDN:[],
-        JS_CDN:[],
+        connected: true,
+        currentEditorSelection: '',
+        CSS_CDN: [],
+        JS_CDN: [],
         isShowingMentions: false,
-        mentionSearchString:null
-    });
+        mentionSearchString: null,
+    })
 
-    const [editorUploadState, setEditorUploadState ] = useState({
+    const [editorUploadState, setEditorUploadState] = useState({
         file: '',
         uploading: false,
-    });
+    })
 
-    const [userSpecificMessages, setUserSpecificMessages] = useState([]);
-    const [userInvitationData,setUserInvitationData] = useState({value:'',socketFeedback:null,socketFeedbackStatus:null});
+    const [userSpecificMessages, setUserSpecificMessages] = useState([])
+    const [userInvitationData, setUserInvitationData] = useState({
+        value: '',
+        socketFeedback: null,
+        socketFeedbackStatus: null,
+    })
 
     const startCountDonwTimer = () => {
         let t = 5
-        const updateCounter = ct => {
-            setcodemarkaState(s => {
+        const updateCounter = (ct) => {
+            setcodemarkaState((s) => {
                 t--
                 return { ...s, countDownTime: ct - 1 }
             })
@@ -179,17 +165,17 @@ const MainClassLayout = ({
         }, 1000)
     }
     const [SocketConnection, setSocketConnection] = useState({
-        connected: socket.connected
+        connected: socket.connected,
     })
 
     const [
         ClassroomPinnedInformation,
-        setClassroomPinnedInformation
+        setClassroomPinnedInformation,
     ] = useState({
         changed: false,
-        value: ''
+        value: '',
     })
-    const connAttempts = useRef(0);
+    const connAttempts = useRef(0)
     const [inRoom, setInRoom] = useState(null)
 
     const redirectTo = (e, path) => {
@@ -197,7 +183,7 @@ const MainClassLayout = ({
     }
 
     const [starRating, setStarRating] = useState(0)
-    
+
     useLayoutEffect(() => {
         socket.on('new_image_message', (data) => {
             const updateMessage = new Promise((resolve) => {
@@ -218,32 +204,35 @@ const MainClassLayout = ({
                     })
                 )
             })
-           updateMessage.then(d => {
-               setTimeout(() => {
-                   setcodemarkaState((c) => {
-                       if (c.messages && c.messages.length > 0) {
-                           const len = c.messages.length
-                           const lastIndex = len - 1
-                           const ele = c.messages[lastIndex].msgId
-                           const lelem = document.getElementById(ele)
+            updateMessage.then((d) => {
+                setTimeout(() => {
+                    setcodemarkaState((c) => {
+                        if (c.messages && c.messages.length > 0) {
+                            const len = c.messages.length
+                            const lastIndex = len - 1
+                            const ele = c.messages[lastIndex].msgId
+                            const lelem = document.getElementById(ele)
 
-                           lelem.scrollIntoView(false)
-                       }
-                       return c
-                   })
-               }, 1000);
-           })
+                            lelem.scrollIntoView(false)
+                        }
+                        return c
+                    })
+                }, 1000)
+            })
         })
 
-        socket.on('thread_reply', (thread,subscribers) => {
+        socket.on('thread_reply', (thread, subscribers) => {
             setcodemarkaState((c) => {
-                let oldMsg = c.messages;
+                let oldMsg = c.messages
                 oldMsg = oldMsg.map((message) => {
-                    if(message.msgId === thread[0].messageId && !message.isThread){
+                    if (
+                        message.msgId === thread[0].messageId &&
+                        !message.isThread
+                    ) {
                         return {
                             ...message,
                             isThread: true,
-                            subscribers
+                            subscribers,
                         }
                     }
                     return message
@@ -269,60 +258,55 @@ const MainClassLayout = ({
                 }
             })
         })
-       
-    }, []);
-    
+    }, [])
+
     React.useEffect(() => {
-        const elem = document.querySelector('#editor_file_uploader_input');
-         elem.addEventListener('change', handleUploadInputChange, { once: true, capture: true, passive: true});
-        
-        return function() {
-        elem.removeEventListener('change', handleUploadInputChange, true);
+        const elem = document.querySelector('#editor_file_uploader_input')
+        elem.addEventListener('change', handleUploadInputChange, {
+            once: true,
+            capture: true,
+            passive: true,
+        })
+
+        return function () {
+            elem.removeEventListener('change', handleUploadInputChange, true)
         }
-
-    },[editorUploadState])
+    }, [editorUploadState])
 
     React.useEffect(() => {
-
         socket.on('attedance_ready', (file, list) => {
-            setAttendanceState(state => {
-                return {...state,list,downloadStatus:''}
+            setAttendanceState((state) => {
+                return { ...state, list, downloadStatus: '' }
             })
             window.open(
                 `${ DOWNLOAD_CLASSROOM_ATTENDANCE }/${ classroomD.kid }/${ file }`,
                 '_blank'
             )
         })
-    },[classroomD.kid])
+    }, [classroomD.kid])
 
     React.useEffect(() => {
         socketRef.current = socket
-    },[socket.connected])
+        setSocket(socket);
+    }, [socket.connected])
 
     React.useEffect(() => {
         const getRandomColor = () => {
-
-            const letters = [
-                '#b99286',
-                '#a4cc99',
-                '#7f82bb',
-                '#b3cc6e'
-            ]
+            const letters = ['#b99286', '#a4cc99', '#7f82bb', '#b3cc6e']
             const color = letters[Math.floor(Math.random() * 4)]
             return color
         }
-        const selectedUserColor = getRandomColor();
+        const selectedUserColor = getRandomColor()
         setUserMessageColor(selectedUserColor)
-
-    },[socket.connected])
+    }, [socket.connected])
 
     React.useEffect(() => {
-         if (inRoom && owner && !started) {
-             setTimeout(() => {
-                 document.querySelector('#dialogueToStart').click()
-             }, 10000)
-         }
-    },[inRoom]);
+        if (inRoom && owner && !started) {
+            setTimeout(() => {
+                document.querySelector('#dialogueToStart').click()
+            }, 10000)
+        }
+    }, [inRoom])
 
     React.useEffect(() => {
         const requestData = {
@@ -330,7 +314,7 @@ const MainClassLayout = ({
             userId: userid,
             username,
             cdata: classroomD,
-        }     
+        }
 
         if (!inRoom && !codemarkastate.blocked) {
             // set listeners and emitters
@@ -374,7 +358,9 @@ const MainClassLayout = ({
                         hasCollectedAttendance: true,
                         list,
                     })
-                    toast.info(`${ list.username } has added their attendance`,{ position: 'bottom-center'});
+                    toast.info(`${ list.username } has added their attendance`, {
+                        position: 'bottom-center',
+                    })
                 }
             })
 
@@ -388,11 +374,13 @@ const MainClassLayout = ({
                 }
             })
 
-            socket.on('image_upload_complete',() => {
-               toast.success('Image Upload Successful', {
-                   position: toast.POSITION.BOTTOM_CENTER,
-               })
-                document.getElementById('upload__codemarka__progressing').remove()
+            socket.on('image_upload_complete', () => {
+                toast.success('Image Upload Successful', {
+                    position: toast.POSITION.BOTTOM_CENTER,
+                })
+                document
+                    .getElementById('upload__codemarka__progressing')
+                    .remove()
             })
 
             socket.on('attendance_reminder', () => {
@@ -455,6 +443,7 @@ const MainClassLayout = ({
             // tell server to add user to class
             socket.emit('join', requestData)
 
+            setSocket(socket)
             //listen for bot messaage
             socket.on('botWelcome', (msg) => {
                 setUserSpecificMessages((c) => [...c, msg])
@@ -469,9 +458,9 @@ const MainClassLayout = ({
                         return u.kid !== userid
                     })
                     socket.emit('user_typing_cleared', {
-                        username:msg.name,
+                        username: msg.name,
                         userid: msg.for,
-                        classroomid: msg.roomId
+                        classroomid: msg.roomId,
                     })
                     return {
                         ...c,
@@ -526,47 +515,49 @@ const MainClassLayout = ({
 
             socket.on('reconnect_error', (error) => {
                 if (connAttempts.current >= 30) {
-                    toast.warn('Reconnection has timedout',{position:'bottom-center'})
+                    toast.warn('Reconnection has timedout', {
+                        position: 'bottom-center',
+                    })
                     setSocketConnection({ connected: false })
                 }
             })
 
             socket.on('reconnect_failed', () => {
-                    setSocketConnection({ connected: false })
+                setSocketConnection({ connected: false })
             })
 
             socket.on('reconnect', (attemptNumber) => {
                 socket.emit('join', requestData)
-                toast.success('Back Online!', {position:'bottom-center'})
+                toast.success('Back Online!', { position: 'bottom-center' })
                 connAttempts.current = 0
                 setSocketConnection({ connected: true })
             })
 
             //listen for new messages
             socket.on('nM', (data) => {
-                        const updateMessage = new Promise((resolve, reject) => {
-                            resolve(
-                                setcodemarkaState((c) => {
-                                    const oldmsg = c.messages
-                                    oldmsg.push(data)
-                                    const newuserTypingList = c.typingState.filter(
-                                        (typist) => {
-                                            return typist.id !== data.by
-                                        }
-                                    )
-                                    return {
-                                        ...c,
-                                        messages: oldmsg,
-                                        typingState: newuserTypingList,
-                                    }
-                                })
+                const updateMessage = new Promise((resolve, reject) => {
+                    resolve(
+                        setcodemarkaState((c) => {
+                            const oldmsg = c.messages
+                            oldmsg.push(data)
+                            const newuserTypingList = c.typingState.filter(
+                                (typist) => {
+                                    return typist.id !== data.by
+                                }
                             )
+                            return {
+                                ...c,
+                                messages: oldmsg,
+                                typingState: newuserTypingList,
+                            }
                         })
+                    )
+                })
 
-                        updateMessage.then((d) => {
-                            var objDiv = document.getElementById('fala')
-                            objDiv.scrollTop = objDiv.scrollHeight
-                        })
+                updateMessage.then((d) => {
+                    var objDiv = document.getElementById('fala')
+                    objDiv.scrollTop = objDiv.scrollHeight
+                })
             })
 
             //listen for members leaving
@@ -586,9 +577,9 @@ const MainClassLayout = ({
                     })
 
                     socket.emit('user_typing_cleared', {
-                        username:msg.name,
+                        username: msg.name,
                         userid: msg.for,
-                        classroomid: msg.roomId
+                        classroomid: msg.roomId,
                     })
 
                     return {
@@ -680,7 +671,7 @@ const MainClassLayout = ({
                             { file: 'js', ...js },
                         ],
                         CSS_CDN: css.externalCDN,
-                        JS_CDN: js.externalCDN
+                        JS_CDN: js.externalCDN,
                     }
                 })
 
@@ -900,8 +891,8 @@ const MainClassLayout = ({
                                 },
                             },
                         }
-                    } else {                       
-                     return c; 
+                    } else {
+                        return c
                     }
                 })
             })
@@ -926,76 +917,86 @@ const MainClassLayout = ({
         onClassroomVerify,
         classroomD,
         attendanceState,
-        SocketConnection
+        SocketConnection,
     ])
 
     const handleEmojiInput = (__emoji_object) => {
-        const { emoji } = __emoji_object;
-            setInputState(s =>{ return { ...s.inputState, value: s.value+emoji }})
-
+        const { native } = __emoji_object
+        setInputState((s) => {
+            return { ...s.inputState, value: s.value + native + ' ' }
+        })
     }
 
-    const handleInputChange = e => {
+    const handleInputChange = (e) => {
         e.preventDefault()
-        const value = e.target.value;
+        const value = e.target.value
 
-        const splittedValue =  value.split(' ');
+        const splittedValue = value.split(' ')
 
-        const lastSplittedIndex =  splittedValue.length - 1;
+        const lastSplittedIndex = splittedValue.length - 1
 
-        const lastSplittedIndexContainsAtSymbol = splittedValue[lastSplittedIndex].includes('@');
+        const lastSplittedIndexContainsAtSymbol = splittedValue[
+            lastSplittedIndex
+        ].includes('@')
 
-        const remainingStringInSplittedValue = splittedValue[lastSplittedIndex].replace('@','');
+        const remainingStringInSplittedValue = splittedValue[
+            lastSplittedIndex
+        ].replace('@', '')
 
-        const indexOfSpecialSymbolInString = value.indexOf(lastSplittedIndex);
+        const indexOfSpecialSymbolInString = value.indexOf(lastSplittedIndex)
 
         const beforelastChar = value[indexOfSpecialSymbolInString - 1]
 
-        if(lastSplittedIndexContainsAtSymbol){
-
-            if(beforelastChar === ' ' || beforelastChar ===  undefined){
-                setcodemarkaState({...codemarkastate, isShowingMentions: true, mentionSearchString:remainingStringInSplittedValue})
+        if (lastSplittedIndexContainsAtSymbol) {
+            if (beforelastChar === ' ' || beforelastChar === undefined) {
+                setcodemarkaState({
+                    ...codemarkastate,
+                    isShowingMentions: true,
+                    mentionSearchString: remainingStringInSplittedValue,
+                })
             }
         } else {
-            setcodemarkaState({...codemarkastate, isShowingMentions: false,mentionSearchString: null})
-
+            setcodemarkaState({
+                ...codemarkastate,
+                isShowingMentions: false,
+                mentionSearchString: null,
+            })
         }
 
-        if(value.length > 500) {
-            const reduced = String(value).slice(0,500);
-            setInputState({ ...inputState,  reduced})
-            alert('Reduce the noise, type less. Use pinned messagees for longer texts.');
-
+        if (value.length > 500) {
+            const reduced = String(value).slice(0, 500)
+            setInputState({ ...inputState, reduced })
+            alert(
+                'Reduce the noise, type less. Use pinned messagees for longer texts.'
+            )
         } else if (e.target.value.trim().length > 0) {
             socket.emit('user_typing', {
                 username,
                 userid,
-                classroomid: data.classroom_id
+                classroomid: data.classroom_id,
             })
             setInputState({ ...inputState, value })
-
         } else {
             socket.emit('user_typing_cleared', {
                 username,
                 userid,
-                classroomid: data.classroom_id
+                classroomid: data.classroom_id,
             })
             setInputState({ ...inputState, value })
-
         }
     }
 
-    const handleMessageSubmit = e => {
+    const handleMessageSubmit = (e) => {
         e.preventDefault()
 
         if (inputState.value !== '') {
             setInputState({
                 ...inputState,
                 lastSentMessage: e.target.value,
-                value: ''
+                value: '',
             })
-            const regex = /\B\@([\w\-]+\s)/ig;
-            const mentions = (String(inputState.value).match(regex));
+            const regex = /\B\@([\w\-]+\s)/gi
+            const mentions = String(inputState.value).match(regex)
 
             const messageData = {
                 user: userid,
@@ -1005,37 +1006,38 @@ const MainClassLayout = ({
                 time: new Date(),
                 messageColor: userMessageColor,
                 isThread: false,
-                reactions:[],
+                reactions: [],
                 isDeleted: false,
-                wasEdited:false,
-                editHistory:[],
+                wasEdited: false,
+                editHistory: [],
                 mentions,
-                hashTags:[],
+                hashTags: [],
                 sent: false,
-                thread:[],
-                subscribers:[]
+                thread: [],
+                subscribers: [],
             }
             socket.emit('newMessage', messageData)
         }
     }
 
-    const handlePreview = e => {
+    const handlePreview = (e) => {
         const previewFrame = document.getElementById('preview_iframe')
         // var preview =  previewFrame.contentDocument || previewFrame.contentWindow.document;
-        let styles, html, script ;
+        let styles, html, script
 
         styles = codemarkastate.previewContent.css.content
         html = codemarkastate.previewContent.html.content
         script = codemarkastate.previewContent.js.content
 
-        let extercssCDN = '', externaljsCDN ='';
-        codemarkastate.CSS_CDN.forEach(cdn => {
-       extercssCDN += `<link href=${ cdn.url } rel="stylesheet"/> \n` 
-      })
-      codemarkastate.JS_CDN.forEach(cdn => {
-        externaljsCDN += `<script src=${ cdn.url }></script> \n` 
-       })
-  
+        let extercssCDN = '',
+            externaljsCDN = ''
+        codemarkastate.CSS_CDN.forEach((cdn) => {
+            extercssCDN += `<link href=${ cdn.url } rel="stylesheet"/> \n`
+        })
+        codemarkastate.JS_CDN.forEach((cdn) => {
+            externaljsCDN += `<script src=${ cdn.url }></script> \n`
+        })
+
         const getGeneratedPageURL = ({ html, css, js }) => {
             const getBlobURL = (code, type) => {
                 const blob = new Blob([code], { type })
@@ -1071,19 +1073,19 @@ const MainClassLayout = ({
         const url = getGeneratedPageURL({
             html,
             css: styles,
-            js: script
+            js: script,
         })
 
-            previewFrame.src = url
+        previewFrame.src = url
     }
 
     let classNotification
-    
+
     const handletoogleUserEditAccess = (e, u) => {
         socket.emit('toogle_class_role', { user: u, new_role: e.target.value })
     }
 
-    const addClassToFavourite = e => {
+    const addClassToFavourite = (e) => {
         e.preventDefault()
         socket.emit('add_to_favourite')
     }
@@ -1101,57 +1103,63 @@ const MainClassLayout = ({
         socket.emit('user_waving', user)
     }
 
-    const handlePinTextAreaChange = e => {
+    const handlePinTextAreaChange = (e) => {
         e.preventDefault()
         const v = e.target.value
 
-        setClassroomPinnedInformation(c => {
+        setClassroomPinnedInformation((c) => {
             return { ...c, touched: true, value: v }
         })
     }
 
-    const handleClassPinnnedSubmit = e => {
+    const handleClassPinnnedSubmit = (e) => {
         e.preventDefault()
 
         if (owner && ClassroomPinnedInformation.value.trim() !== '') {
-            setcodemarkaState(c => {
+            setcodemarkaState((c) => {
                 return { ...c, submitted: true }
             })
-            setClassroomPinnedInformation(c => {
+            setClassroomPinnedInformation((c) => {
                 return { ...c, touched: false, value: '' }
             })
             socket.emit('new_pinned_message', ClassroomPinnedInformation.value)
         } else {
-            alert('No permission to perform Operation!');
+            alert('No permission to perform Operation!')
         }
     }
 
-    const handleUserInviteSubmit = e => {
-        e.preventDefault();
+    const handleUserInviteSubmit = (e) => {
+        e.preventDefault()
         if (owner && userInvitationData.value.trim() !== '') {
-            setcodemarkaState(c => {
+            setcodemarkaState((c) => {
                 return { ...c, submitted: true }
             })
-            setUserInvitationData(c => {
-                return { ...c, socketFeedback:null, socketFeedbackStatus:null }
-            });
-            
+            setUserInvitationData((c) => {
+                return {
+                    ...c,
+                    socketFeedback: null,
+                    socketFeedbackStatus: null,
+                }
+            })
+
             socket.emit('invite_user', {
                 user: userInvitationData.value,
-                classData: {ownerid,
-                data,
-                owner,
-                name,
-                description,
-                username,
-                topic,
-                started,
-                kid:data.classroom_id,
-                shortUrl:classroomD.shortUrl,
-                cd}
+                classData: {
+                    ownerid,
+                    data,
+                    owner,
+                    name,
+                    description,
+                    username,
+                    topic,
+                    started,
+                    kid: data.classroom_id,
+                    shortUrl: classroomD.shortUrl,
+                    cd,
+                },
             })
         } else {
-            alert('No permission to perform Operation or check input!');
+            alert('No permission to perform Operation or check input!')
         }
     }
 
@@ -1163,7 +1171,7 @@ const MainClassLayout = ({
                 elementConfig={ {
                     disabled: owner ? false : true,
                     placeholder: 'Pin Message Here...',
-                    name: 'text__area__msg__pin'
+                    name: 'text__area__msg__pin',
                 } }
                 shouldDisplay={ true }
                 value={ ClassroomPinnedInformation.value }
@@ -1182,7 +1190,7 @@ const MainClassLayout = ({
     const classfilesdownloadlink = `${ CLASSROOM_FILE_DOWNLOAD }${ data.classroom_id }`
 
     const getPinnedMessages = () => {
-        const pm = codemarkastate.pinnedMessages.map(msg => {
+        const pm = codemarkastate.pinnedMessages.map((msg) => {
             if (msg.content.trim() !== '')
                 return (
                     <div
@@ -1190,7 +1198,7 @@ const MainClassLayout = ({
                         className="card mt-0 mb-1"
                         style={ {
                             borderLeft: '2px solid #E91E63',
-                            borderRadius: 0
+                            borderRadius: 0,
                         } }>
                         <div
                             className="card-body"
@@ -1209,7 +1217,7 @@ const MainClassLayout = ({
         }
     }
 
-    const handletestConnection = e => {
+    const handletestConnection = (e) => {
         e.preventDefault()
         if (socket.connected) {
             toast.success(
@@ -1228,7 +1236,7 @@ const MainClassLayout = ({
         }
     }
 
-    const handleexitClassGracefully = e => {
+    const handleexitClassGracefully = (e) => {
         e.preventDefault()
         if (codemarkastate.starRated) {
             window.location.href = window.location.origin
@@ -1239,11 +1247,11 @@ const MainClassLayout = ({
         }
     }
 
-    const handleclassReport = e => {
+    const handleclassReport = (e) => {
         e.preventDefault()
     }
 
-    const handleClassStar = e => {
+    const handleClassStar = (e) => {
         const element = document.getElementById(e.target.id)
         const starPos = parseInt(element.id)
         let strId = ''
@@ -1272,7 +1280,7 @@ const MainClassLayout = ({
                 }
             }
             const rating = arr.length
-            setStarRating(r => {
+            setStarRating((r) => {
                 return rating
             })
         }
@@ -1280,7 +1288,7 @@ const MainClassLayout = ({
         countYellowStars()
     }
 
-    const handleClassStarRating = e => {
+    const handleClassStarRating = (e) => {
         e.preventDefault()
         socket.emit('star_rating', starRating)
     }
@@ -1318,7 +1326,7 @@ const MainClassLayout = ({
                 <div>
                     <button
                         type="button"
-                        onClick={ e => redirectTo(e, '/') }
+                        onClick={ (e) => redirectTo(e, '/') }
                         className="btn btn-animated  btn-sm btn-outline-success btn-animated-y">
                         <span className="btn-inner--visible">NOT NOW</span>
                         <span className="btn-inner--hidden">
@@ -1343,48 +1351,51 @@ const MainClassLayout = ({
         return <Redirect to={ codemarkastate.redirect } />
     }
 
-    const handleEndClass = e => {
-        e.preventDefault();
+    const handleEndClass = (e) => {
+        e.preventDefault()
         document.querySelector('#exitbtn').click()
     }
 
-    const handleuserInvitationDataChange = e => {
-        e.preventDefault();
-        e.persist();
-        const v = e.target.value;
-        setUserInvitationData(c => {
-            return { value: v, socketFeedback:null, socketFeedbackStatus:null }
-        });
+    const handleuserInvitationDataChange = (e) => {
+        e.preventDefault()
+        e.persist()
+        const v = e.target.value
+        setUserInvitationData((c) => {
+            return {
+                value: v,
+                socketFeedback: null,
+                socketFeedbackStatus: null,
+            }
+        })
     }
 
-    const HandleClassShutdown = e => {
+    const HandleClassShutdown = (e) => {
         e.preventDefault()
         if (owner) {
             socket.emit('shutdown_classroom')
         }
     }
 
-    const handlestartClass = e => {
+    const handlestartClass = (e) => {
         e.preventDefault()
         if (owner) {
             socket.emit('start_class', userid)
-            setcodemarkaState(s => {
+            setcodemarkaState((s) => {
                 return { ...s, starting: true }
             })
         }
     }
-    const handleAddUserIconClicked = e => {
+    const handleAddUserIconClicked = (e) => {
         document.querySelector('#participantModalExitButton').click()
-        document.querySelector('#add_user_modal_btn').click();
-
+        document.querySelector('#add_user_modal_btn').click()
     }
 
-    const handledropDownSelect = (event,value,editor) => {
+    const handledropDownSelect = (event, value, editor) => {
         // console.log(event,value,editor);
     }
 
     const handleAttendanceSubmission = (data) => {
-        socket.emit('new_attendance_record',data);
+        socket.emit('new_attendance_record', data)
     }
 
     const handleSendReminder = () => {
@@ -1393,55 +1404,62 @@ const MainClassLayout = ({
 
     const handledownloadAttendance = () => {
         socket.emit('download_attendance_init', classroomD.kid)
-        
-        setAttendanceState({...attendanceState, downloadStatus:'loading'});
+
+        setAttendanceState({ ...attendanceState, downloadStatus: 'loading' })
     }
 
-    const handleUserSelected = (e,username) => {
+    const handleUserSelected = (e, username) => {
         e.preventDefault()
-        
-        const usernameAttached = `@${ username } `;
+
+        const usernameAttached = `@${ username } `
         const currentTextAreaValue = inputState.value
 
-        let newTextAreaValue = currentTextAreaValue;
-        
-            if(codemarkastate.mentionSearchString && codemarkastate.mentionSearchString.length > 0){
-                
-                //find last @symbol and replace
-                const splittedValue =  currentTextAreaValue.split(' ');
+        let newTextAreaValue = currentTextAreaValue
 
-                const lastSplittedIndex =  splittedValue.length - 1;
-        
-                const lastSplittedIndexContainsAtSymbol = splittedValue[lastSplittedIndex].includes('@');
-        
-                if(lastSplittedIndexContainsAtSymbol){
-                    const newReplaceSymbolContent = splittedValue[lastSplittedIndex] = usernameAttached;
-                    splittedValue[lastSplittedIndex] = newReplaceSymbolContent;
-                    newTextAreaValue =  splittedValue.join(' ')
-                }
+        if (
+            codemarkastate.mentionSearchString &&
+            codemarkastate.mentionSearchString.length > 0
+        ) {
+            //find last @symbol and replace
+            const splittedValue = currentTextAreaValue.split(' ')
+
+            const lastSplittedIndex = splittedValue.length - 1
+
+            const lastSplittedIndexContainsAtSymbol = splittedValue[
+                lastSplittedIndex
+            ].includes('@')
+
+            if (lastSplittedIndexContainsAtSymbol) {
+                const newReplaceSymbolContent = (splittedValue[
+                    lastSplittedIndex
+                ] = usernameAttached)
+                splittedValue[lastSplittedIndex] = newReplaceSymbolContent
+                newTextAreaValue = splittedValue.join(' ')
+            }
+        } else {
+            if (codemarkastate.mentionSearchString === null) {
+                newTextAreaValue = `${ currentTextAreaValue }@${ username } `
             } else {
-                if(codemarkastate.mentionSearchString === null){
-                    newTextAreaValue = `${ currentTextAreaValue }@${ username } `;
-                } else {
-                   newTextAreaValue = `${ currentTextAreaValue }${ username } `;
-                }
-            } 
-        
-        setInputState({...inputState,value:newTextAreaValue }) ;
-        setcodemarkaState({...codemarkastate, isShowingMentions: false,mentionSearchString: null})
-        document.querySelector('#input_area').focus()
+                newTextAreaValue = `${ currentTextAreaValue }${ username } `
+            }
+        }
 
+        setInputState({ ...inputState, value: newTextAreaValue })
+        setcodemarkaState({
+            ...codemarkastate,
+            isShowingMentions: false,
+            mentionSearchString: null,
+        })
+        document.querySelector('#input_area').focus()
     }
 
     const handleShowMentions = (e) => {
-
-        setcodemarkaState(s =>
-           { 
-                if(!s.isShowingMentions){
-                    document.querySelector('#mentions_container').focus();
-                }   
-            return {...s, isShowingMentions: !s.isShowingMentions}
-        });
+        setcodemarkaState((s) => {
+            if (!s.isShowingMentions) {
+                document.querySelector('#mentions_container').focus()
+            }
+            return { ...s, isShowingMentions: !s.isShowingMentions }
+        })
     }
 
     const handleAddCodeBlock = (e) => {
@@ -1449,60 +1467,57 @@ const MainClassLayout = ({
     }
 
     const handleShowEmojiPicker = (e) => {
-        setisDisplayingEmoji(!isDisplayingEmoji);
+        setisDisplayingEmoji(!isDisplayingEmoji)
     }
 
     const handleImageUpload = (e) => {
-        document.getElementById('picture_input_upload').click();
+        document.getElementById('picture_input_upload').click()
     }
 
     const handleImageUploadChange = (e) => {
-        setIsUploadingImage(true);
+        setIsUploadingImage(true)
 
-        const file = e.target.files[0];
-         var reader = new FileReader();
+        const file = e.target.files[0]
+        var reader = new FileReader()
 
-         const messagesContainer = document.getElementById('fala')
-       
-         reader.onload = function (e) {
-              const preview = document.createElement('img');
-              preview.src = e.target.result;
-              preview.classList.add('pending__uploaded__image');
-              preview.id = 'upload__codemarka__progressing';
-             socketRef.current.binary(true).emit('image_upload', {
-                 data: e.target.result,
-                 name: file.name,
-                 by: userid,
-                 type: 'image',
-                 time: new Date(),
-                 messageColor: userMessageColor,
-                 room: classroomD.kid,
-             })
-              messagesContainer.appendChild(preview);
-            
-              setTimeout(() => {
-                    preview.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'end',
-                        inline: 'nearest',
-                    })
-              messagesContainer.scrollTop = messagesContainer.scrollHeight
-                    
-              }, 500);
-         }
+        const messagesContainer = document.getElementById('fala')
 
-         reader.readAsDataURL(file)
+        reader.onload = function (e) {
+            const preview = document.createElement('img')
+            preview.src = e.target.result
+            preview.classList.add('pending__uploaded__image')
+            preview.id = 'upload__codemarka__progressing'
+            socketRef.current.binary(true).emit('image_upload', {
+                data: e.target.result,
+                name: file.name,
+                by: userid,
+                type: 'image',
+                time: new Date(),
+                messageColor: userMessageColor,
+                room: classroomD.kid,
+            })
+            messagesContainer.appendChild(preview)
 
+            setTimeout(() => {
+                preview.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'end',
+                    inline: 'nearest',
+                })
+                messagesContainer.scrollTop = messagesContainer.scrollHeight
+            }, 500)
+        }
+
+        reader.readAsDataURL(file)
     }
 
     const handleAddURL = (e) => {
         document.querySelector('#hyperlinkModal').click()
-
     }
-    const editorChanged = (event, value,editorName) => {
+    const editorChanged = (event, value, editorName) => {
         let editorFileId
 
-        codemarkastate.editors.forEach(element => {
+        codemarkastate.editors.forEach((element) => {
             if (element.file === editorName) {
                 editorFileId = element.id
             }
@@ -1516,52 +1531,57 @@ const MainClassLayout = ({
             id: editorFileId,
             editedBy: userid,
             kid: data.classroom_id,
-            type:'update'
+            type: 'update',
         }
 
-        setcodemarkaState(c => {
+        setcodemarkaState((c) => {
             return {
                 ...c,
                 previewContent: {
                     ...c.previewContent,
-                    [editorName]: { content: value, id: editorFileId }
-                }
+                    [editorName]: { content: value, id: editorFileId },
+                },
             }
         })
 
-          socket.emit('editorChanged', emitObj);
-        
+        socket.emit('editorChanged', emitObj)
+
         // if(o.origin === 'cut' && o.removed[0] !== ""){
         // }
-
     }
 
     function handleUploadInputChange(e) {
-        if(e.target && e.target.files[0]){
-            
-            const file = e.target.files[0];
+        if (e.target && e.target.files[0]) {
+            const file = e.target.files[0]
 
-            let fileType = file.type ? file.type.split('/')[1] : 'NOT SUPPORTED';
-            setEditorUploadState({uploading: true, file:fileType});
+            let fileType = file.type ? file.type.split('/')[1] : 'NOT SUPPORTED'
+            setEditorUploadState({ uploading: true, file: fileType })
 
-            const reader = new FileReader();
+            const reader = new FileReader()
             reader.addEventListener('load', (event) => {
-                const content = event.target.result;
+                const content = event.target.result
 
-                const fileTypeSupported = ['javascript','x-javascript','script','html','css'].some(t => t === fileType.toLowerCase());
+                const fileTypeSupported = [
+                    'javascript',
+                    'x-javascript',
+                    'script',
+                    'html',
+                    'css',
+                ].some((t) => t === fileType.toLowerCase())
 
-                if(!fileTypeSupported){
-                    
-                    toast.error('File type not supported for environment,only HTML,CSS and Javascript Files, Try again.')
-                    setEditorUploadState({uploading: false, file:''});
+                if (!fileTypeSupported) {
+                    toast.error(
+                        'File type not supported for environment,only HTML,CSS and Javascript Files, Try again.'
+                    )
+                    setEditorUploadState({ uploading: false, file: '' })
                 } else {
-                    let editorFileId;
-                    fileType = fileType.includes('script') ? 'js' : fileType;
-                    codemarkastate.editors.forEach(element => {
+                    let editorFileId
+                    fileType = fileType.includes('script') ? 'js' : fileType
+                    codemarkastate.editors.forEach((element) => {
                         if (element.file === fileType) {
                             editorFileId = element.id
                         }
-                    });
+                    })
 
                     const emitObj = {
                         file: fileType,
@@ -1571,36 +1591,37 @@ const MainClassLayout = ({
                         id: editorFileId,
                         editedBy: userid,
                         kid: data.classroom_id,
-                        type:'upload'
-                    };
+                        type: 'upload',
+                    }
 
-                    setcodemarkaState(c => {
-                       const nEArray = c.editors.map(e => {
-                            if(e.file === fileType){
-                                return {...e,content}
+                    setcodemarkaState((c) => {
+                        const nEArray = c.editors.map((e) => {
+                            if (e.file === fileType) {
+                                return { ...e, content }
                             } else {
-                                return e;
+                                return e
                             }
-                        });
+                        })
 
                         return {
                             ...c,
                             previewContent: {
                                 ...c.previewContent,
-                                [fileType]: { content, id: editorFileId }
+                                [fileType]: { content, id: editorFileId },
                             },
-                            editors: nEArray
+                            editors: nEArray,
                         }
-                    });
+                    })
 
                     socket.emit('editorChanged', emitObj)
 
-                    toast.success(`Upload Completed. File - ${ fileType }`,{ position:'bottom-center'} )
+                    toast.success(`Upload Completed. File - ${ fileType }`, {
+                        position: 'bottom-center',
+                    })
 
-                    setEditorUploadState({uploading: false, file:''});
+                    setEditorUploadState({ uploading: false, file: '' })
 
-                    e.target.value = null;
-
+                    e.target.value = null
                 }
             })
 
@@ -1610,31 +1631,28 @@ const MainClassLayout = ({
             //     }
             // })
 
-            reader.readAsText(file);
-
+            reader.readAsText(file)
         } else {
-            console.log(e);
+            console.log(e)
         }
-
-    }
-    
-    const handleuploadFileFromSystem = (e,file) => {
-        e.preventDefault();
-        setEditorUploadState({uploading: true, file});
-        
-        document.getElementById('editor_file_uploader_input').click();
-          
     }
 
-    const handleClearEditorrContent = (e,editorName) => {
-        e.preventDefault();
-        setcodemarkaState(s => {
+    const handleuploadFileFromSystem = (e, file) => {
+        e.preventDefault()
+        setEditorUploadState({ uploading: true, file })
+
+        document.getElementById('editor_file_uploader_input').click()
+    }
+
+    const handleClearEditorrContent = (e, editorName) => {
+        e.preventDefault()
+        setcodemarkaState((s) => {
             let editorid = ''
-            const newFileContent = s.editors.map(editor => {
-                if(editor.file === editorName){
+            const newFileContent = s.editors.map((editor) => {
+                if (editor.file === editorName) {
                     const emitObj = {
                         file: editorName,
-                        content:`/**
+                        content: `/**
                                 * Content cleared by ${ username },waiting for changes..
                                 \n
                                 /**`,
@@ -1643,41 +1661,47 @@ const MainClassLayout = ({
                         id: editor.id,
                         editedBy: userid,
                         kid: data.classroom_id,
-                        type:'upload'
-                    };
+                        type: 'upload',
+                    }
                     editorid = editor.id
                     socket.emit('editorChanged', emitObj)
 
-                    return {...editor,content:'',}
-                } else return editor;
-            });
+                    return { ...editor, content: '' }
+                } else return editor
+            })
 
-            return {...s,editors: newFileContent,previewContent:{...codemarkastate.previewContent,[editorName]:{content:'',id: editorid}}}
+            return {
+                ...s,
+                editors: newFileContent,
+                previewContent: {
+                    ...codemarkastate.previewContent,
+                    [editorName]: { content: '', id: editorid },
+                },
+            }
         })
     }
-    const handleAddExternalCDN  = (e, editorName) => {
-        e.preventDefault();
+    const handleAddExternalCDN = (e, editorName) => {
+        e.preventDefault()
 
-        setcodemarkaState(s => {
-            return {...s,currentEditorSelection: editorName}
-        });
-        setcodemarkaState(s => {
+        setcodemarkaState((s) => {
+            return { ...s, currentEditorSelection: editorName }
+        })
+        setcodemarkaState((s) => {
             document.querySelector('#settingsModal').click()
-            return s;
+            return s
         })
     }
 
     const handleAudioVideoAlert = (message) => {
-        toast.success(message);
+        toast.success(message)
     }
 
-    const handleImagePreview = (e,url) => {
-        setImagePreviewConfig({shouldDisplay: true,url})
+    const handleImagePreview = (e, url) => {
+        setImagePreviewConfig({ shouldDisplay: true, url })
     }
 
     const handleclosePreview = (e) => {
-        setImagePreviewConfig({ shouldDisplay: false, url:'' })
-
+        setImagePreviewConfig({ shouldDisplay: false, url: '' })
     }
 
     return (
@@ -1695,9 +1719,12 @@ const MainClassLayout = ({
                 closePreview={ handleclosePreview }
             />
             <EmojiPicker
+                setdisplaying={ (e) => setisDisplayingEmoji(false) }
                 shouldDisplay={ isDisplayingEmoji }
                 handleInputChange={ handleEmojiInput }
             />
+
+            <MessageReactions />
 
             <ClassRoomSettingsModal
                 codemarkastate={ codemarkastate }
@@ -2092,7 +2119,6 @@ const MainClassLayout = ({
                 handleAddUserIconClicked={ handleAddUserIconClicked }
             />
             <VideoAndAudioPermission />
-
             <CodeBlockModal socket={ socketRef.current } />
             <ClassInformationModal
                 owner={ owner }
@@ -2177,8 +2203,10 @@ const MainClassLayout = ({
 
 const mapDispatchToProps = dispatch => {
     return {
-        onClassroomVerify: classroomid =>
-            dispatch(action.classVerify(classroomid))
+        onClassroomVerify: (classroomid) =>
+            dispatch(action.classVerify(classroomid)),
+        setSocket: (socketconnection) =>
+            dispatch(action.setClassroomSocket(socketconnection)),
     }
 }
 export default connect(null, mapDispatchToProps)(MainClassLayout)

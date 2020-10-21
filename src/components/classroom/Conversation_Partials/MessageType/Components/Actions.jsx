@@ -1,7 +1,9 @@
-import React from 'react'
+import React,{ useState} from 'react'
 
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import MessageReaction from './MessageReactions';
+
 import * as actionType from '../../../../../store/actions/Types'
 
  function MessageActions(props) {
@@ -16,15 +18,20 @@ import * as actionType from '../../../../../store/actions/Types'
     });
   }
 
+  function addEmojiReaction(e){
+      props.setShowEmoji(true)
+  }
+
   return (
       <div
           className="message_actions"
           onMouseEnter={ props.keepShowingActions }
           id={ props.id }>
+       
           <span onClick={ loadMessageThread }>
               <i className="fa fa-comment-dots"></i>
           </span>
-          <span>
+          <span onClick={ addEmojiReaction }>
               <i className="fa fa-smile-wink"></i>
           </span>
           <span>
@@ -41,7 +48,8 @@ import * as actionType from '../../../../../store/actions/Types'
 const matchDispatchToProps = (dispatch) => {
     return {
         setMessageThread: (data) =>
-            dispatch({ type: actionType.SET_MESSAGE_THREAD,data })
+            dispatch({ type: actionType.SET_MESSAGE_THREAD, data }),
+        setShowEmoji: () => dispatch({ type: actionType.SET_DISPLAYING_MESSAGE_REACTION_PICKER, status : true})
     }
 }
 
