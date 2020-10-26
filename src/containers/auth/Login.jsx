@@ -61,6 +61,7 @@ const emailIconSvg = (
 function Login(props) {
     const { onClassroomSwitch, onResetAll } = props
    const [mounted, setMounted] = useState(false)
+   
    useEffect(() => {
        setMounted(true)
        if (!mounted) {
@@ -69,7 +70,6 @@ function Login(props) {
        }
    }, [mounted, onClassroomSwitch, onResetAll])
     
-
     const [state, setState] = useState({
         controls: {
             email: {
@@ -135,11 +135,20 @@ function Login(props) {
     let redct
 
     if (props.isAuthenticated) {
-        const host = window.location.href
-        const url = new URLSearchParams(host)
-        const redirectPath = url.get('redir')
-        if (redirectPath) {
-            redct = <Redirect to={ `${ redirectPath }` } />
+        const params = new URLSearchParams(window.location.search)
+      
+        if (params.has('redir')) {
+            var protocol = new RegExp('^(?:[a-z]+:)?//', 'i')
+
+            if (protocol.test(params.get('redir'))) {
+                window.location.href = `${ params.get(
+                    'redir'
+                ) }?token=${ localStorage.getItem(
+                    'wx1298'
+                ) }&user=${ localStorage.getItem('u342345') }`
+            } else {
+                redct = <Redirect to={ params.get('redir') } />
+            }
         } else {
             window.location.href = window.location.origin
         }
@@ -153,12 +162,12 @@ function Login(props) {
             />
             {redct}
             <section className="container-fluid">
-                <div className="row min-vh-100" style={{maxHeight:'100vh','overflow':'auto'}}>
+                <div className="row min-vh-100" style={ {maxHeight:'100vh','overflow':'auto'} }>
                     <div className="comm_bg_img col-md-8 col-xl-8 col-lg-8 py-6 py-md-0 h-100vh d-none d-md-flex d-lg-flex d-xl-flex">
                         <div className="details_container">
                             <div className="logo_container">
                                 <img
-                                    src={Logo}
+                                    src={ Logo }
                                     height="25"
                                     alt="codemarka_logo"
                                 />
@@ -172,7 +181,7 @@ function Login(props) {
                                     <br /> getting a community account today.
                                 </p>
                             </div>
-                            <Link to={APPURLS.COMMUNITY_ACCOUNT_SIGNUP_PAGE}>
+                            <Link to={ APPURLS.COMMUNITY_ACCOUNT_SIGNUP_PAGE }>
                                 <button
                                     type="button"
                                     class="btn btn-animated btn-primary btn-animated-x">
@@ -187,7 +196,7 @@ function Login(props) {
                         </div>
                     </div>
 
-                    <div className="mt-3 p-3 col-md-4 col-lg-4 col-xl-4 py-6 h-100 py-md-0 oveflow-auto" style={{maxHeight:'100vh',overflow:'auto'}}>
+                    <div className="mt-3 p-3 col-md-4 col-lg-4 col-xl-4 py-6 h-100 py-md-0 oveflow-auto" style={ {maxHeight:'100vh',overflow:'auto'} }>
                         <div>
                             <div className="mb-5 text-center">
                                 <h6 className="h3 mb-1">Welcome back!</h6>
@@ -197,16 +206,16 @@ function Login(props) {
                             </div>
                             <span className="clearfix" />
                             {alert}
-                            <form onSubmit={submitHandler}>
+                            <form onSubmit={ submitHandler }>
                                 <Input
                                     type="email"
                                     id="emailinput"
                                     placeholder="someone@someserver.com"
                                     label="Email address"
                                     initialPrepend
-                                    initialPrependsvg={emailIconSvg}
-                                    value={state.controls.email.value}
-                                    changed={(event) =>
+                                    initialPrependsvg={ emailIconSvg }
+                                    value={ state.controls.email.value }
+                                    changed={ (event) =>
                                         handleInputChange(event, 'email')
                                     }
                                 />
@@ -218,19 +227,19 @@ function Login(props) {
                                     label="password"
                                     isLoginPasswordInput
                                     initialPrepend
-                                    forgotPassword={true}
-                                    initialPrependsvg={initialPrependsvg}
-                                    value={state.controls.password.value}
-                                    finalAppend={false}
-                                    changed={(event) =>
+                                    forgotPassword={ true }
+                                    initialPrependsvg={ initialPrependsvg }
+                                    value={ state.controls.password.value }
+                                    finalAppend={ false }
+                                    changed={ (event) =>
                                         handleInputChange(event, 'password')
                                     }
                                 />
                                 <div className="mt-4">
                                     <Button
                                         type="submit"
-                                        clicked={submitHandler}
-                                        disabled={props.loading}
+                                        clicked={ submitHandler }
+                                        disabled={ props.loading }
                                         textColor="#fff"
                                         block
                                         color="primary">

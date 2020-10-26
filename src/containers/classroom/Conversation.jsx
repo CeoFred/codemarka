@@ -258,7 +258,9 @@ export default function Conversation(props) {
                                           userId === props.user
                                               ? 'sent'
                                               : 'received'
-                                      }` }>
+                                      }` }
+                                      >
+                                        
                                       <div
                                           style={ {
                                               color: `${ color }`,

@@ -9,7 +9,6 @@ import * as actionType from '../../../../../store/actions/Types';
 import '../Styles/text.css';
 import MessageActions from '../Components/Actions';
 import ThreadReplies from '../Components/ThreadReplies';
-import MessageReactions from '../Components/MessageReactions';
 import Reactions from '../Components/Reactions'
 
 function MessageComponent (props) {
@@ -48,7 +47,6 @@ function MessageComponent (props) {
                 className="r-message"
                 dangerouslySetInnerHTML={ { __html: props.content } }
             />
-            {<MessageReactions { ...props } />}
             {showAction ? (
                 <MessageActions
                     setShowEmoji={ (v) => setShowingEmoji(v) }

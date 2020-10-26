@@ -18,7 +18,6 @@ const classrooom = React.lazy(() =>
 const newclassroom = React.lazy(() =>
     import('./containers/classroom/NewClassroom')
 )
-
 const logout = React.lazy(() => import('./containers/auth/Logout'))
 const Home = React.lazy(() => import('./containers/public/Home/Index'))
 const Login = React.lazy(() => import('./containers/auth/Login'))

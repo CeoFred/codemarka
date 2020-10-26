@@ -647,12 +647,9 @@ function AudioVideoBroadcast(props) {
             <ToastContainer />
 
             <audio id="myAudio" className="d-none">
+               
                 <source
-                    src="https://notificationsounds.com/soundfiles/44c4c17332cace2124a1a836d9fc4b6f/file-sounds-1147-that-was-quick.wav"
-                    type="audio/wav"
-                />
-                <source
-                    src="https://notificationsounds.com/soundfiles/44c4c17332cace2124a1a836d9fc4b6f/file-sounds-1147-that-was-quick.mp3"
+                    src="../../../media/audio/calling.mp3"
                     type="audio/mpeg"
                 />
             </audio>

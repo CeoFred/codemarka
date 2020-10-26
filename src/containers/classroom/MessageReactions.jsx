@@ -2,7 +2,7 @@
 
 import React, { useState, useLayoutEffect } from 'react'
 import { Picker } from 'emoji-mart'
-import './reactions.css';
+import './css/reactions.css';
 
 function MessageReactions(props) {
     const [display, setDisplay] = useState('none')

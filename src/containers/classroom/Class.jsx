@@ -22,7 +22,7 @@ import ImagePreview from '../../components/classroom/ImagePreview/index';
 
 import { DOWNLOAD_CLASSROOM_ATTENDANCE } from '../../config/api_url';
 import AttendanceCollector from '../../components/classroom/Attendance/index.jsx';
-import MessageReactions from '../../components/classroom/Conversation_Partials/MessageType/Components/MessageReactions'
+import MessageReactions from './MessageReactions'
 
 import CodeBlockModal from '../../components/classroom/Conversation_Partials/CodeBlocks/index';
 import ClassInformationModal from '../../components/classroom/Modals/ClassroomInformation'
