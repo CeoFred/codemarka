@@ -4,14 +4,11 @@
 #codemarka
 A real time coding platform for teams with an additional conversation flow feature.
 
-## Getting started with colab
+## Getting started with codemarka
 - clone the repo
 - cd repo
-- yarn install
+- npm install --save
 - npm start
-
-this should spin up the front end. Colab can't functon well without the server, if you have access
-to this repo, then eventually you should as well have access to the server repo.
 
 Current Features
 - Real time chat
@@ -21,14 +18,11 @@ Current Features
 - classroom link shortner
 - Code Liniting
 - Multiple administrators
+- Classroom mentions
 
 Future AdOns
 
 - Realtime audio recording
 - Classroom screen monitoring with audio and video
 - Support multiple files
-- Classroom mentions
 - LESS,SCSS,Typscript,Markdown.
-<p>Hot Links</p>
-
- - (Audio Recording) - https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API/Using_the_MediaStream_Recording_API
