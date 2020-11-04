@@ -7,10 +7,29 @@ export function classVerify(classKid){
     }
 }
 
+export function setClassroomSocket(socket){
+    return {
+        type: actionTypes.SET_CLASSROOM_SOCKET_CONNECTION,
+        socket
+    }
+}
 export function classVerifySuccess(classroom){
     return {
         type: actionTypes.CLASSROOM_VERIFICATION_SUCCESS,
         classroom
+    }
+}
+
+export function messageThreadFecthDone(data){
+     return {
+         type: actionTypes.MESSAGE_THREAD_FETCH_DONE,
+         data,
+     }
+}
+export function getMessageThread(data){
+    return {
+        type: actionTypes.SET_MESSAGE_THREAD,
+        data
     }
 }
 
@@ -63,5 +82,19 @@ export const classCreationSuccess = (details) => {
     return {
         type: actionTypes.CLASS_CREATION_SUCCESS,
         payload: details
+    }
+}
+
+export const setDefaultInputOutputDevices = (data) => {
+    return {
+        type: actionTypes.SET_DEFAULT_INPUT_OUTPUT_DEVICES,
+        data
+    }
+}
+
+export const setInputOuputDevices = (data) => {
+    return {
+        type: actionTypes.SET_INPUT_OUTPUT_DEVICES,
+        data
     }
 }

@@ -108,18 +108,14 @@ export default function CommunitySocialMediaInfo(props) {
                 updatedControls[key].valid = true
                 updatedControls[key].touched = true
             }
-            setFormControlState({
-                ...formControls,
-                contols: updatedControls,
-            })
-            setFormControlState((c) => {
+            setFormControlState(c => {
                 let formisvalid = true
                 for (const inputIdentifier in formControls.controls) {
                     formisvalid =
                         formControls.controls[inputIdentifier].valid &&
                         formisvalid
                 }
-                return { ...c, formisvalid }
+               return { ...c, controls: updatedControls,formisvalid}
             })
         }
     }, [oldData])

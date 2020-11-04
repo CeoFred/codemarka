@@ -9,7 +9,7 @@
 /coverage
 
 # production
-/build
+/build/*
 
 # misc
 .DS_Store
@@ -30,6 +30,7 @@ logs
 
 node_modules
 bower_components
+build
 
 *.sublime*
 
@@ -42,3 +43,5 @@ sketch
 ### Firebase Patch ###
 .runtimeconfig.json
 .firebase/
+# Local Netlify folder
+.netlify

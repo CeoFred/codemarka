@@ -3,13 +3,33 @@ import * as actionTypes from '../actions/Types'
 import * as helper from '../../utility/shared'
 
 const INITIAL_STATE = {
-    classroom_id:null,
-    is_loaded:null,
-    errors:null,
-    loading:false,
-    classdetails:null,
-    validated:false,
-    status:null
+    classroom_id: null,
+    is_loaded: null,
+    errors: null,
+    loading: false,
+    classdetails: null,
+    validated: false,
+    status: null,
+    defaultAudioVideoConfig: {
+        audioinput: undefined,
+        videoinput: undefined,
+        audiooutput: undefined,
+    },
+    audioVideoDeviceAndConfigs: {},
+    messageThread: {
+        messages: null,
+        retrieved: false,
+        loading: false,
+        messageId: null,
+        classroomId: null,
+        userid: null,
+        userInfo: null,
+        showingThread: false,
+    },
+    messageReaction: {
+        isShowing: false
+    },
+    socket: null
 }
 
 const classroomCreationInit = (state,action) => {
@@ -99,6 +119,81 @@ const resetClassRoomData = (state, action) => {
         ...INITIAL_STATE
     });
 }
+
+const setDefaultInputOutputDevices = (state, action) => {
+    return helper.updateObject(state, {
+        defaultAudioVideoConfig: {
+                ...action.data,
+        },
+    })
+}
+
+const setInputOutputDevices = (state, action) => {
+    return helper.updateObject(state, {
+        audioVideoDeviceAndConfigs: action.data,
+    })
+}
+
+const setThreadData = (state, action) => {
+return helper.updateObject(state, {
+    messageThread: {
+        ...state.messageThread,
+        ...action.data,
+        loading: true,
+        showingThread: true,
+    },
+})
+}
+
+const fetchedMessageThreadSuccessfull = (state, action) => {
+    return helper.updateObject(state, {
+        messageThread: {
+            ...state.messageThread,
+            loading: false,
+            retrieved: true,
+            messages: action.data.messageData.thread,
+            timeSent: action.data.messageData.oTime,
+            message: action.data.messageData.msg || '',
+            showingThread: true,
+            userInfo: {
+                username: action.data.username,
+                image: action.data.image,
+            },
+           data:{
+               ...action.data.messageData
+           }
+        },
+    })
+}
+
+const updateCurrentMessageThread = (state, action) => {
+    const incomingThreadMessageID = action.data[0].messageId;
+    if (state.messageThread.showingThread && state.messageThread.messageId === incomingThreadMessageID) {
+return helper.updateObject(state, {
+    messageThread: {
+        ...state.messageThread,
+        messages: action.data,
+    },
+})
+    } 
+    return state;
+        
+}
+
+const showMessageReactionPicker = (state, action) => {
+    return helper.updateObject(state, {
+        messageReaction: {
+            isShowing: action.status
+        },
+    })
+}
+
+const setSocketConnection = (state, action) => {
+    return helper.updateObject(state, {
+        socket: action.socket
+    })
+}
+
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
 
@@ -111,6 +206,13 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.CLASSROOM_VERIFICATION_SUCCESS): return classroomVerified(state,action)
         case(actionTypes.CLASSROOM_VERIFICATION_FAILED): return classroomVerificationFailed(state,action)
         case(actionTypes.CLASSROOM_RESET): return resetClassRoomData(state,action)
+        case(actionTypes.SET_DEFAULT_INPUT_OUTPUT_DEVICES): return setDefaultInputOutputDevices(state,action)
+        case(actionTypes.SET_INPUT_OUTPUT_DEVICES): return setInputOutputDevices(state,action)
+        case(actionTypes.MESSAGE_THREAD_DATA_SET_DONE): return setThreadData(state,action)
+        case(actionTypes.MESSAGE_THREAD_FETCH_DONE): return fetchedMessageThreadSuccessfull(state,action)
+        case(actionTypes.MESSAGE_THREAD_UPDATED): return updateCurrentMessageThread(state,action)
+        case(actionTypes.SET_DISPLAYING_MESSAGE_REACTION_PICKER): return showMessageReactionPicker(state,action)
+        case(actionTypes.SET_CLASSROOM_SOCKET_CONNECTION): return setSocketConnection(state,action)
         default: return state;
     }
 }

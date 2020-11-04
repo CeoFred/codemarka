@@ -108,21 +108,18 @@ function CommunityInfo(props) {
                   updatedControls[key].valid = true
                   updatedControls[key].touched = true
               }
-              setFormControlState({
-                  ...formControls,
-                  contols: updatedControls,
-              })
-              setFormControlState((c) => {
-                  let formisvalid = true
-                  for (const inputIdentifier in formControls.controls) {
-                      formisvalid =
-                          formControls.controls[inputIdentifier].valid &&
-                          formisvalid
-                  }
-                  return { ...c, formisvalid }
-              })
+              setFormControlState(s => {
+                let formisvalid = true
+                for (const inputIdentifier in formControls.controls) {
+                    formisvalid =
+                        formControls.controls[inputIdentifier].valid &&
+                        formisvalid
+                }
+                return {...s,controls:updatedControls,formisvalid}
+              });
          }
      }, [oldData])
+
      /**
       * Handle Form Submission
       * @param event Event

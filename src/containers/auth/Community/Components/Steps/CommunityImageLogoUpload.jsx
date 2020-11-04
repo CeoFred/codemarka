@@ -28,17 +28,17 @@ function CommunityImageLogoUpload(props) {
 
   const checkMimeType = (event) => {
       //getting file object
-      let files = event.target.files
+      const files = event.target.files
       //define message container
       let err = ''
       // list allow mime type
       const types = ['image/png', 'image/jpeg',]
       // loop access array
-      for (var x = 0; x < files.length; x++) {
+      for (let __x__ = 0; __x__ < files.length; __x__++) {
           // compare file type find doesn't matach
-          if (types.every((type) => files[x].type !== type)) {
+          if (types.every((type) => files[__x__].type !== type)) {
               // create error message and assign to container
-              err += files[x].type + ' is not a supported format\n'
+              err += files[__x__].type + ' is not a supported format\n'
           }
       }
 
@@ -54,21 +54,21 @@ function CommunityImageLogoUpload(props) {
   }
 
   const maxSelectFile = (event) => {
-      let files = event.target.files // create file object
+      const files = event.target.files // create file object
       if (files.length > 1) {
           const msg = 'Only one image can be uploaded'
           setstate({...state,error:true,isValid:true,message:msg});
           event.target.value = null // discard selected file
-          console.log(msg)
+        //   console.log(msg)
           return false
       }
       return true
   }
 
   const checkFileSize = (event) => {
-      let files = event.target.files
-      console.log(files[0].size);
-      let size = 1010000
+      const files = event.target.files
+    //   console.log(files[0].size);
+      const size = 1010000
       let err = ''
       for (let x = 0; x < files.length; x++) {
           if (files[x].size > size) {
@@ -97,7 +97,6 @@ function CommunityImageLogoUpload(props) {
     const file = event.target.files[0];
       setstate({ error: null, isValid: true, message: null })
 
-
       if (maxSelectFile(event) && checkMimeType(event) && checkFileSize(event)) {
 
           setFormControl({
@@ -112,9 +111,9 @@ function CommunityImageLogoUpload(props) {
           data.append('file', file);
 
           axios
-              .patch(APIURL.COMMUNITY_ACCOUNT_CREATE_LOGO_TEMP+`/${props.tempkid}`, data)
+              .patch(APIURL.COMMUNITY_ACCOUNT_CREATE_LOGO_TEMP+`/${ props.tempkid }`, data)
               .then((res) => {
-                  console.log(res.statusText)
+                //   console.log(res.statusText)
                   if (res.statusText === 'OK' && res.data.status) {
                  setstate({
                      error: false,
@@ -167,7 +166,7 @@ function CommunityImageLogoUpload(props) {
       <div className="row">
           <div
               className="col-md-12 mb-5 text-left"
-              style={{ paddingLeft: '15px' }}>
+              style={ { paddingLeft: '15px' } }>
               <h6 className="h3 mb-1">
                   <b>Upload Community Logo</b>
               </h6>
@@ -181,7 +180,7 @@ function CommunityImageLogoUpload(props) {
                       type="file"
                       name="communityLogo"
                       id="file-2"
-                      onChange={onChangeHandler}
+                      onChange={ onChangeHandler }
                       className="custom-input-file custom-input-file--2"
                       data-multiple-caption="{count} files selected"
                   />
@@ -190,23 +189,23 @@ function CommunityImageLogoUpload(props) {
                       <span>Choose a file…</span>
                   </label>
                   <p>Max 1MB, JPEG/PNG</p>
-                  <p className={`text-${state.error === true ? 'danger':'success'}`}>
-                  {state.message}
+                  <p className={ `text-${ state.error === true ? 'danger':'success' }` }>
+                      {state.message}
                   </p>
               </div>
           </div>
           <div className="flex align-items-center d-flex w-100 justify-content-between">
               <button
-                  style={{ marginLeft: '15px' }}
+                  style={ { marginLeft: '15px' } }
                   type="button"
-                  onClick={handlePreviousForm}
+                  onClick={ handlePreviousForm }
                   class="btn btn-primary hover-translate-y-n3 mr-2">
                   Back
               </button>
               <button
-                  style={{ marginLeft: '15px' }}
+                  style={ { marginLeft: '15px' } }
                   type="button"
-                  onClick={handleFormSubmission}
+                  onClick={ handleFormSubmission }
                   class="btn btn-primary hover-translate-y-n3 mr-2">
                   {formControls.inProgress && formControls.formisSubmitted ? (
                       <Spinner />

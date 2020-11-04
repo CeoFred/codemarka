@@ -16,10 +16,12 @@ import { dispatchAppEnvironment } from '../../store/actions/app'
 import './css/Environment.css'
 import '../../components/classroom/Editor/editor.css'
 import ColabLayout from './Class'
-import failedImg from '../../media/images/vectors/flame-1.png'
-import endedImg from '../../media/images/vectors/hugo-unsubscribed.png'
-import notStartedImg from '../../media/images/vectors/pluto-coming-soon-1.png'
-import notSupportedImg from '../../media/images/vectors/page-under-construction-1.png'
+
+import Blocked from '../../components/classroom/AccessMessages/Blocked';
+import Ended from '../../components/classroom/AccessMessages/Ended';
+import NotStarted from '../../components/classroom/AccessMessages/NotStarted';
+import MaxedOut from '../../components/classroom/AccessMessages/MaxUsers';
+import SmallScreen from '../../components/classroom/AccessMessages/SmallScreen';
 
 function Environment(props) {
     const {
@@ -94,132 +96,23 @@ function Environment(props) {
                 />
             )
         }
-        if (colabstate.isSmallScreen) {
-            return (
-                <div>
-                    <div
-                        style={{ height: '100vh' }}
-                        className="bg-warning pt-7 text-center justify-content-center">
-                        <div className="m-auto">
-                            <h1 className="text-white">Heads Up!</h1>
-                            <p className="p-3 text-white">
-                                {' '}
-                                <span className="text-white">
-                                    Unfortunately, classrooms are not yet
-                                    supported for your device size, we are
-                                    working on getting support for your screen,
-                                    please switch to a larger screen to
-                                    continue.
-                                </span>
-                                <br />
-                                return{' '}
-                                <a
-                                    href="/"
-                                    className="text-dark text-uppercase font-weight-bold">
-                                    Home
-                                </a>
-                            </p>
-                            <hr className="divider" />
-                            <div className="m-3">
-                                <img
-                                    style={{ height: '300px' }}
-                                    src={notSupportedImg}
-                                    alt="failed"
-                                    className="img-fluid"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )
-        }
         if (!props.class_verified && !props.validation_error_message) {
             return checking
         } else if (props.validation_error_message && !props.class_verified) {
             clearClassRoomData()
-            return <Redirect to="/classError/notFound/" />
+            return <Redirect to="/error/classroom/not-found" />
         } else if (
             props.isAuthenticated &&
             status &&
-            props.class_verified &&
-            props.username &&
-            props.userid
+            props.class_verified
         ) {
             let blocked = false
 
             if (String(props.classOwner) !== String(props.userid)) {
                 if (status === 3) {
-                    return (
-                        <div>
-                            <div
-                                style={{ height: '100vh' }}
-                                className="bg-primary pt-7 text-center justify-content-center">
-                                <div className="m-auto">
-                                    <h1 className="text-white">
-                                        Class Has Ended!
-                                    </h1>
-                                    <p className="p-3 text-white">
-                                        {' '}
-                                        <span className="text-white">
-                                            Whoops! Seems you ran late for this
-                                            class session.
-                                        </span>
-                                        <br />
-                                        return{' '}
-                                        <a
-                                            href="/"
-                                            className="text-dark text-uppercase font-weight-bold">
-                                            Home
-                                        </a>
-                                    </p>
-                                    <hr className="divider" />
-                                    <div className="m-3">
-                                        <img
-                                            style={{ height: '300px' }}
-                                            src={endedImg}
-                                            alt="failed"
-                                            className="img-fluid"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )
+                    return <Ended />
                 } else if (status === 1) {
-                    return (
-                        <div>
-                            <div
-                                style={{ height: '100vh' }}
-                                className="bg-success pt-7 text-center justify-content-center">
-                                <div className="m-auto">
-                                    <h1 className="text-white">Heads Up!</h1>
-                                    <p className="p-3 text-white">
-                                        {' '}
-                                        <span className="text-white">
-                                            This class session is schedulled to
-                                            start at {props.startTimeFull}
-                                        </span>
-                                        <br />
-                                        return{' '}
-                                        <a
-                                            href="/"
-                                            className="text-dark text-uppercase font-weight-bold">
-                                            Home
-                                        </a>
-                                    </p>
-                                    <hr className="divider" />
-                                    <div className="m-3">
-                                        <img
-                                            style={{ height: '300px' }}
-                                            src={notStartedImg}
-                                            alt="failed"
-                                            className="img-fluid"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )
+                    return <NotStarted startTimeFull={props.startTimeFull} />
                 }
             }
 
@@ -229,6 +122,16 @@ function Environment(props) {
                         blocked = true
                     }
                 })
+            }
+
+            if (props.classroom){
+                // check for number in classroom and classtype
+                const numberInClass = props.classroom.numberInClass
+                const maxUsers = props.classroom.maxUsers;
+
+                if(numberInClass + 1 > maxUsers){
+                    return <MaxedOut />
+                }
             }
 
             if (!blocked) {
@@ -246,51 +149,25 @@ function Environment(props) {
                         topic={props.classTopic}
                         pinnedMessages={props.class_pinnedMessages}
                         history={history}
-                        cd={props.c}
+                        cd={props.cclassroom}
                         kid={props.kid}
                         gravatarUrl={props.gravatarUrl}
                         classroomD={props.classroom}
                     />
                 )
-            } else {
+            }
+            else {
                 clearClassRoomData()
 
-                return (
-                    <div
-                        style={{ height: '100vh' }}
-                        className="bg-warning pt-7 text-center justify-content-center">
-                        <div className="m-auto">
-                            <h1 className="text-white">Heads Up!</h1>
-                            <p className="p-3 text-white">
-                                {' '}
-                                <span className="text-white">
-                                    Whoops! Seems you have been blocked from
-                                    joining {props.className}!
-                                </span>
-                                <br />
-                                return{' '}
-                                <a
-                                    href="/"
-                                    className="text-dark text-uppercase font-weight-bold">
-                                    Home
-                                </a>
-                            </p>
-                            <hr className="divider" />
-                            <div className="m-3">
-                                <img
-                                    style={{ height: '300px' }}
-                                    src={failedImg}
-                                    alt="failed"
-                                    className="img-fluid"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                )
+                return <Blocked className={props.className}/>
             }
         }
     }
-    return <div className="env--container">{getContent()}</div>
+    return (
+        <div className="env--container" id="env-container">
+            {getContent()}
+        </div>
+    )
 }
 
 const mapStateToProps = ({ auth, classroom }) => {
@@ -309,7 +186,7 @@ const mapStateToProps = ({ auth, classroom }) => {
         class_pinnedMessages: classroom.pinnedMessages,
         blocked: classroom.blocked,
         status: classroom.status,
-        startTimeFull: classroom.startTimeFull,
+        startTimeFull: classroom.schedule || classroom.startTimeFull,
         cid: classroom._id,
         kid: classroom.Kid,
         gravatarUrl: classroom.gravatarUrl,

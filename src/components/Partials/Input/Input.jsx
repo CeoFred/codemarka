@@ -22,11 +22,15 @@ if(props.elementType === 'input'){
 
     switch(props.elementType){
         case('input'):
-        inputElement =  <input
-         { ...props.elementConfig }
-          className={ InputClasses.join(' ') } 
-           value={ props.value }
-            onChange={ props.changed } />
+        inputElement = (
+            <input
+                onKeyDown={ props.KeyDown }
+                { ...props.elementConfig }
+                className={ InputClasses.join(' ') }
+                value={ props.value }
+                onChange={ props.changed }
+            />
+        )
 
        break;
 
@@ -36,6 +40,7 @@ if(props.elementType === 'input'){
             className={ InputClasses.join(' ') }
             { ...props.elementConfig }
             value={ props.value }
+            onKeyDown={ props.KeyDown }
             onChange={ props.changed }></textarea>
     )
     break;
@@ -44,38 +49,46 @@ if(props.elementType === 'input'){
     inputElement = (
         <select
             onChange={ props.changed }
+            onKeyDown={ props.KeyDown }
             className={ selectClasses.join(' ') }
             defaultValue={ props.value }>
-            {props.elementConfig.options.map(option => (
-                <option selected={ option.selected || false } value={ option.value } key={ option.value }>
-                    {option.displayValue}
-                </option>
-            ))}
+            {props.elementConfig.options
+                ? props.elementConfig.options.map((option) => (
+                    <option
+                          value={ option.value }
+                          key={ option.key || option.value }>
+                        {option.displayValue}
+                    </option>
+                  ))
+                : ''}
         </select>
     )
     break;
 
     default:
-    inputElement = <input
-    { ...props.elementConfig }
-     className={ InputClasses.join(' ') } 
-      value={ props.value }
-       onChange={ props.changed } />;
+    inputElement = (
+        <input
+            { ...props.elementConfig }
+            className={ InputClasses.join(' ') }
+            value={ props.value }
+            type={ props.elementType }
+            onChange={ props.changed }
+            onKeyDown={ props.KeyDown }
+        />
+    )
     }
-    return(
-        <div className="form-group">
-            <label className="form-control-label">{props.label}{props.validation && props.validation.required ? (<span className="text-danger pl-2">* required</span>) : ''}</label>
-            <div className="input-group input-group-merge">
+    if (props.shouldDisplay) {
+        return <div className="form-group">
+            <label className="form-control-label">{props.label}{props.validation && props.validation.required ? (<span className="text-danger pl-2">*   </span>) : ''}</label>
+            <div className="input-group">
                 {inputElement}
-                {/* <div class="input-group-append">
-                <span class="input-group-text"><i data-feather="credit-card"></i></span>
-            </div> */}
-                <div class="form-text text-muted mt-2">
-                    <small>{props.elementConfig.inputHelperText}</small>
-                </div> 
+
+                <div class="form-text mt-2 text-success">
+                    <small>{props.elementConfig.inputhelpertext}</small>
+                </div>
             </div>
         </div>
-    );
+    } else return (<React.Fragment></React.Fragment>)
 };
 
 export default Input;

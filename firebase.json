@@ -1,15 +1,17 @@
 {
   "hosting": {
-    "public": "build/",
-    "site": "codemarka",
+    "public": "build",
+      "target": "main",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
-    "rewrites": [{
-      "source": "**",
-      "destination": "/index.html"
-    }]
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   }
 }

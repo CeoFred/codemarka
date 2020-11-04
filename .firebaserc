@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "colabinc-7fd69"
+  },
+  "targets": {
+    "colabinc-7fd69": {
+      "hosting": {
+        "main": [
+          "codemarka"
+        ]
+      }
+    }
   }
 }

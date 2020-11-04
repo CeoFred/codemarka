@@ -1,180 +1,342 @@
-/* eslint-disable react/prop-types */
-import React,{ useEffect, useRef } from 'react';
-import { formatToTimeZone } from 'date-fns-timezone';
+/**
+ * /* eslint-disable no-undef
+ *
+ * @format
+ */
 
-import './css/conversation.css';
+/* eslint-disable camelcase */
+/* eslint-disable react/prop-types */
+/**
+ * /* eslint-disable no-undef
+ *
+ * @format
+ */
+
+/**
+ * /* eslint-disable react/prop-types
+ *
+ * @format
+ */
+
+import React, { useRef,useEffect,useState } from 'react'
+import { formatToTimeZone } from 'date-fns-timezone'
+import Mentions from '../../components/classroom/Conversation_Partials/Mentions/index'
+import TextMessage from '../../components/classroom/Conversation_Partials/MessageType/Text/Text'
+import ImageMessage from '../../components/classroom/Conversation_Partials/MessageType/Image'
+import NotificationMessage from '../../components/classroom/Conversation_Partials/MessageType/Notifications'
+import ScrollButton from '../../components/classroom/Conversation_Partials/ScrollTrigger'
+
+import './css/conversation.css'
 
 export default function Conversation(props) {
-    const messageRef = useRef(null);
+    const messageRef = useRef(null)
 
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    useEffect(() => {
-        // document.getElementById("fala").innerHTML = 'text';
-    })
-    var wrapURLs = function (text, new_window, id) {
-        // var url_pattern = /(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}\-\x{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?/gm;
-       
-        var target = (new_window === true || new_window == null) ? '_blank' : '';
-
-        const rt = text.replace(/^(http?|https?):\/\/[^\s$.?#"].[^\s]*$/gm, function (url) {
-            var protocol_pattern = /^(?:(?:https?|ftp):\/\/)/i;
-            var href = protocol_pattern.test(url) ? url : 'http://' + url;
-
-            return `<a href="${href}" target="${target}"> ${url} </a>`;
-        });
-        return (<div className="r-message" dangerouslySetInnerHTML={{ __html: rt }} />);
-    };
-
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
     const inputKeyDown = (event) => {
         if (event.keyCode === 13) {
             // Cancel the default action, if needed
-            event.preventDefault();
-            props.sendMessage(event);
+            event.preventDefault()
+            props.sendMessage(event)
         }
     }
-    let messages;
+
+    const [messageVisible, setMessageVisible] = useState(true)
+
+    useEffect(() => {
+        const messageContainer = document.querySelector('#fala');
+        messageContainer.addEventListener('scroll', function(e){
+            const read =
+                e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight
+             if(!read){
+                 setMessageVisible(false);
+             } else {
+                 setMessageVisible(true)
+             }
+        });
+    }, [])
 
     if (props.messages && props.messages.length > 0) {
-
-        messageRef.current = props.messages.map((m, i) => {
-
+        const messageBundle = {}
+        let chunkCount = 0
+        const mapMessageToChunkId = {}
+        props.messages.forEach((m, i, arr) => {
             const date = new Date(m.oTime)
-            const time = formatToTimeZone(date, 'h:mm a', { timeZone })
+            const time = formatToTimeZone(date, 'h:mm', { timeZone })
 
-            if (m.by.toLowerCase() === 'server' && m.type) {
-                if (m.for === props.user) {
-                    return (
-                            <div className="message_extra" key={m.msgId} id={m.msgId}>
-                                You
-                                {m.type === 'sLeft' ? ' left' : ' Joined'}
-                            </div>
-                    )
-                }
-                return (
-                    <div className="message_extra" key={m.msgId} id={m.msgId}>
-                        {m.name}
-                        {m.type === 'sLeft' ? ' left' : ' Joined'}
-                    </div>
-                )
-            } else if (m.by === 'server' && m.type === 'oldMsgUpdate') {
-                return (
-                    <div
-                        className={`message ${
-                            m.by === props.user ? 'sent' : 'received'
-                            }`}
-                        key={m.msgId.toString()}
-                        id={m.msgId}
-                        style={{ borderLeft: `2px solid ${m.color ? m.color : 'white'}` }}
-                        >
-                        <div
-                            style={{ color: `${m.color ? m.color : 'white'}` }}
-                            className="font-weight-800 user-by">
-                            {m.by !== props.user
-                                ? m.name +
-                                `${props.owner === m.by ? '(admin)' : ''}`
-                                : ''}
-                        </div>
-                        {wrapURLs(String(m.msg), true, m.msgId)}
-                        <span className="metadata">
-                            <b className="time">{time}</b>
-                        </span>
-                    </div>
-                )
+            if (i === 0) {
+                messageBundle[`${ chunkCount }`] = [m]
+                mapMessageToChunkId[m.msgId] = chunkCount
+                chunkCount++
             } else {
-                return (
-                    <div
-                        className={`message ${
-                            m.by === props.user ? 'sent' : 'received'
-                            }`}
-                        key={m.msgId.toString()}
+                // check if message was sent the same day
+                const messageDateAndYear = formatToTimeZone(date, 'h:mm:YYYY', {
+                    timeZone,
+                })
 
-                        style={{ borderLeft: `2px solid ${m.color ? m.color : 'white'}` }}
-                        id={m.msgId}>
-                        <div
-                            style={{ color: `${m.color ? m.color : 'white'}` }}
-                            className="font-weight-800 user-by">
-                            {m.by !== props.user
-                                ? m.name +
-                                `${props.owner === m.by ? '(admin)' : ''}`
-                                : ''}
-                        </div>
-                        {wrapURLs(m.msg, true, m.msgId)}
-                        <span className="metadata">
-                            <b className="time">{time}</b>
-                        </span>
-                    </div>
+                const previousMessageDate = new Date(arr[i - 1].oTime)
+
+                const previousMessageDateAndYear = formatToTimeZone(
+                    previousMessageDate,
+                    'h:mm:YYYY',
+                    { timeZone }
                 )
+
+                const previousMessagetime = formatToTimeZone(
+                    previousMessageDate,
+                    'h:mm',
+                    { timeZone }
+                )
+
+                const previousSender = arr[i - 1].by
+                const currentSender = m.by
+
+                if (
+                    String(previousMessageDateAndYear) ===
+                        String(messageDateAndYear) &&
+                    previousSender === currentSender
+                ) {
+                    if (time === previousMessagetime) {
+                        // get chunk id of previous message
+                        const previousMessageChunkId =
+                            mapMessageToChunkId[arr[i - 1].msgId]
+
+                        messageBundle[`${ previousMessageChunkId }`]
+                            ? messageBundle[`${ previousMessageChunkId }`].push(m)
+                            : (messageBundle[`${ previousMessageChunkId }`] = [m])
+
+                        mapMessageToChunkId[m.msgId] = previousMessageChunkId
+                    } else {
+                        messageBundle[`${ chunkCount }`] = [m]
+                        mapMessageToChunkId[m.msgId] = chunkCount
+
+                        chunkCount++
+                    }
+                } else {
+                    messageBundle[`${ chunkCount }`] = [m]
+                    mapMessageToChunkId[m.msgId] = chunkCount
+
+                    chunkCount++
+                }
             }
         })
+
+        const chunkedJSX = []
+        for (const key in messageBundle) {
+            if (messageBundle.hasOwnProperty(key)) {
+                const messages = messageBundle[key]
+                let jsx = []
+                jsx = messages.map((message) => {
+                    if (message.type && message.type === 'text') {
+                        return (
+                            <TextMessage
+                                message={ message }
+                                users={ props.users }
+                                socket={ props.socket }
+                            />
+                        )
+                    } else if (message.type && message.type === 'image') {
+                        return (
+                            <ImageMessage
+                                handleImagePreview={ props.handleImagePreview }
+                                message={ message }
+                                socket={ props.socket }
+                            />
+                        )
+                    } else {
+                        return (
+                            <NotificationMessage
+                                user={ props.user }
+                                message={ message }
+                            />
+                        )
+                    }
+                })
+                jsx.unshift({
+                    timeSent: messages[0].oTime,
+                    username: messages[0].name,
+                    color: messages[0].color,
+                    userId: messages[0].by,
+                })
+                chunkedJSX.push(jsx)
+            }
+        }
+        messageRef.current = chunkedJSX
     }
 
-
     const getTyping = () => {
-
-        const whoIsTypingArray = props.typing.filter(utypist => {
+        const whoIsTypingArray = props.typing.filter((utypist) => {
             return utypist.id !== props.user
-        });
+        })
 
         if (Array.isArray(whoIsTypingArray)) {
-
-            const usersTyping = whoIsTypingArray.length;
+            const usersTyping = whoIsTypingArray.length
 
             if (usersTyping > 0) {
                 if (usersTyping === 1) {
-                    return (<span className="m-auto">{whoIsTypingArray[0].username.slice(0, 10)} is typing...</span>)
+                    return (
+                        <span className="m-auto">
+                            {whoIsTypingArray[0].username.slice(0, 10)} is
+                            typing...
+                        </span>
+                    )
                 } else if (usersTyping === 2) {
                     return (
                         <span className="m-auto">
                             {whoIsTypingArray[0].username.slice(0, 10)} and{' '}
-                            {whoIsTypingArray[1].username.slice(0, 10)} are typing
+                            {whoIsTypingArray[1].username.slice(0, 10)} are
+                            typing
                         </span>
                     )
+                } else if (usersTyping > 2) {
+                    return <span className="m-auto">Too many typing...</span>
                 }
             } else {
-                return '';
+                return ''
             }
         }
+    }
+
+    function handlegoToBottom(e){
+        e.preventDefault()
+        var objDiv = document.getElementById('fala')
+        objDiv.scrollTop = objDiv.scrollHeight
     }
 
     return (
         <div className="conversation__container d-block">
             <div className="user-bar">
-
                 <span className="name">
-    <div>{props.username.slice(0,20)}{props.username.length > 19 ? '...' : ''}</div>
-                    <div style={{
-                        marginTop: '-10px', 
-                        color: '#fff',
-                        fontSize: '1rem',
-                        fontWeight: 200}}>{props.isOnline ? 'online' : 'offline'} <span className={`dot-${props.isOnline ? 'online' : 'offline'}`}></span>
-                        </div>
-                    <div className="text-white" style={{ fontSize: 10 }}>
+                    <div>
+                        {props.username.slice(0, 20)}
+                        {props.username.length > 19 ? '...' : ''}
+                    </div>
+                    <div
+                        style={ {
+                            marginTop: '-10px',
+                            color: '#fff',
+                            fontSize: '1rem',
+                            fontWeight: 200,
+                        } }>
+                        {props.isOnline ? 'online' : 'offline'}{' '}
+                        <span
+                            className={ `dot-${
+                                props.isOnline ? 'online' : 'offline'
+                            }` }></span>
+                    </div>
+                    <div className="text-white" style={ { fontSize: 10 } }>
                         {getTyping()}
                     </div>
                 </span>
-
             </div>
             {/* messages tab */}
             <div className="container bg-black messages" id="fala">
-                {messageRef.current}
+                {/* {messageRef.current} */}
+                {messageRef.current
+                    ? messageRef.current.map((messages) => {
+                          const groupMetaData = messages[0]
+                          const {
+                              timeSent,
+                              color,
+                              userId,
+                              username,
+                          } = groupMetaData
+                          const date = new Date(timeSent)
+                          const time = formatToTimeZone(date, 'h:mm a', {
+                              timeZone,
+                          })
+                          if (userId === 'server') {
+                              return messages.map((element, i) => {
+                                  if (i !== 0) {
+                                      return element
+                                  }
+                              })
+                          } else {
+                              return (
+                                  <div
+                                      className={ `message ${
+                                          userId === props.user
+                                              ? 'sent'
+                                              : 'received'
+                                      }` }
+                                      >
+                                        
+                                      <div
+                                          style={ {
+                                              color: `${ color }`,
+                                          } }
+                                          className="font-weight-800 user-by">
+                                          {userId !== props.user
+                                              ? username
+                                              : ''}
+                                      </div>
+                                      {messages.map((element, i) => {
+                                          if (i !== 0) {
+                                              return element
+                                          }
+                                      })}
+                                      <span className="metadata">
+                                          <b className="time">{time}</b>
+                                      </span>
+                                  </div>
+                              )
+                          }
+                      })
+                    : ''}
             </div>
+
+            <Mentions
+                users={ props.users }
+                userSelected={ props.userSelected }
+                mentionSearchString={ props.mentionSearchString }
+                shouldDisplay={ props.shouldDisplay }
+            />
+
+            <ScrollButton
+                goToBottom={ handlegoToBottom }
+                status={ messageVisible }
+            />
 
             {/* input text area */}
             <div className="input_container bg-dark">
+                <textarea id="copy_board_textarea" hidden></textarea>
                 <textarea
-
+                    style={ {
+                        fontSize: 'small',
+                        padding: '.5rem .25rem',
+                        background: '#2c3848',
+                        border: 0,
+                    } }
                     resize="none"
                     id="input_area"
-                    onBlur={props.inputBlur}
-                    onFocus={props.inputFocused}
-                    value={props.inputValue}
-                    onChange={props.handleInputChange}
-                    onKeyDown={inputKeyDown}
-                    placeholder="Write a message"
-                    className="form-control"
-                ></textarea>
+                    onBlur={ props.inputBlur }
+                    onFocus={ props.inputFocused }
+                    value={ props.inputValue }
+                    onChange={ props.handleInputChange }
+                    onKeyDown={ inputKeyDown }
+                    placeholder="Message Everyone with ''❤''"
+                    className="form-control"></textarea>
+                <div className="action-container">
+                    <span onClick={ props.showMentions }>
+                        <i className="fa fa-at"></i>
+                    </span>
+                    <span onClick={ props.showEmojiPicker }>
+                        <i className="fa fa-smile"></i>
+                    </span>
+                    {/* <span onClick={props.addCodeBlock}>
+                        <i className="fa fa-code"></i>
+                    </span> */}
+                    <span onClick={ props.uploadImage }>
+                        <i className="fa fa-image"></i>
+                    </span>
+                    {/* <span onClick={props.uploadFiles}>
+                        <i className="fa fa-file-alt"></i>
+                    </span>
+                    <span onClick={props.addURL}>
+                        <i className="fa fa-paperclip"></i>
+                    </span> */}
+                </div>
             </div>
         </div>
-    );
+    )
 }

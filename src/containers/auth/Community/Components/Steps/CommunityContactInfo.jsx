@@ -97,19 +97,15 @@ export default function CommunityContactInfo(props) {
                  updatedControls[key].valid = true
                  updatedControls[key].touched = true
              }
-             setFormControlState({
-                 ...formControls,
-                 contols: updatedControls,
-             })
-              setFormControlState((c) => {
-                  let formisvalid = true
+             let formisvalid = true
                   for (const inputIdentifier in formControls.controls) {
                       formisvalid =
                           formControls.controls[inputIdentifier].valid &&
                           formisvalid
-                  }
-                  return { ...c, formisvalid }
-              })
+            }
+             setFormControlState(c => {
+                 return {...c, controls: updatedControls,formisvalid}
+             });
          }
      }, [oldData])
      /**

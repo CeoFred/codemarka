@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 /** @format */
 
@@ -21,7 +22,7 @@ import Alert from '../../components/Partials/Alert/Alert'
 import './newclassroom.css'
 import * as action from '../../store/actions'
 
-import rocket from "../../media/images/rocket.svg";
+import rocket from '../../media/images/rocket.svg';
 import logo from '../../media/images/logo/codemark__logo.png'
 
 function NewClassroom(props) {
@@ -33,11 +34,10 @@ function NewClassroom(props) {
              onResetAll()
              onClassroomSwitch('classroom')
          }
-     }, mounted)
-    
+     }, [mounted, onResetAll, onClassroomSwitch])
 
     const mappedCountry = countyJson.map((country) => {
-        return { value: `${country.code}`, displayValue: `${country.name}` }
+        return { value: `${ country.code }`, displayValue: `${ country.name }` }
     });
     const [state, setState] = useState({
         controls: {
@@ -47,7 +47,7 @@ function NewClassroom(props) {
                 elementConfig: {
                     type: 'text',
                     placeholder: 'Dragon Riders',
-                    inputHelperText: "e.g David and Friends."
+                    inputhelpertext: 'e.g David and Friends.',
                 },
                 value: '',
                 validation: {
@@ -55,14 +55,16 @@ function NewClassroom(props) {
                     minLength: 6
                 },
                 valid: false,
-                touched: false
+                touched: false,
+                display: true
+
             },
             topic: {
                 label: 'Topic',
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeholder: 'Javascript ES6'
+                    placeholder: 'Javascript ES6',
                 },
                 value: '',
                 validation: {
@@ -70,38 +72,27 @@ function NewClassroom(props) {
                     minLength: 5
                 },
                 valid: false,
-                touched: false
+                touched: false,
+                display: true
+
             },
-            startDate: {
-                label: 'Start Date',
+            schedule: {
+                label: 'Schedule',
                 elementType: 'input',
                 elementConfig: {
-                    type: 'date',
-                    placeholder: 'Select Date',
-                    inputHelperText: "Date should not be in the past."
-
+                    type: 'datetime-local',
+                    placeholder: 'Select Date & Time',
+                    inputhelpertext: 'Choose a time and date in the future',
                 },
                 value: '',
                 validation: {
                     required: true,
                     isPastDate: false
                 },
-                valid: false,
-                touched: false
-            },
-            startTime: {
-                label: 'Start Time',
-                elementType: 'input',
-                elementConfig: {
-                    type: 'time',
-                    placeholder: 'Select Time'
-                },
-                value: '',
-                validation: {
-                    required: true
-                },
-                valid: false,
-                touched: false
+                valid: !props.isCommunityAccount,
+                touched: false,
+                display: props.isCommunityAccount
+
             },
 
             visibility: {
@@ -122,8 +113,7 @@ function NewClassroom(props) {
                             displayValue: 'Private'
                         }
                     ],
-                    inputHelperText: "Private classrooms can only be searched for. Not restrictions to enter once with a valid url to your classroom"
-
+                    inputhelpertext: 'Private classrooms can only be searched for. Not restrictions to enter once with a valid url to your classroom'
                 },
                 value: '',
                 validation: {
@@ -131,13 +121,15 @@ function NewClassroom(props) {
                     minLength: 3
                 },
                 valid: false,
-                touched: false
+                touched: false,
+                display: true,
+
             },
             location: {
                 label: 'location',
                 elementType: 'select',
                 elementConfig: {
-                    options: mappedCountry
+                    options: mappedCountry,
                 },
                 value: '',
                 validation: {
@@ -145,7 +137,9 @@ function NewClassroom(props) {
                     minLength: 1
                 },
                 valid: false,
-                touched: false
+                touched: false,
+                display: true
+
             },
             classType: {
                 label: 'Classroom Type',
@@ -164,23 +158,55 @@ function NewClassroom(props) {
                     minLength: 3
                 },
                 valid: true,
-                touched: false
+                touched: false,
+                display: true
             },
             description: {
                 label: 'class description',
                 elementType: 'textarea',
                 elementConfig: {
                     type: 'textarea',
-                    placeholder: "Let people know more about your class",
-                    inputHelperText: "min 40 Words."
+                    placeholder: 'Let people know more about your class',
+                    inputhelpertext: 'min 30 Words.',
                 },
                 value: '',
                 validation: {
                     required: true,
-                    minLength: 40
+                    minLength: 30
                 },
-                valid: false,
-                touched: false
+                valid: !props.isCommunityAccount,
+                touched: false,
+                display: props.isCommunityAccount
+
+            },
+            isTakingAttendance: {
+                label:'Collect attendance',
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        {
+
+                            value: '',
+                            displayValue: 'Select one'
+                        },
+
+                        {
+                            value: 'Yes',
+                            displayValue: 'Yes'
+                        },
+                        {
+                            value: 'No',
+                            displayValue: 'No'
+                        }
+                    ],
+                },
+                value: '',
+                validation: {
+                    required: true,
+                },
+                valid: !props.isCommunityAccount,
+                touched: false,
+                display: props.isCommunityAccount
             }
         },
         formisValid: false,
@@ -226,20 +252,21 @@ function NewClassroom(props) {
                     state.controls[formElementIdentifier].value
             }
             formData.token = props.token;
-            const date = formData.startDate;
-            const time = formData.startTime;
-
-            if (!isFuture(new Date(`${date} ${time}`))) {
-                alert('Please Ensure your start date and time is in the future');
-                setState({
-                    ...state, formisSubmitted: false,
-                    controls: {
-                        ...state.controls,
-                        startTime: { ...state.controls.startTime, valid: false }
-                    }
-                });
-                return false;
+            formData.user = props.user;
+            
+if(props.isCommunityAccount){
+    if (!isFuture(new Date(`${ formData.schedule }`))) {
+        alert('Please Ensure your start date and time is in the future');
+        setState({
+            ...state, formisSubmitted: false,
+            controls: {
+                ...state.controls,
+                startTime: { ...state.controls.startTime, valid: false }
             }
+        });
+        return false;
+    }
+}
             // eslint-disable-next-line no-undef
             props.onCreate(formData)
         } else {
@@ -262,17 +289,18 @@ function NewClassroom(props) {
         })
     }
     const form = (
-        <form onSubmit={submitHandler}>
+        <form onSubmit={ submitHandler }>
             {formElementArray.map(formElement => (
                 <Input
-                    key={formElement.id}
-                    elementConfig={formElement.config.elementConfig}
-                    elementType={formElement.config.elementType}
-                    value={formElement.config.value}
-                    changed={event => inputChangeHandler(event, formElement.id)}
-                    invalid={formElement.config.valid}
-                    touched={formElement.config.touched}
-                    label={formElement.config.label}
+                    key={ formElement.id }
+                    elementConfig={ formElement.config.elementConfig }
+                    elementType={ formElement.config.elementType }
+                    value={ formElement.config.value }
+                    changed={ event => inputChangeHandler(event, formElement.id) }
+                    invalid={ formElement.config.valid }
+                    touched={ formElement.config.touched }
+                    label={ formElement.config.label }
+                    shouldDisplay={ formElement.config.display }
                 />
             ))}
 
@@ -280,15 +308,15 @@ function NewClassroom(props) {
                 block
                 textColor="#fff"
                 color="success"
-                clicked={submitHandler}
-                disabled={!state.formisValid}>
+                clicked={ submitHandler }
+                disabled={ !state.formisValid }>
                 {state.formisSubmitted ? <Spinner /> : 'Go'}
             </Button>
         </form>
     )
 
     if (props.classroom_kid) {
-        return <Redirect to={`/c/classroom/${props.classroom_kid}`} />
+        return <Redirect to={ `/c/classroom/${ props.classroom_kid }` } />
     }
 
     return (
@@ -313,9 +341,9 @@ function NewClassroom(props) {
                     <div className="col-sm-12 col-md-6 col-lg-6 col-xl-6 py-6 py-md-0 side">
                         <div className="align-content-center justify-content-center rocket-cont ">
                             <div className="rocket-cont">
-                                <img width="200" src={rocket} alt="rocket" />
                                 <img
-                                    src={logo}
+                                    width="200"
+                                    src={ logo }
                                     className="codemarka_logo"
                                     alt="codemarka"
                                 />
@@ -329,7 +357,7 @@ function NewClassroom(props) {
                                 <b className="text-muted mb-0"></b>
                             </div>
                             <span className="clearfix" />
-                            
+
                             <div className="py-4 text-center">
                                 <h6 className="h3 mb-0">
                                     Create your Free Classroom Today!
@@ -338,8 +366,8 @@ function NewClassroom(props) {
                             <span className="clearfix" />
                             {form}
                             <Alert
-                                type={state.alertType}
-                                display={state.formErrorMessage}
+                                type={ state.alertType }
+                                display={ state.formErrorMessage }
                                 title="Heads Up!">
                                 {state.formErrorMessage}
                             </Alert>
@@ -356,7 +384,9 @@ const mapStateToProps = ({ auth, classroom }) => {
     return {
         token: auth.user.token,
         classroom_kid: classroom.classdetails ? classroom.classdetails.kid : null,
-        loading: classroom.loading
+        loading: classroom.loading,
+        isCommunityAccount: auth.user.accountType === 102,
+        user: auth.user 
     }
 }
 

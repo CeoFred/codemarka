@@ -180,7 +180,7 @@ const accountRecoverySuccess = (state, action) => {
     return helper.updateObject(state, {
         error: false,
         loading: false,
-        message: 'Hurray!! Your mail is on it\'\s way'
+        message: 'Hurray!! Your mail is on it\'s way'
     })
 }
 

@@ -1,28 +1,46 @@
 import React from 'react';
 
-import logo from '../../../media/images/colab-04.png'
+import logo from '../../../media/images/logo/codemarka-classroom-logo.png'
 import './index.css';
 function NavBar(props) {
+    const attendanceIsValid = props.isCollectingAttendance && props.hasCollectedAttendance;
+
     return (
         <nav
             className="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-dark"
-            style={{ height: '13vh' }}>
+            style={ { height: '8vh', padding: 0 } }>
             <div className="container-fluid">
                 <a className="navbar-brand" href="/">
-                    <img height="30px" src={logo} alt="codemarka_logo" />
+                    <img
+                        style={ { height: '2rem', maxHeight: '3rem' } }
+                        src={ logo }
+                        alt="codemarka_logo"
+                    />
                 </a>
                 <span className="navbar-brand ml-2">
                     <img
-                        height="30px"
-                        style={{ borderRadius: '50%' }}
-                        src={props.gravatarUrl}
-                        alt={'gvt'}
+                        style={ {
+                            borderRadius: '50%',
+                            height: '2rem',
+                            maxHeight: '3rem',
+                            width: '2rem',
+                            maxWidth: '2rem',
+                        } }
+                        src={ props.gravatarUrl }
+                        alt={ 'gravatar' }
                     />
                 </span>
-                <span className="navbar-brand">
-                    {props.topic}
+                <span className="navbar-brand" style={ { fontSize: '1rem' } }>
+                    <b>
+                        <i
+                            className="fa fa-info-circle"
+                            style={ { fontSize: '13px' } }></i>{' '}
+                        {props.topic}
+                    </b>
                     <br />
-                    <small>by: {props.name}</small>
+                    <small>
+                        <i className="fa fa-at"></i> {props.name.toLowerCase()}
+                    </small>
                 </span>
                 <button
                     className="navbar-toggler"
@@ -39,15 +57,15 @@ function NavBar(props) {
                         <li className="nav-item" title="download files">
                             <a
                                 className="nav-link nav-link-icon"
-                                href={props.downloadLink}>
+                                href={ props.downloadLink }>
                                 <i className="fa fa-file-download"></i>
                             </a>
                         </li>
                         <li
                             title="class participants"
-                            className="nav-item"
+                            className="nav-item cursor-pointer"
                             data-toggle="modal"
-                            data-target=".participants_modal_cont">
+                            data-target="#participantModal">
                             <span className="nav-link nav-link-icon">
                                 <i className="fa fa-users">
                                     <span className="badge badge-danger badge-circle badge-sm badge-floating border-white">
@@ -61,22 +79,45 @@ function NavBar(props) {
                         </li>
                         <li title="favourite" className="nav-item">
                             <a
-                                onClick={props.favourite}
+                                onClick={ props.favourite }
                                 className="nav-link nav-link-icon"
                                 href="/#">
                                 <i
-                                    className={`fa fa-star ${
+                                    className={ `fa fa-star ${
                                         props.isFavourite ? 'bg-gold' : ''
-                                    }`}></i>
+                                    }` }></i>
                                 <span className="nav-link-inner--text d-lg-none">
                                     Favorite
                                 </span>
                             </a>
                         </li>
+                        {props.isCollectingAttendance ? (
+                            <li
+                                title="Attendance"
+                                id="attendanceElem"
+                                data-toggle="modal"
+                                data-target="#attendanceModal"
+                                className="nav-item">
+                                <span
+                                    className="nav-link nav-link-icon"
+                                    id="navbar-success_dropdown_1"
+                                    role="button">
+                                    <i
+                                        className={ `fa fa-clipboard-list ${
+                                            attendanceIsValid
+                                                ? 'text-success'
+                                                : ''
+                                        }` }></i>
+                                    <span className="nav-link-inner--text d-lg-none">
+                                        Attendance
+                                    </span>
+                                </span>
+                            </li>
+                        ) : (
+                            ''
+                        )}
 
-                        <li
-                            title="Audio Broadcast"
-                            className="nav-item dropdown">
+                        <li title="Github" className="nav-item dropdown">
                             <span
                                 className="nav-link nav-link-icon"
                                 id="navbar-success_dropdown_1"
@@ -84,38 +125,16 @@ function NavBar(props) {
                                 data-toggle="dropdown"
                                 aria-haspopup="true"
                                 aria-expanded="false">
-                                <i className="fa fa-microphone-slash"></i>
+                                <i className="fab fa-github"></i>
                                 <span className="nav-link-inner--text d-lg-none">
-                                    Audio Broadcast
+                                    Github
                                 </span>
                             </span>
                             <div
                                 className="dropdown-menu dropdown-menu-right"
                                 aria-labelledby="navbar-success_dropdown_1">
                                 <span className="dropdown-item">
-                                    Audio Broadcast coming soon.
-                                </span>
-                            </div>
-                        </li>
-
-                        <li title="Notifications" className="nav-item dropdown">
-                            <span
-                                className="nav-link nav-link-icon"
-                                id="navbar-success_dropdown_1"
-                                role="button"
-                                data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false">
-                                <i className="fa fa-bell"></i>
-                                <span className="nav-link-inner--text d-lg-none">
-                                    Notifications
-                                </span>
-                            </span>
-                            <div
-                                className="dropdown-menu dropdown-menu-right"
-                                aria-labelledby="navbar-success_dropdown_1">
-                                <span className="dropdown-item">
-                                    No notifications
+                                    Not connected
                                 </span>
                             </div>
                         </li>
@@ -150,6 +169,7 @@ function NavBar(props) {
                             data-toggle="modal"
                             data-target="#classroom_settings_modaal"
                             title="Settings"
+                            id="settingsModal"
                             className="nav-item">
                             <span className="nav-link nav-link-icon">
                                 <i className="fa fa-cogs"></i>
@@ -175,37 +195,40 @@ function NavBar(props) {
                                 className="dropdown-menu dropdown-menu-right"
                                 aria-labelledby="navbar-success_dropdown_1">
                                 <a
-                                    style={{ cursor: 'pointer' }}
+                                    style={ { cursor: 'pointer' } }
                                     className="dropdown-item"
                                     href="/#"
-                                    onClick={props.exitClassGracefully}>
+                                    onClick={ props.exitClassGracefully }>
                                     Exit
                                 </a>
 
                                 <div className="dropdown-divider"></div>
                                 <a
-                                    style={{ cursor: 'pointer' }}
+                                    style={ { cursor: 'pointer' } }
                                     className="dropdown-item"
                                     href="/#"
-                                    onClick={props.testConnection}>
+                                    onClick={ props.testConnection }>
                                     Test connection
                                 </a>
                                 {props.owner ? (
                                     <div>
-                                        <a
-                                            style={{ cursor: 'pointer' }}
-                                            onClick={props.startClass}
-                                            href="/#"
-                                            className="dropdown-item text-success">
-                                            Start Class
-                                        </a>
-                                        <a
-                                            style={{ cursor: 'pointer' }}
-                                            className="dropdown-item text-danger"
-                                            href="/#"
-                                            onClick={props.endClass}>
-                                            End Class
-                                        </a>
+                                        {!props.classStarted ? (
+                                            <a
+                                                style={ { cursor: 'pointer' } }
+                                                onClick={ props.startClass }
+                                                href="/#"
+                                                className="dropdown-item text-success">
+                                                Start Class
+                                            </a>
+                                        ) : (
+                                            <a
+                                                style={ { cursor: 'pointer' } }
+                                                className="dropdown-item text-danger"
+                                                href="/#"
+                                                onClick={ props.endClass }>
+                                                End Class
+                                            </a>
+                                        )}
                                     </div>
                                 ) : (
                                     ''

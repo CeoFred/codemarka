@@ -23,12 +23,13 @@ function Logout(props) {
                     'Authorization',
                     `Bearer ${ localStorage.getItem(userTokenAlias) }`
                 )
-                const logoutRequest =  new Request(url, {
+                const logoutRequest = new Request(url, {
                     method: 'GET',
                     cache: 'default',
                     headers: myHeaders,
-                    mode: 'cors'
-                });
+                    mode: 'cors',
+                    
+                })
             
                return fetch(logoutRequest)
             }
@@ -41,7 +42,7 @@ function Logout(props) {
                 onLogout()
             })
             
-    }, [ isAuthenticated ]);
+    }, [ isAuthenticated, onLogout ]);
 
     const checkAuth = () => {
         if (loggedOut){

@@ -1,9 +1,12 @@
-import React,{ useState } from 'react'
+import React,{ useState, useEffect } from 'react'
 import Button from '../../../Partials/Button'
 import Input from '../../../Partials/Input/Input'
 import Spinner from '../../../Partials/Preloader'
 
+import * as API_URL from '../../../../config/api_url';
+
 const CssTab = (props) => {
+
   const [state, setState] = useState({
       controls: {
           preprocessor: {
@@ -21,7 +24,7 @@ const CssTab = (props) => {
           }
       },
       scontrols:{
-          externalCss: {
+          externalCDN: {
               elementConfig: {
                   placeholder: 'https://somesite.com/style/index.css',
               },
@@ -33,7 +36,10 @@ const CssTab = (props) => {
       formisSubmitted: props.loading ? true : false,
       formErrorMessage: false,
       formErrored: false,
-  })
+      externalCDN:[],
+      preprocessor:''
+  });
+
   const inputChangeHandler = (event, controlName) => {
       const updatedControls = {
           ...state.controls,
@@ -43,34 +49,66 @@ const CssTab = (props) => {
               touched: true,
           },
       }
-
       setState({ ...state, controls: updatedControls })
-      // console.log(updatedControls);
   }
-  const submitHandler = (event) => {
+
+  const mapExternalCDN = () => {
+      return state.externalCDN.map(cdn => {
+         return <div key={ cdn.id } className="badge badge-soft-dark d-block"> {cdn.url.slice(0,30)} </div>
+      })
+  }
+
+  const handleExternalCDNInputChange = (e) => {
+      e.preventDefault();
+      setState({...state, scontrols:{...state.scontrols,externalCDN:{...state.scontrols.externalCDN,value: e.target.value}}});
+  }
+ 
+useEffect(() => {
+    
+    props.socket.on('editor_settings_update_feedback',function(status){
+    if(status){
+    setState({ ...state, formisSubmitted: false,externalCDN:status.externalCDN })
+
+      props.toast.success('Settings updated successfully');
+    } else {
+    setState({ ...state, formisSubmitted: false })
+
+      props.toast.error('Settings Failed to upate.');
+    }
+
+    });
+});
+
+useEffect(() => {
+    
+    const request = new Request(
+        `${ API_URL.GET_CLASSROOM_CSS_SETTINGS }/${ props.cdata.kid }`,
+        {
+            method: 'GET',
+            cache: 'default',
+            mode: 'cors',
+            
+        }
+    )
+
+      fetch(request).then(data => data.json()).then((d) => {
+          setState(s => {
+              return {...s,externalCDN: d.data.externalCDN}
+          });
+      });
+})
+
+const submitHandler = (event) => {
       event.preventDefault()
+        
       const formisSubmitted = true
       setState({ ...state, formisSubmitted })
 
-      const formData = {}
-
-      if (state.formisValid) {
-          for (const formElementIdentifier in state.controls) {
-              formData[formElementIdentifier] =
-                  state.controls[formElementIdentifier].value
-          }
-          // eslint-disable-next-line no-undef
-          props.onCreate(formData)
-      } else {
-          setState({
-              ...state,
-              alertType: 'error',
-              formErrored: true,
-              formErrorMessage:
-                  'Form Validation Failed, please check inputs and try again',
-          })
-          return false
-      }
+      const externalCDN =  state.scontrols.externalCDN.value.split(',');
+      const preprocessor = state.controls.preprocessor.value;
+        if(props.codemarkastate.owner){
+          props.socket.emit('editor_settings_changed',{preprocessor,externalCDN,classroom:props.cdata.kid,editor:'css'})
+        }
   }
 
   const formElementArray = []
@@ -81,18 +119,20 @@ const CssTab = (props) => {
       })
   }
   const form = (
-      <form onSubmit={submitHandler}>
+      <form onSubmit={ submitHandler }>
           {formElementArray.map((formElement) => (
               <Input
-                  key={formElement.id}
-                  elementConfig={formElement.config.elementConfig}
-                  elementType={formElement.config.elementType}
-                  value={formElement.config.value}
-                  changed={(event) => inputChangeHandler(event, formElement.id)}
-                  label={formElement.config.label}
+                  key={ formElement.id }
+                  elementConfig={ formElement.config.elementConfig }
+                  elementType={ formElement.config.elementType }
+                  value={ formElement.config.value }
+                  changed={ (event) => inputChangeHandler(event, formElement.id) }
+                  label={ formElement.config.label }
+                  shouldDisplay={ props.codemarkastate.owner }
+
               />
           ))}
-          <div className="mt-2 mb-2">
+          {/* <div className="mt-2 mb-2">
               <b>Vendor Prefixing</b>
               <div class="custom-control custom-radio pl-0">
                   <input type="radio" id="venfor-prefix" name="venfor-prefix" />
@@ -107,36 +147,42 @@ const CssTab = (props) => {
                   />
                   <label for="None-venfor-prefix">None</label>
               </div>
+          </div> */}
+          <div className="mt-2 mb-2">
+              <b>External Stylesheets</b>
+              {mapExternalCDN()}
           </div>
 
-          <div className="mt-2 mb-2">
-              <b>Add External Stylesheets/Pens</b>
-              <p>
-                  Any URL's (comma seperated) added here will be added as links
-                  in their order, and before the CSS in the editor.
-              </p>
-              <Input
-                  key="external css"
-                  elementConfig={state.scontrols.externalCss.elementConfig}
-                  elementType={state.scontrols.externalCss.elementType}
-                  value={state.scontrols.externalCss.value}
-                  changed={(event) => inputChangeHandler(event, 'externalCss')}
-              />
-          </div>
-          <Button
-              block={false}
-              textColor="#fff"
-              color="success"
-              size="sm"
-              clicked={submitHandler}
-              disabled={state.formisSubmitted}>
-              {state.formisSubmitted ? <Spinner /> : 'Save'}
-          </Button>
+          {props.codemarkastate.owner ? (
+              <div className="mt-2 mb-2">
+                  <b>Add External Stylesheets</b>
+                  <p>
+                      Any URL's (comma seperated) added here will be added as links
+                      in their order, and before the CSS in the editor.
+                  </p>
+                  <Input
+                            key="external css"
+                            elementConfig={ state.scontrols.externalCDN.elementConfig }
+                            elementType={ state.scontrols.externalCDN.elementType }
+                            value={ state.scontrols.externalCDN.value }
+                            changed={ handleExternalCDNInputChange }
+                            shouldDisplay={ props.codemarkastate.owner }
+                        />
+                        
+                  <Button
+                        block={ false }
+                        textColor="#fff"
+                        color="success"
+                        size="sm"
+                        clicked={ submitHandler }
+                        disabled={ state.formisSubmitted }>
+                      {state.formisSubmitted ? <Spinner /> : 'Save'}
+                  </Button>
+              </div>
+          ) : ''}
       </form>
   )
   return (<div>{form}</div>)
 }
-
-
 
 export default CssTab;

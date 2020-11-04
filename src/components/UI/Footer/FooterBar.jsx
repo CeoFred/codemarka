@@ -27,12 +27,8 @@ export default function FooterBar() {
                                     style={ { border: 'none' } }>
                                     <div className="card-body p-0">
                                         <p className="text-sm mb-2">
-                                            Build , learn and collaborate with
-                                            codemarka. This tool comes with
-                                            variety of functionalities you'll
-                                            need to be productive during
-                                            software development by leveraging
-                                            on real time technology.
+                                            A collaborative and virtual environment
+                                            for technical workshops in real time.
                                         </p>
                                     </div>
                                 </div>
@@ -50,19 +46,19 @@ export default function FooterBar() {
                                             Contact
                                         </Link>
                                     </li>
-                                    <li>
+                                    {/* <li>
                                         <a href="/#">Careers</a>
-                                    </li>
+                                    </li> */}
                                 </ul>
                             </div>
-                            <div className="col-lg-3 col-sm-12 mb-5 mb-lg-0">
+                            <div className="col-lg-3 col-4 col-sm-4 mb-5 mb-lg-0">
                                 <h6 className="heading mb-3">Company</h6>
                                 <ul className="list-unstyled">
                                     <li>
-                                        <a href="/#">Terms</a>
+                                        <a href="/terms-and-conditions">Terms</a>
                                     </li>
                                     <li>
-                                        <a href="/#">Privacy</a>
+                                        <a href="/privacy-and-policy">Privacy</a>
                                     </li>
                                     <li>
                                         <a href="/public/contact-us">Support</a>
@@ -70,35 +66,50 @@ export default function FooterBar() {
                                 </ul>
                             </div>
 
-                            <div className="col-lg-3 col-sm-12 mb-5 mb-lg-0">
+                            <div className="col-lg-3 col-4 col-sm-4 mb-5 mb-lg-0">
                                 <h6 className="heading mb-3">Socials</h6>
                                 <ul className="list-unstyled">
                                     <li>
-                                        <a href="https://twitter.com/codemarka">Twitter</a>
+                                        <a
+                                            rel="noopener noreferrer"
+                                            href="https://twitter.com/codemarka"
+                                            target="_blank"
+                                            nofollow="true">
+                                            Twitter
+                                        </a>
                                     </li>
                                     <li>
-                                        <a href="/#">Facebook</a>
+                                        <a
+                                            rel="noopener noreferrer"
+                                            href="https://fb.me/codemarka.dev"
+                                            target="_blank">
+                                            Facebook
+                                        </a>
                                     </li>
                                     <li>
-                                        <a href="/#">Instagram</a>
+                                        <a
+                                            rel="noopener noreferrer"
+                                            href="https://www.linkedin.com/company/codemarka"
+                                            target="_blank">
+                                            Linkedin
+                                        </a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                         <div className="row align-items-center justify-content-md-between py-4 mt-4 border-top mx-0">
-                            <div className="col-md-6 mb-3 mb-md-0">
-                                <div className="copyright text-sm font-weight-bold text-center text-md-left">
+                            <div className="col-12 mb-3 mb-md-0">
+                                <div className="copyright text-sm font-weight-bold text-center">
                                     © 2020{' '}
                                     <a
                                         href={ window.location.origin }
-                                        className="font-weight-bold"
-                                        >
+                                        className="font-weight-bold">
                                         codemarka{' '}
                                     </a>
                                     . All rights reserved.
                                 </div>
                             </div>
-                            <div className="col-md-6">
+                            {/* <div className="col-md-6">
                                 <ul className="nav align-items-center justify-content-center justify-content-md-end">
                                     <li className="nav-item">
                                         <Link
@@ -118,7 +129,7 @@ export default function FooterBar() {
                                         </a>
                                     </li>
                                 </ul>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

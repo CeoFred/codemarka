@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import * as URLs from '../../config/url';
 
 export default function Input(props) {
+    const selectClasses = ['custom-select', 'custom-select-lg']
+
   const regular = (
       <div className="form-group mb-4">
           <div className="d-flex align-items-center justify-content-between">
@@ -73,10 +75,40 @@ export default function Input(props) {
           </div>
       </div>
   );
+
+  const select = (
+      <div className="form-group mb-4">
+          <div className="d-flex align-items-center justify-content-between">
+              <div>
+                  <label className="form-control-label">{props.label}</label>
+              </div>
+             
+          </div>
+          <div className="input-group input-group-merge">
+             
+              <select
+                  onChange={ props.changed }
+                  onKeyDown={ props.KeyDown }
+                  className={ selectClasses.join(' ') }
+                  defaultValue={ props.value }>
+                  {props.elementConfig
+                      ? props.elementConfig.options.map((option) => (
+                          <option
+                                value={ option.value }
+                                key={ option.key || option.value }>
+                              {option.displayValue}
+                          </option>
+                        ))
+                      : ''}
+              </select>
+          </div>
+      </div>
+  )
   switch (props.fieldtype) {
     case 'checkbox':
       return checkbox;
-
+    case 'select':
+        return select;
     default:
       return regular;
   }
