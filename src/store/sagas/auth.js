@@ -64,7 +64,7 @@ export function* authRegisterUserSaga({
             lastname,
         }),
         mode: 'cors',
-        credentials: 'include',
+        
     })
 
     try {
@@ -102,7 +102,7 @@ export function* authLoginUserSaga({ email, password }) {
         headers: myHeaders,
         body: JSON.stringify({ email, password }),
         mode: 'cors',
-        credentials: 'include',
+        
     })
 
     try {
@@ -147,7 +147,7 @@ export function* autoLoginUserSaga() {
             headers: myHeaders,
             body: JSON.stringify({ token, kid }),
             redirect: 'follow',
-            credentials: 'include',
+            
         })
 
         if (token && kid) {
@@ -225,7 +225,7 @@ export function* userPasswordChange({ data }) {
         headers: myHeaders,
         body: JSON.stringify({ ...data }),
         mode: 'cors',
-        credentials: 'include',
+        
     })
     const response = yield fetch(passwordReset)
 

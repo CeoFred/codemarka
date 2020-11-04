@@ -20,6 +20,7 @@ function AllCommunities() {
           method: 'GET',
           cache: 'default',
           mode: 'cors',
+          
       })
 
       fetch(request)
@@ -93,11 +94,12 @@ function AllCommunities() {
     if (e.target.value && e.target.value.length >= 2) {
 
       const searchClassroomRequest = new Request(url, {
-        method: 'GET',
-        cache: 'default',
-        headers: myHeaders,
-        mode: 'cors'
-      });
+          method: 'GET',
+          cache: 'default',
+          headers: myHeaders,
+          mode: 'cors',
+          
+      })
 
       fetch(searchClassroomRequest).then(d => d.json()).then(m => {
         if (m.data && m.data.length >= 1) {

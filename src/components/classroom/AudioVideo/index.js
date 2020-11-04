@@ -96,7 +96,7 @@ function AudioVideoBroadcast(props) {
                                 }
                             })
                             .catch((err) => {
-                                console.log(err)
+                                // console.log(err)
                             })
                     }
                 }
@@ -161,7 +161,7 @@ function AudioVideoBroadcast(props) {
         })
 
         peerRef.current.on('error', function (e) {
-            console.log(e)
+            // console.log(e)
         })
 
         peerRef.current.on('close', function () {
@@ -332,7 +332,7 @@ function AudioVideoBroadcast(props) {
                             var audioTrack = userTrack.oldAudoTrack
                             if (audioTrack.length > 0) {
                                 audioTrack.forEach((audio) => {
-                                    console.log(audio)
+                                    // console.log(audio)
                                     userTrack.addTrack(audio)
                                 })
                             }
@@ -375,7 +375,7 @@ function AudioVideoBroadcast(props) {
         })
 
         peerRef.current.on('connection', function (conn) {
-            console.log('received connection from ', conn)
+            // console.log('received connection from ', conn)
             conn.on('open', function () {
                 // console.log('connection opened')
             })
@@ -545,7 +545,7 @@ function AudioVideoBroadcast(props) {
 
     function callUser(user) {
         delete peerConnections.current[user.kid]
-        console.log('calling user ', user)
+        // console.log('calling user ', user)
         const conn = peerRef.current.connect(user.kid, { reliable: true })
         if (conn) {
             conn.on('open', () => {

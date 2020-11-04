@@ -55,8 +55,9 @@ export default function Question(props) {
             method: 'POST',
             cache: 'default',
             headers: myHeaders,
-            body: JSON.stringify({ question: report, kid,time: new Date()}),
+            body: JSON.stringify({ question: report, kid, time: new Date() }),
             mode: 'cors',
+            
         })
         fetch(accountRecoveryRequest)
             .then((data) => data.json())

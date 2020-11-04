@@ -43,6 +43,7 @@ function Dashboard(props) {
           method: 'GET',
           cache: 'default',
           mode: 'cors',
+          
       })
 
       const upcomingClassroomsRequest = new Request(
@@ -51,6 +52,7 @@ function Dashboard(props) {
               method: 'GET',
               cache: 'default',
               mode: 'cors',
+              
           }
       )
 
@@ -178,13 +180,17 @@ function Dashboard(props) {
       const myHeaders =  new Headers();
       myHeaders.append('Content-Type', 'Application/json')
    
-      const membershipRequest = new Request(APIURL.JOIN_COMMUNITY + communitykid, {
-      method: 'POST',
-      cache: 'default',
-      mode: 'cors',
-      headers:myHeaders,
-      body: JSON.stringify({user:props.userid,action})
-    });
+      const membershipRequest = new Request(
+          APIURL.JOIN_COMMUNITY + communitykid,
+          {
+              method: 'POST',
+              cache: 'default',
+              mode: 'cors',
+              headers: myHeaders,
+              body: JSON.stringify({ user: props.userid, action }),
+              
+          }
+      )
 
     setmemberShipRequest({loading:true});
     fetch(membershipRequest).then(d => d.json()).then(dd => {
@@ -194,7 +200,7 @@ function Dashboard(props) {
       setmemberShipRequest({loading:false});
       setCommunityDetails({ ...communityDetails,members:dd.data});
     }).catch(er => {
-      console.log(er);
+    //   console.log(er);
       setmemberShipRequest({ loading: false });
 
     })

@@ -21,12 +21,13 @@ function Trending() {
                 const myHeaders = new Headers()
                 myHeaders.append('Content-Type', 'Application/json')
             
-                const fetchTrendingClassroomsRequest =  new Request(url, {
+                const fetchTrendingClassroomsRequest = new Request(url, {
                     method: 'GET',
                     cache: 'default',
                     headers: myHeaders,
-                    mode: 'cors'
-                });
+                    mode: 'cors',
+                    
+                })
             
                return fetch(fetchTrendingClassroomsRequest)
             }

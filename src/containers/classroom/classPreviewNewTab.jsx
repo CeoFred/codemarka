@@ -87,6 +87,7 @@ export class classPreviewNewTab extends Component {
                     cache: 'default',
                     headers: myHeaders,
                     mode: 'cors',
+                    
                 })
 
                 return fetch(searchClassroomRequest)

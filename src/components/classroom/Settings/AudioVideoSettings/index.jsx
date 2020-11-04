@@ -12,12 +12,12 @@ import * as classroomActions from '../../../../store/actions/classRoom';
 
     const handleClassroomInformationInputChange = (e, inputname) => {
         const deviceGroupidSelected =  e.target.value;
-        console.log(deviceGroupidSelected)
+        // console.log(deviceGroupidSelected)
 
             const newDefaultInput = props.audioVideoSettings[inputname].filter(
                 (inputDevice) => inputDevice.deviceId === deviceGroupidSelected
             )[0]
-            console.log(newDefaultInput)
+            // console.log(newDefaultInput)
             const data = {
                 ...props.default,
                 [inputname]: newDefaultInput,

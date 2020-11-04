@@ -10,7 +10,6 @@ function NotStarted(props) {
      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
      const getDateandTime = (date) => {
-         console.log(date)
          const Mdate = new Date(date)
          const dtime = formatToTimeZone(Mdate, 'Do MMMM YYYY - h:mm A', {
              timeZone,

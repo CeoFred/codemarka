@@ -188,7 +188,6 @@ function AttendanceCollector(props){
     }
 
     setState({ ...state, controls: updatedControls, formisValid })
-    // console.log(updatedControls);
   }
 
   const submitHandler = event => {
@@ -229,120 +228,119 @@ function AttendanceCollector(props){
   }
 
   const form = (
-    <form onSubmit={submitHandler}>
-      <div className="row align-items-center">
+      <form onSubmit={ submitHandler }>
+          <div className="row align-items-center">
 
-        <Alert
-          type={state.alertType}
-          display={state.formErrorMessage}
+              <Alert
+          type={ state.alertType }
+          display={ state.formErrorMessage }
           title="Heads Up!">
-          {state.formErrorMessage}
-        </Alert>
-      {formElementArray.map(formElement => (
-        <div className="col-md-6" 
-          key={formElement.id}
+                  {state.formErrorMessage}
+              </Alert>
+              {formElementArray.map(formElement => (
+                  <div className="col-md-6" 
+          key={ formElement.id }
         >
-        <Input
-          elementConfig={formElement.config.elementConfig}
-          elementType={formElement.config.elementType}
-          value={formElement.config.value}
-          changed={event => inputChangeHandler(event, formElement.id)}
-          invalid={formElement.config.valid}
-          touched={formElement.config.touched}
-          label={formElement.config.label}
-          shouldDisplay={formElement.config.display}
-          validation={formElement.config.validation}
+                      <Input
+          elementConfig={ formElement.config.elementConfig }
+          elementType={ formElement.config.elementType }
+          value={ formElement.config.value }
+          changed={ event => inputChangeHandler(event, formElement.id) }
+          invalid={ formElement.config.valid }
+          touched={ formElement.config.touched }
+          label={ formElement.config.label }
+          shouldDisplay={ formElement.config.display }
+          validation={ formElement.config.validation }
           
           /></div>
       )
       )}
-      </div>
-    </form>
+          </div>
+      </form>
   )
 
   let list;
 
   list = props.list.map((atte,i) => {
     return (
-      <tr key={atte.kid}>
-        <th scope="row">{i + 1}</th>
-        <td>{atte.firstName}</td>
-        <td>{atte.lastName}</td>
-        <td>{atte.email}</td>
-        <td>@{atte.username}</td>
-        <td>{atte.phone}</td>
-        <td>{atte.classExpertiseLevel}</td>
-      </tr>
+        <tr key={ atte.kid }>
+            <th scope="row">{i + 1}</th>
+            <td>{atte.firstName}</td>
+            <td>{atte.lastName}</td>
+            <td>{atte.email}</td>
+            <td>@{atte.username}</td>
+            <td>{atte.phone}</td>
+            <td>{atte.classExpertiseLevel}</td>
+        </tr>
     )
   })
 
   return (
-    <React.Profiler>
-      <button type="button" class="btn btn-primary d-none" id="attendance_modal" data-toggle="modal" data-target="#attendanceModal">
-        ..
-</button>
-      <div class="modal fade" id="attendanceModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="attendanceModalLabel">Attendance Sheet</h5>
-              <div>              
-                {props.isOwner ? (
-                <>
-                <Button
+      <React.Profiler>
+          <button type="button" class="btn btn-primary d-none" id="attendance_modal" data-toggle="modal" data-target="#attendanceModal">
+              ..
+          </button>
+          <div class="modal fade" id="attendanceModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="attendanceModalLabel">Attendance Sheet</h5>
+                          <div>              
+                              {props.isOwner ? (
+                                  <>
+                                      <Button
                   size="sm"
                   textColor="#fff"
                   color="warning"
-                  clicked={props.downloadAttendance}
-                ><i className="fa fa-download"></i> {props.downloadStatus === "loading" ? "Preparing..": "Download CSV"}</Button><Button
+                  clicked={ props.downloadAttendance }
+                ><i className="fa fa-download"></i> {props.downloadStatus === 'loading' ? 'Preparing..': 'Download CSV'}</Button><Button
                   size="sm"
                   textColor="#fff"
                   color="success"
-                  clicked={props.sendReminder}
+                  clicked={ props.sendReminder }
                 ><i className="fa fa-broadcast-tower"></i> Send Reminder</Button>
-                </>
+                                  </>
                 ) : (
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>)}
-              </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>)}
+                          </div>
 
-            </div>
-            <div class={`modal-body ${props.isOwner ? 'm-0 p-0 h-80': ''}`}>
-              {props.isOwner ? (<table class="table table-dark w-100 table-responsive table-hover">
-                <thead>
-                  <tr >
-                    <th scope="col">#</th>
-                    <th scope="col">First Name</th>
-                    <th scope="col">Last Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Username</th>
-                    <th scope="col">Phone</th>
-                    <th scope="col">Expertise Level</th>
+                      </div>
+                      <div class={ `modal-body ${ props.isOwner ? 'm-0 p-0 h-80': '' }` }>
+                          {props.isOwner ? (<table class="table table-dark w-100 table-responsive table-hover">
+                              <thead>
+                                  <tr >
+                                      <th scope="col">#</th>
+                                      <th scope="col">First Name</th>
+                                      <th scope="col">Last Name</th>
+                                      <th scope="col">Email</th>
+                                      <th scope="col">Username</th>
+                                      <th scope="col">Phone</th>
+                                      <th scope="col">Expertise Level</th>
 
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  {list}
+                              </tbody>
+                          </table>) : form }
+                      </div>
+                      <div class={ `modal-footer ${ props.isOwner ? 'd-none':'' }` }>
 
-                  </tr>
-                </thead>
-                <tbody>
-                  {list}
-                </tbody>
-              </table>) : form }
-            </div>
-            <div class={`modal-footer ${props.isOwner ? 'd-none':''}`}>
-
-              <Button
+                          <Button
                 size="sm"
                 textColor="#fff"
                 color="primary"
-                clicked={submitHandler}
-                disabled={!state.formisValid}>
-                {state.formisSubmitted && props.isSubmittingAttendance ? <Spinner /> : state.hasCollectedAttendance ?'update': 'submit'}
-              </Button>
-            </div>
+                clicked={ submitHandler }
+                disabled={ !state.formisValid }>
+                              {state.formisSubmitted && props.isSubmittingAttendance ? <Spinner /> : state.hasCollectedAttendance ?'update': 'submit'}
+                          </Button>
+                      </div>
+                  </div>
+              </div>
           </div>
-        </div>
-      </div>
-    </React.Profiler>
+      </React.Profiler>
   );
 }
 const mapStateToProps = ({ auth }) => {

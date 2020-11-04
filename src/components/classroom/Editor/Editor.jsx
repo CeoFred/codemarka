@@ -192,13 +192,13 @@ const myEditor = document.getElementById('main_editor_container')
      const percentFromTop = myEditor.getBoundingClientRect().top/ window.innerHeight * 100
      const percentFromLeft = myEditor.getBoundingClientRect().left/ window.innerWidth * 100
 
- console.log(
-     'my cordinates are ',
-     indicatorsPositionX,
-     indicatorsPositionY,
-     percentFromTop,
-     percentFromLeft
- )
+//  console.log(
+//      'my cordinates are ',
+//      indicatorsPositionX,
+//      indicatorsPositionY,
+//      percentFromTop,
+//      percentFromLeft
+//  )
 
  let indicatorContainer = document.getElementById('indicatorContainer_func')
    

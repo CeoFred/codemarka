@@ -10,7 +10,7 @@ function Mentions(props) {
     useEffect(
         function () {
             setIsDisplaying(props.shouldDisplay ? 'flex' : 'none')
-            console.log(props.shouldDisplay)
+            // console.log(props.shouldDisplay)
         },
         
         [props.shouldDisplay]

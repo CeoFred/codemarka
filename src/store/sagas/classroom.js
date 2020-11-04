@@ -24,13 +24,13 @@ export function* setMessageThreadData(data) {
         cache: 'default',
         headers: myHeaders,
         body: JSON.stringify(data.data),
-        mode: 'cors'
+        mode: 'cors',
     });
     
     try {
         const response = yield fetch(messageThreadRequest)
         const resolvedResponse =  yield call(resolvePromise,response.json())        
-        console.log(resolvedResponse)
+        // console.log(resolvedResponse)
 
         if(resolvedResponse.status === 1){
              yield put(actions.messageThreadFecthDone(resolvedResponse.message));
@@ -56,7 +56,8 @@ export function* createClass(data){
         cache: 'default',
         headers: myHeaders,
         body: JSON.stringify(data),
-        mode: 'cors'
+        mode: 'cors',
+        
     });
     
     try {
@@ -94,12 +95,12 @@ export function* verifyClassRoom({ classKid }){
      myHeaders.set('Content-Type', 'Application/json')
 
     const request = new Request(url, {
-     method: 'POST',
-     cache: 'default',
-     headers: myHeaders,
-     body: JSON.stringify(requestData),
-     mode: 'cors'
-
+        method: 'POST',
+        cache: 'default',
+        headers: myHeaders,
+        body: JSON.stringify(requestData),
+        mode: 'cors',
+        
  })
  try {
     const response = yield fetch(request)

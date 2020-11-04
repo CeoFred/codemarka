@@ -3,7 +3,7 @@ import Button from '../../../Partials/Button'
 import Input from '../../../Partials/Input/Input'
 import Spinner from '../../../Partials/Preloader'
 
-import * as API_URL from "../../../../config/api_url";
+import * as API_URL from '../../../../config/api_url';
 
 const CssTab = (props) => {
 
@@ -54,7 +54,7 @@ const CssTab = (props) => {
 
   const mapExternalCDN = () => {
       return state.externalCDN.map(cdn => {
-         return <div key={cdn.id} className="badge badge-soft-dark d-block"> {cdn.url.slice(0,30)} </div>
+         return <div key={ cdn.id } className="badge badge-soft-dark d-block"> {cdn.url.slice(0,30)} </div>
       })
   }
 
@@ -81,11 +81,15 @@ useEffect(() => {
 
 useEffect(() => {
     
-    const request = new Request(`${API_URL.GET_CLASSROOM_CSS_SETTINGS}/${props.cdata.kid}`, {
-        method: 'GET',
-        cache: 'default',
-        mode: 'cors'
-      });
+    const request = new Request(
+        `${ API_URL.GET_CLASSROOM_CSS_SETTINGS }/${ props.cdata.kid }`,
+        {
+            method: 'GET',
+            cache: 'default',
+            mode: 'cors',
+            
+        }
+    )
 
       fetch(request).then(data => data.json()).then((d) => {
           setState(s => {
@@ -107,7 +111,6 @@ const submitHandler = (event) => {
         }
   }
 
-
   const formElementArray = []
   for (const key in state.controls) {
       formElementArray.push({
@@ -116,16 +119,16 @@ const submitHandler = (event) => {
       })
   }
   const form = (
-      <form onSubmit={submitHandler}>
+      <form onSubmit={ submitHandler }>
           {formElementArray.map((formElement) => (
               <Input
-                  key={formElement.id}
-                  elementConfig={formElement.config.elementConfig}
-                  elementType={formElement.config.elementType}
-                  value={formElement.config.value}
-                  changed={(event) => inputChangeHandler(event, formElement.id)}
-                  label={formElement.config.label}
-                  shouldDisplay={props.codemarkastate.owner}
+                  key={ formElement.id }
+                  elementConfig={ formElement.config.elementConfig }
+                  elementType={ formElement.config.elementType }
+                  value={ formElement.config.value }
+                  changed={ (event) => inputChangeHandler(event, formElement.id) }
+                  label={ formElement.config.label }
+                  shouldDisplay={ props.codemarkastate.owner }
 
               />
           ))}
@@ -146,42 +149,40 @@ const submitHandler = (event) => {
               </div>
           </div> */}
           <div className="mt-2 mb-2">
-          <b>External Stylesheets</b>
+              <b>External Stylesheets</b>
               {mapExternalCDN()}
           </div>
 
           {props.codemarkastate.owner ? (
-                        <div className="mt-2 mb-2">
-                        <b>Add External Stylesheets</b>
-                        <p>
-                            Any URL's (comma seperated) added here will be added as links
-                            in their order, and before the CSS in the editor.
-                        </p>
-                        <Input
+              <div className="mt-2 mb-2">
+                  <b>Add External Stylesheets</b>
+                  <p>
+                      Any URL's (comma seperated) added here will be added as links
+                      in their order, and before the CSS in the editor.
+                  </p>
+                  <Input
                             key="external css"
-                            elementConfig={state.scontrols.externalCDN.elementConfig}
-                            elementType={state.scontrols.externalCDN.elementType}
-                            value={state.scontrols.externalCDN.value}
-                            changed={handleExternalCDNInputChange}
-                            shouldDisplay={props.codemarkastate.owner}
+                            elementConfig={ state.scontrols.externalCDN.elementConfig }
+                            elementType={ state.scontrols.externalCDN.elementType }
+                            value={ state.scontrols.externalCDN.value }
+                            changed={ handleExternalCDNInputChange }
+                            shouldDisplay={ props.codemarkastate.owner }
                         />
                         
-                    <Button
-                        block={false}
+                  <Button
+                        block={ false }
                         textColor="#fff"
                         color="success"
                         size="sm"
-                        clicked={submitHandler}
-                        disabled={state.formisSubmitted}>
-                        {state.formisSubmitted ? <Spinner /> : 'Save'}
-                    </Button>
-                    </div>
+                        clicked={ submitHandler }
+                        disabled={ state.formisSubmitted }>
+                      {state.formisSubmitted ? <Spinner /> : 'Save'}
+                  </Button>
+              </div>
           ) : ''}
       </form>
   )
   return (<div>{form}</div>)
 }
-
-
 
 export default CssTab;

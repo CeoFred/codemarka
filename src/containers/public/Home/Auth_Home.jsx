@@ -9,7 +9,6 @@ import FetchCommunities from '../../../components/Partials/FetchCommunities';
 // import HappeningNow from '../../../components/Partials/HappeningNow';
 import UpcomingClassroomSessions from '../../../components/Partials/UpcomingClassSessions';
 
-
 import SearchContainer from '../../../components/Partials/SearchContainer';
 import './auth.css';
 
@@ -37,7 +36,8 @@ function Auth_Home(props) {
         method: 'GET',
         cache: 'default',
         headers: myHeaders,
-        mode: 'cors'
+        mode: 'cors',
+        
     })
 
     fetch(searchClassroomRequest)
@@ -69,12 +69,13 @@ function Auth_Home(props) {
     
     if(e.target.value && e.target.value.length >= 2){
 
-        const searchClassroomRequest =  new Request(url, {
+        const searchClassroomRequest = new Request(url, {
             method: 'GET',
             cache: 'default',
             headers: myHeaders,
-            mode: 'cors'
-        });
+            mode: 'cors',
+            
+        })
 
         fetch(searchClassroomRequest).then(d => d.json()).then(m => {
             if(m.data && m.data.length >= 1){
@@ -98,26 +99,26 @@ function Auth_Home(props) {
                 <span class="mask bg-gradient-dark opacity-6"></span>
                 <div
                     data-offset-top="#navbar-main"
-                    style={{ paddingTop: '59px' }}>
+                    style={ { paddingTop: '59px' } }>
                     <div class="container d-flex align-items-center text-center text-lg-left py-5">
                         <div class="col px-0">
                             <div class="row row-grid align-items-center">
                                 <div class="col-lg-8 text-lg-left text-sm-left text-md-left">
                                     <h1 class="text-white m-0 tal-sm font-weight-bold">
                                         Learn. Build. Collaborate.
-                                  </h1>
-                                    <p style={{marginBottom:'3rem'}} class="lead text-white opacity-8 tal-sm font-weight-light">
+                                    </h1>
+                                    <p style={ {marginBottom:'3rem'} } class="lead text-white opacity-8 tal-sm font-weight-light">
                                         Discover classrooms
-                                  </p>
+                                    </p>
                                     <div class="mt-1">
                                         <form
-                                            action={`/classroom/search/q/${searchInput.value}`}>
+                                            action={ `/classroom/search/q/${ searchInput.value }` }>
                                             <div className="form-group">
                                                 <div className="input-group">
                                                     <input
                                                         type="search"
-                                                        value={searchInput.value}
-                                                        onChange={handleSearchInputChange}
+                                                        value={ searchInput.value }
+                                                        onChange={ handleSearchInputChange }
                                                         className="form-control"
                                                         placeholder="Over 1,000,000 Classrooms"
                                                         aria-label="Over 1,000,000 Classrooms"
@@ -125,7 +126,7 @@ function Auth_Home(props) {
                                                     />
                                                     <div className="input-group-append">
                                                         <button
-                                                            onClick={searchInit}
+                                                            onClick={ searchInit }
                                                             type="button"
                                                             className="btn btn-success"
                                                             id="basic-addon2">
@@ -135,8 +136,8 @@ function Auth_Home(props) {
                                                 </div>
                                             </div>
                                             <SearchContainer
-                                                display={results.result}
-                                                results={results.result}
+                                                display={ results.result }
+                                                results={ results.result }
                                             />
                                         </form>
                                     </div>

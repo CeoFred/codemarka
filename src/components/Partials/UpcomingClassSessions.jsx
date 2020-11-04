@@ -18,6 +18,7 @@ export default function FetchUpcomingClass() {
                 method: 'GET',
                 cache: 'default',
                 mode: 'cors',
+                
             })
 
             fetch(request)
@@ -28,7 +29,7 @@ export default function FetchUpcomingClass() {
                             .timeZone
 
                         const getDateandTime = (date) => {
-                            console.log(date)
+                            // console.log(date)
                             const Mdate = new Date(date)
                             const dtime = formatToTimeZone(
                                 Mdate,

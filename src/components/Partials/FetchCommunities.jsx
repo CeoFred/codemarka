@@ -40,13 +40,17 @@ import * as APIURL from '../../config/api_url';
       const myHeaders = new Headers();
       myHeaders.append('Content-Type', 'Application/json')
 
-      const membershipRequest = new Request(APIURL.JOIN_COMMUNITY + communitykid, {
-        method: 'POST',
-        cache: 'default',
-        mode: 'cors',
-        headers: myHeaders,
-        body: JSON.stringify({ user: props.userid, action })
-      });
+      const membershipRequest = new Request(
+          APIURL.JOIN_COMMUNITY + communitykid,
+          {
+              method: 'POST',
+              cache: 'default',
+              mode: 'cors',
+              headers: myHeaders,
+              
+              body: JSON.stringify({ user: props.userid, action }),
+          }
+      )
 
       setmemberShipRequest({ loading: true });
       fetch(membershipRequest).then(d => d.json()).then(dd => {
@@ -74,10 +78,11 @@ import * as APIURL from '../../config/api_url';
       const url = APIURL.GET_COMMUNITIES;
 
       const request = new Request(url, {
-        method: 'GET',
-        cache: 'default',
-        mode: 'cors'
-      });
+          method: 'GET',
+          cache: 'default',
+          mode: 'cors',
+          
+      })
 
       fetch(request).then(data => data.json()).then(d => {
         if (d.data) {
