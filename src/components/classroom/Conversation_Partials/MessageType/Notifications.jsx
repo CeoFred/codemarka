@@ -1,9 +1,14 @@
 /** @format */
 
-import React from 'react'
+import React, { useLayoutEffect } from 'react'
 import PropTypes from 'prop-types'
 
 function Text(props) {
+      useLayoutEffect(() => {
+          var objDiv = document.getElementById('fala')
+          objDiv.scrollTop = objDiv.scrollHeight
+      }, [])
+
     if (props.message.for === props.user) {
                     return (
                         <div

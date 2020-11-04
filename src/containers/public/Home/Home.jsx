@@ -23,10 +23,6 @@ export default function Home() {
                                       solve their coding problems from different
                                       parts of the world in realtime.
                                   </h1>
-                                  <p className="lead text-white opacity-8 text-left">
-                                      Built for the community ,by the community.
-                                      Feeling left out already?
-                                  </p>
                                   <div className="mt-5">
                                       <Link
                                           to={ url.AUTH_SIGN_UP }
@@ -36,7 +32,7 @@ export default function Home() {
                                               size="md"
                                               icon="btn-icon">
                                               <span className="btn-inner--icon" />
-                                              Create an account
+                                              Get Started
                                           </Button>
                                       </Link>
                                   </div>
@@ -482,7 +478,7 @@ export default function Home() {
                                       <li>Quiz Mode</li>
                                       <li>Github File Export</li>
                                   </ul>
-                                  <Link  to={url.COMMUNITY_ACCOUNT_SIGNUP_PAGE}
+                                  <Link  to={ url.COMMUNITY_ACCOUNT_SIGNUP_PAGE }
                                       className="btn btn-sm btn-white hover-translate-y-n3 hover-shadow-lg mb-3"
                                       target="_blank">
                                       Get started
