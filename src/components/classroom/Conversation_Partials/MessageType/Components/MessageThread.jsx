@@ -4,6 +4,7 @@ import React, { useState, useEffect, useLayoutEffect } from 'react'
 import Modal from '../../../../Partials/Modals/Modal'
 import Input from '../../../../Partials/Input/Input'
 import Spinner from '../../../../Partials/Preloader'
+import ImageMessage from '../Image';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import * as actionType from '../../../../../store/actions/Types'
@@ -107,7 +108,12 @@ function MessageThread(props) {
                                 {props.threadState.data.type === 'text' ? (
                                     props.threadState.message
                                 ) : (
-                                    <img src={ props.threadState.data.result.secure_url } />
+                                    <ImageMessage
+                                        message={
+                                            props.threadState.data
+                                        }
+                                        replyingthread
+                                    />
                                 )}
                                 {}
                             </div>

@@ -30,16 +30,16 @@ import * as actionType from '../../../../../store/actions/Types'
           <span onClick={ loadMessageThread }>
               <i className="fa fa-comment-dots"></i>
           </span>
-          <span onClick={ addEmojiReaction }>
+          {/* <span onClick={ addEmojiReaction }>
               <i className="fa fa-smile-wink"></i>
-          </span>
-          <span>
+          </span> */}
+          {/* <span>
               <i className="fa fa-pencil-alt"></i>
           </span>
 
           <span>
               <i className="fa fa-trash-alt"></i>
-          </span>
+          </span> */}
       </div>
   )
 }

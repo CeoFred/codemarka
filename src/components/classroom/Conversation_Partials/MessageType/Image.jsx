@@ -1,6 +1,6 @@
 /** @format */
 
-import React,{ useState} from 'react'
+import React,{ useState, useLayoutEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
@@ -21,6 +21,12 @@ function ImageMessage(props) {
           classroomId: props.match.params.classroom,
       })
   }
+
+  useLayoutEffect(() => {
+        var objDiv = document.getElementById('fala')
+        objDiv.scrollTop = objDiv.scrollHeight
+  }, []);
+
     if (isDeleted)
         return <i className="deleted_message">Message was deleted </i> 
 
@@ -34,24 +40,24 @@ function ImageMessage(props) {
             className="main_message_container"
             id={ props.message.msgId }>
             <img
-                    src={ props.message.result.secure_url }
-                    alt={ props.message.result.public_id }
-                    title={ 'Image' }
-                    style={ {
-                        width: '100%',
-                        cursor: 'pointer',
-                        objectFit: 'cover',
-                        height: '100%',
-                    } }
-                    onClick={ (e) =>
-                        props.handleImagePreview(
-                            e,
-                            props.message.result.secure_url
-                        )
-                    }
-                />
+                src={ props.message.result.secure_url }
+                alt={ props.message.result.public_id }
+                title={ 'Image' }
+                style={ {
+                    width: '100%',
+                    cursor: 'pointer',
+                    objectFit: 'cover',
+                    height: '100%',
+                } }
+                onClick={ (e) =>
+                    !props.replyingthread && props.handleImagePreview(
+                        e,
+                        props.message.result.secure_url
+                    )
+                }
+            />
 
-            {showAction ? (
+            {showAction && !props.replyingthread ? (
                 <MessageActions
                     keepShowingActions={ (e) => setShowingAction(true) }
                     id={ msgId }

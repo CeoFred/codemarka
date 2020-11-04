@@ -553,11 +553,7 @@ const MainClassLayout = ({
                         })
                     )
                 })
-
-                updateMessage.then((d) => {
-                    var objDiv = document.getElementById('fala')
-                    objDiv.scrollTop = objDiv.scrollHeight
-                })
+              
             })
 
             //listen for members leaving
@@ -589,12 +585,6 @@ const MainClassLayout = ({
                         numberInClass: newUserList.length,
                         typingState: newTypingState,
                     }
-                })
-
-                setcodemarkaState((c) => {
-                    var objDiv = document.getElementById('fala')
-                    objDiv.scrollTop = objDiv.scrollHeight
-                    return c
                 })
             })
 

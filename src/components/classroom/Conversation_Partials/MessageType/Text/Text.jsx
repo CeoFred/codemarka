@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 /** @format */
 
-import React,{ useState } from 'react'
+import React,{ useState, useLayoutEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
@@ -12,6 +12,11 @@ import ThreadReplies from '../Components/ThreadReplies';
 import Reactions from '../Components/Reactions'
 
 function MessageComponent (props) {
+
+       useLayoutEffect(() => {
+           var objDiv = document.getElementById('fala')
+           objDiv.scrollTop = objDiv.scrollHeight
+       }, [])
     const { isThread , isDeleted,msgId,by,thread } = props.message;
 
     const [showAction, setShowingAction] = useState(false)
@@ -37,6 +42,7 @@ function MessageComponent (props) {
          })
         //  props.showReactionComponent(true);
      }
+   
     return (
         <div
             onMouseLeave={ (e) => setShowingAction(false) }
