@@ -16,9 +16,9 @@ div.message_actions {
   top: -10px;
   align-items: center;
   justify-content: space-between;
-  width: 5.5rem;
+  width: auto;
   background: black;
-  padding: 4px;
+  padding: 7px;
   border-radius: 5px
 }
 

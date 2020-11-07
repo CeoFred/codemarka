@@ -84,8 +84,6 @@ const MainClassLayout = ({
         shouldDisplay: false,
         url: '',
     })
-    const [accessControlLevel, setAccessControlLevel] = useState(0)
-
     const [attendanceState, setAttendanceState] = useState({
         hasCollectedAttendance: false,
         isCollectingAttendance: classroomD.isTakingAttendance,
@@ -183,7 +181,10 @@ const MainClassLayout = ({
     }
 
     const [starRating, setStarRating] = useState(0)
-
+ useLayoutEffect(() => {
+     var objDiv = document.getElementById('fala')
+     objDiv.scrollTop = objDiv.scrollHeight
+ }, [codemarkastate.messages])
     useLayoutEffect(() => {
         socket.on('new_image_message', (data) => {
             const updateMessage = new Promise((resolve) => {

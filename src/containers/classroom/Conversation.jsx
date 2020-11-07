@@ -46,10 +46,9 @@ export default function Conversation(props) {
     useEffect(() => {
         const messageContainer = document.querySelector('#fala');
         messageContainer.addEventListener('scroll', function(e){
-            const read =
-                e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight
-             if(!read){
-                 setMessageVisible(false);
+            const position1 = e.target.scrollHeight - e.target.scrollTop;
+             if (![1,0,2].includes(Number(position1 - e.target.clientHeight))) {
+                 setMessageVisible(false)
              } else {
                  setMessageVisible(true)
              }

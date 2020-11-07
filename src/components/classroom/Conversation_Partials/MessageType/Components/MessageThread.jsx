@@ -81,7 +81,7 @@ function MessageThread(props) {
             style={ style }
             size="sm"
             footerContent={ <FooterContent { ...props } /> }
-            title="Thread"
+            title="Message Thread"
             targetid="thread_modal">
             {!props.threadState.loading && props.threadState.retrieved ? (
                 <div className="thread_container" id="thread_container_div">
@@ -133,6 +133,8 @@ function MessageThread(props) {
                                                       src={
                                                           message.reply_by.image
                                                       }
+                                                      height="30px"
+                                                      width="30px"
                                                       alt={
                                                           message.reply_by
                                                               .username
@@ -180,8 +182,8 @@ const mapStateToProps = ({ classroom,auth }) => {
 const matchDispatchToProps = (dispatch) => {
     return {
         addMessageToThread: () => dispatch({ type: actionType.AUTO_AUTH_INIT }),
-        fetchMessageThread: () =>
-            dispatch({ type: actionType.MESSAGE_THREAD_FETCH_START }),
+        // fetchMessageThread: () =>
+        //     dispatch({ type: actionType.MESSAGE_THREAD_FETCH_START }),
         updateMessageThread: (data) => dispatch({ type: actionType.MESSAGE_THREAD_UPDATED, data})
     }
 }

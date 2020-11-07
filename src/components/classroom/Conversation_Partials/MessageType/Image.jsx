@@ -47,13 +47,11 @@ function ImageMessage(props) {
                     width: '100%',
                     cursor: 'pointer',
                     objectFit: 'cover',
-                    height: '100%',
                 } }
+                height="180px"
                 onClick={ (e) =>
-                    !props.replyingthread && props.handleImagePreview(
-                        e,
-                        props.message.result.secure_url
-                    )
+                    !props.replyingthread &&
+                    props.handleImagePreview(e, props.message.result.secure_url)
                 }
             />
 
@@ -61,7 +59,7 @@ function ImageMessage(props) {
                 <MessageActions
                     keepShowingActions={ (e) => setShowingAction(true) }
                     id={ msgId }
-                    userId={ by }
+                    senderid={ by }
                 />
             ) : (
                 ''

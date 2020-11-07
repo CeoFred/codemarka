@@ -1,48 +1,52 @@
-/* eslint-disable no-undef */
+/**
+ * /* eslint-disable no-undef
+ *
+ * @format
+ */
+
 /** @format */
 
-import React,{ useState, useLayoutEffect } from 'react'
+import React, { useState, useLayoutEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import * as actionType from '../../../../../store/actions/Types';
-import '../Styles/text.css';
-import MessageActions from '../Components/Actions';
-import ThreadReplies from '../Components/ThreadReplies';
+import * as actionType from '../../../../../store/actions/Types'
+import '../Styles/text.css'
+import MessageActions from '../Components/Actions'
+import ThreadReplies from '../Components/ThreadReplies'
 import Reactions from '../Components/Reactions'
 
-function MessageComponent (props) {
-
-       useLayoutEffect(() => {
-           var objDiv = document.getElementById('fala')
-           objDiv.scrollTop = objDiv.scrollHeight
-       }, [])
-    const { isThread , isDeleted,msgId,by,thread } = props.message;
+function MessageComponent(props) {
+    useLayoutEffect(() => {
+        var objDiv = document.getElementById('fala')
+        objDiv.scrollTop = objDiv.scrollHeight
+    }, [])
+    const { isThread, isDeleted, msgId, by, thread } = props.message
 
     const [showAction, setShowingAction] = useState(false)
-  
-    if(isDeleted)  return (<i className="deleted_message">Message was deleted </i>) 
 
-    function handleShowThread(e) {
-        e.preventDefault();
-          document.getElementById('thread_modal_button').click()
-          props.setMessageThread({
-              messageId: msgId,
-              userId: props.userId,
-              classroomId: props.match.params.classroom,
-          })
+    if (isDeleted)
+        return <i className="deleted_message">Message was deleted </i>
+
+    async function handleShowThread(e) {
+        e.preventDefault()
+       await props.setMessageThread({
+            messageId: msgId,
+            classroomId: props.match.params.classroom,
+        })
+       await document.getElementById('thread_modal_button').click()
     }
 
-     function showReactionComponent(e) {
-         e.preventDefault()
-         props.setMessageThread({
-             messageId: msgId,
-             userId: props.userId,
-             classroomId: props.match.params.classroom,
-         })
+    function showReactionComponent(e) {
+        e.preventDefault()
+        props.setMessageThread({
+            messageId: msgId,
+            userId: props.userId,
+            classroomId: props.match.params.classroom,
+        })
         //  props.showReactionComponent(true);
-     }
-   
+    }
+
     return (
         <div
             onMouseLeave={ (e) => setShowingAction(false) }
@@ -55,10 +59,10 @@ function MessageComponent (props) {
             />
             {showAction ? (
                 <MessageActions
-                    setShowEmoji={ (v) => setShowingEmoji(v) }
+                    // setShowEmoji={ (v) => setShowingEmoji(v) }
                     keepShowingActions={ (e) => showReactionComponent(e) }
                     id={ msgId }
-                    userId={ by }
+                    senderid={ by }
                 />
             ) : (
                 ''
@@ -76,7 +80,7 @@ function MessageComponent (props) {
             <Reactions { ...props } />
         </div>
     )
-};
+}
 
 function Text(props) {
     const copyCode = (e, code) => {
@@ -142,28 +146,19 @@ function Text(props) {
     padding: 2px;
     border-radius: 6px;
 "><a style="color:#aea262;cursor:pointer" href="/u/${ userFound[0].username }" target="_blank" rel="noopener noreferrer" class="mentions_username"> ${ username }</a>
-             <div class="mentions_username_profile">
-                <div class="card shadow-none">
-    <div class="p-3 d-flex" style="align-items:center">
-                  <a href="#" class="avatar rounded-circle hover-scale-105">
-    <img alt="Image placeholder" src="${ userFound[0].avatar }" class="">
-
-</a>
-        <div>
-         
-        </div>
-    </div>
-</div>
-             </div>
-             </b>`
+ </b>`
             } else return username
         })
 
-        return <MessageComponent { ...props } content={ rt } id={ props.message.msgId } />
+        return (
+            <MessageComponent
+                { ...props }
+                content={ rt }
+                id={ props.message.msgId }
+            />
+        )
     }
-    return <React.Fragment>
-        {wrapURLs(props.message.msg)}
-    </React.Fragment>
+    return <React.Fragment>{wrapURLs(props.message.msg)}</React.Fragment>
 }
 
 Text.propTypes = {
@@ -174,14 +169,18 @@ const matchDispatchToProps = (dispatch) => {
     return {
         setMessageThread: (data) =>
             dispatch({ type: actionType.SET_MESSAGE_THREAD, data }),
-        hideMessageReactionPicker:(data) =>  dispatch({ type: actionType.SET_DISPLAYING_MESSAGE_REACTION_PICKER, status: data })
+        hideMessageReactionPicker: (data) =>
+            dispatch({
+                type: actionType.SET_DISPLAYING_MESSAGE_REACTION_PICKER,
+                status: data,
+            }),
     }
 }
 
-const mapStateToProps = ({  auth,classroom }) => {
+const mapStateToProps = ({ auth, classroom }) => {
     return {
         userId: auth.user.accountid,
-        ...classroom
+        ...classroom,
     }
 }
 
