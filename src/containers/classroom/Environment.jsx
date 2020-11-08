@@ -128,7 +128,7 @@ function Environment(props) {
                 // check for number in classroom and classtype
                 const numberInClass = props.classroom.numberInClass
                 const maxUsers = props.classroom.maxUsers;
-
+                console.log(maxUsers, numberInClass);
                 if(numberInClass + 1 > maxUsers){
                     return <MaxedOut />
                 }

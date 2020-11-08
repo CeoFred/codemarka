@@ -1,17 +1,20 @@
 import React,{ useState, useEffect } from 'react'
 
 export default function ThreadReplies(props) {
-  const { subscribers,thread } =  props.message;
+  const { subscribers } =  props.message;
 
   const [threadCount, setThreadCount] = useState(1);
 
  useEffect(() => {
     setThreadCount(props.thread.length ? props.thread.length : 1)
+    if(props.socket){
+        
      props.socket.on('thread_reply', (thread) => {
-        if(thread[0].messageId === props.msgId){
-         setThreadCount(thread.length)
-        }
-        })
+         if (thread[0].messageId === props.msgId) {
+             setThreadCount(thread.length)
+         }
+     })
+    }
  }, [])
 
   return (

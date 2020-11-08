@@ -3,10 +3,9 @@
 // yet to start
 
 import React from 'react'
-import { formatToTimeZone } from 'date-fns-timezone'
 import notFoundImg from '../../../media/images/vectors/hugo-fatal-error.png'
 
-function NotStarted(props) {
+function NotFoundAlertMessage(props) {
    
     return (
         <div>
@@ -16,7 +15,7 @@ function NotStarted(props) {
                     data-bg-size="cover"
                     data-bg-position="center">
                     <img
-                        src={notFoundImg}
+                        src={ notFoundImg }
                         alt="Image"
                         class="img-as-bg rounded-bottom-left"
                     />
@@ -64,4 +63,4 @@ function NotStarted(props) {
     )
 }
 
-export default NotStarted
+export default NotFoundAlertMessage
