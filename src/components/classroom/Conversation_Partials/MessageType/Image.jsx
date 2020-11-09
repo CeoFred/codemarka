@@ -7,10 +7,14 @@ import { withRouter } from 'react-router-dom'
 import * as actionType from '../../../../store/actions/Types'
 import MessageActions from './Components/Actions'
 import ThreadReplies from './Components/ThreadReplies'
+import Reactions from './Components/Reactions';
 
 function ImageMessage(props) {
     const { isThread, isDeleted, msgId, by, thread } = props.message
-
+ useLayoutEffect(() => {
+     var objDiv = document.getElementById('fala')
+     objDiv.scrollTop = objDiv.scrollHeight
+ }, [])
     const [showAction, setShowingAction] = useState(false)
   function handleShowThread(e) {
       e.preventDefault()
@@ -21,11 +25,6 @@ function ImageMessage(props) {
           classroomId: props.match.params.classroom,
       })
   }
-
-  useLayoutEffect(() => {
-        var objDiv = document.getElementById('fala')
-        objDiv.scrollTop = objDiv.scrollHeight
-  }, []);
 
     if (isDeleted)
         return <i className="deleted_message">Message was deleted </i> 
@@ -74,6 +73,13 @@ function ImageMessage(props) {
             ) : (
                 ''
             )}
+
+            <Reactions
+                messageid={ props.message.msgId }
+                classroomid={ props.kid }
+                user={ props.userId }
+                reactions={ props.message.reactions }
+            />
         </div>
     )
 }

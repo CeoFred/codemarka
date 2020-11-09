@@ -27,7 +27,8 @@ const INITIAL_STATE = {
         showingThread: false,
     },
     messageReaction: {
-        isShowing: false
+        isShowing: false,
+        messageId: null
     },
     socket: null
 }
@@ -183,7 +184,8 @@ return helper.updateObject(state, {
 const showMessageReactionPicker = (state, action) => {
     return helper.updateObject(state, {
         messageReaction: {
-            isShowing: action.status
+            isShowing: action.status,
+            messageId: action.messageId
         },
     })
 }
@@ -191,6 +193,15 @@ const showMessageReactionPicker = (state, action) => {
 const setSocketConnection = (state, action) => {
     return helper.updateObject(state, {
         socket: action.socket
+    })
+}
+
+const closeMessageReactionPicker = (state, action) => {
+    return helper.updateObject(state, {
+        messageReaction: {
+            isShowing: false,
+            messageId: null
+        }
     })
 }
 
@@ -213,6 +224,7 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.MESSAGE_THREAD_UPDATED): return updateCurrentMessageThread(state,action)
         case(actionTypes.SET_DISPLAYING_MESSAGE_REACTION_PICKER): return showMessageReactionPicker(state,action)
         case(actionTypes.SET_CLASSROOM_SOCKET_CONNECTION): return setSocketConnection(state,action)
+        case(actionTypes.CLOSE_MESSAGE_REACTION_EMOJI_PICKER): return closeMessageReactionPicker(state,action)
         default: return state;
     }
 }

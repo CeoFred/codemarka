@@ -13,6 +13,11 @@ export function setClassroomSocket(socket){
         socket
     }
 }
+export function closeReactionEmojiPicker(){
+    return {
+        type: actionTypes.CLOSE_MESSAGE_REACTION_EMOJI_PICKER
+    }
+}
 export function classVerifySuccess(classroom){
     return {
         type: actionTypes.CLASSROOM_VERIFICATION_SUCCESS,

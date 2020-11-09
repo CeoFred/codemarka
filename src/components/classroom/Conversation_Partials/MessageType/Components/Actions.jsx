@@ -17,9 +17,9 @@ import * as actionType from '../../../../../store/actions/Types'
 
   }
 
-//   function addEmojiReaction(e){
-//       props.setShowEmoji(true)
-//   }
+  function addEmojiReaction(e){
+      props.setShowEmoji(true, props.id);
+  }
 
   return (
       <div
@@ -32,9 +32,11 @@ import * as actionType from '../../../../../store/actions/Types'
               title="Show Thread">
               <i className="fa fa-comment-dots"></i>
           </span>
-          {/* <span onClick={ addEmojiReaction }>
+          <span
+              style={ { marginLeft: 5, marginRight: 5 } }
+              onClick={ addEmojiReaction }>
               <i className="fa fa-smile-wink"></i>
-          </span> */}
+          </span>
           {props.senderid === props.userId && (
               <span>
                   <span
@@ -57,7 +59,7 @@ const matchDispatchToProps = (dispatch) => {
     return {
         setMessageThread: (data) =>
             dispatch({ type: actionType.SET_MESSAGE_THREAD, data }),
-        setShowEmoji: () => dispatch({ type: actionType.SET_DISPLAYING_MESSAGE_REACTION_PICKER, status : true})
+        setShowEmoji: (status,messageId) => dispatch({ type: actionType.SET_DISPLAYING_MESSAGE_REACTION_PICKER, status, messageId }),
     }
 }
 const mapStateToProps = ({ auth }) => {

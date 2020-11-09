@@ -17,10 +17,10 @@ import ThreadReplies from '../Components/ThreadReplies'
 import Reactions from '../Components/Reactions'
 
 function MessageComponent(props) {
-    useLayoutEffect(() => {
-        var objDiv = document.getElementById('fala')
-        objDiv.scrollTop = objDiv.scrollHeight
-    }, [])
+  useLayoutEffect(() => {
+      var objDiv = document.getElementById('fala')
+      objDiv.scrollTop = objDiv.scrollHeight
+  }, [])
     const { isThread, isDeleted, msgId, by, thread } = props.message
 
     const [showAction, setShowingAction] = useState(false)
@@ -77,7 +77,12 @@ function MessageComponent(props) {
             ) : (
                 ''
             )}
-            <Reactions { ...props } />
+            <Reactions
+                messageid={ props.message.msgId }
+                room={ props.kid }
+                user={ props.userId }
+                reactions={ props.message.reactions }
+            />
         </div>
     )
 }
