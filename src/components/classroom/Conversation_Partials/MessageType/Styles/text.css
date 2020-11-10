@@ -199,3 +199,66 @@ div.message_thread_input_container {
 a.thread_link {
   color: grey!important;
 }
+
+.message_reaction_container {
+  margin-bottom: 4px;
+  margin-top: 4px;
+}
+
+.c-reaction {
+  font-size: 11px;
+  line-height: 16px;
+  padding: 4px 6px;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: top;
+  border: none;
+  border-radius: 12px;
+  margin-right: 5px;
+  margin-bottom: 4px;
+  margin-right: 4px;
+}
+
+.c-button-unstyled {
+  background: none;
+  border: 1px solid;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  overflow: initial;
+  text-align: initial;
+  vertical-align: initial;
+  cursor: pointer;
+}
+
+.c-emoji {
+  overflow: hidden;
+  display: inline-flex;
+  vertical-align: top;
+  align-items: center;
+  object-fit: contain;
+}
+
+.c-emoji__small {
+  width: 16px;
+  height: 16px;
+}
+
+.c-reaction .c-emoji:not(:last-child) {
+  margin-right: 2px;
+}
+
+.c-reaction__count {
+  padding: 0 1px 0 3px;
+  font-weight: 700;
+}
+
+.c-reaction--reacted {
+  border: 1px solid #5252bb;
+  background: #2c2c71;
+}
+
+.disabled {
+  color: grey;
+  font-style: italic;
+}

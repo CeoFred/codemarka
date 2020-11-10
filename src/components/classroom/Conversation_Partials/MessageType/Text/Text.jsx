@@ -21,7 +21,7 @@ function MessageComponent(props) {
         var objDiv = document.getElementById('fala')
         objDiv.scrollTop = objDiv.scrollHeight
     }, [])
-    const { isThread, isDeleted, msgId, by, thread } = props.message
+    const { isThread, isDeleted, msgId, by, thread, wasEdited } = props.message
 
     const [showAction, setShowingAction] = useState(false)
 
@@ -30,20 +30,16 @@ function MessageComponent(props) {
 
     async function handleShowThread(e) {
         e.preventDefault()
-       await props.setMessageThread({
+        await props.setMessageThread({
             messageId: msgId,
             classroomId: props.match.params.classroom,
         })
-       await document.getElementById('thread_modal_button').click()
+        await document.getElementById('thread_modal_button').click()
     }
 
     function showReactionComponent(e) {
         e.preventDefault()
-        props.setMessageThread({
-            messageId: msgId,
-            userId: props.userId,
-            classroomId: props.match.params.classroom,
-        })
+
         //  props.showReactionComponent(true);
     }
 
@@ -57,12 +53,16 @@ function MessageComponent(props) {
                 className="r-message"
                 dangerouslySetInnerHTML={ { __html: props.content } }
             />
-            {showAction ? (
+            {wasEdited && <small className="disabled">edited</small>}
+            {showAction && !props.message.isDeleted ? (
                 <MessageActions
                     // setShowEmoji={ (v) => setShowingEmoji(v) }
                     keepShowingActions={ (e) => showReactionComponent(e) }
                     id={ msgId }
                     senderid={ by }
+                    type="text"
+                    message={ props.message.msg }
+                    isDeleted={ props.message.isDeleted }
                 />
             ) : (
                 ''
@@ -77,7 +77,12 @@ function MessageComponent(props) {
             ) : (
                 ''
             )}
-            <Reactions { ...props } />
+            <Reactions
+                messageid={ props.message.msgId }
+                room={ props.kid }
+                user={ props.userId }
+                reactions={ props.message.reactions }
+            />
         </div>
     )
 }
@@ -162,7 +167,7 @@ function Text(props) {
 }
 
 Text.propTypes = {
-    message: PropTypes.isRequired,
+    message: PropTypes.object,
 }
 
 const matchDispatchToProps = (dispatch) => {
