@@ -22,7 +22,7 @@ export default function ThreadReplies(props) {
           {subscribers.map((subscriber,i) => {
             if(i <= 4){
 return (
-    <div className="thread_message_reply_user_image">
+    <div key={ subscriber.image } className="thread_message_reply_user_image">
         <img height="24" width="24" role="img" src={ subscriber.image } />
     </div>
 )

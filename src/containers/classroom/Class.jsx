@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef,useLayoutEffect } from 'react'
+import React, { useState, useRef,useLayoutEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import io from 'socket.io-client'
 import { ToastContainer, toast } from 'react-toastify'
@@ -19,6 +19,8 @@ import ParticipantModal from '../../components/classroom/Participants/Modal'
 import ClassRoomSettingsModal from '../../components/classroom/Settings/index.jsx';
 import EmojiPicker from '../../components/classroom/Emoji/picker';
 import MessageReactionEmojiPicker from '../../components/classroom/Emoji/picker'
+import EditMessageModal from '../../components/classroom/Conversation_Partials/MessageType/Components/EditMessage';
+import DeleteMessageModal from '../../components/classroom/Conversation_Partials/MessageType/Components/DeleteMessage'
 
 import ImagePreview from '../../components/classroom/ImagePreview/index';
 
@@ -72,6 +74,9 @@ const MainClassLayout = ({
     closeReactionEmojiPicker,
     isShowingReactionEmoji,
     activeMessage,
+    handleUnsetEditOrDeleteMessage,
+    isProcessingEditingOrDeletingMessage,
+    instanceOdEditingOrDeletingMessage,
 }) => {
     const [inputState, setInputState] = useState({
         value: '',
@@ -184,7 +189,7 @@ const MainClassLayout = ({
     }
 
     const [starRating, setStarRating] = useState(0)
-   
+
     useLayoutEffect(() => {
         socket.on('new_image_message', (data) => {
             const updateMessage = new Promise((resolve) => {
@@ -245,6 +250,29 @@ const MainClassLayout = ({
             })
         })
 
+        socket.on('message_edit_or_delete_success', async function (
+            message__
+        ) {
+            await setcodemarkaState((c) => {
+                let oldMsg = c.messages
+                oldMsg = oldMsg.map((message) => {
+                    if (message.msgId === message__.msgId) {
+                        return {
+                            ...message__,
+                        }
+                    }
+                    return message
+                })
+                return {
+                    ...c,
+                    messages: oldMsg,
+                }
+            })
+            await document.getElementById('edit_message_modal') && document.getElementById('edit_message_modal').click()
+            await document.getElementById('delete_message_modal') && document.getElementById('delete_message_modal').click()
+
+            await handleUnsetEditOrDeleteMessage()
+        })
         //listen for old message
         socket.on('updateMsg', (msg) => {
             setcodemarkaState((c) => {
@@ -344,29 +372,26 @@ const MainClassLayout = ({
             })
 
             socket.on('new_message_reaction', (messageData) => {
-                const { msgId } = messageData;
-             
-                 setcodemarkaState((s) => {
-                       const isValid = s.messages.find(
-                           (message) => message.msgId === msgId
-                       )
-                        if (isValid) {
-                            const newMessages = s.messages.map(
-                                (message) => {
-                                    if (message.msgId === msgId) {
-                                        return {
-                                            ...messageData,
-                                        }
-                                    }
-                                    return message
-                                }
-                            )
-                            return { ...s, messages: newMessages }
+                const { msgId } = messageData
 
-                        }
-                     return  s
-                 }) 
-            });
+                setcodemarkaState((s) => {
+                    const isValid = s.messages.find(
+                        (message) => message.msgId === msgId
+                    )
+                    if (isValid) {
+                        const newMessages = s.messages.map((message) => {
+                            if (message.msgId === msgId) {
+                                return {
+                                    ...messageData,
+                                }
+                            }
+                            return message
+                        })
+                        return { ...s, messages: newMessages }
+                    }
+                    return s
+                })
+            })
 
             socket.on('attendance_recorded', () => {
                 setAttendanceState({
@@ -2144,6 +2169,14 @@ const MainClassLayout = ({
             />
             <VideoAndAudioPermission />
             <CodeBlockModal socket={ socketRef.current } />
+            {isProcessingEditingOrDeletingMessage &&
+                instanceOdEditingOrDeletingMessage === 'edit' && (
+                    <EditMessageModal socket={ socketRef.current } />
+                )}
+            {isProcessingEditingOrDeletingMessage &&
+                instanceOdEditingOrDeletingMessage === 'delete' && (
+                    <DeleteMessageModal socket={ socketRef.current } />
+                )}
             <ClassInformationModal
                 owner={ owner }
                 socket={ socketRef.current }
@@ -2238,13 +2271,16 @@ const mapDispatchToProps = dispatch => {
             dispatch(action.setClassroomSocket(socketconnection)),
         closeReactionEmojiPicker: () =>
             dispatch(action.closeReactionEmojiPicker()),
+        handleUnsetEditOrDeleteMessage: () => dispatch(action.handleUnsetEditOrDeleteMessage()),
     }
 }
 
 const mapStateToProps = ({ classroom }) => {
     return {
         activeMessage: classroom.messageReaction.messageId,
-        isShowingReactionEmoji: classroom.messageReaction.isShowing
+        isShowingReactionEmoji: classroom.messageReaction.isShowing,
+        isProcessingEditingOrDeletingMessage: classroom.editOrDeleteMessage.processing,
+        instanceOdEditingOrDeletingMessage: classroom.editOrDeleteMessage.instance
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MainClassLayout)

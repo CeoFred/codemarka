@@ -54,11 +54,13 @@ function ImageMessage(props) {
                 }
             />
 
-            {showAction && !props.replyingthread ? (
+            {showAction && !props.replyingthread && !props.message.isDeleted ? (
                 <MessageActions
                     keepShowingActions={ (e) => setShowingAction(true) }
                     id={ msgId }
                     senderid={ by }
+                    type="image"
+                    isDeleted={ props.message.isDeleted }
                 />
             ) : (
                 ''
@@ -82,10 +84,6 @@ function ImageMessage(props) {
             />
         </div>
     )
-}
-
-ImageMessage.propTypes = {
-    message: PropTypes.isRequired,
 }
 
 const matchDispatchToProps = (dispatch) => {

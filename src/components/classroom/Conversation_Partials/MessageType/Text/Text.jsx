@@ -21,7 +21,7 @@ function MessageComponent(props) {
       var objDiv = document.getElementById('fala')
       objDiv.scrollTop = objDiv.scrollHeight
   }, [])
-    const { isThread, isDeleted, msgId, by, thread } = props.message
+    const { isThread, isDeleted, msgId, by, thread, wasEdited } = props.message
 
     const [showAction, setShowingAction] = useState(false)
 
@@ -57,12 +57,16 @@ function MessageComponent(props) {
                 className="r-message"
                 dangerouslySetInnerHTML={ { __html: props.content } }
             />
-            {showAction ? (
+            {wasEdited && <small className="disabled">edited</small>}
+            {showAction && !props.message.isDeleted ? (
                 <MessageActions
                     // setShowEmoji={ (v) => setShowingEmoji(v) }
                     keepShowingActions={ (e) => showReactionComponent(e) }
                     id={ msgId }
                     senderid={ by }
+                    type="text"
+                    message={ props.message.msg }
+                    isDeleted={ props.message.isDeleted }
                 />
             ) : (
                 ''
@@ -167,7 +171,7 @@ function Text(props) {
 }
 
 Text.propTypes = {
-    message: PropTypes.isRequired,
+    message: PropTypes.object,
 }
 
 const matchDispatchToProps = (dispatch) => {

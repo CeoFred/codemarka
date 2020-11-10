@@ -126,9 +126,14 @@ export default function Conversation(props) {
                 const messages = messageBundle[key]
                 let jsx = []
                 jsx = messages.map((message) => {
+                    if(message.isDeleted) {
+                        return (<i key={ message.msgId }>Message was deleted</i>)
+                    } else {
+                        
                     if (message.type && message.type === 'text') {
                         return (
                             <TextMessage
+                                key={ message.msgId }
                                 message={ message }
                                 users={ props.users }
                                 socket={ props.socket }
@@ -137,6 +142,7 @@ export default function Conversation(props) {
                     } else if (message.type && message.type === 'image') {
                         return (
                             <ImageMessage
+                                key={ message.msgId }
                                 handleImagePreview={ props.handleImagePreview }
                                 message={ message }
                                 socket={ props.socket }
@@ -145,10 +151,12 @@ export default function Conversation(props) {
                     } else {
                         return (
                             <NotificationMessage
+                                key={ message.msgId }
                                 user={ props.user }
                                 message={ message }
                             />
                         )
+                    }
                     }
                 })
                 jsx.unshift({
@@ -253,6 +261,7 @@ export default function Conversation(props) {
                           } else {
                               return (
                                   <div
+                                      key={ Math.random()*4272+22 }
                                       className={ `message ${
                                           userId === props.user
                                               ? 'sent'

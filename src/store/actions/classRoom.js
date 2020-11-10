@@ -18,6 +18,12 @@ export function closeReactionEmojiPicker(){
         type: actionTypes.CLOSE_MESSAGE_REACTION_EMOJI_PICKER
     }
 }
+
+export function handleUnsetEditOrDeleteMessage() {
+    return {
+        type: actionTypes.UNSET_EDIT_OR_DELETE_MESSAGE_DATA,
+    }
+}
 export function classVerifySuccess(classroom){
     return {
         type: actionTypes.CLASSROOM_VERIFICATION_SUCCESS,
