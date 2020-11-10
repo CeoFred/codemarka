@@ -2,14 +2,12 @@
 
 import React, { useState, useEffect, useLayoutEffect } from 'react'
 import Modal from '../../../../Partials/Modals/Modal'
-import Input from '../../../../Partials/Input/Input'
 import Button from '../../../../Partials/Button'
 import Spinner from '../../../../Partials/Preloader'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
 function DeleteMessage(props) {
-    const [message, setmessage] = useState(props.deletestate.originalContent)
     const [isSaving, setIsSaving] = useState(false)
 
     useLayoutEffect(() => {
@@ -23,39 +21,12 @@ function DeleteMessage(props) {
         props.socket.on('edit_success', () => {
             setIsSaving(false)
         })
-        setmessage(props.deletestate.originalContent)
     }, [])
-
-    useEffect(() => {
-        setmessage(props.deletestate.originalContent)
-    }, [props.deletestate])
-
-    const inputKeyDown = (event) => {
-        if (event.keyCode === 13) {
-            event.preventDefault()
-            setIsSaving(true)
-            const data = {
-                content: message,
-                room: props.deletestate.classroomId,
-                time: new Date(),
-                edit_by: {
-                    kid: props.user.accountid,
-                    username: props.user.displayName,
-                    email: props.user.email,
-                    image: props.user.displayImg,
-                },
-                messageId: props.deletestate.messageId,
-            }
-            if (message.length > 0) {
-                props.socket.emit('delete_message', data)
-            }
-        }
-    }
 
     const handleDeleteInit = () => {
         setIsSaving(true)
         const data = {
-            content: message,
+            content: '',
             room: props.deletestate.classroomId,
             time: new Date(),
             edit_by: {
@@ -66,9 +37,7 @@ function DeleteMessage(props) {
             },
             messageId: props.deletestate.messageId,
         }
-        if (message.length > 0) {
-            props.socket.emit('', data)
-        }
+            props.socket.emit('delete_message', data)
     }
     const style = {
         maxWidth: '31rem',
