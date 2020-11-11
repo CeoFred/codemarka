@@ -276,11 +276,11 @@ function AttendanceCollector(props){
   })
 
   return (
-      <React.Profiler>
+      <React.Fragment>
           <button type="button" class="btn btn-primary d-none" id="attendance_modal" data-toggle="modal" data-target="#attendanceModal">
               ..
           </button>
-          <div class="modal fade" id="attendanceModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+          <div class="modal fade" id="attendanceModal" tabIndex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered" role="document">
                   <div class="modal-content">
                       <div class="modal-header">
@@ -340,7 +340,7 @@ function AttendanceCollector(props){
                   </div>
               </div>
           </div>
-      </React.Profiler>
+      </React.Fragment>
   );
 }
 const mapStateToProps = ({ auth }) => {

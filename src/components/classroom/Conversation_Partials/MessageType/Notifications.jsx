@@ -32,7 +32,7 @@ function Text(props) {
 }
 
 Text.propTypes = {
-    message: PropTypes.isRequired,
+    message: PropTypes.any.isRequired,
 }
 
 export default Text

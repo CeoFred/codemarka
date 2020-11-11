@@ -545,7 +545,7 @@ export default function EditProfile() {
                                         <div
                                             class="modal fade"
                                             id="modal_account_deactivate"
-                                            tabindex="-1"
+                                            tabIndex="-1"
                                             role="dialog"
                                             aria-labelledby="modal_account_deactivate"
                                             aria-hidden="true">
