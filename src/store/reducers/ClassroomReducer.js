@@ -27,9 +27,17 @@ const INITIAL_STATE = {
         showingThread: false,
     },
     messageReaction: {
-        isShowing: false
+        isShowing: false,
+        messageId: null,
     },
-    socket: null
+    socket: null,
+    editOrDeleteMessage: {
+        messageId: null,
+        classroomId: null,
+        originalContent: '',
+        processing: false,
+        instance: null,
+    },
 }
 
 const classroomCreationInit = (state,action) => {
@@ -183,7 +191,8 @@ return helper.updateObject(state, {
 const showMessageReactionPicker = (state, action) => {
     return helper.updateObject(state, {
         messageReaction: {
-            isShowing: action.status
+            isShowing: action.status,
+            messageId: action.messageId
         },
     })
 }
@@ -194,6 +203,36 @@ const setSocketConnection = (state, action) => {
     })
 }
 
+const closeMessageReactionPicker = (state, action) => {
+    return helper.updateObject(state, {
+        messageReaction: {
+            isShowing: false,
+            messageId: null
+        }
+    })
+}
+
+const setEditOrDeleteMessageData = (state, action) => {
+    return helper.updateObject(state, {
+        editOrDeleteMessage: {
+            ...state.editMessage,
+            ...action.data,
+            processing: true,
+        },
+    })
+}
+
+const unsetMessageEditOrDeleteData = (state) => {
+    return helper.updateObject(state, {
+        editOrDeleteMessage: {
+            messageId: null,
+            classroomId: null,
+            originalContent: '',
+            processing: false,
+            instance: null,
+        },
+    })
+}
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
 
@@ -213,6 +252,9 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.MESSAGE_THREAD_UPDATED): return updateCurrentMessageThread(state,action)
         case(actionTypes.SET_DISPLAYING_MESSAGE_REACTION_PICKER): return showMessageReactionPicker(state,action)
         case(actionTypes.SET_CLASSROOM_SOCKET_CONNECTION): return setSocketConnection(state,action)
+        case(actionTypes.CLOSE_MESSAGE_REACTION_EMOJI_PICKER): return closeMessageReactionPicker(state,action)
+        case(actionTypes.SET_EDIT_OR_DELETE_MESSAGE_DATA): return setEditOrDeleteMessageData(state,action)
+        case(actionTypes.UNSET_EDIT_OR_DELETE_MESSAGE_DATA): return unsetMessageEditOrDeleteData(state,action)
         default: return state;
     }
 }

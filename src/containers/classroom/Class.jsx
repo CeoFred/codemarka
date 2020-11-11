@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef,useLayoutEffect } from 'react'
+import React, { useState, useRef,useLayoutEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import io from 'socket.io-client'
 import { ToastContainer, toast } from 'react-toastify'
@@ -18,6 +18,10 @@ import Spinner from '../../components/Partials/Preloader'
 import ParticipantModal from '../../components/classroom/Participants/Modal'
 import ClassRoomSettingsModal from '../../components/classroom/Settings/index.jsx';
 import EmojiPicker from '../../components/classroom/Emoji/picker';
+import MessageReactionEmojiPicker from '../../components/classroom/Emoji/picker'
+import EditMessageModal from '../../components/classroom/Conversation_Partials/MessageType/Components/EditMessage';
+import DeleteMessageModal from '../../components/classroom/Conversation_Partials/MessageType/Components/DeleteMessage'
+
 import ImagePreview from '../../components/classroom/ImagePreview/index';
 
 import { DOWNLOAD_CLASSROOM_ATTENDANCE } from '../../config/api_url';
@@ -64,11 +68,15 @@ const MainClassLayout = ({
     pinnedMessages,
     started,
     cid,
-    cd,
-    kid,
     gravatarUrl,
     classroomD,
     setSocket,
+    closeReactionEmojiPicker,
+    isShowingReactionEmoji,
+    activeMessage,
+    handleUnsetEditOrDeleteMessage,
+    isProcessingEditingOrDeletingMessage,
+    instanceOdEditingOrDeletingMessage,
 }) => {
     const [inputState, setInputState] = useState({
         value: '',
@@ -181,10 +189,7 @@ const MainClassLayout = ({
     }
 
     const [starRating, setStarRating] = useState(0)
- useLayoutEffect(() => {
-     var objDiv = document.getElementById('fala')
-     objDiv.scrollTop = objDiv.scrollHeight
- }, [codemarkastate.messages])
+
     useLayoutEffect(() => {
         socket.on('new_image_message', (data) => {
             const updateMessage = new Promise((resolve) => {
@@ -245,6 +250,29 @@ const MainClassLayout = ({
             })
         })
 
+        socket.on('message_edit_or_delete_success', async function (
+            message__
+        ) {
+            await setcodemarkaState((c) => {
+                let oldMsg = c.messages
+                oldMsg = oldMsg.map((message) => {
+                    if (message.msgId === message__.msgId) {
+                        return {
+                            ...message__,
+                        }
+                    }
+                    return message
+                })
+                return {
+                    ...c,
+                    messages: oldMsg,
+                }
+            })
+            await document.getElementById('edit_message_modal') && document.getElementById('edit_message_modal').click()
+            await document.getElementById('delete_message_modal') && document.getElementById('delete_message_modal').click()
+
+            await handleUnsetEditOrDeleteMessage()
+        })
         //listen for old message
         socket.on('updateMsg', (msg) => {
             setcodemarkaState((c) => {
@@ -288,7 +316,7 @@ const MainClassLayout = ({
 
     React.useEffect(() => {
         socketRef.current = socket
-        setSocket(socket);
+        setSocket(socket)
     }, [socket.connected])
 
     React.useEffect(() => {
@@ -340,6 +368,28 @@ const MainClassLayout = ({
                     hasCollectedAttendance: true,
                     isCollectingAttendance: true,
                     isSubmittingAttendance: false,
+                })
+            })
+
+            socket.on('new_message_reaction', (messageData) => {
+                const { msgId } = messageData
+
+                setcodemarkaState((s) => {
+                    const isValid = s.messages.find(
+                        (message) => message.msgId === msgId
+                    )
+                    if (isValid) {
+                        const newMessages = s.messages.map((message) => {
+                            if (message.msgId === msgId) {
+                                return {
+                                    ...messageData,
+                                }
+                            }
+                            return message
+                        })
+                        return { ...s, messages: newMessages }
+                    }
+                    return s
                 })
             })
 
@@ -554,7 +604,6 @@ const MainClassLayout = ({
                         })
                     )
                 })
-              
             })
 
             //listen for members leaving
@@ -992,7 +1041,6 @@ const MainClassLayout = ({
             const messageData = {
                 user: userid,
                 class: data.classroom_id,
-                kid,
                 message: inputState.value,
                 time: new Date(),
                 messageColor: userMessageColor,
@@ -1146,7 +1194,6 @@ const MainClassLayout = ({
                     started,
                     kid: data.classroom_id,
                     shortUrl: classroomD.shortUrl,
-                    cd,
                 },
             })
         } else {
@@ -1695,6 +1742,17 @@ const MainClassLayout = ({
         setImagePreviewConfig({ shouldDisplay: false, url: '' })
     }
 
+    const addReactionToMessage = (emoji) => {
+        socket.emit(
+            'add_reaction_to_message',
+            emoji,
+            activeMessage,
+            classroomD.kid,
+            userid
+        )
+        closeReactionEmojiPicker()
+    }
+
     return (
         <div>
             <Seo
@@ -2111,6 +2169,14 @@ const MainClassLayout = ({
             />
             <VideoAndAudioPermission />
             <CodeBlockModal socket={ socketRef.current } />
+            {isProcessingEditingOrDeletingMessage &&
+                instanceOdEditingOrDeletingMessage === 'edit' && (
+                    <EditMessageModal socket={ socketRef.current } />
+                )}
+            {isProcessingEditingOrDeletingMessage &&
+                instanceOdEditingOrDeletingMessage === 'delete' && (
+                    <DeleteMessageModal socket={ socketRef.current } />
+                )}
             <ClassInformationModal
                 owner={ owner }
                 socket={ socketRef.current }
@@ -2129,6 +2195,11 @@ const MainClassLayout = ({
                                 onChange={ handleImageUploadChange }
                             />
                             <ConversationThread socket={ socketRef.current } />
+                            <MessageReactionEmojiPicker
+                                shouldDisplay={ isShowingReactionEmoji }
+                                setdisplaying={ closeReactionEmojiPicker }
+                                handleInputChange={ addReactionToMessage }
+                            />
                             <Convo
                                 typing={ codemarkastate.typingState }
                                 users={ codemarkastate.users }
@@ -2198,6 +2269,18 @@ const mapDispatchToProps = dispatch => {
             dispatch(action.classVerify(classroomid)),
         setSocket: (socketconnection) =>
             dispatch(action.setClassroomSocket(socketconnection)),
+        closeReactionEmojiPicker: () =>
+            dispatch(action.closeReactionEmojiPicker()),
+        handleUnsetEditOrDeleteMessage: () => dispatch(action.handleUnsetEditOrDeleteMessage()),
     }
 }
-export default connect(null, mapDispatchToProps)(MainClassLayout)
+
+const mapStateToProps = ({ classroom }) => {
+    return {
+        activeMessage: classroom.messageReaction.messageId,
+        isShowingReactionEmoji: classroom.messageReaction.isShowing,
+        isProcessingEditingOrDeletingMessage: classroom.editOrDeleteMessage.processing,
+        instanceOdEditingOrDeletingMessage: classroom.editOrDeleteMessage.instance
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(MainClassLayout)

@@ -80,7 +80,7 @@ return (
         <Fragment>
 <button type="button" class="d-none" data-toggle="modal" id="codeblockModal" data-target=".code-blocks-modal">..</button>
 
-<div class="modal fade code-blocks-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<div class="modal fade code-blocks-modal" tabIndex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm" style={{display:'flex',height:'80%',alignItems:'center',justifyContent:'center'}}>
     <div class="modal-content">
       <div class="modal-header">

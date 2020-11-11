@@ -126,7 +126,7 @@ function MessageThread(props) {
                                   return (
                                       <div
                                           className="thread_reply"
-                                          key={ message.thread_id }>
+                                          key={ message.messageId }>
                                           <div className="thread_reply_user">
                                               <div className="thread_reply_user_image">
                                                   <img
@@ -168,7 +168,7 @@ function MessageThread(props) {
                 data-toggle="modal"
                 data-target="#thread_modal"
                 id="thread_modal_button"
-                hidden="true"></button>
+                hidden={ true }></button>
         </Modal>
     )
 }

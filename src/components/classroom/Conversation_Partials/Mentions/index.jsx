@@ -49,7 +49,7 @@ function Mentions(props) {
             {users.map((user) => {
                 return (
                     <span
-                        tabindex="0"
+                        tabIndex="0"
                         role="button"
                         aria-pressed="false"
                         key={ `mention--user-${ user.kid }` }

@@ -143,7 +143,7 @@ const Modal = ({
     }
     
     return (
-        <div class="modal fade docs-example-modal-lg" id="participantModal" tabindex="-1" role="dialog" aria-labelledby="participantModalLabel" aria-hidden="true">
+        <div class="modal fade docs-example-modal-lg" id="participantModal" tabIndex="-1" role="dialog" aria-labelledby="participantModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
 
