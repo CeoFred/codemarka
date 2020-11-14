@@ -66,7 +66,7 @@ function Login(props) {
        setMounted(true)
        if (!mounted) {
            onResetAll()
-           onClassroomSwitch('classroom')
+           onClassroomSwitch('app')
        }
    }, [mounted, onClassroomSwitch, onResetAll])
     
@@ -252,13 +252,13 @@ function Login(props) {
                                 </div>
                             </form>
 
-                            <div className="py-3 text-center">
+                            {/* <div className="py-3 text-center">
                                 <span className="text-xs text-uppercase">
                                     or
                                 </span>
-                            </div>
+                            </div> */}
 
-                            <div className="row">
+                            {/* <div className="row">
                                 <div className="col-6">
                                     <Github
                                         link={
@@ -275,7 +275,7 @@ function Login(props) {
                                         }
                                     />
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="mt-4 text-center">
                                 <small>Not registered?</small>
                                 <Link

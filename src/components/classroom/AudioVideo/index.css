@@ -1,3 +1,12 @@
+.videos-remote-user {
+  position: absolute;
+  top: 3rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: inherit;
+}
+
 .audio_broadcast_btn-ended {
   background-color: #ff5c75;
   position: fixed;
@@ -105,8 +114,8 @@
   border: none;
   font-size: 10px;
   width: 100%;
-  height: 93%;
-  min-height: 93%;
+  height: 100%;
+  min-height: 100%;
   display: flex;
   -ms-flex-direction: column;
   flex-direction: column;
@@ -116,18 +125,74 @@
 }
 
 .video-container {
-  position: absolute;
-  top: 3rem;
+  height: 13rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: inherit;
+}
+
+video.userVideo {
+  border: 4px solid #2fff4b;
+}
+
+video.userVideo-muted {
+  border: 4px solid red;
 }
 
 video {
   height: 100%;
+  width: 100%;
+  transform: rotateY(180deg);
+  position: absolute;
   width: 100%;
 }
 
 .host-video-container {
   height: 10rem;
   margin: 10px;
+}
+
+.video-audio-controls {
+  position: absolute;
+  z-index: 999;
+  width: 100%;
+  bottom: 0;
+  height: 0;
+  justify-content: space-evenly;
+  align-items: center;
+  background: seagreen;
+  transition: ease-out 0.3s;
+  display: none;
+  -webkit-animation: slide 0.5s forwards;
+  -webkit-animation-delay: 2s;
+  animation: slide 0.5s forwards;
+  animation-delay: 2s;
+}
+
+@-webkit-keyframes slide {
+  100% {
+    height: 3rem;
+  }
+}
+
+@keyframes slide {
+  100% {
+    height: 3rem;
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.video-audio-icon-button {
+  font-size: large;
+}
+
+.video-container:hover .video-audio-controls {
+  display: flex;
+  height: 3rem;
 }
 
 .local-video-container {
@@ -158,7 +223,7 @@ video.host-video, video.local-video {
 .hide {
   font-weight: bolder;
   position: absolute;
-  height: 47px;
+  height: 3rem;
   background-color: #162029;
   width: 100%;
   font-size: 0.8rem;
@@ -166,7 +231,10 @@ video.host-video, video.local-video {
   align-items: center;
   padding-left: 10px;
   /* z-index: 99; */
-  border-radius: 6px;
+}
+
+.group-audio-settings {
+  cursor: pointer;
 }
 
 .remote-participant-video-container {

@@ -5,7 +5,20 @@ import * as URLs from '../../config/url';
 
 export default function Input(props) {
     const selectClasses = ['custom-select', 'custom-select-lg']
-
+       const InputClasses = ['form-control']
+       if (props.elementType === 'input') {
+           if (!props.valid && props.touched) {
+               InputClasses.push('is-invalid')
+           } else if (props.valid && props.touched) {
+               InputClasses.push('is-valid')
+           }
+       } else {
+           if (!props.invalid && props.touched) {
+               selectClasses.push('is-invalid')
+           } else if (props.invalid && props.touched) {
+               selectClasses.push('is-valid')
+           }
+       }
   const regular = (
       <div className="form-group mb-4">
           <div className="d-flex align-items-center justify-content-between">
@@ -36,7 +49,7 @@ export default function Input(props) {
               )}
               <input
                   type={ props.type }
-                  className="form-control"
+                  className={ InputClasses.join(' ') }
                   id={ props.id || '' }
                   placeholder={ props.placeholder }
                   onChange={ props.changed }

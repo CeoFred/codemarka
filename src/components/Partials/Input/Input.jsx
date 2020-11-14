@@ -29,6 +29,7 @@ if(props.elementType === 'input'){
                 className={ InputClasses.join(' ') }
                 value={ props.value }
                 onChange={ props.changed }
+                autocomplete="off"
             />
         )
 
@@ -40,6 +41,7 @@ if(props.elementType === 'input'){
             className={ InputClasses.join(' ') }
             { ...props.elementConfig }
             value={ props.value }
+            autocomplete="off"
             onKeyDown={ props.KeyDown }
             onChange={ props.changed }></textarea>
     )

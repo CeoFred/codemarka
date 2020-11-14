@@ -10,7 +10,7 @@ import Navigation from '../../components/classroom/UI/NavBar'
 import Convo from './Conversation'
 import Editor from '../../components/classroom/Editor/Editor'
 import Preview from '../../components/classroom/Editor/Preview'
-import AudioVideo from '../../components/classroom/AudioVideo/index';
+import AudioVideo from '../../components/classroom/AudioVideo/RTC';
 import Seo from '../../components/SEO/helmet'
 import Modal from '../../components/Partials/Modals/Modal'
 import Input from '../../components/Partials/Input/Input'
@@ -495,10 +495,6 @@ const MainClassLayout = ({
             socket.emit('join', requestData)
 
             setSocket(socket)
-            //listen for bot messaage
-            socket.on('botWelcome', (msg) => {
-                setUserSpecificMessages((c) => [...c, msg])
-            })
 
             //listen for new members added
             socket.on('someoneJoined', (msg) => {
@@ -586,7 +582,7 @@ const MainClassLayout = ({
 
             //listen for new messages
             socket.on('nM', (data) => {
-                const updateMessage = new Promise((resolve, reject) => {
+                new Promise((resolve, reject) => {
                     resolve(
                         setcodemarkaState((c) => {
                             const oldmsg = c.messages

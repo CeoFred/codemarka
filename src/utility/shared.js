@@ -52,6 +52,9 @@ if(!rules.isPastDate){
         isValid = !isPast(new Date(value)) && isValid;
     }
 }
+if (rules.notwhitespace) {
+    isValid = !value.includes(' ') && isValid
+}
 
 if(rules.url){
       var pattern = new RegExp(

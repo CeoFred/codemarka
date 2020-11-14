@@ -22,7 +22,6 @@ import Alert from '../../components/Partials/Alert/Alert'
 import './newclassroom.css'
 import * as action from '../../store/actions'
 
-import rocket from '../../media/images/rocket.svg';
 import logo from '../../media/images/logo/codemark__logo.png'
 
 function NewClassroom(props) {
