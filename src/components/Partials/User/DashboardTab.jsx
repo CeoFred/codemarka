@@ -2,12 +2,8 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { NavLink } from 'react-router-dom'
-import * as APP_URL from '../../../config/url';
 import { useSelector } from 'react-redux'
 function DashboardTab(props) {
-
-    const {  auth } = useSelector((state) => state)
 
     return (
         <div>

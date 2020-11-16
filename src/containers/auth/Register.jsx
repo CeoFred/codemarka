@@ -3,8 +3,8 @@ import { Redirect } from 'react-router-dom'
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 
-import Github from '../../components/Partials/Auth/Button/Github';
-import Google from '../../components/Partials/Auth/Button/Google';
+// import Github from '../../components/Partials/Auth/Button/Github';
+// import Google from '../../components/Partials/Auth/Button/Google';
 
 import Button from '../../components/Partials/Button';
 import Input from '../../components/Partials/Input';
@@ -15,7 +15,7 @@ import Alert from '../../components/Partials/Alert/Alert';
 import { checkValidity } from '../../utility/shared'
 
 import * as URLS from '../../config/url';
-import * as APIURLS from '../../config/api_url';
+// import * as APIURLS from '../../config/api_url';
 
 import * as action from '../../store/actions';
 

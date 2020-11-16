@@ -87,7 +87,7 @@ const MainClassLayout = ({
     const [userMessageColor, setUserMessageColor] = useState('#000')
 
     const [isDisplayingEmoji, setisDisplayingEmoji] = useState(false)
-    const [isUploadingImage, setIsUploadingImage] = useState(false)
+    const [, setIsUploadingImage] = useState(false)
     const [imagePreviewConfig, setImagePreviewConfig] = useState({
         shouldDisplay: false,
         url: '',
@@ -457,14 +457,11 @@ const MainClassLayout = ({
 
             socket.on('rejoin_updateMsg', (msg) => {
                 setcodemarkaState((c) => {
-                    const nnc = msg.newuserslist.filter((u) => {
-                        return String(u.kid) !== String(userid)
-                    })
                     return {
                         ...c,
                         messages: msg.msgs,
                         users: msg.newuserslist,
-                        numberInClass: nnc.length,
+                        numberInClass: msg.newuserslist.length,
                     }
                 })
             })
@@ -502,7 +499,7 @@ const MainClassLayout = ({
                     const oldmsg = c.messages
                     oldmsg.push(msg)
                     const nnc = msg.newuserslist.filter((u) => {
-                        return u.kid !== userid
+                        return true
                     })
                     socket.emit('user_typing_cleared', {
                         username: msg.name,
@@ -608,11 +605,8 @@ const MainClassLayout = ({
                     const oldmsg = c.messages
                     oldmsg.push(msg)
 
-                    let newUserList = c.users.filter((user) => {
+                    const newUserList = c.users.filter((user) => {
                         return String(user.kid) !== String(msg.for)
-                    })
-                    newUserList = newUserList.filter((u) => {
-                        return String(u.kid) !== String(userid)
                     })
                     const newTypingState = c.typingState.filter((user) => {
                         return String(user.kid) !== String(msg.for)
@@ -2244,6 +2238,7 @@ const MainClassLayout = ({
                             <AudioVideo
                                 socket={ socketRef.current }
                                 userkid={ userid }
+                                username={ username }
                                 isOwner={ owner }
                                 ref={ audioVideoRef }
                                 isBroadcasting={ classroomD.isBroadcasting }

@@ -29,6 +29,7 @@ const Modal = ({
                              class="avatar  rounded-circle avatar-sm"
                          />
                          <a
+                             target="_blank"
                              href={ `/u/${ u.username }?ref=classroom` }
                              className="text-dark font-weight-normal pl-2">
                              <b>

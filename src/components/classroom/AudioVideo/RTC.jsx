@@ -2,7 +2,6 @@
 /** @format */
 
 import React, { useState, useLayoutEffect, useRef, useEffect } from 'react'
-import Peer from 'simple-peer'
 import DetectRTC from 'detectrtc'
 import VideoAudioPermission from '../Modals/VideoAndAudioPermission'
 import RemoteVideoStream from './Components/Video'
@@ -11,11 +10,14 @@ import './index.css'
 export default function RTC(props) {
     const yourID = useRef('')
     const [users, setUsers] = useState([])
+    const usersRef = useRef();
     const [stream, setStream] = useState()
 
     const userVideo = useRef()
     const signalingSocket = useRef()
     const peersRef = useRef({})
+    const mystream = useRef();
+    const myData =  useRef();
     const [audioMuted, setAudioMuted] = useState(false)
     const [videoMuted, setVideoMuted] = useState(false)
     const [peerStreams, setPeerStreams] = useState([])
@@ -28,16 +30,21 @@ export default function RTC(props) {
         })
         userVideo.current.srcObject = _stream
         setStream(_stream)
+        mystream.current = _stream;
         window.stream = {}
         window.stream[yourID.current] = _stream
         canCall.current = false
+        usersRef.current  = (usersInClass);
+        myData.current =
+            usersInClass &&
+            usersInClass.filter((user) => user.kid === yourID.current)[0];
+
         usersInClass &&
             usersInClass
                 .filter((user) => user.kid !== yourID.current)
-                .map((user_) => user_.socketid)
-                .forEach((userSocketId) => {
-                    userSocketId !== signalingSocket.current.id &&
-                        callPeer(userSocketId, _stream)
+                .forEach((user) => {
+                    user.socketid !== signalingSocket.current.id &&
+                        callPeer(user, window.stream[yourID.current])
                 })
     }
     useEffect(() => {
@@ -66,17 +73,17 @@ export default function RTC(props) {
                     }, 1500)
                 }
                 signalingSocket.current.on('classroom_users', (data) => {
-                    console.log(data)
                     canCall.current && getUserMediaStream(data)
                 })
 
                 signalingSocket.current.on('offer', (data) => {
+                        console.log('received offer ', data);
+
                     if (
-                        !peersRef.current[data.caller] &&
-                        data.target === signalingSocket.current.id
+                        !peersRef.current[data.caller.kid] &&
+                        data.target.socketid === signalingSocket.current.id
                     ) {
                         // accept offer
-                        console.log('received offer')
                         handleRecieveCall(data, window.stream[yourID.current])
                     }
                 })
@@ -86,13 +93,24 @@ export default function RTC(props) {
                     'ice-candidate',
                     handleNewICECandidateMsg
                 )
+                 signalingSocket.current.on('updatechat_left', (msg) => {
+                      setPeerStreams((s) => {
+                          delete peersRef.current[msg.for]
+                          const newUserStreams = s.filter(
+                              (remoteStream_) =>
+                                  remoteStream_.userSocketID !== msg.for
+                          )
+                          return newUserStreams
+                      }) 
+                 })
             }
         })
     }, [])
 
-    function callPeer(userSocketId, myStream) {
-        console.log('calling ', userSocketId)
-        const peer = createPeer(userSocketId)
+    function callPeer(user, myStream) {
+        console.log('calling ', user)
+       
+        const peer = createPeer(user)
         myStream.getTracks().forEach((track) => peer.addTrack(track, myStream))
         return peer
     }
@@ -100,18 +118,18 @@ export default function RTC(props) {
     function handleAnswer(message) {
         const desc = new RTCSessionDescription(message.sdp)
         console.log('Got answer for ', message.caller)
-        peersRef.current[message.caller] &&
-            peersRef.current[message.caller]
+        peersRef.current[message.caller.kid] &&
+            peersRef.current[message.caller.kid]
                 .setRemoteDescription(desc)
                 .catch((e) => console.log(e))
-        console.log(peersRef.current[message.caller])
+        console.log(peersRef.current[message.caller.kid])
     }
 
-    function handleRecieveCall(incoming, myStream) {
-        console.log('handling offer')
-        const newpeer = createPeer(incoming.caller)
+    async function handleRecieveCall(incoming, myStream) {
+        console.log('handling offer ', incoming);
+        const newpeer = await createPeer(incoming.caller)
         console.log(newpeer)
-        const desc = new RTCSessionDescription(incoming.sdp)
+        const desc = await new RTCSessionDescription(incoming.sdp)
         newpeer
             .setRemoteDescription(desc)
             .then(() => {
@@ -128,7 +146,7 @@ export default function RTC(props) {
             .then(() => {
                 const payload = {
                     target: incoming.caller,
-                    caller: signalingSocket.current.id,
+                    caller: incoming.target,
                     sdp: newpeer.localDescription,
                 }
                 console.log('answer ready ', payload)
@@ -136,8 +154,33 @@ export default function RTC(props) {
             })
     }
 
-    function createPeer(userSocketID) {
-        if (peersRef.current[userSocketID]) return
+    function removeVideoTrack(){
+        window.stream[yourID.current].getVideoTracks()[0].stop();
+
+// if (videoTrack.length > 0) {
+//     window.stream[yourID.current].removeTrack(videoTrack[0])
+// }
+    }
+
+    async function addVideoTrack(){
+          const _stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+        })
+        _stream.getVideoTracks()
+    }
+
+    function removeAudio(){
+
+    }
+
+    function addAudio(){
+
+    }
+
+    function createPeer(user) {
+        const userkid = user.kid;
+        
+        if (peersRef.current[userkid]) return
         const peer = new RTCPeerConnection({
             iceServers: [
                 {
@@ -159,31 +202,39 @@ export default function RTC(props) {
          * Called once  after a peer object has been created
          * - We create offer for a user here and dispatch with socket.io
          */
-        peer.onnegotiationneeded = () =>
-            handleNegotiationNeededEvent(userSocketID)
-        peer.onicecandidate = (e) => handleICECandidateEvent(e, userSocketID)
-        peer.oniceconnectionstatechange = (ev) => {
+        peer.onnegotiationneeded = () => handleNegotiationNeededEvent(user);
+
+        peer.onicecandidate = (e) => handleICECandidateEvent(e, user);
+        peer.ontrack = (e) => handleTrackEvent(e, user)
+
+        peer.oniceconnectionstatechange = async () => {
             console.log(`${ peer.iceConnectionState }-state`)
             if (peer.iceConnectionState === 'disconnected') {
-                setPeerStreams((s) => {
-                        delete peersRef.current[userSocketID];
-                        const newUserStreams = s.filter((remoteStream_) =>  (remoteStream_.userSocketID !== userSocketID))
+               await setPeerStreams((s) => {
+                        console.log(s);
+                        const newUserStreams = s.filter(
+                            (remoteStream_) =>
+                                remoteStream_ &&
+                                remoteStream_.user.kid !== userkid
+                        )
                         return newUserStreams
-                }) 
+                })
+              await delete peersRef.current[userkid];
+              await peer.close();
             }
         }
-        peer.ontrack = (e) => handleTrackEvent(e, userSocketID)
-        peersRef.current[userSocketID] = peer
+        peersRef.current[userkid] = peer;
+        console.log('created peer ',peersRef.current[userkid]);
         return peer
     }
 
-    function handleICECandidateEvent(e, userSocketID) {
+    function handleICECandidateEvent(e, user) {
         if (e.candidate) {
             console.log('ice candidate updates')
             const payload = {
-                target: userSocketID,
+                target: user,
                 candidate: e.candidate,
-                sender: signalingSocket.current.id,
+                sender: myData.current,
             }
             signalingSocket.current.emit('ice-candidate', payload)
         }
@@ -192,23 +243,30 @@ export default function RTC(props) {
     function handleNewICECandidateMsg(incoming) {
         const candidate = new RTCIceCandidate(incoming.candidate)
         console.log('received ICE ', incoming)
-        peersRef.current[incoming.sender] &&
-            peersRef.current[incoming.sender]
+        peersRef.current[incoming.sender.kid] &&
+            peersRef.current[incoming.sender.kid]
                 .addIceCandidate(candidate)
                 .catch((e) => console.log(e))
     }
-    function handleNegotiationNeededEvent(userSokcetID) {
-        peersRef.current[userSokcetID]
+
+    function handleNegotiationNeededEvent(user) {
+        console.log('initializing negotiation with user ',user);
+        const {kid } = user
+
+        peersRef.current[kid]
             .createOffer()
             .then((offer) => {
-                return peersRef.current[userSokcetID].setLocalDescription(offer)
+                console.log('created offer for ', user, offer);
+                return peersRef.current[kid].setLocalDescription(offer)
             })
             .then(() => {
                 const payload = {
-                    target: userSokcetID,
-                    caller: signalingSocket.current.id,
-                    sdp: peersRef.current[userSokcetID].localDescription,
+                    target: user,
+                    caller: myData.current,
+                    sdp: peersRef.current[kid].localDescription,
                 }
+                console.log('ready to dispatch offer to peer ', payload)
+
                 signalingSocket.current.emit('offer', payload)
             })
             .catch((e) => console.log(e))
@@ -230,12 +288,12 @@ export default function RTC(props) {
             }
         }
 
-    function hideRemoteVideo(userSocketID) {
+    function hideRemoteVideo(userkid) {
         setPeerStreams((s) => {
             let newUserStreams = s
             newUserStreams = s.map((remoteStream_) => {
-                if (remoteStream_.userSocketID === userSocketID) {
-                    const newStream = remoteStream_.stream;
+                if (remoteStream_ && remoteStream_.user.kid === userkid) {
+                    const newStream = remoteStream_.stream
                     newStream.getVideoTracks()[0].enabled = !newStream.getVideoTracks()[0]
                         .enabled
                     return {
@@ -251,23 +309,41 @@ export default function RTC(props) {
         })
     }
 
-    function handleTrackEvent(e, userSocketID) {
-            setPeerStreams((s) => {
+    function handleTrackEvent(e, user) {
+
+        console.log('got stream for ', user.kid, e)
+
+        user && user.kid &&  setPeerStreams((s) => {
+                
                 let newUserStreams = s;
                 if (
-                    s.find((remoteStream) => remoteStream.userSocketID === userSocketID)
+                        newUserStreams.find(
+                            (remoteStream) =>
+                                String(remoteStream.user.kid) ===
+                                String(user.kid)
+                        )
                 ) {
-
-                     newUserStreams = s.map((remoteStream_) => {
-                         if (remoteStream_.userSocketID === userSocketID) {
-                             return { ...remoteStream_, stream: e.streams[0] }
-                         } else {
-                             return stream
-                         }
-                     })
-                        return newUserStreams
+                    console.log('old stream , upating stream ', s)
+                    newUserStreams = s.map((remotePeerStreamData) => {
+                        if (remotePeerStreamData.user.kid === user.kid) {
+                            return {
+                                ...remotePeerStreamData,
+                                stream: e.streams[0],
+                            }
+                        } else {
+                            return stream
+                        }
+                    })
+                    return newUserStreams
                 } else {
-                        newUserStreams = [...s, { userSocketID, stream: e.streams[0], video: true, audio: true }]
+                    console.log('new peer stream')
+                  
+                    newUserStreams.push({
+                        user,
+                        stream: e.streams[0],
+                        video: true,
+                        audio: true,
+                    })
                 }
                 return newUserStreams;
             }) 
@@ -288,12 +364,18 @@ export default function RTC(props) {
             <div className="videos-remote-user">
                 <div className="video-container">
                     <video
-                        className={ `${ audioMuted ? 'userVideo-muted': 'userVideo' }` }
+                        className={ `${
+                            audioMuted ? 'userVideo-muted' : 'userVideo'
+                        }` }
                         playsInline
                         muted
                         ref={ userVideo }
                         autoPlay
                     />
+                    <span className="user_name_label">
+                        {props.username} (You)
+                    </span>
+
                     <div className="video-audio-controls">
                         <span
                             className="video-audio-icon-button"
@@ -307,22 +389,27 @@ export default function RTC(props) {
                             onClick={ hideAudio }
                             className="video-audio-icon-button">
                             <i
-                                className={
-                                    `fa fa-microphone${ audioMuted ? '-slash': '' } cursor-pointer`
-                                }></i>
+                                className={ `fa fa-microphone${
+                                    audioMuted ? '-slash' : ''
+                                } cursor-pointer` }></i>
                         </span>
                     </div>
                 </div>
 
-                {peerStreams.map((remotestream) => (
-                    <RemoteVideoStream
-                        stream={ remotestream.stream }
-                        hideVideo={ hideRemoteVideo }
-                        video={ remotestream.video }
-                        audio={ remotestream.audio }
-                        usersSocketID={ remotestream.userSocketID }
-                    />
-                ))}
+                {peerStreams.map(
+                    (remotestream) =>
+                        remotestream && (
+                            <RemoteVideoStream
+                                stream={ remotestream.stream }
+                                hideVideo={ hideRemoteVideo }
+                                video={ remotestream.video }
+                                audio={ remotestream.audio }
+                                isOwner={ props.isOwner }
+                                user={ remotestream.user }
+                                kid={ remotestream.user.kid }
+                            />
+                        )
+                )}
             </div>
         </div>
     )

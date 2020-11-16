@@ -65,13 +65,13 @@ export default function Profile(props) {
                 
             const usersFollowers = data.data.followers
             const isFollowing = usersFollowers.some(
-                (user) => user.kid == auth.user.accountid
+                (user) => user.kid === auth.user.accountid
             )
             setConfig({ isFollingUser: isFollowing })
             setloaded(true)
             }
         })
-    }, [props.match.params.username])
+    }, [props.match.params.username,postData,auth.user.accountid])
 
     const handleFollowUser = (e) => {
         e.preventDefault()

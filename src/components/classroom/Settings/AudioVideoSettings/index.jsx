@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 /** @format */
 
-import React, { useState, useLayoutEffect,useEffect } from 'react'
+import React from 'react'
 import { connect } from 'react-redux';
 import Input from '../../../Partials/Input/Input'
 

@@ -4,7 +4,17 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-color: inherit;
+  max-width: 100%;
+  height: auto;
+}
+
+.user_name_label {
+  position: absolute;
+  background: #72b97c;
+  border-radius: 0 0 4px 0;
+  padding: .3rem;
+  font-size: medium;
+  z-index:22;
 }
 
 .audio_broadcast_btn-ended {
@@ -129,15 +139,17 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-color: inherit;
+  margin-bottom: 1rem;
 }
 
 video.userVideo {
-  border: 4px solid #2fff4b;
+  border: 2px solid #72b97c;
+  border-radius: 5px;
 }
 
 video.userVideo-muted {
-  border: 4px solid red;
+  border: 2px solid #ca3a3a;
+  border-radius: 5px;
 }
 
 video {
@@ -161,7 +173,7 @@ video {
   height: 0;
   justify-content: space-evenly;
   align-items: center;
-  background: seagreen;
+  background: #72b97c;
   transition: ease-out 0.3s;
   display: none;
   -webkit-animation: slide 0.5s forwards;
