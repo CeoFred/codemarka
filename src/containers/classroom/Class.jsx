@@ -77,6 +77,7 @@ const MainClassLayout = ({
     handleUnsetEditOrDeleteMessage,
     isProcessingEditingOrDeletingMessage,
     instanceOdEditingOrDeletingMessage,
+    usersData
 }) => {
     const [inputState, setInputState] = useState({
         value: '',
@@ -2245,6 +2246,8 @@ const MainClassLayout = ({
                                 users={ codemarkastate.users }
                                 kid={ classroomD.kid }
                                 onAlert={ handleAudioVideoAlert }
+                                usersData={ usersData }
+                                toast={ toast }
                             />
                         </div>
                     </div>
@@ -2266,12 +2269,13 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-const mapStateToProps = ({ classroom }) => {
+const mapStateToProps = ({ classroom, auth }) => {
     return {
         activeMessage: classroom.messageReaction.messageId,
         isShowingReactionEmoji: classroom.messageReaction.isShowing,
         isProcessingEditingOrDeletingMessage: classroom.editOrDeleteMessage.processing,
-        instanceOdEditingOrDeletingMessage: classroom.editOrDeleteMessage.instance
+        instanceOdEditingOrDeletingMessage: classroom.editOrDeleteMessage.instance,
+        usersData: auth.user
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MainClassLayout)

@@ -8,13 +8,42 @@
   height: auto;
 }
 
+.wave_alert_rtc  {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-unmuted {
+  border: 2px solid #72b97c;
+  border-radius: 5px;
+}
+
+.user-muted {
+  border: 2px solid #f85867;
+  border-radius: 5px;
+}
+
+.userVideo-placecholder {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #1f2d3d;
+}
+
+.userVideo-placecholder img {
+  border-radius: 50%;
+}
+
 .user_name_label {
   position: absolute;
   background: #72b97c;
   border-radius: 0 0 4px 0;
   padding: .3rem;
   font-size: medium;
-  z-index:22;
+  z-index: 22;
 }
 
 .audio_broadcast_btn-ended {

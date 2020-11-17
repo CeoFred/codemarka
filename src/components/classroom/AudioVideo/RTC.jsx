@@ -29,13 +29,15 @@ export default function RTC(props) {
             audio: true,
         })
         userVideo.current.srcObject = _stream
-        setStream(_stream)
+        await setStream(_stream)
+        await setVideoMuted(true)
+        _stream.getVideoTracks()[0].enabled = await videoMuted;
         mystream.current = _stream;
         window.stream = {}
         window.stream[yourID.current] = _stream
         canCall.current = false
-        usersRef.current  = (usersInClass);
-        myData.current =
+        usersRef.current  = await (usersInClass);
+        myData.current = await
             usersInClass &&
             usersInClass.filter((user) => user.kid === yourID.current)[0];
 
@@ -46,6 +48,21 @@ export default function RTC(props) {
                     user.socketid !== signalingSocket.current.id &&
                         callPeer(user, window.stream[yourID.current])
                 })
+    }
+
+    async function getStreamExplicit(){
+const _stream = await navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true,
+})
+        userVideo.current.srcObject = _stream
+        await setStream(_stream)
+        await setVideoMuted(true)
+        _stream.getVideoTracks()[0].enabled = await videoMuted
+        mystream.current = _stream
+        window.stream = {}
+        window.stream[yourID.current] = _stream
+        return _stream;
     }
     useEffect(() => {
         yourID.current = props.userkid && props.userkid
@@ -72,6 +89,8 @@ export default function RTC(props) {
                             document.querySelector('#video_permission').click()
                     }, 1500)
                 }
+                getUserMediaStream();
+
                 signalingSocket.current.on('classroom_users', (data) => {
                     canCall.current && getUserMediaStream(data)
                 })
@@ -84,6 +103,7 @@ export default function RTC(props) {
                         data.target.socketid === signalingSocket.current.id
                     ) {
                         // accept offer
+                        if(!window.stream) getStreamExplicit()
                         handleRecieveCall(data, window.stream[yourID.current])
                     }
                 })
@@ -103,6 +123,19 @@ export default function RTC(props) {
                           return newUserStreams
                       }) 
                  })
+
+                 signalingSocket.current.on('mute_user_audio_webrtc', toogleMicStatus)
+
+                signalingSocket.current.on('disconnection_request', disconnectFromVideoConference);
+
+                signalingSocket.current.on('audio_toggle_complete', updateAudioStatusForUser)
+
+                signalingSocket.current.on(
+                    'wave_to_user_webrtc_',
+                    handleIncomingWave
+                )
+
+                signalingSocket.current.on('video_toggle', handleUserVideoToggle)
             }
         })
     }, [])
@@ -152,29 +185,6 @@ export default function RTC(props) {
                 console.log('answer ready ', payload)
                 signalingSocket.current.emit('answer', payload)
             })
-    }
-
-    function removeVideoTrack(){
-        window.stream[yourID.current].getVideoTracks()[0].stop();
-
-// if (videoTrack.length > 0) {
-//     window.stream[yourID.current].removeTrack(videoTrack[0])
-// }
-    }
-
-    async function addVideoTrack(){
-          const _stream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-        })
-        _stream.getVideoTracks()
-    }
-
-    function removeAudio(){
-
-    }
-
-    function addAudio(){
-
     }
 
     function createPeer(user) {
@@ -243,7 +253,7 @@ export default function RTC(props) {
     function handleNewICECandidateMsg(incoming) {
         const candidate = new RTCIceCandidate(incoming.candidate)
         console.log('received ICE ', incoming)
-        peersRef.current[incoming.sender.kid] &&
+        incoming.sender && peersRef.current[incoming.sender.kid] &&
             peersRef.current[incoming.sender.kid]
                 .addIceCandidate(candidate)
                 .catch((e) => console.log(e))
@@ -277,7 +287,36 @@ export default function RTC(props) {
         if (stream) {
             setVideoMuted(!videoMuted)
             stream.getVideoTracks()[0].enabled = videoMuted
+            const data = {
+                ...props.usersData,
+                videoMuted,
+                socketid: signalingSocket.current.id
+            }
+            signalingSocket.current.emit('video_toggle', data)
+
         }
+    }
+
+    function handleUserVideoToggle(data) {
+        console.log('received alert on video toggle ', data)
+        const { accountid, videoMuted: videoMuted_ } = data
+        accountid &&
+            peersRef.current[accountid] &&
+            setPeerStreams((s) => {
+                let newUserStreams = s
+                newUserStreams = s.map((remoteStream_) => {
+                    if (remoteStream_ && remoteStream_.user.kid === accountid) {
+                        return {
+                            ...remoteStream_,
+                            video: videoMuted_,
+                        }
+                    } else {
+                        return stream
+                    }
+                })
+                return newUserStreams
+            })
+
     }
 
         function hideAudio(e) {
@@ -285,28 +324,64 @@ export default function RTC(props) {
             if (stream) {
                 setAudioMuted(!audioMuted)
                 stream.getAudioTracks()[0].enabled = audioMuted
+                peerStreams.length && signalingSocket.current.emit('audio_toggle_complete', audioMuted, myData.current)
             }
         }
 
-    function hideRemoteVideo(userkid) {
-        setPeerStreams((s) => {
-            let newUserStreams = s
-            newUserStreams = s.map((remoteStream_) => {
-                if (remoteStream_ && remoteStream_.user.kid === userkid) {
-                    const newStream = remoteStream_.stream
-                    newStream.getVideoTracks()[0].enabled = !newStream.getVideoTracks()[0]
-                        .enabled
-                    return {
-                        ...remoteStream_,
-                        stream: newStream,
-                        video: !newStream.getVideoTracks()[0].enabled,
+        async function toogleMicStatus(){
+            console.log(
+                'received request to mute myself ',
+                mystream.current,
+                audioMuted
+            )
+            if (mystream.current) {
+               const status = await mystream.current.getAudioTracks()[0].enabled;
+               await setAudioMuted(status);
+
+                mystream.current.getAudioTracks()[0].enabled = await !mystream.current.getAudioTracks()[0]
+                    .enabled
+                signalingSocket.current.emit(
+                    'audio_toggle_complete',
+                    !status,
+                    myData.current
+                )
+
+                // alert that mic was muted
+                status
+                    ? props.toast.info('Your Mic was muted by moderator.', {
+                          position: 'bottom-center',
+                      })
+                    : props.toast.info('Your Mic has been released by moderator.', {
+                          position: 'bottom-center',
+                      })
+            }
+        }
+
+    function updateAudioStatusForUser(status, user){
+        console.log('updating audio for user ', status, user);
+        const { kid } = user;
+        kid &&
+            peersRef.current[kid] &&
+            setPeerStreams((s) => {
+                let newUserStreams = s
+                newUserStreams = s.map((remoteStream_) => {
+                    if (remoteStream_ && remoteStream_.user.kid === kid) {
+                        return {
+                            ...remoteStream_,
+                            audio: status,
+                        }
+                    } else {
+                        return stream
                     }
-                } else {
-                    return stream
-                }
+                })
+                return newUserStreams
             })
-            return newUserStreams
-        })
+    }
+
+    async function saveScreenshotOfVideo(userkid) {
+       
+        signalingSocket.current.emit('video_toggle', data)
+    
     }
 
     function handleTrackEvent(e, user) {
@@ -341,13 +416,59 @@ export default function RTC(props) {
                     newUserStreams.push({
                         user,
                         stream: e.streams[0],
-                        video: true,
+                        video: false,
                         audio: true,
                     })
                 }
                 return newUserStreams;
             }) 
     }
+
+    function handleUserDisconnection(user){
+        signalingSocket.current.emit('disconnect_user_webrtc', user);
+    }
+
+    function disconnectFromVideoConference(){
+        for (const key in peersRef.current) {
+            if (peersRef.current.hasOwnProperty(key)) {
+                peersRef.current[key].close();
+                peersRef.current[key] && delete peersRef.current[key]
+            }
+        }
+        setPeerStreams([])
+    }
+
+    function handletoogleUserAudio(user){
+        console.log(user);
+        signalingSocket.current.emit('mute_user_audio_webrtc', user)
+    }
+
+    function handleWaveUser(user){
+        props.toast.success(
+            <div className="wave_alert_rtc">
+                <img
+                    src={ user.avatar }
+                    style={ { borderRadius: '50%', marginRight: '1rem' } }
+                    height="40"
+                    width="40"
+                />
+                <b>You sent a wave.</b>
+            </div>,
+            { position: 'bottom-center' }
+        )
+        signalingSocket.current.emit('wave_to_user_webrtc', {...user, from: {displayName: props.usersData.displayName, displayImg: props.usersData.displayImg }})
+    }
+        function handleIncomingWave(data){
+            console.log(data);
+        data && data.from && props.toast.success(
+            <div className="wave_alert_rtc">
+                <img src={ data.from.displayImg } style={ {borderRadius:'50%',marginRight:'1rem'} } height="40" width="40" />
+                <b>{data.from.displayName} sent a wave</b>
+            </div>,
+            { position: 'bottom-center' }
+        )
+    }
+
     return (
         <div className="participant-host-video-container">
             <VideoAudioPermission />
@@ -362,19 +483,27 @@ export default function RTC(props) {
                 )}
             </span>
             <div className="videos-remote-user">
-                <div className="video-container">
+                <div
+                    className={ `video-container ${
+                        audioMuted ? 'user-muted' : 'user-unmuted'
+                    }` }>
                     <video
-                        className={ `${
-                            audioMuted ? 'userVideo-muted' : 'userVideo'
-                        }` }
+                        style={ { display: videoMuted ? 'none' : 'block' } }
                         playsInline
                         muted
                         ref={ userVideo }
                         autoPlay
                     />
-                    <span className="user_name_label">
-                        {props.username} (You)
-                    </span>
+                    <div
+                        style={ { display: videoMuted ? 'flex' : 'none' } }
+                        className="userVideo-placecholder">
+                        <img
+                            src={ props.usersData.displayImg }
+                            height="60"
+                            width="60"
+                        />
+                    </div>
+                    <span className="user_name_label">(You)</span>
 
                     <div className="video-audio-controls">
                         <span
@@ -401,10 +530,13 @@ export default function RTC(props) {
                         remotestream && (
                             <RemoteVideoStream
                                 stream={ remotestream.stream }
-                                hideVideo={ hideRemoteVideo }
+                                // hideVideo={ hideRemoteVideo }
                                 video={ remotestream.video }
+                                disconnectUser={ handleUserDisconnection }
                                 audio={ remotestream.audio }
                                 isOwner={ props.isOwner }
+                                wave={ handleWaveUser }
+                                toogleAudio={ handletoogleUserAudio }
                                 user={ remotestream.user }
                                 kid={ remotestream.user.kid }
                             />

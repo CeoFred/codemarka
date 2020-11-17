@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { ControlledEditor as Editor } from '@monaco-editor/react'
+import Spinner from '../../Partials/Preloader';
 import './monaco.css'
 
 function CodemarkaEditor(props) {
@@ -407,7 +408,7 @@ const myEditor = document.getElementById('main_editor_container')
                                 onChange={ handleEditorChange }
                                 language={ currentLanguage }
                                 loading={
-                                    <i className="fa fa-file-code fa-3x"></i>
+                                    <Spinner />
                                 }
                                 value={ editorValue.current }
                                 editorDidMount={ handleEditorDidMount }
