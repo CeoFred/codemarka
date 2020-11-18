@@ -71,6 +71,13 @@ function MessageComponent(props) {
             ) : (
                 ''
             )}
+
+            <Reactions
+                messageid={ props.message.msgId }
+                room={ props.kid }
+                user={ props.userId }
+                reactions={ props.message.reactions }
+            />
             {isThread ? (
                 <ThreadReplies
                     msgId={ msgId }
@@ -81,12 +88,6 @@ function MessageComponent(props) {
             ) : (
                 ''
             )}
-            <Reactions
-                messageid={ props.message.msgId }
-                room={ props.kid }
-                user={ props.userId }
-                reactions={ props.message.reactions }
-            />
         </div>
     )
 }

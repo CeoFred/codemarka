@@ -16,7 +16,6 @@ export default function ThreadReplies(props) {
      })
     }
  }, [])
-
   return (
       <div className="message__reply_bar">
           {subscribers.map((subscriber,i) => {

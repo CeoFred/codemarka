@@ -33,6 +33,7 @@ import ClassInformationModal from '../../components/classroom/Modals/ClassroomIn
 import VideoAndAudioPermission from '../../components/classroom/Modals/VideoAndAudioPermission';
 import { CLASSROOM_FILE_DOWNLOAD } from '../../config/api_url'
 import ConversationThread from '../../components/classroom/Conversation_Partials/MessageType/Components/MessageThread'
+import ReconnectionModal from '../../components/classroom/UI/ReconnectionModal';
 
 import './css/Environment.css'
 
@@ -541,11 +542,7 @@ const MainClassLayout = ({
 
             socket.on('reconnecting', (attemptNumber) => {
                 connAttempts.current++
-                if (attemptNumber > 1) {
-                    toast.info(
-                        'Attempting to reconnect to classroom,please wait...'
-                    )
-                }
+                setSocketConnection({ connected: false, attemptNumber })
             })
 
             socket.on('star_rating_failed', (reason) => {
@@ -568,14 +565,15 @@ const MainClassLayout = ({
             })
 
             socket.on('reconnect_failed', () => {
-                setSocketConnection({ connected: false })
+                setSocketConnection({ connected: false, failed: true })
             })
 
             socket.on('reconnect', (attemptNumber) => {
+                setSocketConnection({ connected: true, failed: false })
                 socket.emit('join', requestData)
                 toast.success('Back Online!', { position: 'bottom-center' })
                 connAttempts.current = 0
-                setSocketConnection({ connected: true })
+                socket.emit('new_socket_id', socketRef.current.id);
             })
 
             //listen for new messages
@@ -1749,6 +1747,11 @@ const MainClassLayout = ({
             <Seo
                 title={ `${ name } :: codemarka classroom` }
                 metaDescription={ description }></Seo>
+            <ReconnectionModal
+                show={ !SocketConnection.connected }
+                attemptNumber={ SocketConnection.attemptNumber }
+                failed={ SocketConnection.failed }
+            />
             <ToastContainer />
             <Preview
                 previewBtnClicked={ handlePreview }
@@ -2211,7 +2214,7 @@ const MainClassLayout = ({
                                 shouldDisplay={ codemarkastate.isShowingMentions }
                                 owner={ ownerid }
                                 showMentions={ handleShowMentions }
-                                isOnline={ socketRef.current.connected }
+                                isOnline={ SocketConnection.connected }
                                 addCodeBlock={ handleAddCodeBlock }
                                 showEmojiPicker={ handleShowEmojiPicker }
                                 uploadImage={ handleImageUpload }

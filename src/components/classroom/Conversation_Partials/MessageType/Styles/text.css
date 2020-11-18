@@ -6,6 +6,7 @@ i.deleted_message {
 div.main_message_container {
   position: relative;
   cursor: pointer;
+  margin-bottom: 1rem;
 }
 
 div.message_actions {
@@ -19,7 +20,7 @@ div.message_actions {
   width: auto;
   background: black;
   padding: 7px;
-  border-radius: 5px
+  border-radius: 5px;
 }
 
 div.message_thread_input_container {

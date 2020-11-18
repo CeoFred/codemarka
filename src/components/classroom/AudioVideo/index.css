@@ -1,14 +1,15 @@
 .videos-remote-user {
   position: absolute;
-  top: 3rem;
+  top: 4rem;
   display: flex;
   flex-direction: column;
   width: 100%;
   max-width: 100%;
   height: auto;
+  align-items: center;
 }
 
-.wave_alert_rtc  {
+.wave_alert_rtc {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,7 +31,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #1f2d3d;
+  background: #2c3848;
 }
 
 .userVideo-placecholder img {
@@ -147,7 +148,7 @@
 }
 
 .participant-host-video-container {
-  background-color: #101010f5;
+  background-color: #1f2d3d;
   position: relative;
   color: #fff;
   border: none;
@@ -167,7 +168,7 @@
   height: 13rem;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 90%;
   margin-bottom: 1rem;
 }
 

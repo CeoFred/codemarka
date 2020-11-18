@@ -1,776 +1,641 @@
-// /**
-//  * /* eslint-disable no-undef
-//  *
-//  * @format
-//  */
+/**
+ * /* eslint-disable no-undef
+ *
+ * @format
+ */
 
-// /**
-//  * /* eslint-disable no-undef
-//  *
-//  * @format
-//  */
+/** @format */
 
-// /* eslint-disable react/prop-types */
-// /** @format */
+import React, { useState, useLayoutEffect, useRef, useEffect } from 'react'
+import DetectRTC from 'detectrtc'
 
-// import React, { useEffect, useRef, useState, useLayoutEffect } from 'react'
-// import { connect } from 'react-redux'
-// import { ToastContainer, toast } from 'react-toastify'
-// import 'react-toastify/dist/ReactToastify.css'
-// import Peer from 'peerjs'
+import VideoAudioPermission from '../Modals/VideoAndAudioPermission'
+import RemoteVideoStream from './Components/Video'
+import './index.css'
 
-// import * as classroomActions from '../../../store/actions/classRoom'
-// import './index.css'
+export default function RTC(props) {
+    const yourID = useRef('')
+    const [users, setUsers] = useState([])
+    const usersRef = useRef()
+    const [stream, setStream] = useState()
 
-// function AudioVideoBroadcast(props) {
-//     const socketRef = useRef()
-//     const localVideo = useRef()
-//     const localStream = useRef()
-//     const hostVideo = useRef()
-//     const PeerId = useRef()
-//     const peersRef = useRef([])
-//     const peerConnections = useRef({})
-//     const peerRef = useRef()
-//     const [, setPeers] = useState([])
-//     const usersRef = useRef()
-//     const isHost = useRef()
-//     const [mutedAll, setMutedAll] = useState(false)
-//     const [allUsersVideoOff, setAllUsersvideoOff] = useState(false)
-//     const [myVideoState, setMyVideoStatus] = useState(true)
-//     const onCall = useRef(false)
-//     const hostVideoStatus = useRef(false)
-//     const hostAudioStatus = useRef(false)
-//     const [isBroadCasting, setIsBroadCasting] = useState(false)
-//     const [inputOutputSettings, setInputOutputSettings] = useState({
-//         audioinput: [],
-//         audiooutput: [],
-//         videoinput: [],
-//     })
-//     const AudioVideoContraints = useRef({
-//         audio: {
-//             deviceId: { exact: undefined },
-//         },
-//         video: {
-//             deviceId: { exact: undefined },
-//         },
-//         audioOutput: {
-//             deviceId: undefined,
-//         },
-//     })
+    const userVideo = useRef()
+    const signalingSocket = useRef()
+    const peersRef = useRef({})
+    const mystream = useRef()
+    const myData = useRef()
+    const [audioMuted, setAudioMuted] = useState(false)
+    const [videoMuted, setVideoMuted] = useState(false)
+    const [peerStreams, setPeerStreams] = useState([])
 
-//     useEffect(() => {
-//         usersRef.current = props.users
-//     }, [props.users])
+    const canCall = useRef(true)
+    async function initiateCallWithUsers(usersInClass) {
+        console.log('users ', usersInClass)
+        // canCall.current = false
+        if (!window.stream[yourID.current]) {
+            const _stream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true,
+            })
+            userVideo.current.srcObject = _stream
+            await setStream(_stream)
+            await setVideoMuted(true)
+            _stream.getVideoTracks()[0].enabled = await videoMuted
+            mystream.current = _stream
+            window.stream = {}
+            window.stream[yourID.current] = _stream
+        }
 
-//     toast.configure({
-//         autoClose: 6000,
-//         draggable: true,
-//     })
+        usersRef.current = await usersInClass
+        myData.current =
+            (await usersInClass) &&
+            usersInClass.filter((user) => user.kid === yourID.current)[0]
 
-//     /**
-//      * Effect to run when audio input or output source is
-//      * changed.
-//      */
-//     useEffect(() => {
-//         if (props.defaultInputOutput) {
-//             if (props.defaultInputOutput.audioinput) {
-//                 if (
-//                     props.defaultInputOutput.audioinput.deviceId !==
-//                     AudioVideoContraints.current.audio.deviceId
-//                 ) {
-//                     AudioVideoContraints.current.audio.deviceId = {
-//                         exact: props.defaultInputOutput.audioinput.deviceId,
-//                     }
-//                     if (isHost.current && isBroadCasting) {
-//                         navigator.mediaDevices
-//                             .getUserMedia({
-//                                 video: AudioVideoContraints.current.video,
-//                                 audio: AudioVideoContraints.current.audio,
-//                             })
-//                             .then((mediaStream) => {
-//                                 var audioTrack = window.stream.getAudioTracks()
-//                                 if (audioTrack.length > 0) {
-//                                     window.stream.removeTrack(audioTrack[0])
-//                                     const newStream = mediaStream.getAudioTracks()
-//                                     window.stream.addTrack(newStream[0])
-//                                 }
-//                             })
-//                             .catch((err) => {
-//                                 // console.log(err)
-//                             })
-//                     }
-//                 }
-//             }
-//             if (props.defaultInputOutput.videoinput) {
-//                 if (
-//                     props.defaultInputOutput.videoinput.deviceId !==
-//                     AudioVideoContraints.current.video.deviceId
-//                 ) {
-//                     AudioVideoContraints.current.video.deviceId = {
-//                         exact: props.defaultInputOutput.videoinput.deviceId,
-//                     }
-//                     //call users again
-//                     if (isHost.current && isBroadCasting) {
-//                         HostcallUsers()
-//                     }
-//                 }
-//             }
-//         } else {
-//             AudioVideoContraints.current.audio.deviceId = {
-//                 exact: undefined,
-//             }
-//             AudioVideoContraints.current.audio.deviceId = {
-//                 exact: undefined,
-//             }
-//         }
-//     }, [props.defaultInputOutput])
+        usersInClass &&
+            usersInClass
+                .filter((user) => user.kid !== yourID.current)
+                .forEach((user) => {
+                    user.socketid !== signalingSocket.current.id &&
+                        callPeer(user, window.stream[yourID.current])
+                })
+    }
 
-//     useEffect(() => {
-//         props.setInputDevices(inputOutputSettings)
-//     }, [inputOutputSettings])
+    useEffect(() => {
+        console.log(props)
+    }, [])
 
-//     useEffect(() => {
-//         socketRef.current = props.socket
-//         isHost.current = props.isOwner
+    async function preparePeer() {
+        const _stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true,
+        })
+        userVideo.current.srcObject = _stream
+        await setStream(_stream)
+        myData.current =
+            (await props.users) &&
+            props.users.filter((user) => user.kid === yourID.current)[0]
 
-//         const peer = new Peer(props.userkid, {
-//             host: 'peerjs-server.herokuapp.com',
-//             port: 443,
-//             debug: 0,
-//             key: 'peerjs',
-//             secure: true,
-//             config: {
-//                 iceServers: [
-//                     { url: 'stun:stun.l.google.com:19302' },
-//                     {
-//                         url: 'turn:turn.azcryptotrade.com:3478',
-//                         credential: 'turnadmin',
-//                         username: '@P@$$w0rd',
-//                     },
-//                 ],
-//             },
-//         })
-//         peerRef.current = peer
+        await setVideoMuted(true)
+        _stream.getVideoTracks()[0].enabled = await videoMuted
+        mystream.current = _stream
+        window.stream = {}
+        window.stream[yourID.current] = _stream
+    }
 
-//         peerRef.current.on('open', function (id) {
-//             PeerId.current = id
-//             // console.log('connection opened ', peer)
-//             if (props.isBroadcasting && props.isOwner) {
-//                 HostcallUsers()
-//             }
-//         })
+    useEffect(() => {
+        yourID.current = props.userkid && props.userkid
+    }, [props.userkid])
 
-//         peerRef.current.on('error', function (e) {
-//             // console.log(e)
-//         })
+    useLayoutEffect(async () => {
+        DetectRTC.load(async function () {
+            signalingSocket.current = (await props.socket) ? props.socket : null
+            yourID.current = await props.userkid
+            await setUsers(props.users)
 
-//         peerRef.current.on('close', function () {
-//             console.log('closed connection')
-//         })
-//     }, [])
+            const hasWebcamForOutput = DetectRTC.hasWebcam
+            const hasMicrophoneForOutput = DetectRTC.hasMicrophone
 
-//     useEffect(() => {
-//         socketRef.current.on('call_me', (user) => {
-//             // console.log('should call', user)
-//             if (isHost.current && user.kid !== props.userkid) {
-//                 updateDeviceList()
-//                 navigator.mediaDevices
-//                     .getUserMedia({
-//                         video: AudioVideoContraints.current.video,
-//                         audio: AudioVideoContraints.current.audio,
-//                     })
-//                     .then((mediaStream) => {
-//                         window.stream = mediaStream
-//                         setIsBroadCasting(true)
-//                         hostVideoStatus.current = true
-//                         hostAudioStatus.current = true
-//                         hostVideo.current.srcObject = window.stream
-//                         localStream.current = window.stream
-//                         callUser(user)
-//                     })
-//             }
-//         })
-//         socketRef.current.on('broadcast_status', (status, id) => {
-//             if (status) {
-//                 if (id === socketRef.current.id) setIsBroadCasting((br) => true)
-//                 if (isHost.current) {
-//                     HostcallUsers()
-//                 }
-//             } else {
-//                 props.onAlert('Failed to start broadcast,try again')
-//                 setIsBroadCasting((br) => false)
-//                 setPeers([])
-//                 peersRef.current = []
-//             }
-//         })
-//         socketRef.current.on('turn_video_off_all_successfully', (status) => {
-//             if (!isHost.current) {
-//                 toast.info('Your video has been turned off by host', {
-//                     position: 'bottom-center',
-//                 })
-//                 if (window.stream) {
-//                     var videoTrack = window.stream.getVideoTracks()
-//                     if (videoTrack && videoTrack.length > 0) {
-//                         window.stream.oldVideoTrack = videoTrack
-//                         videoTrack.forEach((video) => {
-//                             window.stream.removeTrack(video)
-//                         })
-//                         setMyVideoStatus(false)
-//                     }
-//                 }
-//             } else {
-//                 if (window.usersStreams) {
-//                     for (const key in window.usersStreams) {
-//                         if (window.usersStreams.hasOwnProperty(key)) {
-//                             const userTrack = window.usersStreams[key]
-//                             var videoTrack = userTrack.getVideoTracks()
-//                             if (videoTrack.length > 0) {
-//                                 userTrack.oldVideoTrack = videoTrack
-//                                 videoTrack.forEach((video) => {
-//                                     userTrack.removeTrack(video)
-//                                 })
-//                                 if (
-//                                     document.querySelector(
-//                                         `#wrapper-on-muted${ key }`
-//                                     )
-//                                 ) {
-//                                     document
-//                                         .querySelector(
-//                                             `#wrapper-on-muted${ key }`
-//                                         )
-//                                         .classList.remove('d-none')
-//                                     document
-//                                         .querySelector(
-//                                             `#wrapper-on-muted${ key }`
-//                                         )
-//                                         .classList.add('d-flex')
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         })
-//         socketRef.current.on('turn_video_on_all_successfully', (status) => {
-//             if (!isHost.current) {
-//                 toast.info('Your video has been turned on by host', {
-//                     position: 'bottom-center',
-//                 })
-//                 if (window.stream) {
-//                     var videoTrack = window.stream.oldVideoTrack
-//                     if (videoTrack && videoTrack.length > 0) {
-//                         videoTrack.forEach((video) => {
-//                             window.stream.addTrack(video)
-//                         })
-//                         setMyVideoStatus(true)
-//                     }
-//                 }
-//             } else {
-//                 if (window.usersStreams) {
-//                     for (const key in window.usersStreams) {
-//                         if (window.usersStreams.hasOwnProperty(key)) {
-//                             const userTrack = window.usersStreams[key]
-//                             var videoTrack = userTrack.oldVideoTrack
-//                             if (videoTrack.length > 0) {
-//                                 videoTrack.forEach((video) => {
-//                                     userTrack.addTrack(video)
-//                                 })
-//                                 if (
-//                                     document.querySelector(
-//                                         `#wrapper-on-muted${ key }`
-//                                     )
-//                                 ) {
-//                                     document
-//                                         .querySelector(
-//                                             `#wrapper-on-muted${ key }`
-//                                         )
-//                                         .classList.add('d-none')
-//                                     document
-//                                         .querySelector(
-//                                             `#wrapper-on-muted${ key }`
-//                                         )
-//                                         .classList.remove('d-flex')
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         })
-//         socketRef.current.on('muted_successfully', (status) => {
-//             if (!isHost.current) {
-//                 toast.info('Your mic has been muted by host', {
-//                     position: 'bottom-center',
-//                 })
-//             } else {
-//                 if (window.usersStreams) {
-//                     for (const key in window.usersStreams) {
-//                         if (window.usersStreams.hasOwnProperty(key)) {
-//                             const userTrack = window.usersStreams[key]
-//                             var audioTrack = userTrack.getAudioTracks()
-//                             if (audioTrack.length > 0) {
-//                                 userTrack.oldAudoTrack = audioTrack
-//                                 audioTrack.forEach((audio) => {
-//                                     //   console.log(audio)
-//                                     userTrack.removeTrack(audio)
-//                                 })
-//                                 var tracks = userTrack.getAudioTracks()
-//                                 //   console.log(tracks)
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         })
-//         socketRef.current.on('unmuted_successfully', (status) => {
-//             if (!isHost.current && status) {
-//             } else {
-//                 if (window.usersStreams) {
-//                     for (const key in window.usersStreams) {
-//                         if (window.usersStreams.hasOwnProperty(key)) {
-//                             const userTrack = window.usersStreams[key]
-//                             var audioTrack = userTrack.oldAudoTrack
-//                             if (audioTrack.length > 0) {
-//                                 audioTrack.forEach((audio) => {
-//                                     // console.log(audio)
-//                                     userTrack.addTrack(audio)
-//                                 })
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         })
+            if (!hasWebcamForOutput || !hasMicrophoneForOutput) {
+                // show modal, telling the user they can't start webrtc calls without devices;
+            } else {
+                if (
+                    !DetectRTC.isWebsiteHasMicrophonePermissions &&
+                    !DetectRTC.isWebsiteHasWebcamPermissions
+                ) {
+                    setTimeout(() => {
+                        document.querySelector('#video_permission') &&
+                            document.querySelector('#video_permission').click()
+                    }, 1500)
+                }
+                await preparePeer()
 
-//         socketRef.current.on('broadcast_end_confirmed', (status) => {
-//             if (status) {
-//                 setIsBroadCasting((br) => false)
+                signalingSocket.current.emit('rtc_ready_state', props.kid)
 
-//                 if (isHost.current) {
-//                     peerConnections.current = {}
-//                     const node = document.getElementById(
-//                         'remote-streams-container'
-//                     )
-//                     while (node.firstChild) {
-//                         node.removeChild(node.lastChild)
-//                     }
-//                 }
-//                 if (window.stream) {
-//                     window.stream.getTracks().forEach(function (track) {
-//                         track.stop()
-//                     })
-//                 }
-//                 hostVideo.current.srcObject = null
-//                 setPeers([])
+                signalingSocket.current.on(
+                    'rtc_room_users',
+                    async (usersin) => {
+                        usersRef.current = await usersin
+                        myData.current =
+                            (await usersin) &&
+                            usersin.filter(
+                                (user) => user.kid === yourID.current
+                            )[0]
+                        console.log(myData.current, usersRef.current)
+                        signalingSocket.current.emit(
+                            'rtc_room_users_setup_complete',
+                            props.kid
+                        )
+                    }
+                )
+                // request for current users in room;
 
-//                 peersRef.current = []
-//                 onCall.current = false
-//                 props.onAlert('Host has ended live broadcast.')
-//             }
-//         })
+                signalingSocket.current.on('rtc_beep', async (caller) => {
+                    console.log('received call request')
 
-//         socketRef.current.on('operation_failed', (reason) => {
-//             props.onAlert(reason)
-//             setIsBroadCasting((br) => false)
-//         })
+                    await preparePeer()
+                    if (
+                        window.stream[yourID.current] &&
+                        !peersRef.current[caller.kid]
+                    ) {
+                        console.log('I am ready to receive peer connection')
+                        signalingSocket.current.emit('rtc_beep_ready', {
+                            ...caller,
+                            room: props.kid,
+                        })
+                    }
+                })
 
-//         peerRef.current.on('connection', function (conn) {
-//             // console.log('received connection from ', conn)
-//             conn.on('open', function () {
-//                 // console.log('connection opened')
-//             })
-//         })
+                signalingSocket.current.on('rtc_initiate_call', (userdata) => {
+                    console.log(' user is ready so i can call ', userdata)
+                    callPeer(userdata, window.stream[yourID.current])
+                })
 
-//         peerRef.current.on('call', function (call) {
-//             // Answer the call, providing our mediaStream
-//             // console.log('received a call ', call)
-//             updateDeviceList()
-//             if(!localStorage.getItem('allowed_media_permission')){
-//                  document.getElementById('myAudio').click();
-//                 document.getElementById('myAudio').play()
-//                 document.querySelector('#video_permission').click();
-//             }
-//             navigator.mediaDevices
-//                 .getUserMedia({
-//                     video: AudioVideoContraints.current.video,
-//                     audio: AudioVideoContraints.current.audio,
-//                 })
-//                 .then((mediaStream) => {
-//                     localStorage.setItem('allowed_media_permission',true);
-//                     window.stream = mediaStream
-//                     localVideo.current.srcObject = window.stream
-//                     localStream.current = window.stream
+                signalingSocket.current.on('offer', (data) => {
+                    console.log('received offer ', data)
 
-//                     call.answer(window.stream)
+                    if (
+                        !peersRef.current[data.caller.kid] &&
+                        data.target.socketid === signalingSocket.current.id
+                    ) {
+                        // accept offer
+                        if (!window.stream) preparePeer()
+                        handleRecieveCall(data, window.stream[yourID.current])
+                    }
+                })
+                signalingSocket.current.on('answer', handleAnswer)
 
-//                     call.on('stream', (remoteStream) => {
-//                         hostVideo.current.srcObject = remoteStream
-//                         onCall.current = true
-//                         setIsBroadCasting((br) => true)
-//                     })
+                signalingSocket.current.on(
+                    'ice-candidate',
+                    handleNewICECandidateMsg
+                )
+                signalingSocket.current.on('updatechat_left', (msg) => {
+                    peersRef.current[msg.for] &&
+                        setPeerStreams((s) => {
+                            peersRef.current[msg.for].close()
+                        })
+                })
 
-//                     call.on('error', (e) => {
-//                         onCall.current = false
-//                         console.log(e)
-//                     })
+                signalingSocket.current.on(
+                    'mute_user_audio_webrtc',
+                    toogleMicStatus
+                )
 
-//                     call.on('close', function () {
-//                         onCall.current = false
-//                         // console.log('closed')
-//                     })
+                signalingSocket.current.on(
+                    'disconnection_request',
+                    disconnectFromVideoConference
+                )
 
-//                     call.on('disconnected', function () {
-//                         onCall.current = false
-//                         // console.log('disconnected')
-//                     })
-//                 })
-//                 .catch((err) => {
-//                     console.log(err)
-//                 })
-//         })
+                signalingSocket.current.on(
+                    'audio_toggle_complete',
+                    updateAudioStatusForUser
+                )
 
-//         peerRef.current.on('close', function () {
-//             // peerRef.current.destroy()
-//             onCall.current = false
-//         })
+                signalingSocket.current.on(
+                    'wave_to_user_webrtc_',
+                    handleIncomingWave
+                )
 
-//         peerRef.current.on('disconnected', function () {
-//             onCall.current = false
-//             peerRef.current.reconnect()
-//         })
+                signalingSocket.current.on(
+                    'video_toggle',
+                    handleUserVideoToggle
+                )
+            }
+        })
+    }, [])
 
-//         peerRef.current.on('error', function (e) {
-//             const FATAL_ERRORS = [
-//                 'invalid-id',
-//                 'invalid-key',
-//                 'network',
-//                 'ssl-unavailable',
-//                 'server-error',
-//                 'socket-error',
-//                 'socket-closed',
-//                 'unavailable-id',
-//                 'webrtc',
-//             ]
-//             if (FATAL_ERRORS.includes(e.type)) {
-//                 if (isHost.current && isBroadCasting) {
-//                     HostcallUsers()
-//                 } else {
-//                     onCall.current = false
-//                 }
-//             } else {
-//                 console.log('Non fatal error: ', e.type)
-//             }
-//         })
-//     }, [])
+    function callPeer(user, myStream) {
+        console.log('calling ', user)
 
-//     async function updateDeviceList() {
-//         await navigator.mediaDevices
-//             .enumerateDevices()
-//             .then(function (deviceInfos) {
-//                 for (var i = 0; i !== deviceInfos.length; ++i) {
-//                     const deviceInfo = deviceInfos[i]
-//                     setInputOutputSettings((s) => {
-//                         const deviceType = s[deviceInfo.kind]
-//                         const exists = deviceType.some((devices) => {
-//                             return (
-//                                 devices.deviceId === deviceInfo.deviceId &&
-//                                 devices.groupId === deviceInfo.groupId &&
-//                                 devices.label === deviceInfo.label
-//                             )
-//                         })
-//                         if (!exists) {
-//                             s[deviceInfo.kind].push(deviceInfo)
-//                             props.setInputDevices(s)
-//                         }
-//                         return {
-//                             ...s,
-//                         }
-//                     })
-//                 }
-//             })
-//             .catch(function (err) {
-//                 console.log(err)
-//             })
-//     }
+        const peer = createPeer(user)
+        myStream.getTracks().forEach((track) => peer.addTrack(track, myStream))
+        return peer
+    }
 
-//     useEffect(() => {
-//         navigator.mediaDevices.ondevicechange = function (event) {
-//             updateDeviceList().then((done) => {
-//                 // console.log('done updating devices');
-//             })
-//         }
-//     }, [])
+    function handleAnswer(message) {
+        const desc = new RTCSessionDescription(message.sdp)
+        console.log('Got answer for ', message.caller)
+        peersRef.current[message.caller.kid] &&
+            peersRef.current[message.caller.kid]
+                .setRemoteDescription(desc)
+                .catch((e) => console.log(e))
+        console.log(peersRef.current[message.caller.kid])
+    }
 
-//     useLayoutEffect(() => {
-//         updateDeviceList()
-//     }, [])
+    async function handleRecieveCall(incoming, myStream) {
+        console.log('handling offer ', incoming)
+        const newpeer = await createPeer(incoming.caller)
+        console.log(newpeer)
+        const desc = await new RTCSessionDescription(incoming.sdp)
+        newpeer
+            .setRemoteDescription(desc)
+            .then(() => {
+                myStream
+                    .getTracks()
+                    .forEach((track) => newpeer.addTrack(track, myStream))
+            })
+            .then(() => {
+                return newpeer.createAnswer()
+            })
+            .then((answer) => {
+                return newpeer.setLocalDescription(answer)
+            })
+            .then(() => {
+                const payload = {
+                    target: incoming.caller,
+                    caller: incoming.target,
+                    sdp: newpeer.localDescription,
+                }
+                console.log('answer ready ', payload)
+                signalingSocket.current.emit('answer', payload)
+            })
+    }
 
-//     const handleBroadcasting = () => {
-//         if (!isBroadCasting) {
-//             // startBroadcast
-//             socketRef.current.emit('broadcast_init', true, props.userkid)
-//         } else {
-//             // stopBroadcast();
-//             socketRef.current.emit('broadcast_end', true, props.userkid)
-//         }
-//     }
+    function createPeer(user) {
+        const userkid = user.kid
 
-//     function HostcallUsers() {
-//         updateDeviceList().then((done) => {
-//             //   console.log('done updating media')
-//             navigator.mediaDevices
-//                 .getUserMedia({
-//                     video: AudioVideoContraints.current.video,
-//                     audio: AudioVideoContraints.current.audio,
-//                 })
-//                 .then((mediaStream) => {
-//                     setIsBroadCasting((br) => true)
-//                     hostVideoStatus.current = true
-//                     hostAudioStatus.current = true
-//                     if (window.stream) window.stream = null
-//                     window.stream = mediaStream
-//                     hostVideo.current.srcObject = window.stream
-//                     localStream.current = window.stream
-//                     usersRef.current
-//                         .filter((user) => user.kid !== props.userkid)
-//                         .forEach((filtered) => {
-//                             callUser(filtered)
-//                         })
-//                 })
-//                 .catch((err) => {
-//                     console.log(err)
-//                 })
-//         })
-//     }
+        if (peersRef.current[userkid]) {
+            console.log('old peer, recreating')
+            peersRef.current[userkid].close()
+            delete peersRef.current[userkid]
+            setPeerStreams((s) => {
+                const newUserStreams = s.filter(
+                    (remoteStream_) =>
+                        remoteStream_ && remoteStream_.user.kid !== userkid
+                )
+                return newUserStreams
+            })
+        }
 
-//     function callUser(user) {
-//         delete peerConnections.current[user.kid]
-//         // console.log('calling user ', user)
-//         const conn = peerRef.current.connect(user.kid, { reliable: true })
-//         if (conn) {
-//             conn.on('open', () => {
-//                 // console.log('connection opened for user ', user)
+        const peer = new RTCPeerConnection({
+            iceServers: [
+                // {
+                //     urls: 'stun:numb.viagenie.ca',
+                //     username: 'sultan1640@gmail.com',
+                //     credential: '98376683',
+                // },
+                // {
+                //     urls: 'turn:numb.viagenie.ca',
+                //     username: 'sultan1640@gmail.com',
+                //     credential: '98376683',
+                // },
+            ],
+        })
+        /**
+         * Called once  after a peer object has been created
+         * - We create offer for a user here and dispatch with socket.io
+         */
+        peer.onnegotiationneeded = () => handleNegotiationNeededEvent(user)
 
-//                 peerConnections.current[user.kid] = {
-//                     metadata: user,
-//                 }
-//                 const call = peerRef.current.call(user.kid, localStream.current)
+        peer.onicecandidate = (e) => handleICECandidateEvent(e, user)
+        peer.ontrack = (e) => handleTrackEvent(e, user)
 
-//                 call.on('stream', function (stream) {
-//                     // console.log('User has amswered')
-//                     if (window.usersStreams) {
-//                         window.usersStreams[user.kid] = stream
-//                     } else {
-//                         window.usersStreams = {
-//                             [user.kid]: stream,
-//                         }
-//                     }
-//                     peerConnections.current[user.kid] = {
-//                         ...peerConnections.current[user.kid],
-//                         stream,
-//                     }
-//                     setIsBroadCasting((br) => true)
+        peer.oniceconnectionstatechange = async () => {
+            console.log(`${ peer.iceConnectionState }-state`)
+            if (peer.iceConnectionState === 'disconnected') {
+            }
+            if (peer.iceConnectionState === 'failed') {
+                peer.restartIce()
+            }
+            if (peer.iceConnectionState === 'closed') {
+                await setPeerStreams((s) => {
+                    console.log(s)
+                    const newUserStreams = s.filter(
+                        (remoteStream_) =>
+                            remoteStream_ && remoteStream_.user.kid !== userkid
+                    )
+                    return newUserStreams
+                })
+                await peer.close()
+                await delete peersRef.current[userkid]
+            }
+        }
+        peersRef.current[userkid] = peer
+        console.log('created peer ', peersRef.current[userkid])
+        return peer
+    }
 
-//                     if (document.querySelector(`div#${ user.kid }`)) {
-//                         document.querySelector(`div#${ user.kid }`).remove()
-//                     }
-//                     var videoDivContainer = document.createElement('div')
-//                     videoDivContainer.classList.add(
-//                         'remote-participant-video-container'
-//                     )
-//                     videoDivContainer.id = user.kid
-//                     var videoLabel = document.createElement('div')
-//                     videoLabel.classList.add('video-label')
-//                     videoLabel.innerText = `@${ user.username }`
-//                     var wrapperOnMuted = document.createElement('div')
-//                     wrapperOnMuted.innerHTML = `@${ user.username }`
-//                     wrapperOnMuted.classList.add('wrapper-on-muted')
-//                     wrapperOnMuted.classList.add('d-none')
-//                     wrapperOnMuted.id = `wrapper-on-muted${ user.kid }`
-//                     var videlem = document.createElement('video')
-//                     videlem.srcObject = stream
-//                     videlem.autoplay = true
-//                     videlem.id = user.kid
-//                     videlem.playsInline = true
-//                     videoDivContainer.appendChild(wrapperOnMuted)
-//                     videoDivContainer.appendChild(videlem)
-//                     videoDivContainer.appendChild(videoLabel)
-//                     document
-//                         .getElementById('remote-streams-container')
-//                         .appendChild(videoDivContainer)
-//                 })
-//                 call.on('error', (e) => {
-//                     console.warn('error with stream', e)
-//                     if (isHost.current) {
-//                         callUser(user)
-//                     }
-//                 })
+    function handleICECandidateEvent(e, user) {
+        if (e.candidate) {
+            console.log('ice candidate updates')
+            const payload = {
+                target: user,
+                candidate: e.candidate,
+                sender: myData.current,
+            }
+            signalingSocket.current.emit('ice-candidate', payload)
+        }
+    }
 
-//                 call.on('close', function () {
-//                     delete peerConnections.current[user.kid]
-//                     if (document.querySelector(`div#${ user.kid }`)) {
-//                         document.querySelector(`div#${ user.kid }`).remove()
-//                     }
-//                 })
-//             })
-//         }
-//     }
+    function handleNewICECandidateMsg(incoming) {
+        if (incoming.candidate) {
+            const candidate = new RTCIceCandidate(incoming.candidate)
+            console.log('received ICE ', incoming)
+            incoming.sender &&
+                peersRef.current[incoming.sender.kid] &&
+                peersRef.current[incoming.sender.kid]
+                    .addIceCandidate(candidate)
+                    .catch((e) => console.log(e))
+        }
+    }
 
-//     function handleMuteAllUsers() {
-//         if (isHost.current && isBroadCasting) {
-//             socketRef.current.emit('mute_All', props.kid, new Date())
-//             setMutedAll(true)
-//         }
-//     }
+    function handleNegotiationNeededEvent(user) {
+        console.log('initializing negotiation with user ', user)
+        const { kid } = user
 
-//     function handleUnMuteAllUsers() {
-//         if (isHost.current && isBroadCasting) {
-//             socketRef.current.emit('unmute_All', props.kid, new Date())
-//             setMutedAll(false)
-//         }
-//     }
-//     function handleOffVideoAllUsers() {
-//         if (isHost.current && isBroadCasting) {
-//             socketRef.current.emit('turn_video_off_all', props.kid, new Date())
-//             setAllUsersvideoOff(true)
-//         }
-//     }
+        peersRef.current[kid]
+            .createOffer()
+            .then((offer) => {
+                console.log('created offer for ', user, offer)
+                return peersRef.current[kid].setLocalDescription(offer)
+            })
+            .then(() => {
+                const payload = {
+                    target: user,
+                    caller: myData.current,
+                    sdp: peersRef.current[kid].localDescription,
+                }
+                console.log('ready to dispatch offer to peer ', payload)
 
-//     function handleOnVideoAllUsers() {
-//         if (isHost.current && isBroadCasting) {
-//             socketRef.current.emit('turn_video_on_all', props.kid, new Date())
-//             setAllUsersvideoOff(false)
-//         }
-//     }
-//     return (
-//         <div className="h-100" style={ { backgroundColor: '#0f0f0f' } }>
-//             <ToastContainer />
+                signalingSocket.current.emit('offer', payload)
+            })
+            .catch((e) => console.log(e))
+    }
 
-//             <audio id="myAudio" className="d-none">
-               
-//                 <source
-//                     src="../../../media/audio/calling.mp3"
-//                     type="audio/mpeg"
-//                 />
-//             </audio>
-//             <div className="participant-host-video-container">
-//                 <span className="hide d-flex align-items-center justify-content-between">
-//                     <div>
-//                         <i className="fa fa-video mr-2"></i> Video chat
-//                     </div>
-//                     {isHost.current ? (
-//                         <div
-//                             title="General Video Settings"
-//                             className="nav-item dropdown">
-//                             <span
-//                                 className="nav-link nav-link-icon"
-//                                 id="navbar-success_dropdown_1"
-//                                 role="button"
-//                                 data-toggle="dropdown"
-//                                 aria-haspopup="true"
-//                                 aria-expanded="false">
-//                                 <i className="fa fa-ellipsis-v"></i>
-//                             </span>
-//                             <div
-//                                 className="dropdown-menu dropdown-menu-right"
-//                                 aria-labelledby="navbar-success_dropdown_1">
-//                                 <div
-//                                     style={ { cursor: 'pointer' } }
-//                                     className="dropdown-item"
-//                                     onClick={
-//                                         mutedAll
-//                                             ? handleUnMuteAllUsers
-//                                             : handleMuteAllUsers
-//                                     }>
-//                                     {mutedAll ? 'Unmute All' : 'Mute All'}
-//                                 </div>
+    function hideVideo(e) {
+        e.preventDefault()
+        if (stream) {
+            setVideoMuted(!videoMuted)
+            stream.getVideoTracks()[0].enabled = videoMuted
+            const data = {
+                ...props.usersData,
+                videoMuted,
+                socketid: signalingSocket.current.id,
+            }
+            signalingSocket.current.emit('video_toggle', data)
+        }
+    }
 
-//                                 <div className="dropdown-divider"></div>
-//                                 <a
-//                                     style={ { cursor: 'pointer' } }
-//                                     className="dropdown-item"
-//                                     onClick={
-//                                         allUsersVideoOff
-//                                             ? handleOnVideoAllUsers
-//                                             : handleOffVideoAllUsers
-//                                     }>
-//                                     {allUsersVideoOff
-//                                         ? 'Turn on cameras'
-//                                         : 'Turn off cameras'}
-//                                 </a>
-//                             </div>
-//                         </div>
-//                     ) : (
-//                         ''
-//                     )}
-//                 </span>
+    function handleUserVideoToggle(data) {
+        console.log('received alert on video toggle ', data)
+        const { accountid, videoMuted: videoMuted_ } = data
+        accountid &&
+            peersRef.current[accountid] &&
+            setPeerStreams((s) => {
+                let newUserStreams = s
+                newUserStreams = s.map((remoteStream_) => {
+                    if (remoteStream_ && remoteStream_.user.kid === accountid) {
+                        return {
+                            ...remoteStream_,
+                            video: videoMuted_,
+                        }
+                    } else {
+                        return stream
+                    }
+                })
+                return newUserStreams
+            })
+    }
 
-//                 <div className="video-container">
-//                     <div className="host-video-container">
-//                         <video
-//                             ref={ hostVideo }
-//                             muted={ isHost.current ? true : false }
-//                             className="host-video"
-//                             autoPlay
-//                             playsInline></video>
-//                         <div className="video-label">
-//                             {isHost.current ? 'You' : 'Host'}
-//                         </div>
-//                     </div>
-//                     {!isHost.current ? (
-//                         <div className="local-video-container">
-//                             {!myVideoState && isBroadCasting ? (
-//                                 <div className="my-video-off-wrapper">
-//                                     <i className="fa fa-video-slash"></i>
-//                                 </div>
-//                             ) : (
-//                                 ''
-//                             )}
-//                             <video
-//                                 ref={ localVideo }
-//                                 className="local-video"
-//                                 autoPlay
-//                                 muted
-//                                 playsInline></video>
-//                             <div className="video-label">You</div>
-//                         </div>
-//                     ) : (
-//                         <div id="remote-streams-container"></div>
-//                     )}
-//                 </div>
-//             </div>
-//             {isHost.current ? (
-//                 <div className="video-chat-actions-container">
-//                     <button
-//                         type="button"
-//                         onClick={ handleBroadcasting }
-//                         className={ `btn w-100 btn-sm btn-outline-${
-//                             isBroadCasting === true ? 'success' : 'info'
-//                         }` }>
-//                         {isBroadCasting ? 'Hang Up' : 'Call In '}
-//                     </button>
-//                 </div>
-//             ) : (
-//                 ''
-//             )}
-//         </div>
-//     )
-// }
-// const matchDispatchToProps = (dispatch) => {
-//     return {
-//         updateDefaultInputOutput: (data) =>
-//             dispatch(classroomActions.setDefaultInputOutputDevices(data)),
-//         setInputDevices: (data) =>
-//             dispatch(classroomActions.setInputOuputDevices(data)),
-//     }
-// }
+    function hideAudio(e) {
+        e.preventDefault()
+        if (stream) {
+            setAudioMuted(!audioMuted)
+            stream.getAudioTracks()[0].enabled = audioMuted
+            peerStreams.length &&
+                signalingSocket.current.emit(
+                    'audio_toggle_complete',
+                    audioMuted,
+                    myData.current
+                )
+        }
+    }
 
-// const mapStateToProps = ({ classroom }) => {
-//     return {
-//         defaultInputOutput: classroom.defaultAudioVideoConfig,
-//     }
-// }
-// export default connect(
-//     mapStateToProps,
-//     matchDispatchToProps
-// )(AudioVideoBroadcast)
+    async function toogleMicStatus() {
+        console.log(
+            'received request to mute myself ',
+            mystream.current,
+            audioMuted
+        )
+        if (mystream.current) {
+            const status = await mystream.current.getAudioTracks()[0].enabled
+            await setAudioMuted(status)
+
+            mystream.current.getAudioTracks()[0].enabled = await !mystream.current.getAudioTracks()[0]
+                .enabled
+            signalingSocket.current.emit(
+                'audio_toggle_complete',
+                !status,
+                myData.current
+            )
+
+            // alert that mic was muted
+            status
+                ? props.toast.info('Your Mic was muted by moderator.', {
+                      position: 'bottom-center',
+                  })
+                : props.toast.info('Your Mic has been released by moderator.', {
+                      position: 'bottom-center',
+                  })
+        }
+    }
+
+    function updateAudioStatusForUser(status, user) {
+        console.log('updating audio for user ', status, user)
+        const { kid } = user
+        kid &&
+            peersRef.current[kid] &&
+            setPeerStreams((s) => {
+                let newUserStreams = s
+                newUserStreams = s.map((remoteStream_) => {
+                    if (remoteStream_ && remoteStream_.user.kid === kid) {
+                        return {
+                            ...remoteStream_,
+                            audio: status,
+                        }
+                    } else {
+                        return stream
+                    }
+                })
+                return newUserStreams
+            })
+    }
+
+    async function saveScreenshotOfVideo(userkid) {
+        signalingSocket.current.emit('video_toggle', data)
+    }
+
+    function handleTrackEvent(e, user) {
+        console.log('got stream for ', user.kid, e)
+
+        user &&
+            user.kid &&
+            setPeerStreams((s) => {
+                let newUserStreams = s
+                if (
+                    newUserStreams.find(
+                        (remoteStream) =>
+                            String(remoteStream.user.kid) === String(user.kid)
+                    )
+                ) {
+                    console.log('old stream , upating stream ', s)
+                    newUserStreams = s.map((remotePeerStreamData) => {
+                        if (remotePeerStreamData.user.kid === user.kid) {
+                            return {
+                                ...remotePeerStreamData,
+                                stream: e.streams[0],
+                            }
+                        } else {
+                            return stream
+                        }
+                    })
+                    return newUserStreams
+                } else {
+                    console.log('new peer stream')
+                    // play sound;
+                    newUserStreams.push({
+                        user,
+                        stream: e.streams[0],
+                        video: e.streams[0].getVideoTracks()[0].enabled,
+                        audio: e.streams[0].getAudioTracks()[0].enabled,
+                    })
+                }
+                return newUserStreams
+            })
+    }
+
+    function handleUserDisconnection(user) {
+        signalingSocket.current.emit('disconnect_user_webrtc', user)
+    }
+
+    function disconnectFromVideoConference() {
+        for (const key in peersRef.current) {
+            if (peersRef.current.hasOwnProperty(key)) {
+                peersRef.current[key].close()
+                peersRef.current[key] && delete peersRef.current[key]
+            }
+        }
+        setPeerStreams([])
+    }
+
+    function handletoogleUserAudio(user) {
+        console.log(user)
+        signalingSocket.current.emit('mute_user_audio_webrtc', user)
+    }
+
+    function handleWaveUser(user) {
+        props.toast.success(
+            <div className="wave_alert_rtc">
+                <img
+                    src={ user.avatar }
+                    style={ { borderRadius: '50%', marginRight: '1rem' } }
+                    height="40"
+                    width="40"
+                />
+                <b>You sent a wave.</b>
+            </div>,
+            { position: 'bottom-center' }
+        )
+        signalingSocket.current.emit('wave_to_user_webrtc', {
+            ...user,
+            from: {
+                displayName: props.usersData.displayName,
+                displayImg: props.usersData.displayImg,
+            },
+        })
+    }
+
+    function handleIncomingWave(data) {
+        console.log(data)
+        data &&
+            data.from &&
+            props.toast.success(
+                <div className="wave_alert_rtc">
+                    <img
+                        src={ data.from.displayImg }
+                        style={ { borderRadius: '50%', marginRight: '1rem' } }
+                        height="40"
+                        width="40"
+                    />
+                    <b>{data.from.displayName} sent a wave</b>
+                </div>,
+                { position: 'bottom-center' }
+            )
+    }
+
+    return (
+        <div className="participant-host-video-container">
+            <VideoAudioPermission />
+            <span className="hide d-flex align-items-center justify-content-between">
+                <div>
+                    <i className="fa fa-video mr-1"></i> Video call
+                </div>
+                {props.isOwner ? (
+                    <i className="fa fa-users-cog mr-2 group-audio-settings"></i>
+                ) : (
+                    ''
+                )}
+            </span>
+            <div className="videos-remote-user">
+                <div
+                    className={ `video-container ${
+                        audioMuted ? 'user-muted' : 'user-unmuted'
+                    }` }>
+                    <video
+                        style={ { display: videoMuted ? 'none' : 'block' } }
+                        playsInline
+                        muted
+                        ref={ userVideo }
+                        autoPlay
+                    />
+                    <div
+                        style={ { display: videoMuted ? 'flex' : 'none' } }
+                        className="userVideo-placecholder">
+                        <img
+                            src={ props.usersData.displayImg }
+                            height="60"
+                            width="60"
+                        />
+                    </div>
+                    <span className="user_name_label">(You)</span>
+
+                    <div className="video-audio-controls">
+                        <span
+                            className="video-audio-icon-button"
+                            onClick={ hideVideo }>
+                            <i
+                                className={ `fa fa-video${
+                                    videoMuted ? '-slash' : ''
+                                } cursor-pointer` }></i>
+                        </span>
+                        <span
+                            onClick={ hideAudio }
+                            className="video-audio-icon-button">
+                            <i
+                                className={ `fa fa-microphone${
+                                    audioMuted ? '-slash' : ''
+                                } cursor-pointer` }></i>
+                        </span>
+                    </div>
+                </div>
+
+                {peerStreams.map(
+                    (remotestream) =>
+                        remotestream && (
+                            <RemoteVideoStream
+                                stream={ remotestream.stream }
+                                // hideVideo={ hideRemoteVideo }
+                                video={ remotestream.video }
+                                disconnectUser={ handleUserDisconnection }
+                                audio={ remotestream.audio }
+                                isOwner={ props.isOwner }
+                                wave={ handleWaveUser }
+                                toogleAudio={ handletoogleUserAudio }
+                                user={ remotestream.user }
+                                kid={ remotestream.user.kid }
+                            />
+                        )
+                )}
+            </div>
+        </div>
+    )
+}

@@ -1,4 +1,5 @@
 import React, { useRef, useLayoutEffect, useState } from 'react'
+import * as util from '../../../../utility/shared'
 
 export default function RemoteVideoStream({
     takePhoto,
@@ -22,8 +23,13 @@ export default function RemoteVideoStream({
     }, [stream, user])
 
     return (
-        <div className={ `video-container ${ audio ? 'user-unmuted' : 'user-muted' }` }>
-            <span className="user_name_label">{username_ || 'loading...'}</span>
+        <div
+            className={ `video-container ${
+                audio ? 'user-unmuted' : 'user-muted'
+            }` }>
+            <span className="user_name_label">
+                {util.trimString(username_,15,'...') || 'loading...'}
+            </span>
             <video
                 style={ { display: video ? 'flex' : 'none' } }
                 className={ `stream-${ user.kid }` }
@@ -51,7 +57,10 @@ export default function RemoteVideoStream({
                             className="video-audio-icon-button"
                             title="Toogle User Audio"
                             onClick={ () => toogleAudio(user) }>
-                            <i className={ `fa fa-microphone${ !audio ? '-slash' : ' ' } cursor-pointer` }></i>
+                            <i
+                                className={ `fa fa-microphone${
+                                    !audio ? '-slash' : ' '
+                                } cursor-pointer` }></i>
                         </span>
                     </React.Fragment>
                 )}{' '}
