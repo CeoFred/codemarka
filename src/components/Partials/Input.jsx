@@ -51,6 +51,7 @@ export default function Input(props) {
                   type={ props.type }
                   className={ InputClasses.join(' ') }
                   id={ props.id || '' }
+                  name={ props.name || '' }
                   placeholder={ props.placeholder }
                   onChange={ props.changed }
                   value={ props.value }

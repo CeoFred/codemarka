@@ -468,6 +468,11 @@ const MainClassLayout = ({
                 })
             })
 
+            socket.on('force_disconnect', () => {
+                alert('Closing this session! Bye!');
+                socket.close();
+            })
+
             socket.on('started_class', () => {
                 setcodemarkaState((s) => {
                     return { ...s, started: true, starting: null }
@@ -500,9 +505,13 @@ const MainClassLayout = ({
                 setcodemarkaState((c) => {
                     const oldmsg = c.messages
                     oldmsg.push(msg)
-                    const nnc = msg.newuserslist.filter((u) => {
+                    const nnc = msg.newuserslist.find((u) => {
                         return true
                     })
+                    if(msg.for === userid){
+                        socket.close();
+                        alert('You have been logged Out! Bye!!')
+                    }
                     socket.emit('user_typing_cleared', {
                         username: msg.name,
                         userid: msg.for,
@@ -571,9 +580,14 @@ const MainClassLayout = ({
             socket.on('reconnect', (attemptNumber) => {
                 setSocketConnection({ connected: true, failed: false })
                 socket.emit('join', requestData)
-                toast.success('Back Online!', { position: 'bottom-center' })
+                // toast.success('Back Online!', { position: 'bottom-center' })
                 connAttempts.current = 0
-                socket.emit('new_socket_id', socketRef.current.id);
+                socket.emit(
+                    'update_socket_id',
+                    socketRef.current.id,
+                    requestData
+                )
+                console.log(socketRef.current.id);
             })
 
             //listen for new messages

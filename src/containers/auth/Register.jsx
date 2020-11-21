@@ -340,7 +340,7 @@ if (props.authRegistrationSuccess) {
                                       color: 'rgb(163 154 154)',
                                   } }>
                                   <b>
-                                      - Username should not contain white space and at least 3 characters.
+                                      - Username should not contain white space, alpha numberic characters, at least 3 characters and a maximum of 20.
                                       <br />- Password should be at least 8
                                       character long.
                                   </b>

@@ -2,10 +2,57 @@
 
 // yet to start
 
-import React from 'react'
+import React,{ useState } from 'react'
+import Axios from 'axios';
+import io from 'socket.io-client'
+
 import notFoundImg from '../../../media/images/vectors/hugo-fatal-error.png'
+import Spinner from '../../Partials/Preloader';
+import * as APIURL from '../../../config/api_url';
 
 function AlreadyInClassName(props) {
+    const host =
+        process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test'
+            ? 'https://api.secure.codemarka.dev'
+            : 'http://localhost:2001'
+
+    const socket = io(host, {
+        reconnection: true,
+        reconnectionDelay: 6000,
+        reconnectionDelayMax: 1000,
+        reconnectionAttempts: 30,
+    })
+
+    const [forcing, setforcing ] = useState(false);
+    const [responseObj, setResponseObj] = useState({type:'success', message: null});
+
+    function handleForceEntry(){
+        const { roomkid: room, userkid: kid, token } = props
+        setforcing(true);
+        setResponseObj({message: null})
+
+        Axios.post(APIURL.FORCE_ROOM_ENTRANCE,{room, kid},{
+            headers: {'Authorization':`Bearer ${ token }`}
+        }).then(response => {
+            const { data, status } = response;
+            if(status && status === 200){
+                setforcing(false);
+                setResponseObj({
+                    type: 'success',
+                    message: 'Please wait, disconnecting..',
+                })
+
+                socket.emit('force_disconnect',data.message);
+
+                setTimeout(() => {
+                window.location.reload();
+                }, 3000);
+            }
+        }).catch(err => {
+            setforcing(false);
+            setResponseObj({type:'error', message: 'Failed!'})
+        })
+    };
     return (
         <div>
             <section className="vh-100 d-flex align-items-center">
@@ -15,7 +62,7 @@ function AlreadyInClassName(props) {
                     data-bg-position="center">
                     <img
                         src={ notFoundImg }
-                        alt="Image"
+                        alt="img--"
                         className="img-as-bg rounded-bottom-left"
                     />
                 </div>
@@ -27,15 +74,42 @@ function AlreadyInClassName(props) {
                                     <h6 className="display-1 mb-3 font-weight-600 text-warning">
                                         Oops!
                                     </h6>
-                                    <p className="lead text-lg mb-3">You are already logged into this session.</p>
+                                    <p className="lead text-lg mb-3">
+                                        You are already logged into this
+                                        session.
+                                    </p>
 
                                     <a
                                         href="#"
-                                        className="text-primary hover-translate-y-n3 mt-3">
+                                        onClick={ handleForceEntry }
+                                        className="text-primary btn btn-primary text-white-50 hover-translate-y-n3 mt-3">
                                         <span className="btn-inner--text">
-                                            Force Entrance
+                                            {forcing ? (
+                                                <Spinner />
+                                            ) : (
+                                                'Force Entrance'
+                                            )}
                                         </span>
                                     </a>
+
+                                    {responseObj.message &&
+                                        responseObj.type ===
+                                            'success' && (
+                                                <div
+                                                    class="mt-2 text-success"
+                                                    role="alert">
+                                                    {responseObj.message}
+                                                </div>
+                                            )}
+                                    {responseObj.message &&
+                                        responseObj.type ===
+                                            'error' && (
+                                                <div
+                                                    class="mt-2 text-danger"
+                                                    role="alert">
+                                                    {responseObj.message}
+                                                </div>
+                                            )}
                                 </div>
                             </div>
                         </div>

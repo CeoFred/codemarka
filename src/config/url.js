@@ -29,6 +29,7 @@ export const AUTH_LOGOUT  = '/auth/user/logout';
 export const OAUTH_URL = '/auth/user/oauth/success/:token/:user'
 export const EMAIL_VERIFICATION = '/account/confirmed/:verified/'
 export const COMMUNITY_ACCOUNT_SIGNUP_PAGE = '/auth/signup/community'
+export const OAUTH_FINAL_STEPS = '/auth/account/user/finalSteps/:auth_setup_token/:user_kid'
 
 export const ACCOUNT_SETTINGS = '/user/account/settings'
 export const ACCOUNT_BILLING = '/user/account/billing'

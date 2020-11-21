@@ -112,7 +112,13 @@ function Environment(props) {
                     return user.kid === props.userid
                 })
                 if(alreadyInClass){
-                    return <AlreadyInClass />
+                    return (
+                        <AlreadyInClass
+                            roomkid={props.kid}
+                            userkid={props.userid}
+                            token={props.token}
+                        />
+                    )
                 }
             }
                 if (String(props.classOwner) !== String(props.userid)) {
@@ -183,7 +189,7 @@ const mapStateToProps = ({ auth, classroom }) => {
         isAuthenticated: auth.user.token !== null,
         userid: auth.user.accountid,
         username: auth.user.displayName,
-        user_t: auth.user.token,
+        token: auth.user.token,
         class_verified: classroom.validated,
         classOwner: classroom.owner,
         className: classroom.name,
@@ -196,7 +202,7 @@ const mapStateToProps = ({ auth, classroom }) => {
         status: classroom.status,
         startTimeFull: classroom.schedule || classroom.startTimeFull,
         cid: classroom._id,
-        kid: classroom.Kid,
+        kid: classroom.kid,
         gravatarUrl: classroom.gravatarUrl,
         classroom
     }
