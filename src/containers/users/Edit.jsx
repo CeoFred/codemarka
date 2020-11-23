@@ -60,7 +60,7 @@ export default function EditProfile() {
            
         }).catch(err => {
             setIsSaving(false)
-             toast.danger(<div>Action Failed</div>, {
+             toast.error(<div>Action Failed</div>, {
                  position: 'bottom-center',
              })
 

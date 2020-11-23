@@ -162,7 +162,7 @@ function Login(props) {
             />
             {redct}
             <section className="container-fluid">
-                <div className="row min-vh-100" style={ {maxHeight:'100vh','overflow':'auto'} }>
+                <div className="row min-vh-100" style={ { overflow:'auto'} }>
                     <div className="comm_bg_img col-md-8 col-xl-8 col-lg-8 py-6 py-md-0 h-100vh d-none d-md-flex d-lg-flex d-xl-flex">
                         <div className="details_container">
                             <div className="logo_container">
@@ -196,8 +196,8 @@ function Login(props) {
                         </div>
                     </div>
 
-                    <div className="mt-3 p-3 col-md-4 col-lg-4 col-xl-4 py-6 h-100 py-md-0 oveflow-auto" style={ {maxHeight:'100vh',overflow:'auto'} }>
-                        <div>
+                    <div className="col-md-4 col-lg-4 col-xl-4oveflow-auto" style={ {height:'97vh!important',overflow:'auto', display:'flex', flexDorient:'column', alignItems:'center',justifyContent:'center'} }>
+                        <div style={ {width:'91%'} }>
                             <div className="mb-5 text-center">
                                 <h6 className="h3 mb-1">Welcome back!</h6>
                                 <p className="text-muted mb-0">

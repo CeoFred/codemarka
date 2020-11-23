@@ -37,37 +37,6 @@ export default function RTC(props) {
     const offerStrength = useRef(0)
     const beepOfferStatus = useRef([])
 
-    const canCall = useRef(true)
-    async function initiateCallWithUsers(usersInClass) {
-        // canCall.current = false
-        if (!window.stream[yourID.current]) {
-            const _stream = await navigator.mediaDevices.getUserMedia({
-                video: true,
-                audio: true,
-            })
-            userVideo.current.srcObject = _stream
-            await setStream(_stream)
-            await setVideoMuted(true)
-            _stream.getVideoTracks()[0].enabled = await videoMuted
-            mystream.current = _stream
-            window.stream = {}
-            window.stream[yourID.current] = _stream
-        }
-
-        usersRef.current = await usersInClass
-        myData.current =
-            (await usersInClass) &&
-            usersInClass.filter((user) => user.kid === yourID.current)[0]
-
-        usersInClass &&
-            usersInClass
-                .filter((user) => user.kid !== yourID.current)
-                .forEach((user) => {
-                    user.socketid !== signalingSocket.current.id &&
-                        callPeer(user, window.stream[yourID.current])
-                })
-    }
-
     async function preparePeer() {
         const _stream = await navigator.mediaDevices.getUserMedia({
             video: true,
@@ -87,7 +56,7 @@ export default function RTC(props) {
         yourID.current = props.userkid && props.userkid
     }, [props.userkid])
 
-    useLayoutEffect(async () => {
+    useLayoutEffect(() => {
         DetectRTC.load(async function () {
             signalingSocket.current = (await props.socket) ? props.socket : null
             yourID.current = await props.userkid
