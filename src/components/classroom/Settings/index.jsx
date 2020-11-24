@@ -9,7 +9,6 @@ import Editors from './Editors/index.jsx';
 import Modes from './Modes/index.jsx';
 import More from './More/index.jsx';
 import Behaviour from './Behaviour/index.jsx'
-import AudioVideoSettings from './AudioVideoSettings/index.jsx'
 import'./style.css';
  
 export default function ClassroomModalSettings(props) {
@@ -37,9 +36,6 @@ export default function ClassroomModalSettings(props) {
                 break
             case 'Behaviour':
                 setComponent(<Behaviour { ...props } />)
-                break
-            case 'Audio/Video Settings':
-                setComponent(<AudioVideoSettings { ...props } />)
                 break
             default:
                 setComponent(<Editors { ...props } />)
@@ -99,27 +95,6 @@ export default function ClassroomModalSettings(props) {
                                         Behaviour
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a
-                                        class={ `nav-link ${
-                                            tab === 'Audio/Video Settings'
-                                                ? 'active'
-                                                : ''
-                                        }` }
-                                        onClick={ handleTabSelection }
-                                        href="#AudioVideoSettings">
-                                        Audio/Video Settings
-                                    </a>
-                                </li>
-                                {/* 
-                                <li class="nav-item">
-                                    <a
-                                      class={`nav-link ${tab === 'More' ? 'active': ''}`}
-                                       onClick={handleTabSelection}
-                                        href="#general-actions">
-                                        More
-                                    </a>
-                                </li> */}
                             </ul>
                         </div>
 

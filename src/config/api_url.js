@@ -15,7 +15,12 @@ export const ACCOUNT_PASSWORD_RESET = `${ host }auth/user/account/password/reset
 export const GET_USER_DATA = `${ host }user/u/` //:kid
 export const FOLLOW_USER = `${ host }user/follow/`;
 export const UNFOLLOW_USER = `${ host }user/unfollow/`
+export const CHECK_USERNAME = `${ host }user/username`;
 export const UPDATE_USER_INFORMATION = `${ host }auth/user/profile/update`
+export const FORCE_ROOM_ENTRANCE =  `${ host }classroom/socket/disconnect`;
+export const VERIFY_FINAL_STEPS_TOKEN = `${ host }auth/user/oauth/verify/` //:token
+export const COMPLETE_ACCOUNT_OAUTH_SETUP =  `${ host }auth/user/oauth/complete/`
+
 // Oauth
 
 export const GITHUB_AUTH_URL = `${ host }auth/github`;

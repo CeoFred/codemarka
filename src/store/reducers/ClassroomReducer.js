@@ -233,6 +233,20 @@ const unsetMessageEditOrDeleteData = (state) => {
         },
     })
 }
+
+const updateClassInfo = (state, action) => {
+    return helper.updateObject(state, {
+        description: action.data.description,
+        topic: action.data.topic,
+        name: action.data.name,
+    })
+};
+
+const updateRoomGravatar =  (state, action) => {
+    return helper.updateObject(state, {
+        gravatarUrl: action.url
+    })
+}
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
 
@@ -255,6 +269,8 @@ export default (state = INITIAL_STATE, action) => {
         case(actionTypes.CLOSE_MESSAGE_REACTION_EMOJI_PICKER): return closeMessageReactionPicker(state,action)
         case(actionTypes.SET_EDIT_OR_DELETE_MESSAGE_DATA): return setEditOrDeleteMessageData(state,action)
         case(actionTypes.UNSET_EDIT_OR_DELETE_MESSAGE_DATA): return unsetMessageEditOrDeleteData(state,action)
+        case(actionTypes.CLASSROOM_INFO_UPDATE): return updateClassInfo(state,action);
+        case(actionTypes.UPDATE_ROOM_GRAVATAR): return updateRoomGravatar(state,action);
         default: return state;
     }
 }

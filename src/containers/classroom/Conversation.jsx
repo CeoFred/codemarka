@@ -261,7 +261,6 @@ export default function Conversation(props) {
                           } else {
                               return (
                                   <div
-                                      key={ Math.random()*4272+22 }
                                       className={ `message ${
                                           userId === props.user
                                               ? 'sent'

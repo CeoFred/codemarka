@@ -1,3 +1,10 @@
+/* eslint-disable no-undef */
+/**
+ * /* eslint-disable no-undef
+ *
+ * @format
+ */
+
 /**
  * /* eslint-disable no-undef
  *
@@ -9,6 +16,7 @@
 import React, { useState, useLayoutEffect, useRef, useEffect } from 'react'
 import DetectRTC from 'detectrtc'
 
+import * as util from '../../../utility/shared'
 import VideoAudioPermission from '../Modals/VideoAndAudioPermission'
 import RemoteVideoStream from './Components/Video'
 import './index.css'
@@ -27,42 +35,8 @@ export default function RTC(props) {
     const [audioMuted, setAudioMuted] = useState(false)
     const [videoMuted, setVideoMuted] = useState(false)
     const [peerStreams, setPeerStreams] = useState([])
-
-    const canCall = useRef(true)
-    async function initiateCallWithUsers(usersInClass) {
-        console.log('users ', usersInClass)
-        // canCall.current = false
-        if (!window.stream[yourID.current]) {
-            const _stream = await navigator.mediaDevices.getUserMedia({
-                video: true,
-                audio: true,
-            })
-            userVideo.current.srcObject = _stream
-            await setStream(_stream)
-            await setVideoMuted(true)
-            _stream.getVideoTracks()[0].enabled = await videoMuted
-            mystream.current = _stream
-            window.stream = {}
-            window.stream[yourID.current] = _stream
-        }
-
-        usersRef.current = await usersInClass
-        myData.current =
-            (await usersInClass) &&
-            usersInClass.filter((user) => user.kid === yourID.current)[0]
-
-        usersInClass &&
-            usersInClass
-                .filter((user) => user.kid !== yourID.current)
-                .forEach((user) => {
-                    user.socketid !== signalingSocket.current.id &&
-                        callPeer(user, window.stream[yourID.current])
-                })
-    }
-
-    useEffect(() => {
-        console.log(props)
-    }, [])
+    const offerStrength = useRef(0)
+    const beepOfferStatus = useRef([])
 
     async function preparePeer() {
         const _stream = await navigator.mediaDevices.getUserMedia({
@@ -71,22 +45,19 @@ export default function RTC(props) {
         })
         userVideo.current.srcObject = _stream
         await setStream(_stream)
-        myData.current =
-            (await props.users) &&
-            props.users.filter((user) => user.kid === yourID.current)[0]
-
         await setVideoMuted(true)
         _stream.getVideoTracks()[0].enabled = await videoMuted
         mystream.current = _stream
         window.stream = {}
         window.stream[yourID.current] = _stream
+        offerStrength.current = util.randomNumber(4)
     }
 
     useEffect(() => {
         yourID.current = props.userkid && props.userkid
     }, [props.userkid])
 
-    useLayoutEffect(async () => {
+    useLayoutEffect(() => {
         DetectRTC.load(async function () {
             signalingSocket.current = (await props.socket) ? props.socket : null
             yourID.current = await props.userkid
@@ -107,47 +78,127 @@ export default function RTC(props) {
                             document.querySelector('#video_permission').click()
                     }, 1500)
                 }
-                await preparePeer()
+                await preparePeer() //1
 
-                signalingSocket.current.emit('rtc_ready_state', props.kid)
+                await signalingSocket.current.emit('rtc_ready_state', props.kid) //2
+
+                // request for current users in room;
+                // 1. Setup personal stream
+                //2. Alert server you are ready
+                //3. server tells you to setup your data and other users data
+                // 4. let the server know when done
+                // 5. server beeps people in room
+                // 6. when a user receives beep, setup rtc and emit ready to receive call
+                // 7. initiate a call to the user, create offer and everything follows;
 
                 signalingSocket.current.on(
-                    'rtc_room_users',
-                    async (usersin) => {
-                        usersRef.current = await usersin
+                    'rtc_setup_users',
+                    async (usersInRoom) => {
+                        console.log('got users', usersInRoom)
+                        usersRef.current = await usersInRoom.filter(
+                            (user) => user.kid !== yourID.current
+                        )
                         myData.current =
-                            (await usersin) &&
-                            usersin.filter(
+                            (await usersInRoom) &&
+                            usersInRoom.filter(
                                 (user) => user.kid === yourID.current
                             )[0]
-                        console.log(myData.current, usersRef.current)
+                        console.log(
+                            'setup complete ',
+                            myData.current,
+                            usersRef.current
+                        )
                         signalingSocket.current.emit(
-                            'rtc_room_users_setup_complete',
-                            props.kid
+                            'rtc_setup_users_complete',
+                            usersRef.current,
+                            offerStrength.current
                         )
                     }
                 )
-                // request for current users in room;
 
-                signalingSocket.current.on('rtc_beep', async (caller) => {
-                    console.log('received call request')
-
-                    await preparePeer()
-                    if (
-                        window.stream[yourID.current] &&
-                        !peersRef.current[caller.kid]
-                    ) {
-                        console.log('I am ready to receive peer connection')
-                        signalingSocket.current.emit('rtc_beep_ready', {
-                            ...caller,
-                            room: props.kid,
+                signalingSocket.current.on('beep_delivery', (user) => {
+                    console.log('beep delivered to ', user.kid)
+                    const offerExists = beepOfferStatus.current.find(
+                        (user_) => user_.kid === user.kid
+                    )
+                    if (!offerExists) {
+                        beepOfferStatus.current.push({
+                            ...user,
+                            offer: 'pending',
                         })
+                        console.log('beep offer added locally for ', user.kid)
                     }
                 })
 
-                signalingSocket.current.on('rtc_initiate_call', (userdata) => {
-                    console.log(' user is ready so i can call ', userdata)
-                    callPeer(userdata, window.stream[yourID.current])
+                signalingSocket.current.on(
+                    'rtc_beep',
+                    async ({ from: to, beepstrength }) => {
+                        // user wants to call
+                        ;(await !window.stream) && (await preparePeer())
+                        // console.log();
+                        const exitingBeepOffers =
+                            beepOfferStatus.current.length > 0
+                        // check if we have a beep instance of the user trying to call
+                        const initiatedBeep =
+                            exitingBeepOffers &&
+                            beepOfferStatus.current.find(
+                                (user) => user.socketid === to
+                            )
+
+                        if (!initiatedBeep) {
+                            // no instance of user yet, allow to receive
+                            console.log(
+                                'received a fresh beep from user and had no inital plan to call, allowing user to call me'
+                            )
+                            ;(await window.stream) &&
+                                (await signalingSocket.current.emit(
+                                    'rtc_beep_success',
+                                    to,
+                                    myData.current
+                                ))
+                        } else {
+                            console.log(
+                                'I have an instance of beep for this user'
+                            )
+                            // check beep strength
+                            const myBeepStrength = offerStrength.current
+                            console.log(myBeepStrength, beepstrength)
+                            if (beepstrength > myBeepStrength) {
+                                console.log(
+                                    'incoming user has a higer beep strength, so i let user call me',
+                                    beepstrength,
+                                    myBeepStrength
+                                ) // my call strength is weak, allow user to call me instead.
+                                ;(await window.stream) &&
+                                    (await signalingSocket.current.emit(
+                                        'rtc_beep_success',
+                                        to,
+                                        myData.current
+                                    ))
+                            } else {
+                                console.log('I would call user instead')
+                                const user = usersRef.current.find(
+                                    (user_) => user_.socketid === to
+                                )
+                                user &&
+                                    callPeer(
+                                        user,
+                                        window.stream[yourID.current]
+                                    )
+                            }
+                        }
+                    }
+                )
+
+                signalingSocket.current.on('rtc_beep_initite', (usertocall) => {
+                    // user aggred i should call
+                    console.log('user agreed that i call in ', usertocall)
+                    usertocall &&
+                        callPeer(usertocall, window.stream[yourID.current])
+                })
+
+                signalingSocket.current.on('rtc_search_failed', () => {
+                    window.location.reload()
                 })
 
                 signalingSocket.current.on('offer', (data) => {
@@ -169,10 +220,9 @@ export default function RTC(props) {
                     handleNewICECandidateMsg
                 )
                 signalingSocket.current.on('updatechat_left', (msg) => {
+                    console.log(msg.for, ' left')
                     peersRef.current[msg.for] &&
-                        setPeerStreams((s) => {
-                            peersRef.current[msg.for].close()
-                        })
+                        closeVideoCall(peersRef.current[msg.for], msg.for)
                 })
 
                 signalingSocket.current.on(
@@ -254,30 +304,31 @@ export default function RTC(props) {
         const userkid = user.kid
 
         if (peersRef.current[userkid]) {
-            console.log('old peer, recreating')
-            peersRef.current[userkid].close()
-            delete peersRef.current[userkid]
-            setPeerStreams((s) => {
-                const newUserStreams = s.filter(
-                    (remoteStream_) =>
-                        remoteStream_ && remoteStream_.user.kid !== userkid
-                )
-                return newUserStreams
-            })
+            closeVideoCall(peersRef.current[userkid],userkid);
         }
 
         const peer = new RTCPeerConnection({
             iceServers: [
-                // {
-                //     urls: 'stun:numb.viagenie.ca',
-                //     username: 'sultan1640@gmail.com',
-                //     credential: '98376683',
-                // },
-                // {
-                //     urls: 'turn:numb.viagenie.ca',
-                //     username: 'sultan1640@gmail.com',
-                //     credential: '98376683',
-                // },
+                {
+                    urls: 'turn:numb.viagenie.ca',
+                    credential: 'muazkh',
+                    username: 'webrtc@live.com',
+                },
+                {
+                    url: 'turn:turn.azcryptotrade.com:3478',
+                    credential: 'turnadmin',
+                    username: '@P@$$w0rd',
+                },
+                {
+                    urls: 'stun:numb.viagenie.ca',
+                    username: 'sultan1640@gmail.com',
+                    credential: '98376683',
+                },
+                {
+                    urls: 'turn:numb.viagenie.ca',
+                    username: 'sultan1640@gmail.com',
+                    credential: '98376683',
+                },
             ],
         })
         /**
@@ -291,27 +342,46 @@ export default function RTC(props) {
 
         peer.oniceconnectionstatechange = async () => {
             console.log(`${ peer.iceConnectionState }-state`)
-            if (peer.iceConnectionState === 'disconnected') {
+            if (
+                peer.iceConnectionState === 'failed' ||
+                peer.iceConnectionState === 'closed'
+            ) {
+                closeVideoCall(peer, userkid)
             }
-            if (peer.iceConnectionState === 'failed') {
-                peer.restartIce()
-            }
-            if (peer.iceConnectionState === 'closed') {
-                await setPeerStreams((s) => {
-                    console.log(s)
-                    const newUserStreams = s.filter(
-                        (remoteStream_) =>
-                            remoteStream_ && remoteStream_.user.kid !== userkid
-                    )
-                    return newUserStreams
-                })
-                await peer.close()
-                await delete peersRef.current[userkid]
+        }
+
+        peer.signalingstatechange = () => {
+            switch (peer.signalingState) {
+                case 'closed':
+                    closeVideoCall(peer, userkid)
+                    break
             }
         }
         peersRef.current[userkid] = peer
         console.log('created peer ', peersRef.current[userkid])
         return peer
+    }
+
+    function closeVideoCall(peer_, kid) {
+        setPeerStreams((s) => {
+            if (peer_) {
+                peer_.ontrack = null
+                peer_.onremovetrack = null
+                peer_.onremovestream = null
+                peer_.onicecandidate = null
+                peer_.oniceconnectionstatechange = null
+                peer_.onsignalingstatechange = null
+                peer_.onicegatheringstatechange = null
+                peer_.onnegotiationneeded = null
+                peer_.close()
+                peer_ = null;
+                delete peersRef.current[kid];
+            }
+            const newUserStreams = s.filter(
+                (remoteStream_) => remoteStream_.user.kid !== kid
+            )
+            return newUserStreams
+        })
     }
 
     function handleICECandidateEvent(e, user) {
@@ -327,15 +397,13 @@ export default function RTC(props) {
     }
 
     function handleNewICECandidateMsg(incoming) {
-        if (incoming.candidate) {
-            const candidate = new RTCIceCandidate(incoming.candidate)
-            console.log('received ICE ', incoming)
-            incoming.sender &&
-                peersRef.current[incoming.sender.kid] &&
-                peersRef.current[incoming.sender.kid]
-                    .addIceCandidate(candidate)
-                    .catch((e) => console.log(e))
-        }
+        const candidate = new RTCIceCandidate(incoming.candidate)
+        console.log('received ICE ', incoming)
+        incoming.sender &&
+            peersRef.current[incoming.sender.kid] &&
+            peersRef.current[incoming.sender.kid]
+                .addIceCandidate(candidate)
+                .catch((e) => console.log(e))
     }
 
     function handleNegotiationNeededEvent(user) {
@@ -461,7 +529,7 @@ export default function RTC(props) {
     }
 
     async function saveScreenshotOfVideo(userkid) {
-        signalingSocket.current.emit('video_toggle', data)
+        signalingSocket.current.emit('video_toggle')
     }
 
     function handleTrackEvent(e, user) {
@@ -477,7 +545,6 @@ export default function RTC(props) {
                             String(remoteStream.user.kid) === String(user.kid)
                     )
                 ) {
-                    console.log('old stream , upating stream ', s)
                     newUserStreams = s.map((remotePeerStreamData) => {
                         if (remotePeerStreamData.user.kid === user.kid) {
                             return {
@@ -490,13 +557,12 @@ export default function RTC(props) {
                     })
                     return newUserStreams
                 } else {
-                    console.log('new peer stream')
                     // play sound;
                     newUserStreams.push({
                         user,
                         stream: e.streams[0],
-                        video: e.streams[0].getVideoTracks()[0].enabled,
-                        audio: e.streams[0].getAudioTracks()[0].enabled,
+                        video: false,
+                        audio: true,
                     })
                 }
                 return newUserStreams
@@ -504,14 +570,14 @@ export default function RTC(props) {
     }
 
     function handleUserDisconnection(user) {
+        closeVideoCall(peersRef.current[user.kid],user.kid);
         signalingSocket.current.emit('disconnect_user_webrtc', user)
     }
 
     function disconnectFromVideoConference() {
         for (const key in peersRef.current) {
             if (peersRef.current.hasOwnProperty(key)) {
-                peersRef.current[key].close()
-                peersRef.current[key] && delete peersRef.current[key]
+                closeVideoCall(peersRef.current[key], key)
             }
         }
         setPeerStreams([])
@@ -543,7 +609,6 @@ export default function RTC(props) {
             },
         })
     }
-
     function handleIncomingWave(data) {
         console.log(data)
         data &&

@@ -71,6 +71,13 @@ function MessageComponent(props) {
             ) : (
                 ''
             )}
+
+            <Reactions
+                messageid={ props.message.msgId }
+                room={ props.kid }
+                user={ props.userId }
+                reactions={ props.message.reactions }
+            />
             {isThread ? (
                 <ThreadReplies
                     msgId={ msgId }
@@ -81,12 +88,6 @@ function MessageComponent(props) {
             ) : (
                 ''
             )}
-            <Reactions
-                messageid={ props.message.msgId }
-                room={ props.kid }
-                user={ props.userId }
-                reactions={ props.message.reactions }
-            />
         </div>
     )
 }
@@ -96,7 +97,7 @@ function Text(props) {
         navigator.permissions
             .query({ name: 'clipboard-write' })
             .then((result) => {
-                if (result.state == 'granted' || result.state == 'prompt') {
+                if (result.state === 'granted' || result.state === 'prompt') {
                     /* write to the clipboard now */
                     navigator.clipboard.writeText(code).then(
                         function () {

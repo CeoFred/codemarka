@@ -65,6 +65,13 @@ function ImageMessage(props) {
             ) : (
                 ''
             )}
+
+            <Reactions
+                messageid={ props.message.msgId }
+                classroomid={ props.kid }
+                user={ props.userId }
+                reactions={ props.message.reactions }
+            />
             {isThread ? (
                 <ThreadReplies
                     msgId={ msgId }
@@ -75,13 +82,6 @@ function ImageMessage(props) {
             ) : (
                 ''
             )}
-
-            <Reactions
-                messageid={ props.message.msgId }
-                classroomid={ props.kid }
-                user={ props.userId }
-                reactions={ props.message.reactions }
-            />
         </div>
     )
 }

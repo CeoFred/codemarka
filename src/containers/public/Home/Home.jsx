@@ -11,18 +11,17 @@ import './home.css';
 export default function Home() {
   return (
       <>
-          <div className="header-container-fluid">
-              <section className="header-bg slice py-8 bg-dark bg-cover bg-size--cover">
-                  <span className="mask bg-gradient-dark opacity-6" />
-                  <div className="container d-flex align-items-center text-center text-lg-left py-5">
+          <div className="header-container-fluid d-lex justify-content-center align-items-center" style={ {height:'100vh'} }>
+              <section className="header-bg slice py-8 bg-dark bg-cover bg-size--cover" style={ {height:'100%'} }>
+                  <span className="mask bg-gradient-dark opacity-9 h-100"/>
+                  <div className="container d-flex align-items-center text-lg-left py-5">
                       <div className="col px-0">
                           <div className="row row-grid align-items-center">
                               <div className="col-lg-8 text-center text-lg-left">
                                   <h1 className="text-white mb-4 text-left">
-                                      We're helping to bring together teams to
-                                      solve their coding problems from different
-                                      parts of the world in realtime.
+                                      Remote Technical workshops, Interviews, Meetups on the cloud leveraging real time technology.
                                   </h1>
+                                  <h4 className="text-white text-left">communicate in style with text, audio or video</h4>
                                   <div className="mt-5">
                                       <Link
                                           to={ url.AUTH_SIGN_UP }

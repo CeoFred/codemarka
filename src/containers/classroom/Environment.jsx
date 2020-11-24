@@ -21,7 +21,7 @@ import Blocked from '../../components/classroom/AccessMessages/Blocked';
 import Ended from '../../components/classroom/AccessMessages/Ended';
 import NotStarted from '../../components/classroom/AccessMessages/NotStarted';
 import MaxedOut from '../../components/classroom/AccessMessages/MaxUsers';
-import SmallScreen from '../../components/classroom/AccessMessages/SmallScreen';
+import AlreadyInClass from '../../components/classroom/AccessMessages/AlreadyInClass'
 
 function Environment(props) {
     const {
@@ -107,14 +107,29 @@ function Environment(props) {
             props.class_verified
         ) {
             let blocked = false
-
-            if (String(props.classOwner) !== String(props.userid)) {
-                if (status === 3) {
-                    return <Ended />
-                } else if (status === 1) {
-                    return <NotStarted startTimeFull={props.startTimeFull} />
+            if (props.classroom.students.length){
+                const alreadyInClass = props.classroom.students.find(user => {
+                    return user.kid === props.userid
+                })
+                if(alreadyInClass){
+                    return (
+                        <AlreadyInClass
+                            roomkid={props.kid}
+                            userkid={props.userid}
+                            token={props.token}
+                        />
+                    )
                 }
             }
+                if (String(props.classOwner) !== String(props.userid)) {
+                    if (status === 3) {
+                        return <Ended />
+                    } else if (status === 1) {
+                        return (
+                            <NotStarted startTimeFull={props.startTimeFull} />
+                        )
+                    }
+                }
 
             if (props.blocked) {
                 props.blocked.forEach(per => {
@@ -174,7 +189,7 @@ const mapStateToProps = ({ auth, classroom }) => {
         isAuthenticated: auth.user.token !== null,
         userid: auth.user.accountid,
         username: auth.user.displayName,
-        user_t: auth.user.token,
+        token: auth.user.token,
         class_verified: classroom.validated,
         classOwner: classroom.owner,
         className: classroom.name,
@@ -187,7 +202,7 @@ const mapStateToProps = ({ auth, classroom }) => {
         status: classroom.status,
         startTimeFull: classroom.schedule || classroom.startTimeFull,
         cid: classroom._id,
-        kid: classroom.Kid,
+        kid: classroom.kid,
         gravatarUrl: classroom.gravatarUrl,
         classroom
     }

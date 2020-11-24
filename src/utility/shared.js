@@ -1,20 +1,14 @@
 import { isFuture, isPast,isToday } from 'date-fns';
 import { formatToTimeZone } from 'date-fns-timezone'
 
-export const fetch  = (url='',method='GET',data={}) => {
-    
-return fetch(url,{
-    method:method,
-    mode:'cors',
-    cache:'no-cache',
-    credentials:'omit',
-    headers:{
-        'content-Type':'application.json'
-    },
-    redirect:'follow',
-    body:JSON.stringify(data)
-}).then(response => response.json())
-
+export const randomNumber = function (length) {
+    var text = ''
+    var possible = '123456789'
+    for (var i = 0; i < length; i++) {
+        var sup = Math.floor(Math.random() * possible.length)
+        text += i > 0 && sup == i ? '0' : possible.charAt(sup)
+    }
+    return Number(text)
 }
 
 export const updateObject = (oldObject, UpdatedProperties) => {
@@ -52,6 +46,9 @@ if(!rules.isPastDate){
         isValid = !isPast(new Date(value)) && isValid;
     }
 }
+if (rules.notwhitespace) {
+    isValid = !value.includes(' ') && isValid
+}
 
 if(rules.url){
       var pattern = new RegExp(
@@ -75,6 +72,14 @@ return isValid;
 
 export const resolvePromise = (promise) => {
     return promise.then(data => data).catch(error => error);
+}
+
+export function trimString(string, newlength, suffix) {
+    const trimmedString =
+        string.length > newlength
+            ? string.substring(0, newlength) + String(suffix)
+            : string
+    return trimmedString
 }
 
 export const convertToReadableDateFormat = (UTC,format,specifiedTimeZone) => {

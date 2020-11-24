@@ -5,11 +5,18 @@ import Modal from '../../Partials/Modals/Modal'
 import Input from '../../Partials/Input/Input'
 import Spinner from '../../Partials/Preloader'
 import { convertToReadableDateFormat } from '../../../utility/shared';
+import { connect } from 'react-redux'
 
-export default function ClassroomInformation({ owner, socket, onClassroomVerify,toast }) {
-    const {
-        classroom
-    } = useSelector((state) => state)
+import * as action from '../../../store/actions';
+
+function ClassroomInformation({
+    owner,
+    socket,
+    onClassroomInfoUpdate,
+    toast,
+    gravatarChanged,
+}) {
+    const { classroom } = useSelector((state) => state)
     const [classInfo, setClassroomInformation] = useState({
         cname: {
             value: classroom.name,
@@ -29,7 +36,7 @@ export default function ClassroomInformation({ owner, socket, onClassroomVerify,
         submitted: false,
     })
 
-    const [uploadingImage, setUploadingImage] = useState(false);
+    const [uploadingImage, setUploadingImage] = useState(false)
 
     const handleClassInfoUpdate = (e) => {
         e.preventDefault()
@@ -42,43 +49,26 @@ export default function ClassroomInformation({ owner, socket, onClassroomVerify,
         }
     }
 
-     useEffect(() => {
-         socket.on('newClassInformation', (doc) => {
-             toast.success((<div><span>Head Up! ✋<br/>Information updated! </span></div>));
-             setClassroomInformation((c) => {
-                 return { ...c, submitted: false }
-             })
-             onClassroomVerify(doc.kid)
-         })
-         
-         socket.on('gravatarRegenerated',(url) => {
-           setClassroomInformation((c) => {
-             return {...c,cgravatar: { value: url }}
-           })
-         })
+    useEffect(() => {
+        socket.on('newClassInformation', (doc) => {
+            setClassroomInformation((c) => {
+                return { ...c, submitted: false }
+            })
+            onClassroomInfoUpdate(doc)
+        })
 
-         socket.on('action_failed',(reason) => {
-           toast.error(reason);
-         });
+        socket.on('action_failed', (reason) => {
+            toast.error(reason)
+        })
 
-         socket.on('gravatar_image_upload_complete',(url) => {
-           setClassroomInformation((c) => {
-               return { ...c, cgravatar: { value: url } }
-           })
-           setUploadingImage(false);
-           onClassroomVerify(classroom.kid)
-             toast.success(
-                 <div>
-                     <span>
-                         Head Up! ✋<br />
-                         Image updated!{' '}
-                     </span>
-                 </div>
-             )
-
-         })
-
-     }, [])
+        socket.on('gravatar_image_upload_complete', (url) => {
+            setClassroomInformation((c) => {
+                return { ...c, cgravatar: { value: url } }
+            })
+            setUploadingImage(false)
+            gravatarChanged(url)
+        })
+    }, [])
 
     const handleClassroomInformationInputChange = (e, inputname) => {
         const v = e.target.value
@@ -89,11 +79,14 @@ export default function ClassroomInformation({ owner, socket, onClassroomVerify,
     }
 
     const handleGravatarRegeneration = (e) => {
-      socket.emit('gravatarRegenerate', { room: classroom.kid,time: new Date() })
+        socket.emit('gravatarRegenerate', {
+            room: classroom.kid,
+            time: new Date(),
+        })
     }
 
     const handleImageUploadChange = (e) => {
-        setUploadingImage(true);
+        setUploadingImage(true)
         const file = e.target.files[0]
         var reader = new FileReader()
 
@@ -137,7 +130,7 @@ export default function ClassroomInformation({ owner, socket, onClassroomVerify,
                                 borderRadius: '50%',
                                 height: '3rem',
                                 maxHeight: '3rem',
-                                width: '3rem'
+                                width: '3rem',
                             } }
                             height="50"
                         />
@@ -157,7 +150,11 @@ export default function ClassroomInformation({ owner, socket, onClassroomVerify,
                                             : 'Upload'
                                     }
                                     type="button"
-                                    onClick={ () => document.getElementById('gravatar_image').click() }
+                                    onClick={ () =>
+                                        document
+                                            .getElementById('gravatar_image')
+                                            .click()
+                                    }
                                 />
                                 <input
                                     type="file"
@@ -216,25 +213,10 @@ export default function ClassroomInformation({ owner, socket, onClassroomVerify,
                             handleClassroomInformationInputChange(e, 'cdesc')
                         }
                     />
-
-                    <Input
-                        label="Schedule"
-                        elementType="datetime-local"
-                        elementConfig={ {
-                            disabled: owner ? false : true,
-                            name: 'cschedule',
-                        } }
-                        shouldDisplay={ owner }
-                        value={ classInfo.cschedule.value }
-                        changed={ (e) =>
-                            handleClassroomInformationInputChange(
-                                e,
-                                'cschedule'
-                            )
-                        }
-                    />
                     <div>
-                        <label className="form-control-label">Time</label>
+                        <label className="form-control-label">
+                            Scheduled Time
+                        </label>
                         <div>
                             {convertToReadableDateFormat(
                                 classInfo.cschedule.value
@@ -246,3 +228,14 @@ export default function ClassroomInformation({ owner, socket, onClassroomVerify,
         </div>
     )
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onClassroomInfoUpdate: (data) => dispatch(action.updateRoomInfo(data)),
+        gravatarChanged: (url) => dispatch(action.updateClassGravatar(url))
+    }
+}
+export default connect(
+    null,
+    mapDispatchToProps
+)(ClassroomInformation)

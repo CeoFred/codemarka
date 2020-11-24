@@ -1,5 +1,16 @@
 import * as actionTypes from './Types'
 
+export function updateRoomInfo(data){
+    return {type: actionTypes.CLASSROOM_INFO_UPDATE,
+    data}
+}
+
+export function updateClassGravatar(url){
+    return {
+        type: actionTypes.UPDATE_ROOM_GRAVATAR,
+        url
+    }
+}
 export function classVerify(classKid){
     return {
         type:actionTypes.CLASSROOM_ASYNC_VERIFICATION_INIT,

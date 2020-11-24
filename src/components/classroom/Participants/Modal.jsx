@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react'
-
+import './style.css'
 const Modal = ({
     userid,
     ownerid,
@@ -16,85 +16,79 @@ const Modal = ({
 
     if (users && users.length > 0) {
          users__ =  users.map(u => {
-             return userid !== u.kid ? (
-                 <div>
-                     <li
-                         className="list-group-item  justify-content-between align-items-center"
-                         key={ u.id }>
-                         <div className="d-inline">
-                             <img
-                                 alt={
-                                     u.username.toUpperCase()[0] +
-                                     '' +
-                                     u.username.toUpperCase()[1]
-                                 }
-                                 src={ u.avatar }
-                                 class="avatar  rounded-circle avatar-sm"
-                             />
-                             <span>
-                                 <a
-                                     href={ `/user/profile/${ u.id }?ref=classroom` }
-                                     className="text-dark font-weight-normal pl-3 text-uppercase">
-                                     @{u.username}{' '}
-                                     {ownerid === u.id ? '(Admin)' : ''}
-                                 </a>
-                                 <br />
-                                 {owner ? (
-                                     <div className="ml-5">
-                                         <b
-                                             style={ { cursor: 'pointer' } }
-                                             onClick={ (e, user = u) =>
-                                                 sendUserPrivateMessage(e, user)
-                                             }
-                                             className="text-info p-1">
-                                             message{' '}
-                                         </b>
+             return (
+                 <li className="participant-container" key={ u.kid }>
+                     <div className="user-username-image">
+                         <img
+                             alt={
+                                 u.username.toUpperCase()[0] +
+                                 '' +
+                                 u.username.toUpperCase()[1]
+                             }
+                             src={ u.avatar }
+                             class="avatar  rounded-circle avatar-sm"
+                         />
+                         <a
+                             target="_blank"
+                             href={ `/u/${ u.username }?ref=classroom` }
+                             className="text-dark font-weight-normal pl-2">
+                             <b>
+                                 @{u.username} {userid === u.kid && ' (You)'}
+                                 {ownerid === u.id ? '(admin)' : ''}
+                             </b>
+                         </a>
+                     </div>
 
-                                         <b
-                                             onClick={ (e, user = u) =>
-                                                 waveAtUser(e, user)
-                                             }
-                                             style={ { cursor: 'pointer' } }
-                                             className="text-dark p-1">
-                                             wave
-                                         </b>
+                     <span className="user-actions">
+                         {owner && userid !== u.kid ? (
+                             <div className="ml-5">
+                                 <b
+                                     onClick={ (e, user = u) =>
+                                         waveAtUser(e, user)
+                                     }
+                                     style={ { cursor: 'pointer' } }
+                                     className="text-dark p-1">
+                                     <i className="fa fa-hand-paper"></i> 
+                                 </b>
 
-                                         <b
-                                             onClick={ (e, user = u) =>
-                                                 blockUser(e, user)
-                                             }
-                                             style={ { cursor: 'pointer' } }
-                                             className="text-danger p-1">
-                                             block
-                                         </b>
-                                     </div>
-                                 ) : (
-                                     <div className="ml-5">
-                                         <b
-                                             onClick={ (e, user = u) =>
-                                                 sendUserPrivateMessage(e, user)
-                                             }
-                                             style={ { cursor: 'pointer' } }
-                                             className="text-info p-1">
-                                             message
-                                         </b>
-                                         <b
-                                             onClick={ (e, user = u) =>
-                                                 waveAtUser(e, user)
-                                             }
-                                             style={ { cursor: 'pointer' } }
-                                             className="text-dark p-1">
-                                             wave
-                                         </b>
-                                     </div>
+                                 <b
+                                     onClick={ (e, user = u) =>
+                                         blockUser(e, user)
+                                     }
+                                     style={ { cursor: 'pointer' } }
+                                     className="text-danger p-1">
+                                     <i className="fa fa-ban"></i> 
+                                 </b>
+                                 <b
+                                     onClick={ (e, user = u) =>
+                                         toogleUserEditAccess(e, user)
+                                     }
+                                     style={ { cursor: 'pointer' } }
+                                     className="text-primary p-1">
+                                     <i className="fa fa-chalkboard-teacher"></i>
+                                 </b>
+                             </div>
+                         ) : (
+                             <div className="ml-5">
+                                 {userid !== u.kid && (
+                                     <b
+                                         onClick={ (e, user = u) =>
+                                             waveAtUser(e, user)
+                                         }
+                                         style={ { cursor: 'pointer' } }
+                                         className="text-dark p-1">
+                                         <i className="fa fa-hand-paper"></i>{' '}
+                                         
+                                     </b>
                                  )}
-                             </span>
-                         </div>
-                         {owner ? (
+                             </div>
+                         )}
+                     </span>
+                     {/* {owner ? (
                              <div>
                                  <select
                                      className="d-inline custom-select"
-                                     onChange={ (e) =>
+                                     onChange={(e) =>
                                          toogleUserEditAccess(e, u)
                                      }>
                                      <option
@@ -122,10 +116,9 @@ const Modal = ({
                              </div>
                          ) : (
                              ''
-                         )}
-                     </li>
-                 </div>
-             ) : null
+                         )} */}
+                 </li>
+             ) 
          
         })
     }
@@ -148,7 +141,7 @@ const Modal = ({
                 <div class="modal-content">
 
                     <div class="modal-header">
-                        <h5 class="modal-title h6" id="participantModalLabel">Participants</h5>
+                        <h5 class="modal-title h6" id="participantModalLabel">Participants In Room</h5>
                         <button type="button" id="participantModalExitButton" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

@@ -10,7 +10,7 @@ import Navigation from '../../components/classroom/UI/NavBar'
 import Convo from './Conversation'
 import Editor from '../../components/classroom/Editor/Editor'
 import Preview from '../../components/classroom/Editor/Preview'
-import AudioVideo from '../../components/classroom/AudioVideo/index';
+import AudioVideo from '../../components/classroom/AudioVideo/RTC';
 import Seo from '../../components/SEO/helmet'
 import Modal from '../../components/Partials/Modals/Modal'
 import Input from '../../components/Partials/Input/Input'
@@ -33,6 +33,7 @@ import ClassInformationModal from '../../components/classroom/Modals/ClassroomIn
 import VideoAndAudioPermission from '../../components/classroom/Modals/VideoAndAudioPermission';
 import { CLASSROOM_FILE_DOWNLOAD } from '../../config/api_url'
 import ConversationThread from '../../components/classroom/Conversation_Partials/MessageType/Components/MessageThread'
+import ReconnectionModal from '../../components/classroom/UI/ReconnectionModal';
 
 import './css/Environment.css'
 
@@ -77,6 +78,7 @@ const MainClassLayout = ({
     handleUnsetEditOrDeleteMessage,
     isProcessingEditingOrDeletingMessage,
     instanceOdEditingOrDeletingMessage,
+    usersData
 }) => {
     const [inputState, setInputState] = useState({
         value: '',
@@ -87,7 +89,7 @@ const MainClassLayout = ({
     const [userMessageColor, setUserMessageColor] = useState('#000')
 
     const [isDisplayingEmoji, setisDisplayingEmoji] = useState(false)
-    const [isUploadingImage, setIsUploadingImage] = useState(false)
+    const [, setIsUploadingImage] = useState(false)
     const [imagePreviewConfig, setImagePreviewConfig] = useState({
         shouldDisplay: false,
         url: '',
@@ -457,16 +459,24 @@ const MainClassLayout = ({
 
             socket.on('rejoin_updateMsg', (msg) => {
                 setcodemarkaState((c) => {
-                    const nnc = msg.newuserslist.filter((u) => {
-                        return String(u.kid) !== String(userid)
-                    })
                     return {
                         ...c,
                         messages: msg.msgs,
                         users: msg.newuserslist,
-                        numberInClass: nnc.length,
+                        numberInClass: msg.newuserslist.length,
                     }
                 })
+            })
+
+            socket.on('force_disconnect', () => {
+                alert('Closing this session! Bye!');
+                  setSocketConnection({
+                      ...SocketConnection,
+                      connected: false,
+                      failed: true,
+                  })
+
+                socket.close();
             })
 
             socket.on('started_class', () => {
@@ -495,19 +505,19 @@ const MainClassLayout = ({
             socket.emit('join', requestData)
 
             setSocket(socket)
-            //listen for bot messaage
-            socket.on('botWelcome', (msg) => {
-                setUserSpecificMessages((c) => [...c, msg])
-            })
 
             //listen for new members added
             socket.on('someoneJoined', (msg) => {
                 setcodemarkaState((c) => {
                     const oldmsg = c.messages
                     oldmsg.push(msg)
-                    const nnc = msg.newuserslist.filter((u) => {
-                        return u.kid !== userid
+                    const nnc = msg.newuserslist.find((u) => {
+                        return true
                     })
+                    if(msg.for === userid){
+                        socket.close();
+                        alert('You have been logged Out! Bye!!')
+                    }
                     socket.emit('user_typing_cleared', {
                         username: msg.name,
                         userid: msg.for,
@@ -525,17 +535,14 @@ const MainClassLayout = ({
             })
 
             socket.on('disconnect', (reason) => {
-                setSocketConnection({ ...SocketConnection, connected: false })
 
                 if (reason === 'io server disconnect') {
                     // the disconnection was initiated by the server, you need to reconnect manually
                     socket.connect()
                 }
                 socket.emit('lefti')
-                if (connAttempts.current > 6) {
-                    toast.warn('Disconnected from classroom', {
-                        position: toast.POSITION.BOTTOM_RIGHT,
-                    })
+                if (connAttempts.current > 30) {
+                  setSocketConnection({ ...SocketConnection, connected: false, failed: true })
                 }
             })
 
@@ -547,11 +554,7 @@ const MainClassLayout = ({
 
             socket.on('reconnecting', (attemptNumber) => {
                 connAttempts.current++
-                if (attemptNumber > 1) {
-                    toast.info(
-                        'Attempting to reconnect to classroom,please wait...'
-                    )
-                }
+                setSocketConnection({ connected: attemptNumber > 10 ? false : true, attemptNumber })
             })
 
             socket.on('star_rating_failed', (reason) => {
@@ -566,27 +569,30 @@ const MainClassLayout = ({
 
             socket.on('reconnect_error', (error) => {
                 if (connAttempts.current >= 30) {
-                    toast.warn('Reconnection has timedout', {
-                        position: 'bottom-center',
-                    })
-                    setSocketConnection({ connected: false })
+                    setSocketConnection({ connected: false, failed: true })
                 }
             })
 
             socket.on('reconnect_failed', () => {
-                setSocketConnection({ connected: false })
+                setSocketConnection({ connected: false, failed: true })
             })
 
             socket.on('reconnect', (attemptNumber) => {
+                setSocketConnection({ connected: true, failed: false })
                 socket.emit('join', requestData)
-                toast.success('Back Online!', { position: 'bottom-center' })
+                // toast.success('Back Online!', { position: 'bottom-center' })
                 connAttempts.current = 0
-                setSocketConnection({ connected: true })
+                socket.emit(
+                    'update_socket_id',
+                    socketRef.current.id,
+                    requestData
+                )
+                console.log(socketRef.current.id);
             })
 
             //listen for new messages
             socket.on('nM', (data) => {
-                const updateMessage = new Promise((resolve, reject) => {
+                new Promise((resolve, reject) => {
                     resolve(
                         setcodemarkaState((c) => {
                             const oldmsg = c.messages
@@ -612,11 +618,8 @@ const MainClassLayout = ({
                     const oldmsg = c.messages
                     oldmsg.push(msg)
 
-                    let newUserList = c.users.filter((user) => {
+                    const newUserList = c.users.filter((user) => {
                         return String(user.kid) !== String(msg.for)
-                    })
-                    newUserList = newUserList.filter((u) => {
-                        return String(u.kid) !== String(userid)
                     })
                     const newTypingState = c.typingState.filter((user) => {
                         return String(user.kid) !== String(msg.for)
@@ -1758,6 +1761,11 @@ const MainClassLayout = ({
             <Seo
                 title={ `${ name } :: codemarka classroom` }
                 metaDescription={ description }></Seo>
+            <ReconnectionModal
+                show={ !SocketConnection.connected }
+                attemptNumber={ SocketConnection.attemptNumber }
+                failed={ SocketConnection.failed }
+            />
             <ToastContainer />
             <Preview
                 previewBtnClicked={ handlePreview }
@@ -1815,7 +1823,7 @@ const MainClassLayout = ({
                 classroomid={ data.classroom_id }
                 testConnection={ handletestConnection }
                 classReport={ handleclassReport }
-                number={ codemarkastate.numberInClass }
+                number={ codemarkastate.users.length }
                 owner={ owner }
                 classStarted={ classroomD.status === 2 ? true : false }
                 endClass={ handleEndClass }
@@ -2220,7 +2228,7 @@ const MainClassLayout = ({
                                 shouldDisplay={ codemarkastate.isShowingMentions }
                                 owner={ ownerid }
                                 showMentions={ handleShowMentions }
-                                isOnline={ socketRef.current.connected }
+                                isOnline={ SocketConnection.connected }
                                 addCodeBlock={ handleAddCodeBlock }
                                 showEmojiPicker={ handleShowEmojiPicker }
                                 uploadImage={ handleImageUpload }
@@ -2248,12 +2256,15 @@ const MainClassLayout = ({
                             <AudioVideo
                                 socket={ socketRef.current }
                                 userkid={ userid }
+                                username={ username }
                                 isOwner={ owner }
                                 ref={ audioVideoRef }
                                 isBroadcasting={ classroomD.isBroadcasting }
                                 users={ codemarkastate.users }
                                 kid={ classroomD.kid }
                                 onAlert={ handleAudioVideoAlert }
+                                usersData={ usersData }
+                                toast={ toast }
                             />
                         </div>
                     </div>
@@ -2275,12 +2286,13 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-const mapStateToProps = ({ classroom }) => {
+const mapStateToProps = ({ classroom, auth }) => {
     return {
         activeMessage: classroom.messageReaction.messageId,
         isShowingReactionEmoji: classroom.messageReaction.isShowing,
         isProcessingEditingOrDeletingMessage: classroom.editOrDeleteMessage.processing,
-        instanceOdEditingOrDeletingMessage: classroom.editOrDeleteMessage.instance
+        instanceOdEditingOrDeletingMessage: classroom.editOrDeleteMessage.instance,
+        usersData: auth.user
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MainClassLayout)

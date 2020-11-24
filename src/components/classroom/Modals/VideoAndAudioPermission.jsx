@@ -24,7 +24,7 @@ export default function VideoAndAudioPermission() {
                 size="sm">
                 <div
                     className="mb-2 mt-2 d-flex justify-content-center align-items-center"
-                    align="center">
+                    align="left">
                     Codemarka needs access to your camera and microphone so that
                     only your instructor can see and hear you. Codemarka will
                     ask you to confirm this decision on each browser and

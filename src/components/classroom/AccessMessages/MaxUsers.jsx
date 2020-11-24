@@ -3,7 +3,6 @@
 // yet to start
 
 import React from 'react'
-import { formatToTimeZone } from 'date-fns-timezone'
 import notFoundImg from '../../../media/images/vectors/hugo-fatal-error.png'
 
 function MaxedOut(props) {
@@ -16,7 +15,7 @@ function MaxedOut(props) {
                     data-bg-position="center">
                     <img
                         src={ notFoundImg }
-                        alt="Image"
+                        alt="not_found"
                         class="img-as-bg rounded-bottom-left"
                     />
                 </div>
