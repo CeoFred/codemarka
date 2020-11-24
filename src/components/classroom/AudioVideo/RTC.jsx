@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * /* eslint-disable no-undef
  *
@@ -544,7 +545,6 @@ export default function RTC(props) {
                             String(remoteStream.user.kid) === String(user.kid)
                     )
                 ) {
-                    console.log('old stream , upating stream ', s)
                     newUserStreams = s.map((remotePeerStreamData) => {
                         if (remotePeerStreamData.user.kid === user.kid) {
                             return {
@@ -557,7 +557,6 @@ export default function RTC(props) {
                     })
                     return newUserStreams
                 } else {
-                    console.log('new peer stream')
                     // play sound;
                     newUserStreams.push({
                         user,

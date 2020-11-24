@@ -17,9 +17,16 @@ export default function RemoteVideoStream({
 
     useLayoutEffect(() => {
         userVideo.current.srcObject = stream
-
+        window.stream2 = {};
+        window.stream2[user.username] = stream;
         const name = (user && user.username) || 'loading..'
         setusername_(name)
+
+        const userVideo_ = document.getElementById(`marka_rtc_${ user.kid }`);
+        const videoTrack = userVideo_ && userVideo_.srcObject.getVideoTracks()[0];
+        videoTrack.onmute = function () {
+            console.log('onmute');
+        };
     }, [stream, user])
 
     return (
@@ -36,6 +43,7 @@ export default function RemoteVideoStream({
                 playsInline
                 muted={ false }
                 ref={ userVideo }
+                id={ `marka_rtc_${ user.kid }` }
                 autoPlay
             />
             <div
