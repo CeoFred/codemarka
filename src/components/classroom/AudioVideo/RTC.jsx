@@ -631,7 +631,7 @@ export default function RTC(props) {
         <div className="participant-host-video-container">
             <VideoAudioPermission />
             <span className="hide d-flex align-items-center justify-content-between">
-                <div>
+                <div style={ { fontSize:'larger'} }>
                     <i className="fa fa-video mr-1"></i> Video call
                 </div>
                 {props.isOwner ? (

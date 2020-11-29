@@ -6,7 +6,6 @@ i.deleted_message {
 div.main_message_container {
   position: relative;
   cursor: pointer;
-  margin-bottom: 1rem;
 }
 
 div.message_actions {

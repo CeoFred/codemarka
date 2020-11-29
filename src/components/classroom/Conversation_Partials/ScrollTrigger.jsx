@@ -8,11 +8,12 @@ export default function ScrollTrigger({ status, goToBottom }) {
                 <div
                     onClick={ goToBottom }
                     style={ {
-                        position: 'absolute',
+                        position: 'relative',
                         width: '100%',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        bottom: '15%'
                     } }>
                     <i className="toButtomIcon fa fa-angle-double-down"></i>
                 </div>

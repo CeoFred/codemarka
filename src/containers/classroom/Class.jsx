@@ -8,7 +8,7 @@ import * as action from '../../store/actions/'
 
 import Navigation from '../../components/classroom/UI/NavBar'
 import Convo from './Conversation'
-import Editor from '../../components/classroom/Editor/Editor'
+import Editor from '../../components/classroom/Editor/index'
 import Preview from '../../components/classroom/Editor/Preview'
 import AudioVideo from '../../components/classroom/AudioVideo/RTC';
 import Seo from '../../components/SEO/helmet'
@@ -173,7 +173,7 @@ const MainClassLayout = ({
         }, 1000)
     }
     const [SocketConnection, setSocketConnection] = useState({
-        connected: socket.connected,
+        connected: true,
     })
 
     const [
@@ -901,44 +901,45 @@ const MainClassLayout = ({
                 })
             })
             //listen to file changes
-            socket.on('class_files_updated', (data) => {
-                const EditorName = data.file
-                const updatedContentForEditor = data.content
-                const EditorId = data.id
-                const FileEditorsKid = data.user
+            // socket.on('class_files_updated', (data) => {
+            //     const EditorName = data.file
+            //     const updatedContentForEditor = data.content
+            //     const EditorId = data.id
+            //     const FileEditorsKid = data.user
 
-                setcodemarkaState((c) => {
-                    // check preview states
-                    if (FileEditorsKid !== userid) {
-                        let newEditorContent
+            //     setcodemarkaState((c) => {
+            //         // check preview states
+            //         if (FileEditorsKid !== userid) {
+            //             let newEditorContent
 
-                        c.editors.forEach((editor, i) => {
-                            if (
-                                editor.file === EditorName &&
-                                editor.id === EditorId
-                            ) {
-                                newEditorContent = c.editors
-                                newEditorContent[
-                                    i
-                                ].content = updatedContentForEditor
-                            }
-                        })
-                        return {
-                            ...c,
-                            editors: newEditorContent,
-                            previewContent: {
-                                ...c.previewContent,
-                                [EditorName]: {
-                                    content: updatedContentForEditor,
-                                    id: EditorId,
-                                },
-                            },
-                        }
-                    } else {
-                        return c
-                    }
-                })
-            })
+            //             c.editors.forEach((editor, i) => {
+            //                 if (
+            //                     editor.file === EditorName &&
+            //                     editor.id === EditorId
+            //                 ) {
+            //                     newEditorContent = c.editors
+            //                     newEditorContent[
+            //                         i
+            //                     ].content = updatedContentForEditor
+            //                 }
+            //             })
+            //             return {
+            //                 ...c,
+            //                 editors: newEditorContent,
+            //                 previewContent: {
+            //                     ...c.previewContent,
+            //                     [EditorName]: {
+            //                         content: updatedContentForEditor,
+            //                         id: EditorId,
+            //                     },
+            //                 },
+            //             }
+            //         } else {
+            //             return c
+            //         }
+            //     })
+            // })
+
         } else if (codemarkastate.blocked && inRoom === false) {
             socket.close()
         }
@@ -1555,7 +1556,7 @@ const MainClassLayout = ({
     const handleAddURL = (e) => {
         document.querySelector('#hyperlinkModal').click()
     }
-    const editorChanged = (event, value, editorName) => {
+    const editorChanged = (value, editorName, deltaValue,updateId) => {
         let editorFileId
 
         codemarkastate.editors.forEach((element) => {
@@ -1573,6 +1574,8 @@ const MainClassLayout = ({
             editedBy: userid,
             kid: data.classroom_id,
             type: 'update',
+            deltaValue,
+            updateId,
         }
 
         setcodemarkaState((c) => {
@@ -1586,9 +1589,6 @@ const MainClassLayout = ({
         })
 
         socket.emit('editorChanged', emitObj)
-
-        // if(o.origin === 'cut' && o.removed[0] !== ""){
-        // }
     }
 
     function handleUploadInputChange(e) {
@@ -1612,7 +1612,10 @@ const MainClassLayout = ({
 
                 if (!fileTypeSupported) {
                     toast.error(
-                        'File type not supported for environment,only HTML,CSS and Javascript Files, Try again.'
+                        '😥 File not supported',
+                        {
+                            position:'bottom-center'
+                        }
                     )
                     setEditorUploadState({ uploading: false, file: '' })
                 } else {
@@ -1655,10 +1658,6 @@ const MainClassLayout = ({
                     })
 
                     socket.emit('editorChanged', emitObj)
-
-                    toast.success(`Upload Completed. File - ${ fileType }`, {
-                        position: 'bottom-center',
-                    })
 
                     setEditorUploadState({ uploading: false, file: '' })
 
@@ -2241,12 +2240,11 @@ const MainClassLayout = ({
                                 readOnly={ codemarkastate.editorPriviledge }
                                 handleEditorChange={ editorChanged }
                                 files={ codemarkastate.previewContent }
-                                userkid={ userid }
+                                user={ userid }
                                 socket={ socketRef.current }
                                 dropDownSelect={ handledropDownSelect }
-                                uploadFileFromSystem={
-                                    handleuploadFileFromSystem
-                                }
+                                uploadingState={ editorUploadState.uploading }
+                                showPreview={ handlePreview }
                                 classroomid={ data.classroom_id }
                                 clearEditorrContent={ handleClearEditorrContent }
                                 addExternalCDN={ handleAddExternalCDN }

@@ -9,16 +9,6 @@ export default function Preview(props) {
     }
     return (
         <div>
-            <button
-                title="Preview"
-                type="button"
-                onClick={ props.previewBtnClicked }
-                data-toggle="modal"
-                data-target="#modal_1"
-                className="preview_btn">
-                <i className="fa fa-play-circle fa-3x"></i>
-            </button>
-
             <div
                 className="modal modal-fluid fade"
                 id="modal_1"

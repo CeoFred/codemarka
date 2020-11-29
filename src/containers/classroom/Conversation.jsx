@@ -213,28 +213,21 @@ export default function Conversation(props) {
     return (
         <div className="conversation__container d-block">
             <div className="user-bar">
-                <span className="name">
-                    <div>
-                        {props.username.slice(0, 20)}
-                        {props.username.length > 19 ? '...' : ''}
+                <div
+                    className="name"
+                    style={ {
+                        color: '#fff',
+                        fontSize: '1rem',
+                        fontWeight: 200,
+                    } }>
+                    <div className="channel_info_container">
+                        <div className="channel_info_title"><i className="fas fa-comment-alt"></i> Group Chat </div>
                     </div>
-                    <div
-                        style={ {
-                            marginTop: '-10px',
-                            color: '#fff',
-                            fontSize: '1rem',
-                            fontWeight: 200,
-                        } }>
-                        {props.isOnline ? 'online' : 'offline'}{' '}
-                        <span
-                            className={ `dot-${
-                                props.isOnline ? 'online' : 'offline'
-                            }` }></span>
-                    </div>
-                    <div className="text-white" style={ { fontSize: 10 } }>
-                        {getTyping()}
-                    </div>
-                </span>
+                </div>
+                
+                <div className="text-white" style={ { fontSize: 13, width:'100%', flexWrap:'wrap'} }>
+                    {getTyping()}
+                </div>
             </div>
             {/* messages tab */}
             <div className="container bg-black messages" id="fala">
@@ -265,9 +258,7 @@ export default function Conversation(props) {
                                           userId === props.user
                                               ? 'sent'
                                               : 'received'
-                                      }` }
-                                      >
-                                        
+                                      }` }>
                                       <div
                                           style={ {
                                               color: `${ color }`,
