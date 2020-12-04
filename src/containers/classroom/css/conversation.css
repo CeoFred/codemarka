@@ -2,6 +2,7 @@ div.conversation__container {
     height: 100%;
     max-height: 100%;
     position: relative;
+    border-right: 1px solid #1f2d3d;
 }
 
 div.input_container textarea.form-control {

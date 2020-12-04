@@ -1826,6 +1826,7 @@ const MainClassLayout = ({
                 owner={ owner }
                 classStarted={ classroomD.status === 2 ? true : false }
                 endClass={ handleEndClass }
+                connected={ SocketConnection.connected }
                 startClass={ handlestartClass }
                 gravatarUrl={ gravatarUrl }
                 isCollectingAttendance={ attendanceState.isCollectingAttendance }
@@ -2190,7 +2191,7 @@ const MainClassLayout = ({
                 onClassroomVerify={ onClassroomVerify }
                 toast={ toast }
             />
-            <div style={ { width: '100%', height: '92vh' } }>
+            <div style={ { width: '100%', height: '91vh' } }>
                 <div className="container-fluid h-100">
                     <div className="row h-100">
                         <div className="col-2 p-0 d-none d-md-block d-lg-block h-100">

@@ -1,4 +1,9 @@
-/* eslint-disable no-undef */
+/**
+ * /* eslint-disable no-undef
+ *
+ * @format
+ */
+
 /**
  * /* eslint-disable no-undef
  *
@@ -32,8 +37,8 @@ export default function RTC(props) {
     const peersRef = useRef({})
     const mystream = useRef()
     const myData = useRef()
-    const [audioMuted, setAudioMuted] = useState(false)
-    const [videoMuted, setVideoMuted] = useState(false)
+    const [audioMuted, setAudioMuted] = useState(true)
+    const [videoMuted, setVideoMuted] = useState(true)
     const [peerStreams, setPeerStreams] = useState([])
     const offerStrength = useRef(0)
     const beepOfferStatus = useRef([])
@@ -51,6 +56,7 @@ export default function RTC(props) {
         window.stream = {}
         window.stream[yourID.current] = _stream
         offerStrength.current = util.randomNumber(4)
+        _stream.getAudioTracks()[0].enabled = false
     }
 
     useEffect(() => {
@@ -304,7 +310,7 @@ export default function RTC(props) {
         const userkid = user.kid
 
         if (peersRef.current[userkid]) {
-            closeVideoCall(peersRef.current[userkid],userkid);
+            closeVideoCall(peersRef.current[userkid], userkid)
         }
 
         const peer = new RTCPeerConnection({
@@ -374,8 +380,8 @@ export default function RTC(props) {
                 peer_.onicegatheringstatechange = null
                 peer_.onnegotiationneeded = null
                 peer_.close()
-                peer_ = null;
-                delete peersRef.current[kid];
+                peer_ = null
+                delete peersRef.current[kid]
             }
             const newUserStreams = s.filter(
                 (remoteStream_) => remoteStream_.user.kid !== kid
@@ -464,17 +470,19 @@ export default function RTC(props) {
             })
     }
 
-    function hideAudio(e) {
+    function toogleAudio(e) {
         e.preventDefault()
         if (stream) {
-            setAudioMuted(!audioMuted)
-            stream.getAudioTracks()[0].enabled = audioMuted
+            const status = stream.getAudioTracks()[0].enabled
+            setAudioMuted(status)
+            stream.getAudioTracks()[0].enabled = !status
             peerStreams.length &&
                 signalingSocket.current.emit(
                     'audio_toggle_complete',
-                    audioMuted,
+                    status,
                     myData.current
                 )
+                console.log('muted? ', status)
         }
     }
 
@@ -488,11 +496,10 @@ export default function RTC(props) {
             const status = await mystream.current.getAudioTracks()[0].enabled
             await setAudioMuted(status)
 
-            mystream.current.getAudioTracks()[0].enabled = await !mystream.current.getAudioTracks()[0]
-                .enabled
+            mystream.current.getAudioTracks()[0].enabled = await !status
             signalingSocket.current.emit(
                 'audio_toggle_complete',
-                !status,
+                status,
                 myData.current
             )
 
@@ -570,7 +577,7 @@ export default function RTC(props) {
     }
 
     function handleUserDisconnection(user) {
-        closeVideoCall(peersRef.current[user.kid],user.kid);
+        closeVideoCall(peersRef.current[user.kid], user.kid)
         signalingSocket.current.emit('disconnect_user_webrtc', user)
     }
 
@@ -631,7 +638,7 @@ export default function RTC(props) {
         <div className="participant-host-video-container">
             <VideoAudioPermission />
             <span className="hide d-flex align-items-center justify-content-between">
-                <div style={ { fontSize:'larger'} }>
+                <div style={ { fontSize: 'larger' } }>
                     <i className="fa fa-video mr-1"></i> Video call
                 </div>
                 {props.isOwner ? (
@@ -641,10 +648,7 @@ export default function RTC(props) {
                 )}
             </span>
             <div className="videos-remote-user">
-                <div
-                    className={ `video-container ${
-                        audioMuted ? 'user-muted' : 'user-unmuted'
-                    }` }>
+                <div className={ 'video-container' }>
                     <video
                         style={ { display: videoMuted ? 'none' : 'block' } }
                         playsInline
@@ -661,7 +665,17 @@ export default function RTC(props) {
                             width="60"
                         />
                     </div>
-                    <span className="user_name_label">(You)</span>
+                    <span
+                        className={ `user_name_label ${
+                            audioMuted ? 'user-muted' : 'user-unmuted'
+                        }` }>
+                        You
+                        {audioMuted ? (
+                            <i className="ml-1 fas fa-volume-mute"></i>
+                        ) : (
+                            <i className="ml-1  fas fa-volume-up"></i>
+                        )}
+                    </span>
 
                     <div className="video-audio-controls">
                         <span
@@ -673,7 +687,7 @@ export default function RTC(props) {
                                 } cursor-pointer` }></i>
                         </span>
                         <span
-                            onClick={ hideAudio }
+                            onClick={ toogleAudio }
                             className="video-audio-icon-button">
                             <i
                                 className={ `fa fa-microphone${

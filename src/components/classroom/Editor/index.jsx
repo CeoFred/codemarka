@@ -24,38 +24,52 @@ EditorAce.propTypes = {
     canEdit: PropTypes.bool
 }
 function EditorAce(props) {
-    const editorRef = useRef()
-    const socketRef = useRef()
-    const editorModeRef =  useRef('javascript');
-
-    const [editorSettings, setEditorSettings] = useState({
-        mode: 'javascript',
-        value: '',
-        loaded: false,
-        updateId: 0,
-        lastupdateTimestamp: null,
-        editorOptions: {
-            readOnly: !props.canEdit,
-        },
-    })
-
-    const [loading, setloading] = useState(false)
-
-    const [editorAction, setEditorAction] = useState('Loading..')
+    
     const mapMode = {
         javascript: 'js',
         css: 'css',
         html: 'html',
     }
+    const editorRef = useRef()
+    const socketRef = useRef()
+    const editorModeRef =  useRef('js');
+
+    const [editorSettings, setEditorSettings] = useState({
+        mode: 'javascript',
+        value: '',
+        loaded: false,
+        editorOptions: {
+            readOnly: !props.canEdit,
+        },
+        lastEditDelta: null,
+        shouldEmit: false
+    })
+    const [loading, setloading] = useState(true)
+    const [editorAction, setEditorAction] = useState('Loading..')
+    const editorFiles = useRef({js:{},css:{},html:{}});
     const [editorUpdates, setEditorUpdates] = useState('')
 
-    useLayoutEffect(() => {
+        useEffect(() => {
+            editorSettings.shouldEmit &&
+                props.handleEditorChange(
+                    editorSettings.value,
+                    mapMode[editorSettings.mode],
+                    editorSettings.lastEditDelta
+                )
+        }, [
+            editorSettings.value,
+            editorSettings.lastEditDelta,
+            editorSettings.shouldEmit,
+        ])
+
+        useLayoutEffect(() => {
         socketRef.current = props.socket;
 
         socketRef.current.on('class_files', (css, html, js) => {
-            // set editor state
-            editorRef.current.env.document.doc.setValue(js.content);
             setEditorSettings({ ...editorSettings, value: js.content })
+            editorFiles.current.css =  css
+            editorFiles.current.html = html
+            editorFiles.current.js = js
         });
 
         socketRef.current.on('class_files_updated', (data) => {
@@ -65,87 +79,110 @@ function EditorAce(props) {
             const updatedContentForEditor = data.content
             const updatedBy = data.user
             // check preview states
-            if(updatedBy === props.user && data.type === 'update') return;
+            editorFiles.current[EditorName].content = updatedContentForEditor
 
-            if (data.type === 'upload') {
-                console.log('uploaded content')
+            if(updatedBy === props.user){
+            if (
+                data.type === 'upload' &&
+                editorModeRef.current === EditorName
+            ) {
                 setEditorSettings({
                     ...editorSettings,
                     value: updatedContentForEditor,
+                    shouldEmit: false,
                 })
+            } else if (
+                EditorName !== editorModeRef.current
+            ) {
+                setEditorUpdates(EditorName)
             }
-
-            if (String(updatedContentForEditor).length <= 0){
+            return;
+            } else {
+                if (
+                    data.type === 'upload' &&
+                    editorModeRef.current === EditorName
+                ) {
+                    setEditorSettings({
+                        ...editorSettings,
+                        value: updatedContentForEditor,
+                        shouldEmit: false,
+                    })
+                }
+            else if (
+                data.type !== 'upload' &&
+                String(updatedContentForEditor).length <= 0 &&
+                mapMode[editorModeRef.current] === EditorName
+            ) {
                 editorRef.current.env.document.doc.setValue('')
             }
+            if (
+                updatedContentForEditor !==
+                    editorRef.current.env.document.doc.getValue() &&
+                EditorName === editorModeRef.current
+            ) {
+                console.log('Content by another use')
+                const { action, start, lines } = data.deltaValue
 
-                if (
-                    String(updatedContentForEditor).trim() !==
-                        String(
-                            editorRef.current.env.document.doc.getValue()
-                        ).trim() &&
-                    EditorName === mapMode[editorModeRef.current]
-                ) {
-                    console.log('Content by another use')
-                    const { action, start, lines } = data.deltaValue
-
-                    if (action !== 'remove') {
-                        lines.length &&
-                            lines.forEach((line, index) => {
-                                const range = {
-                                    row: start.row + index,
-                                    column: start.column,
-                                }
-                                const rowAvailable = editorRef.current.env.document.doc.getLength()
-                                if (range.row > rowAvailable - 1) {
-                                    editorRef.current.env.document.doc.insertMergedLines(
-                                        range,
-                                        ['', '']
-                                    )
-                                }
-                                editorRef.current.env.document.doc.insertInLine(
+                if (action !== 'remove') {
+                    lines.length &&
+                        lines.forEach((line, index) => {
+                            const range = {
+                                row: start.row + index,
+                                column: start.column,
+                            }
+                            const rowAvailable = editorRef.current.env.document.doc.getLength()
+                            if (range.row > rowAvailable - 1) {
+                                editorRef.current.env.document.doc.insertMergedLines(
                                     range,
-                                    line
+                                    ['', '']
                                 )
-                            })
-                    } else {
-                        lines.length &&
-                            lines.forEach((line, index) => {
-                                const range_ = new Range(
-                                    data.deltaValue.start.row + index,
-                                    data.deltaValue.start.column,
-                                    data.deltaValue.end.row + index,
-                                    data.deltaValue.end.column
-                                )
-                                editorRef.current.env.document.doc.remove(
-                                    range_,
-                                    line
-                                )
-                            })
-                    }
-                    if (
-                        editorRef.current.env.document.doc.getValue().trim() !==
-                        updatedContentForEditor.trim()
-                    ) {
-                        editorRef.current.env.document.doc.setValue(
-                            updatedContentForEditor
-                        )
-                    }
-                } else if (
-                    String(updatedContentForEditor).trim() !==
-                        String(editorSettings.value).trim() &&
-                    EditorName !== editorModeRef.current
-                ) {
-                    console.log(EditorName, mapMode[editorSettings.mode])
-                    setEditorUpdates(EditorName)
+                            }
+                            editorRef.current.env.document.doc.insertInLine(
+                                range,
+                                line
+                            )
+                        })
+                } else {
+                    lines.length &&
+                        lines.forEach((line, index) => {
+                            const range_ = new Range(
+                                data.deltaValue.start.row + index,
+                                data.deltaValue.start.column,
+                                data.deltaValue.end.row + index,
+                                data.deltaValue.end.column
+                            )
+                            editorRef.current.env.document.doc.remove(
+                                range_,
+                                line
+                            )
+                        })
                 }
+                // if (
+                //     editorRef.current.env.document.doc.getValue() !==
+                //     updatedContentForEditor
+                // ) {
+                //     editorRef.current.env.document.doc.setValue(
+                //         updatedContentForEditor
+                //     )
+                // }
+            } else if (
+                String(updatedContentForEditor) !==
+                    String(editorSettings.value) &&
+                EditorName !== editorModeRef.current
+            ) {
+                setEditorUpdates(EditorName)
+            }
+            }
+
         })
 
     }, [])
 
     const onEditorLoad = (editor) => {
         editorRef.current = editor
-        setloading(false)
+        setTimeout(() => {
+             setloading(false)
+        }, 1500);
         setEditorSettings({ ...editorSettings, loaded: true })
         editor.getSession().setUseWorker(false)
     }
@@ -159,27 +196,27 @@ function EditorAce(props) {
             () => {
                 editorSettings.loaded && setloading(props.uploadingState)
 
-                setEditorAction('Uploading File Content..')
+                props.uploadingState && setEditorAction('Uploading File Content..')
             },
             props.uploadingState ? 2000 : 0
         )
+
     }, [props.uploadingState])
 
     /**
      * Set new Mode (editor tab click event listener)
      */
     const setEditorMode = async (e, mode) => {
-        e.preventDefault()
+        e.preventDefault();
+
         await setEditorSettings({
             ...editorSettings,
             mode: mode,
             value: props.files[mapMode[mode]].content,
+            shouldEmit: false
         })
         editorModeRef.current = mapMode[mode]
-        await console.log(editorModeRef.current, mode)
-        editorRef.current.env.document.doc.setValue(
-            props.files[mapMode[mode]].content
-        )
+        
         await setEditorUpdates('')
     }
 
@@ -188,21 +225,16 @@ function EditorAce(props) {
      * @return void
      */
     const onEditorContentChange = (content, delta) => {
-        console.log(props)
-        if(String(content).trim() !== String(editorSettings.value).trim()){
-            if (props.canEdit) {
-                props.handleEditorChange(
-                    content,
-                    mapMode[editorSettings.mode],
-                    delta
-                )
-                
-        setEditorSettings((s) => {
-            return { ...s, value: content }
-        })
-            }
-
-        }
+        // console.log(props)
+        
+                if(props.canEdit) {
+                    setEditorSettings((s) => {
+                        if(s.value !== content){
+                         return { ...s, value:content, lastEditDelta: delta, shouldEmit: true }
+                        }
+                        return s;
+                    })
+                }
     }
 
     return (
@@ -247,19 +279,33 @@ function EditorAce(props) {
                         style={ { color: '#f5f555' } }></i>
                 </div>
 
-                <div className="editing-status"></div>
+                <div className="editing-status">
+                    <div
+                        className={ `eitor_access_state badge badge-${
+                            props.canEdit ? 'success' : 'primary'
+                        } badge-pill` }>
+                        {props.canEdit ? (
+                            <i>
+                                <i className="fa fa-pen-alt"></i> Edit mode
+                            </i>
+                        ) : (
+                            <i className="fa fa-eye">{' '}Read only</i>
+                        )}
+                    </div>
+                </div>
 
                 <div className="editor-actions">
                     <a
                         target="_blank"
                         type="button"
                         title="Open In New Tab"
-                        className="fas fa-external-link-alt"
+                        className="fas fa-external-link-alt text-white-50"
                         href={ `/c/classroom/preview/${ props.classroomid }` }></a>
                     <span
-                        title="Upload File"
-                        type="button"
-                        onClick={ handleFileUpload }>
+                            title="Upload File"
+                            type="button"
+                            className={ `${ !props.canEdit ? 'disabled' : 'active' }` }
+                            onClick={ props.canEdit && handleFileUpload }>
                         <i className="fa fa-cloud-upload-alt"></i>{' '}
                     </span>
                     <span
@@ -293,14 +339,14 @@ function EditorAce(props) {
                         enableSnippets: true,
                         enableLiveAutocompletion: true,
                     } }
+                    rr
                     onLoad={ onEditorLoad }
+                    value={ editorSettings.value }
                     height="100%"
-                    cursorStart={ 0 }
                     className="ace-codemarka"
                     focus={ true }
                     showGutter
                     readOnly={ editorSettings.editorOptions.readOnly }
-                    showPrintMargin
                     showLineNumbers
                     width="100%"
                 />

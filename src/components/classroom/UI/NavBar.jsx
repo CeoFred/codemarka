@@ -1,14 +1,17 @@
 import React from 'react';
+import { useSelector } from 'react-redux'
 
 import logo from '../../../media/images/logo/codemarka-classroom-logo.png'
 import './index.css';
+
 function NavBar(props) {
     const attendanceIsValid = props.isCollectingAttendance && props.hasCollectedAttendance;
 
+    const {auth } = useSelector((state) => state)
     return (
         <nav
             className="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-dark"
-            style={ { height: '8vh', padding: 0 } }>
+            style={ { height: '9vh', padding: 0 } }>
             <div className="container-fluid">
                 <a className="navbar-brand" href="/">
                     <img
@@ -178,6 +181,7 @@ function NavBar(props) {
                                 </span>
                             </span>
                         </li>
+
                         <li title="Settings" className="nav-item dropdown">
                             <span
                                 className="nav-link nav-link-icon"
@@ -233,6 +237,20 @@ function NavBar(props) {
                                 ) : (
                                     ''
                                 )}
+                            </div>
+                        </li>
+
+                        <li className="nav-item">
+                            <div style={ {display: 'flex',position:'relative', height: '100%', alignItems: 'center'} }>
+                                <img
+                                    alt="user_icon"
+                                    src={ auth.user.displayImg }
+                                    className="avatar  rounded-circle avatar-sm"
+                                />
+                                <span
+                                    className={ `avatar-child avatar-badge bg-${
+                                        props.connected ? 'success' : 'danger'
+                                    }` }></span>
                             </div>
                         </li>
                     </ul>
