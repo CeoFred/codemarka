@@ -21,7 +21,8 @@ EditorAce.propTypes = {
     user: PropTypes.string.isRequired,
     readOnly: PropTypes.bool.isRequired,
     handleEditorChange: PropTypes.func,
-    canEdit: PropTypes.bool
+    canEdit: PropTypes.bool,
+    handleFileDownload: PropTypes.func
 }
 function EditorAce(props) {
     
@@ -237,6 +238,10 @@ function EditorAce(props) {
                 }
     }
 
+    const handleFileSync = (e) => {
+        e.preventDefault();
+    }
+
     return (
         <div className="codemarka-editor-container">
             <input
@@ -285,16 +290,17 @@ function EditorAce(props) {
                             props.canEdit ? 'success' : 'primary'
                         } badge-pill` }>
                         {props.canEdit ? (
-                            <i>
-                                <i className="fa fa-pen-alt"></i> Edit mode
-                            </i>
+                            <i className="fa fa-pen-alt"> Edit mode</i>
                         ) : (
-                            <i className="fa fa-eye">{' '}Read only</i>
+                            <i className="fa fa-eye"> Read only</i>
                         )}
                     </div>
                 </div>
 
                 <div className="editor-actions">
+                    <span title="Invite or Add Collaborators" type="button">
+                        <i className="fa fa-user-plus"></i>
+                    </span>
                     <a
                         target="_blank"
                         type="button"
@@ -302,11 +308,17 @@ function EditorAce(props) {
                         className="fas fa-external-link-alt text-white-50"
                         href={ `/c/classroom/preview/${ props.classroomid }` }></a>
                     <span
-                            title="Upload File"
-                            type="button"
-                            className={ `${ !props.canEdit ? 'disabled' : 'active' }` }
-                            onClick={ props.canEdit && handleFileUpload }>
+                        title="Upload File"
+                        type="button"
+                        className={ `${ !props.canEdit ? 'disabled' : 'active' }` }
+                        onClick={ props.canEdit && handleFileUpload }>
                         <i className="fa fa-cloud-upload-alt"></i>{' '}
+                    </span>
+                    <span
+                        title="Download Files"
+                        type="button"
+                        onClick={ props.handleFileDownload }>
+                        <i className="fa fa-file-archive"></i>{' '}
                     </span>
                     <span
                         title="Preview"
@@ -315,6 +327,12 @@ function EditorAce(props) {
                         type="button"
                         onClick={ props.showPreview }>
                         <i className="fa fa-play-circle"></i>
+                    </span>
+                    <span
+                        title="Sync Editor Contents"
+                        type="button"
+                        onClick={ handleFileSync }>
+                        <i className="fa fa-sync-alt"></i>
                     </span>
                 </div>
             </div>

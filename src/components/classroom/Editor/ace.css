@@ -68,9 +68,13 @@
   right: 3px;
   display: flex;
   height: 100%;
-  width: 7rem;
+  width: auto;
   align-items: center;
   justify-content: space-between
+}
+
+.editor-actions > * {
+  padding-right: 13px;
 }
 
 .ace-editor-backdrop {
