@@ -6,8 +6,7 @@ import { connect } from 'react-redux'
 
 import { Range } from 'ace-builds'
 import PropTypes from 'prop-types'
-
-import * as util from '../../../utility/shared';
+import InviteCollborator from './InviteAsCollaborator';
 
 import './ace.css'
 
@@ -241,6 +240,10 @@ function EditorAce(props) {
     const handleFileSync = (e) => {
         e.preventDefault();
     }
+    const handleCollaboratorIV = (e) => {
+        document.getElementById('addAsCollaboratorButton') &&
+            document.getElementById('addAsCollaboratorButton').click();
+    }
 
     return (
         <div className="codemarka-editor-container">
@@ -298,18 +301,27 @@ function EditorAce(props) {
                 </div>
 
                 <div className="editor-actions">
-                    <span title="Invite or Add Collaborators" type="button">
+                    <span
+                        dataToggle="tooltip"
+                        dataPlacement="bottom"
+                        title="Invite or Add Collaborators"
+                        onClick={ handleCollaboratorIV }
+                        type="button">
                         <i className="fa fa-user-plus"></i>
                     </span>
                     <a
                         target="_blank"
                         type="button"
                         title="Open In New Tab"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
                         className="fas fa-external-link-alt text-white-50"
                         href={ `/c/classroom/preview/${ props.classroomid }` }></a>
                     <span
                         title="Upload File"
                         type="button"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
                         className={ `${ !props.canEdit ? 'disabled' : 'active' }` }
                         onClick={ props.canEdit && handleFileUpload }>
                         <i className="fa fa-cloud-upload-alt"></i>{' '}
@@ -317,6 +329,8 @@ function EditorAce(props) {
                     <span
                         title="Download Files"
                         type="button"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
                         onClick={ props.handleFileDownload }>
                         <i className="fa fa-file-archive"></i>{' '}
                     </span>
@@ -369,13 +383,20 @@ function EditorAce(props) {
                     width="100%"
                 />
             </div>
+            <InviteCollborator classroom={ props.room }/>
         </div>
     )
 }
 
 const mapStateToProps = ({ classroom, auth }) => {
+    
+    const WRITE_ACCESS = classroom.participants.find(participant => {
+        return participant ===  auth.user.accountid && participant.accessControls.editor.write
+    })
+
     return {
-        canEdit: auth.user.accountid === classroom.owner,
+        canEdit: auth.user.accountid === classroom.owner || WRITE_ACCESS,
+        room: classroom.kid
     }
 }
 export default connect(mapStateToProps, null)(EditorAce)

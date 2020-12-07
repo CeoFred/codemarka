@@ -43,3 +43,20 @@ div.CodeMirror {
     background-color: darkslateblue;
     color: #fff;
 }
+
+.copy_link {
+    cursor: pointer;
+    /* color: rgba(40, 40, 165, 0.671); */
+    /* font-size: small; */
+    padding-right: 10px;
+}
+
+.embed-container {
+    border: 1px solid grey;
+    padding:10px;
+    border-radius: 4px;
+}
+
+.embed-container code {
+    color: black;
+}
