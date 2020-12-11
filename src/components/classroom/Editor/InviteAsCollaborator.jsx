@@ -1,18 +1,33 @@
-import React, { useState, useLayoutEffect } from 'react'
+/* eslint-disable no-undef */
+import React, { useState, useLayoutEffect, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import * as util from '../../../utility/shared';
 import * as APP_URL from '../../../config/url';
-
+import * as API from '../../../config/api_url'
+import http from '../../../services/http';
+import './collaborators.css'
 function InviteAsCollaborator(props) {
   const code = `<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="${ window.location.host }/c/classroom/preview/${ props.classroom }?embed_host=share" allowfullscreen></iframe>`
 
-  const [state, setState] = useState({showingEmbed: false, collaboratorList: []});
+  const [state, setState] = useState({message:'',
+                                     messageType:'',
+                                     inputValue:'',
+                                     searchSuggestions:[],
+                                     showingEmbed: false, 
+                                     collaboratorList: [],
+                                     noResultsAfterSearch:false
+                                    });
+
+  useEffect(() => {
+      
+  }, [])
 
   useLayoutEffect(() => {
     if(!state.showingEmbed) {
-        // fetch all collaborators
-
+        http().GET(`${ API.FETCH_EDITOR_CONTRIBUTORS }${ props.classroom }`).then(response => {
+            setState({...state, collaboratorList: response.data.message});
+        })
     }
   }, [state.showingEmbed])
 
@@ -23,6 +38,37 @@ function InviteAsCollaborator(props) {
   const copyEmbedCode = () => {
     util.copyToClipboard(code);
   } 
+
+  const handleEmailUsernameChange = (e) => {
+       
+        const { value } = e.target;
+        setState({ ...state, inputValue: value, noResultsAfterSearch: false})
+        window.clearInterval(window.localStorage.getItem('intervalKey'));
+        
+        const timeoutKey  = setTimeout(() => {
+            http()
+            .GET(`${ API.FIND_USER_BY_EMAIL_OR_USERNAME }${ value }`)
+            .then(response => {
+                setState({
+                    ...state,
+                    searchSuggestions: response.data.message,
+                    noResultsAfterSearch: response.data.message.length === 0,
+                    inputValue: value
+                })
+            });
+        }, 1500);
+
+        window.localStorage.setItem('intervalKey', timeoutKey);
+  }
+
+  const handleClearSuggestion = (e) => {
+    setState({ ...state, searchSuggestions: [], noResultsAfterSearch: false })
+  }
+
+  const handleSendInvite = (e) => {
+      e.preventDefault();
+      props.socket.emit('invite_to_collaborate', state.inputValue, props.classroom)
+  }
   return (
       <div>
           <button
@@ -33,7 +79,7 @@ function InviteAsCollaborator(props) {
               data-target="#addAsCollaborator"></button>
 
           <div
-              className="modal fade docs-example-modal-sm"
+              className="modal fade"
               id="addAsCollaborator"
               tabindex="-1"
               role="dialog"
@@ -42,7 +88,11 @@ function InviteAsCollaborator(props) {
               {state.showingEmbed ? (
                   <div
                       className="modal-dialog modal-dialog-centered"
-                      role="document">
+                      role="document"
+                      style={ {
+                          width: '40%!important',
+                          maxWidth: '40%!important',
+                      } }>
                       <div className="modal-content">
                           <div className="modal-header">
                               <h5
@@ -60,16 +110,17 @@ function InviteAsCollaborator(props) {
                           </div>
                           <div className="modal-body">
                               <div className="embed-container">
-                                  <code>
-                                      {code}
-                                  </code>
+                                  <code>{code}</code>
                               </div>
                           </div>
                           <div className="modal-footer">
                               <button
                                   type="button"
                                   onClick={ () =>
-                                      setState({ showingEmbed: false })
+                                      setState({
+                                          ...state,
+                                          showingEmbed: false,
+                                      })
                                   }
                                   className="btn btn-secondary btn-sm">
                                   Close
@@ -86,7 +137,11 @@ function InviteAsCollaborator(props) {
               ) : (
                   <div
                       className="modal-dialog modal-dialog-centered"
-                      role="document">
+                      role="document"
+                      style={ {
+                          width: '40%!important',
+                          maxWidth: '40%!important',
+                      } }>
                       <div className="modal-content">
                           <div className="modal-header">
                               <h5
@@ -103,33 +158,101 @@ function InviteAsCollaborator(props) {
                               </button>
                           </div>
                           <div className="modal-body">
-                              <form>
+                              <form style={ { position: 'relative' } } onSubmit={ handleSendInvite }>
                                   <div class="form-group">
                                       <div class="input-group">
                                           <input
                                               type="text"
                                               class="form-control"
                                               placeholder="Email address or username"
-                                              aria-label="Recipient's username"
-                                              aria-describedby="basic-addon2"
+                                              value={ state.inputValue }
+                                              onChange={
+                                                  handleEmailUsernameChange
+                                              }
+                                              onBlur={ handleClearSuggestion }
                                           />
                                           <div class="input-group-append">
                                               <button
                                                   type="button"
-                                                  class="btn btn-sm btn-primary                                                  ">
+                                                  onClick={ handleSendInvite }
+                                                  class="btn btn-sm btn-primary">
                                                   Send Invite
                                               </button>
                                           </div>
                                       </div>
                                   </div>
+
+                                  {(state.searchSuggestions.length ||
+                                      state.noResultsAfterSearch) && (
+                                          <div className="search_suggestion">
+                                              {state.searchSuggestions &&
+                                                  state.searchSuggestions.map(
+                                                      (suggestion) => {
+                                                          return (
+                                                              <div className="search_suggestion_item">
+                                                                  <img
+                                                                      src={
+                                                                          suggestion.gravatarUrl
+                                                                      }
+                                                                      className="search_suggestion_item_gravatar"
+                                                                  />{' '}
+                                                                  {
+                                                                      suggestion.username
+                                                                  }
+                                                              </div>
+                                                          )
+                                                      }
+                                                  )}
+                                              {state.noResultsAfterSearch && (
+                                                  <div className="search_suggestion_item">
+                                                      Whoops! user not found.
+                                                  </div>
+                                              )}
+                                          </div>
+                                      )}
                               </form>
 
                               <div className="collaborators_list">
-
+                                  {state.collaboratorList.map(
+                                      (collaborator) => {
+                                          return (
+                                              <div className="collaborator_container">
+                                                  <div className="collaborator_data">
+                                                      <div>
+                                                          <img
+                                                              src={
+                                                                  collaborator.avatar
+                                                              }
+                                                              className="collaborator_data_img"
+                                                          />
+                                                      </div>
+                                                      <b className="collaborator_data_username">
+                                                          {
+                                                              collaborator.username
+                                                          }{' '}
+                                                          {collaborator.isowner && (
+                                                              <span>
+                                                                  (owner)
+                                                              </span>
+                                                          )}
+                                                      </b>
+                                                  </div>
+                                                  {collaborator.isowner && (
+                                                      <div className="action">
+                                                          <i className="fa fa-close"></i>
+                                                      </div>
+                                                  )}
+                                              </div>
+                                          )
+                                      }
+                                  )}
                               </div>
                           </div>
                           <div className="modal-footer">
-                              <span type="button" className="copy_link" onClick={ handleCopyRoomLink }>
+                              <span
+                                  type="button"
+                                  className="copy_link"
+                                  onClick={ handleCopyRoomLink }>
                                   <i className="fa fa-paperclip"></i>{' '}
                                   <span>Copy Link</span>
                               </span>
@@ -151,7 +274,8 @@ function InviteAsCollaborator(props) {
 }
 
 InviteAsCollaborator.propTypes = {
-  classroom: PropTypes.string.isRequired
+  classroom: PropTypes.string.isRequired,
+  socket: PropTypes.any.isRequired
 }
 
 export default InviteAsCollaborator

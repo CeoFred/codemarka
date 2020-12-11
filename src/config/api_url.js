@@ -14,12 +14,13 @@ export const ACCOUNT_RECOVERY =  `${ host }auth/user/account/recovery`;
 export const ACCOUNT_PASSWORD_RESET = `${ host }auth/user/account/password/reset`;
 export const GET_USER_DATA = `${ host }user/u/` //:kid
 export const FOLLOW_USER = `${ host }user/follow/`;
-export const UNFOLLOW_USER = `${ host }user/unfollow/`
+export const UNFOLLOW_USER = `${ host }user/unfollow/`  
 export const CHECK_USERNAME = `${ host }user/username`;
 export const UPDATE_USER_INFORMATION = `${ host }auth/user/profile/update`
 export const FORCE_ROOM_ENTRANCE =  `${ host }classroom/socket/disconnect`;
 export const VERIFY_FINAL_STEPS_TOKEN = `${ host }auth/user/oauth/verify/` //:token
 export const COMPLETE_ACCOUNT_OAUTH_SETUP =  `${ host }auth/user/oauth/complete/`
+export const FIND_USER_BY_EMAIL_OR_USERNAME = `${ host }user/find/`; // :emailOrUsername
 
 // Oauth
 
@@ -53,3 +54,5 @@ export const GET_CLASSROOM_HTML_SETTINGS =  `${ host }classroom/language/setting
 export const REPORT_CLASSROOM = `${ host }classroom/report`
 export const ASK_A_QUESTION = `${ host }classroom/question`
 export const FETCH_MESSAGE_THREAD =  `${ host }classroom/thread/` // :kid
+export const FETCH_EDITOR_CONTRIBUTORS = `${ host }classroom/editor/contributors/` //
+export const INVITE_USER_AS_EDITOR_COLLABORATOR = `${ host }classroom/editor/collaborator/invite/` // :

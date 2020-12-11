@@ -383,7 +383,7 @@ function EditorAce(props) {
                     width="100%"
                 />
             </div>
-            <InviteCollborator classroom={ props.room }/>
+            <InviteCollborator socket={ socketRef.current } classroom={ props.room }/>
         </div>
     )
 }
@@ -396,7 +396,7 @@ const mapStateToProps = ({ classroom, auth }) => {
 
     return {
         canEdit: auth.user.accountid === classroom.owner || WRITE_ACCESS,
-        room: classroom.kid
+        room: classroom.kid,
     }
 }
 export default connect(mapStateToProps, null)(EditorAce)
