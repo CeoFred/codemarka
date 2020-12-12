@@ -42,13 +42,11 @@ box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034), 0 6.7px 5.3px rgba(0, 0, 0, 0.04
 }
 
 .search_suggestion {
-    position: absolute;
-    width: 60%;
     height: auto;
     max-height: 9rem;
     background-color: #fff;
     z-index: 3;
-    border: 1px solid #00000066;
+    border: 1px solid #00000036;
     border-radius: 3px;
     padding: 10px;
     overflow-y: auto;

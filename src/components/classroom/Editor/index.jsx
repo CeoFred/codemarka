@@ -182,7 +182,7 @@ function EditorAce(props) {
         editorRef.current = editor
         setTimeout(() => {
              setloading(false)
-        }, 1500);
+        }, 2500);
         setEditorSettings({ ...editorSettings, loaded: true })
         editor.getSession().setUseWorker(false)
     }
@@ -383,7 +383,7 @@ function EditorAce(props) {
                     width="100%"
                 />
             </div>
-            <InviteCollborator socket={ socketRef.current } classroom={ props.room }/>
+            <InviteCollborator user={ props.user } socket={ socketRef.current } classroom={ props.room }/>
         </div>
     )
 }
