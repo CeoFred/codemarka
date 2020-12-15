@@ -8,8 +8,12 @@ div.conversation__container {
 div.input_container textarea.form-control {
     height: 51px;
     outline: none;
-    border-radius: 0px;
+    border-radius: 8px;
     overflow-y: auto;
+
+}
+div.input_container textarea.form-control:focus {
+    border:4px solid;
 }
 
 div.input_container {
@@ -17,7 +21,7 @@ div.input_container {
     position: absolute;
     bottom: 0;
     left: 0;
-    height: 12%;
+    height: 17%;
 }
 
 .action-container {
@@ -37,7 +41,9 @@ div.input_container {
     font-weight: lighter!important;
 }
 
-div.channel_info_container {}
+div.channel_info_container {
+    line-height:1.2;
+}
 
 .toButtomIcon {
     display: flex!important;
@@ -46,10 +52,9 @@ div.channel_info_container {}
 
 div.messages {
     position: relative;
-    /* bottom: 50px; */
     overflow-y: auto;
     padding: 0;
-    height: 80%;
+    height: 75%;
 }
 
 .user-bar .name {

@@ -221,12 +221,16 @@ export default function Conversation(props) {
                         fontWeight: 200,
                     } }>
                     <div className="channel_info_container">
-                        <div className="channel_info_title"><i className="fas fa-comment-alt"></i> Group Chat </div>
+                        <div className="channel_info_title">
+                            <i className="fas fa-comment-alt"></i> Workspace{' '}
+                            <br />{' '}
+                            <span style={ { fontSize: 'smaller' } }>
+                                {' '}
+                                # general{' '}
+                            </span>{' '}
+                        </div>
+                        {/* <b># general</b> */}
                     </div>
-                </div>
-                
-                <div className="text-white" style={ { fontSize: 13, width:'100%', flexWrap:'wrap'} }>
-                    {getTyping()}
                 </div>
             </div>
             {/* messages tab */}
@@ -333,6 +337,12 @@ export default function Conversation(props) {
                     <span onClick={props.addURL}>
                         <i className="fa fa-paperclip"></i>
                     </span> */}
+                </div>
+
+                <div
+                    className="text-white"
+                    style={ { fontSize: 13, width: '100%', flexWrap: 'wrap' } }>
+                    {getTyping()}
                 </div>
             </div>
         </div>
