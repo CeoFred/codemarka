@@ -48,7 +48,7 @@ export default function FooterBar() {
                                         </Link>
                                     </li>
                                     <li>
-                                        <a href="https://sandbox.codemarka.dev">Sandbox</a>
+                                        <a href="https://sandbox.codemarka.co">Sandbox</a>
                                     </li>
                                 </ul>
                             </div>
