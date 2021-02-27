@@ -74,7 +74,7 @@ function EditorAce(props) {
 
         socketRef.current.on('class_files_updated', (data) => {
 
-          console.log('updated ', data, editorModeRef.current);
+          
             const EditorName = data.file
             const updatedContentForEditor = data.content
             const updatedBy = data.user
@@ -120,7 +120,7 @@ function EditorAce(props) {
                     editorRef.current.env.document.doc.getValue() &&
                 EditorName === editorModeRef.current
             ) {
-                console.log('Content by another use')
+                
                 const { action, start, lines } = data.deltaValue
 
                 if (action !== 'remove') {
@@ -225,7 +225,7 @@ function EditorAce(props) {
      * @return void
      */
     const onEditorContentChange = (content, delta) => {
-        // console.log(props)
+        // 
         
                 if(props.canEdit) {
                     setEditorSettings((s) => {

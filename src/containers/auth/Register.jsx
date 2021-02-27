@@ -359,7 +359,7 @@ if (props.authRegistrationSuccess) {
                                   </div>
 
                                   <div className="mt-4">
-                                      {/* {console.log(state.formIsValid)} */}
+                                      {/* {} */}
                                       <Button
                                           type="submit"
                                           clicked={ submitHandler }

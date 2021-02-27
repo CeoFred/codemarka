@@ -25,7 +25,7 @@ export default function RemoteVideoStream({
         const userVideo_ = document.getElementById(`marka_rtc_${ user.kid }`);
         const videoTrack = userVideo_ && userVideo_.srcObject.getVideoTracks()[0];
         videoTrack.onmute = function () {
-            console.log('onmute');
+            
         };
     }, [stream, user])
 

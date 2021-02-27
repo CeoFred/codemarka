@@ -29,7 +29,7 @@ export default function FetchUpcomingClass() {
                             .timeZone
 
                         const getDateandTime = (date) => {
-                            // console.log(date)
+                            // 
                             const Mdate = new Date(date)
                             const dtime = formatToTimeZone(
                                 Mdate,

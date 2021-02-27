@@ -70,7 +70,7 @@ export default function Report(props) {
       });
 
       }).catch(err => {
-        console.log(err);
+        
       setIsSending(false);
       setReport('');
   setAlertConfig({

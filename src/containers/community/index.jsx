@@ -200,7 +200,7 @@ function Dashboard(props) {
       setmemberShipRequest({loading:false});
       setCommunityDetails({ ...communityDetails,members:dd.data});
     }).catch(er => {
-    //   console.log(er);
+    //   
       setmemberShipRequest({ loading: false });
 
     })

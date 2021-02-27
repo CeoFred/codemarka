@@ -109,7 +109,7 @@ export function* authLoginUserSaga({ email, password }) {
         const response = yield fetch(loginRequest)
         const resolvedResponse = yield call(resolvePromise, response.json())
         if (resolvedResponse.status) {
-            // console.log('in');
+            // 
             yield localStorage.setItem(
                 userTokenAlias,
                 resolvedResponse.data.token
@@ -153,7 +153,7 @@ export function* autoLoginUserSaga() {
         if (token && kid) {
             try {
                 // const done = yield axios.post(url,{token,kid})
-                // console.log(done);
+                // 
                 const response = yield fetch(autoLoginRequest)
                 const resolvedResponse = yield call(
                     resolvePromise,

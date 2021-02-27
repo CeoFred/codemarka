@@ -587,7 +587,7 @@ const MainClassLayout = ({
                     socketRef.current.id,
                     requestData
                 )
-                console.log(socketRef.current.id);
+                
             })
 
             //listen for new messages
@@ -1433,7 +1433,7 @@ const MainClassLayout = ({
     }
 
     const handledropDownSelect = (event, value, editor) => {
-        // console.log(event,value,editor);
+        // 
     }
 
     const handleAttendanceSubmission = (data) => {
@@ -1673,7 +1673,7 @@ const MainClassLayout = ({
 
             reader.readAsText(file)
         } else {
-            console.log(e)
+            
         }
     }
 

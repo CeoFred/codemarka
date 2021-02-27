@@ -65,7 +65,7 @@ import * as APIURL from '../../config/api_url';
         document.querySelector(`#btn-con-${ communitykid }`).addEventListener('click', joinCommunityAsMember(e, communitykid, !isAMember))
        
       }).catch(er => {
-        console.log(er);
+        
        return;
       })
     }

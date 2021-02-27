@@ -26,7 +26,7 @@ function FooterContent(props) {
 
     useEffect(() => {
         props.socket.on('thread_reply',(thread) => {
-            // console.log(props.threadState.showingThread)
+            // 
             props.updateMessageThread(thread)
         });
     },[])
