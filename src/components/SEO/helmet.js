@@ -31,7 +31,7 @@ export default function helmet({follow = true,lang,title,metaDescription,pathnam
                 },
                 {
                     property: 'og:url',
-                    content: 'https://codemarka.dev'
+                    content: 'https://codemarka.co'
                 },
 
                 {

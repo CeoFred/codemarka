@@ -3,7 +3,7 @@
 import React from 'react'
 import NavigationBarItems from './NavigationBarItems'
 import { useSelector } from 'react-redux'
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 import logo from '../../../media/images/logo/codemark__logo.png'
 export default function NavigationBar() {
@@ -17,16 +17,16 @@ export default function NavigationBar() {
         display = true
     }
     return (
-        <div style={{ display: display ? 'block' : 'none' }}>
+        <div style={ { display: display ? 'block' : 'none' } }>
             <nav
                 className="navbar navbar-main navbar-expand-md navbar-fixed navbar-dark bg-dark"
                 id="navbar-main">
                 <div className="container">
                     <Link className="navbar-brand" to="/">
                         <img
-                            style={{ height: '20px', width: '130px' }}
+                            style={ { height: '20px', width: '130px' } }
                             alt="codemarka"
-                            src={logo}
+                            src={ logo }
                             id="navbar-logo"
                         />{' '}
                     </Link>
@@ -47,12 +47,12 @@ export default function NavigationBar() {
                             <div className="col-6">
                                 <Link className="navbar-brand" to="/">
                                     <img
-                                        style={{
+                                        style={ {
                                             height: '20px',
                                             width: '130px',
-                                        }}
+                                        } }
                                         alt="codemarka"
-                                        src={logo}
+                                        src={ logo }
                                     />{' '}
                                 </Link>{' '}
                             </div>{' '}
@@ -91,7 +91,7 @@ export default function NavigationBar() {
                             </div>
                         </div>
                         <NavigationBarItems
-                            user={auth.user}
+                            user={ auth.user }
                         />
                     </div>
                 </div>

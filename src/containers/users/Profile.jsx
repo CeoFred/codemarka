@@ -45,7 +45,7 @@ export default function Profile(props) {
                 setUserFound(false)
             } else {
                 
-                console.log(data.data.data)
+                
                 const isFollowing = data.data.data.followers.find(
                 (user) => user.kid === auth.user.accountid
             )

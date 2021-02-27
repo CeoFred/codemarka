@@ -235,7 +235,7 @@ function NewClassroom(props) {
         }
 
         setState({ ...state, controls: updatedControls, formisValid })
-        // console.log(updatedControls);
+        // 
     }
 
     const submitHandler = event => {

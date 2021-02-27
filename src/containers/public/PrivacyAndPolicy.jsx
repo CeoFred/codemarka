@@ -23,7 +23,7 @@ export default function PrivacyAndPolicy() {
               <div className="container">
                   <div className="row row-grid justify-content-between">
                       <p>
-                          At codemarka, accessible from https://codemarka.dev,
+                          At codemarka, accessible from https://codemarka.co,
                           one of our main priorities is the privacy of our
                           visitors. This Privacy Policy document contains types
                           of information that is collected and recorded by

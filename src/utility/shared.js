@@ -2,13 +2,22 @@ import { isFuture, isPast,isToday } from 'date-fns';
 import { formatToTimeZone } from 'date-fns-timezone'
 
 export const randomNumber = function (length) {
-    var text = ''
-    var possible = '123456789'
-    for (var i = 0; i < length; i++) {
-        var sup = Math.floor(Math.random() * possible.length)
-        text += i > 0 && sup == i ? '0' : possible.charAt(sup)
-    }
-    return Number(text)
+     const chars =
+         '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHUJKLMNOPQRSTUVWXYZ'
+     let result = ''
+     for (let i = 0; i < length; i += 1) {
+         result += chars.charAt(Math.floor(Math.random() * chars.length))
+     }
+     return Number(result);
+}
+
+export const randomString = (length)  => {
+        const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHUJKLMNOPQRSTUVWXYZ';
+        let result = '';
+        for (let i = 0; i < length; i += 1) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
 }
 
 export const updateObject = (oldObject, UpdatedProperties) => {
@@ -94,4 +103,20 @@ export const convertToReadableDateFormat = (UTC,format,specifiedTimeZone) => {
          }
      )
      return dtime;
+}
+
+export const copyToClipboard = (text) => {
+    navigator.permissions.query({ name: 'clipboard-write' }).then((result) => {
+        if (result.state == 'granted' || result.state == 'prompt') {
+  navigator.clipboard.writeText(text).then(
+      function () {
+          alert('Copied To Clipboard');
+          /* clipboard successfully set */
+      },
+      function () {
+          /* clipboard write failed */
+      }
+  )
+          }
+    })
 }

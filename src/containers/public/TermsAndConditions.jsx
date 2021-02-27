@@ -119,7 +119,7 @@ export default function TermsAndConditions() {
                                     These Website Standard Terms and Conditions
                                     written on this webpage shall manage your
                                     use of our website, codemarka accessible
-                                    at https://codemarka.dev.
+                                    at https://codemarka.co.
                                 </p>
                                 <p>
                                     These Terms will be applied fully and affect

@@ -21,7 +21,7 @@ import * as action from '../../store/actions';
 
 import * as APPURLS from '../../config/url'
 import { updateObject } from '../../utility/shared'
-import Logo from '../../media/images/logo/codemark__logo.png'
+import envelop from '../../media/images/envelop.png'
 import './style.css'
 
 const emailIconSvg = (
@@ -133,7 +133,7 @@ function Register(props) {
        setMounted(true)
        if (!mounted) {
            onResetAll()
-           onClassroomSwitch('app')
+           onClassroomSwitch('classroom')
        }
    }, [mounted, onClassroomSwitch, onResetAll])
     
@@ -236,34 +236,27 @@ if (props.authRegistrationSuccess) {
           />
           {redct}
 
-          <section className="container-fluid">
-              <div className="row" style={ { overflow: 'hidden' } }>
+          <section className="container-fluid h-100vh">
+              <div className="row h-100" style={ { overflow: 'hidden' } }>
                   <div
                       style={ { minHeight: '100%' } }
                       className="comm_bg_img col-md-8 col-xl-8 col-lg-8 py-6 py-md-0 d-none d-md-flex d-lg-flex d-xl-flex">
                       <div className="details_container">
                           <div className="logo_container">
-                              <img
-                                  src={ Logo }
-                                  height="25"
-                                  alt="codemarka_logo"
-                              />
-                              <span className="badge badge-warning">
-                                  community
-                              </span>
+                              <h1 className="h1 text-white">Need more flex??</h1>
                           </div>
                           <div className="mb-2">
-                              <p className="float-left p-text text-white line-height-1">
+                              <p className="float-left text-white line-height-1">
                                   Get the best out of every classrom and enjoy
                                   <br />
-                                  all our exciting features by
-                                  <br /> getting a community account today.
+                                  all our exciting features by getting
+                                  <br />  a community lisence today.
                               </p>
                           </div>
                           <Link to={ APPURLS.COMMUNITY_ACCOUNT_SIGNUP_PAGE }>
                               <button
                                   type="button"
-                                  class="btn btn-animated btn-primary btn-animated-x">
+                                  class="btn btn-animated btn-success btn-sm btn-animated-x">
                                   <span class="btn-inner--visible">
                                       SIGN UP
                                   </span>
@@ -277,114 +270,135 @@ if (props.authRegistrationSuccess) {
 
                   <div
                       id="register_form"
-                      className="mt-3 p-3 col-md-4 col-lg-4 col-xl-4 py-6 h-100 py-md-0 oveflow-auto">
-                      <div>
-                          <div className="mb-5 text-center">
-                              <h6 className="h3 mb-1 mt-3">Join Codemarka</h6>
-                              <p className="text-muted mb-0">
-                                  Made with love for developers
-                              </p>
-                              {alert}
+                      className="mt-3 p-3 pb-4 col-md-4 col-lg-4 col-xl-4 py-6 h-100 py-md-0"
+                      style={ { overflow: 'auto' } }>
+                      {props.authRegistrationSuccess ? (
+                          <div style={ {flexDirection: 'column'} } className="h-100vh d-flex text-center justify-content-center align-items-center">
+                              <img className="img-responsive" style={ {height:100} } src={ envelop }/>
+                              <h3>Confirm Your email!</h3>
+                              <p>Your account has been successfully registered. To complete the process please check your 
+                                  email for a validation request.</p>
                           </div>
-                          <span className="clearfix" />
-                          <form onSubmit={ submitHandler } autoComplete="off">
-                              {/* username input */}
-                              <Input
-                                  type="text"
-                                  placeholder="doejonny"
-                                  label="username"
-                                  elementType="input"
-                                  valid={ state.controls.username.valid }
-                                  touched={ state.controls.username.touched }
-                                  initialPrepend
-                                  initialPrependsvg={ userIconSvg }
-                                  value={ state.controls.username.value }
-                                  changed={ (e) =>
-                                      handleInputChange(e, 'username')
-                                  }
-                              />
-
-                              {/* email input */}
-                              <Input
-                                  type="email"
-                                  elementType="input"
-                                  placeholder="someone@someserver.com"
-                                  label="Email address"
-                                  valid={ state.controls.email.valid }
-                                  touched={ state.controls.email.touched }
-                                  initialPrepend
-                                  initialPrependsvg={ emailIconSvg }
-                                  value={ state.controls.email.value }
-                                  changed={ (e) => handleInputChange(e, 'email') }
-                              />
-                              {/* pasword input */}
-                              <Input
-                                  type="password"
-                                  elementType="input"
-                                  placeholder="Secret password"
-                                  valid={ state.controls.password.valid }
-                                  touched={ state.controls.password.touched }
-                                  label={ state.controls.password.label }
-                                  isLoginPasswordInput={ false }
-                                  initialPrepend
-                                  initialPrependsvg={ initialPrependsvg }
-                                  value={ state.controls.password.value }
-                                  changed={ (e) =>
-                                      handleInputChange(e, 'password')
-                                  }
-                              />
-
-                              <div
-                                  className="mt-5"
-                                  style={ {
-                                      color: 'rgb(163 154 154)',
-                                  } }>
-                                  <b>
-                                      - Username should not contain white space, alpha numberic characters, at least 3 characters and a maximum of 20.
-                                      <br />- Password should be at least 8
-                                      character long.
-                                  </b>
+                      ) : (
+                          <div>
+                              <div className="mb-5 text-center">
+                                  <h6 className="h3 mb-1 mt-3">
+                                      Join Codemarka
+                                  </h6>
+                                  <p className="text-muted mb-0">
+                                      Made with love for developers
+                                  </p>
+                                  {alert}
                               </div>
+                              <span className="clearfix" />
+                              <form onSubmit={ submitHandler } autoComplete="off">
+                                  {/* username input */}
+                                  <Input
+                                      type="text"
+                                      placeholder="doejonny"
+                                      label="username"
+                                      elementType="input"
+                                      valid={ state.controls.username.valid }
+                                      touched={ state.controls.username.touched }
+                                      initialPrepend
+                                      initialPrependsvg={ userIconSvg }
+                                      value={ state.controls.username.value }
+                                      changed={ (e) =>
+                                          handleInputChange(e, 'username')
+                                      }
+                                  />
 
-                              <div className="mt-4">
-                                  {console.log(state.formIsValid)}
-                                  <Button
-                                      type="submit"
-                                      clicked={ submitHandler }
-                                      disabled={ !state.formIsValid }
-                                      textColor="#fff"
-                                      block
-                                      color="primary">
-                                      {props.loading ? (
-                                          <Spinner />
-                                      ) : (
-                                          'Create  account'
-                                      )}
-                                  </Button>
-                              </div>
+                                  {/* email input */}
+                                  <Input
+                                      type="email"
+                                      elementType="input"
+                                      placeholder="someone@someserver.com"
+                                      label="Email address"
+                                      valid={ state.controls.email.valid }
+                                      touched={ state.controls.email.touched }
+                                      initialPrepend
+                                      initialPrependsvg={ emailIconSvg }
+                                      value={ state.controls.email.value }
+                                      changed={ (e) =>
+                                          handleInputChange(e, 'email')
+                                      }
+                                  />
+                                  {/* pasword input */}
+                                  <Input
+                                      type="password"
+                                      elementType="input"
+                                      placeholder="******"
+                                      valid={ state.controls.password.valid }
+                                      touched={ state.controls.password.touched }
+                                      label={ state.controls.password.label }
+                                      isLoginPasswordInput={ false }
+                                      initialPrepend
+                                      initialPrependsvg={ initialPrependsvg }
+                                      value={ state.controls.password.value }
+                                      changed={ (e) =>
+                                          handleInputChange(e, 'password')
+                                      }
+                                  />
 
-                              <div className="mt-5">
-                                  <small>
-                                      By creating an account, you agree to the
-                                      <Link to="/terms-and-conditions">
-                                          {' '}
-                                          Terms of Service
-                                      </Link>
-                                      . For more information about Codemarka's
-                                      privacy practices, see the Codemarka{' '}
-                                      <Link to="/privacy-and-policy">
-                                          Privacy Statement.
-                                      </Link>{' '}
-                                      We'll occasionally send you
-                                      account-related emails.
-                                  </small>
-                              </div>
-                          </form>
-                          {/* <div className="py-3 text-center">
+                                  <div
+                                      className="mt-5"
+                                      style={ {
+                                          color: 'rgb(163 154 154)',
+                                          fontSize: 'small',
+                                      } }>
+                                      <b>
+                                          - Username should not contain white
+                                          space
+                                          <br />
+                                          - only alpha numberic characters at
+                                          least 3 characters and a maximum of
+                                          20.
+                                          <br />- Password should be at least 8
+                                          character long.
+                                      </b>
+                                  </div>
+
+                                  <div className="mt-4">
+                                      {/* {} */}
+                                      <Button
+                                          type="submit"
+                                          clicked={ submitHandler }
+                                          disabled={ !state.formIsValid }
+                                          textColor="#fff"
+                                          block
+                                          color="primary">
+                                          {props.loading ? (
+                                              <Spinner />
+                                          ) : (
+                                              'Create  account'
+                                          )}
+                                      </Button>
+                                  </div>
+
+                                  <div className="mt-5">
+                                      <small>
+                                          By creating an account, you agree to
+                                          the
+                                          <Link to="/terms-and-conditions">
+                                              {' '}
+                                              Terms of Service
+                                          </Link>
+                                          . For more information about
+                                          Codemarka's privacy practices, see the
+                                          Codemarka{' '}
+                                          <Link to="/privacy-and-policy">
+                                              Privacy Statement.
+                                          </Link>{' '}
+                                          We'll occasionally send you
+                                          account-related emails.
+                                      </small>
+                                  </div>
+                              </form>
+                              {/* <div className="py-3 text-center">
                               <span className="text-xs text-uppercase">or</span>
                           </div> */}
 
-                          {/* <div className="row">
+                              {/* <div className="row">
                               <div className=" col-sm-6">
                                   <Github
                                       link={
@@ -402,15 +416,16 @@ if (props.authRegistrationSuccess) {
                                   />
                               </div>
                           </div> */}
-                          <div className="mb-4 mt-2 text-center">
-                              <small>Already have an account?</small>{' '}
-                              <Link
-                                  to={ URLS.AUTH_SIGN_IN }
-                                  className="small font-weight-bold">
-                                  signin
-                              </Link>
+                              <div className="mb-4 mt-2 text-center">
+                                  <small>Already have an account?</small>{' '}
+                                  <Link
+                                      to={ URLS.AUTH_SIGN_IN }
+                                      className="small font-weight-bold">
+                                      signin
+                                  </Link>
+                              </div>
                           </div>
-                      </div>
+                      )}
                   </div>
               </div>
           </section>

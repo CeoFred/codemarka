@@ -95,33 +95,42 @@ function Auth_Home(props) {
     return (
         <div className="colab__container">
             {/* start search container */}
-            <section class="slice py-8 bg-dark bg-cover bg-size--home">
-                <span class="mask bg-gradient-dark opacity-6"></span>
+            <section class="slice py-8 bg-dark bg-cover bg-size--home" style={ {height:'100vh'} }>
+                <span class="mask bg-gradient-dark opacity-3"></span>
                 <div
                     data-offset-top="#navbar-main"
                     style={ { paddingTop: '59px' } }>
                     <div class="container d-flex align-items-center text-center text-lg-left py-5">
                         <div class="col px-0">
                             <div class="row row-grid align-items-center">
-                                <div class="col-lg-8 text-lg-left text-sm-left text-md-left">
+                                <div class="col-lg-8">
                                     <h1 class="text-white m-0 tal-sm font-weight-bold">
-                                        Learn. Build. Collaborate.
+                                        <span style={ {color:'#0F66BD'} }>Learn.</span>{' '}
+                                        <span style={ {color:'#00B250'} }>Build.</span>{' '}
+                                        <span style={ {color:'#f60369'} }>Collaborate.</span>
                                     </h1>
-                                    <p style={ {marginBottom:'3rem'} } class="lead text-white opacity-8 tal-sm font-weight-light">
+                                    {/* <p
+                                        style={ { marginBottom: '3rem' } }
+                                        class="lead text-white opacity-8 tal-sm font-weight-light">
                                         Discover classrooms
-                                    </p>
-                                    <div class="mt-1">
+                                    </p> */}
+                                    <div class="mt-2">
                                         <form
-                                            action={ `/classroom/search/q/${ searchInput.value }` }>
+                                            // action={ `/classroom/search/q/${ searchInput.value }` }
+                                            >
                                             <div className="form-group">
                                                 <div className="input-group">
                                                     <input
                                                         type="search"
-                                                        value={ searchInput.value }
-                                                        onChange={ handleSearchInputChange }
+                                                        value={
+                                                            searchInput.value
+                                                        }
+                                                        onChange={
+                                                            handleSearchInputChange
+                                                        }
                                                         className="form-control"
-                                                        placeholder="Over 1,000,000 Classrooms"
-                                                        aria-label="Over 1,000,000 Classrooms"
+                                                        placeholder="Explore Classrooms"
+                                                        aria-label="Explore Classrooms"
                                                         aria-describedby="basic-addon2"
                                                     />
                                                     <div className="input-group-append">
@@ -153,25 +162,25 @@ function Auth_Home(props) {
 
             <div className="all__classrooms__container">
                 <div className="row mr-3 ml-3">
-                    <div
+                    {/* <div
                         className="bg-dark w-100  p-3 text-center mt-4"
                         style={ {
                             borderRadius: '15px',
                             backgroundImage:
-                                'linear-gradient(45deg, #a06060, transparent)'
+                                'linear-gradient(45deg, #a06060, transparent)',
                         } }>
                         <div>
                             <div className="text-white">
                                 Want to host a session? Create a Free classroom
                                 today! It's Quick and easy
                             </div>
-                            <Link to='/classroom/create?ref=btn'>
+                            <Link to="/classroom/create?ref=btn">
                                 <button className="btn mt-2 btn-success">
                                     Get Started
                                 </button>
                             </Link>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="trending__container w-100 pt-4">
                         <div className="trending__title mb-4 text-center ">
                             <h3 className="font-weight-700 float-left text-uppercase d-inline pr-3">

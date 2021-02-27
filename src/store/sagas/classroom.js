@@ -30,7 +30,7 @@ export function* setMessageThreadData(data) {
     try {
         const response = yield fetch(messageThreadRequest)
         const resolvedResponse =  yield call(resolvePromise,response.json())        
-        // console.log(resolvedResponse)
+        // 
 
         if(resolvedResponse.status === 1){
              yield put(actions.messageThreadFecthDone(resolvedResponse.message));
@@ -116,6 +116,6 @@ export function* verifyClassRoom({ classKid }){
     }
 } catch (e) {
     yield put(actions.classVerifyFailed('Failed to verify classroom status'));
-    console.log(e)
+    
 }
 }

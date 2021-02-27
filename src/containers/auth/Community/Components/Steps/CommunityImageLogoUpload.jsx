@@ -45,7 +45,7 @@ function CommunityImageLogoUpload(props) {
       if (err !== '') {
           // if message not same old that mean has error
           event.target.value = null // discard selected file
-          console.log(err)
+          
           setstate({ ...state, error: true, isValid: true, message: 'File type not supported' })
 
           return false
@@ -59,7 +59,7 @@ function CommunityImageLogoUpload(props) {
           const msg = 'Only one image can be uploaded'
           setstate({...state,error:true,isValid:true,message:msg});
           event.target.value = null // discard selected file
-        //   console.log(msg)
+        //   
           return false
       }
       return true
@@ -67,7 +67,7 @@ function CommunityImageLogoUpload(props) {
 
   const checkFileSize = (event) => {
       const files = event.target.files
-    //   console.log(files[0].size);
+    //   
       const size = 1010000
       let err = ''
       for (let x = 0; x < files.length; x++) {
@@ -85,7 +85,7 @@ function CommunityImageLogoUpload(props) {
               message: 'File too Large',
           })
 
-          console.log(err)
+          
           return false
       }
 
@@ -113,7 +113,7 @@ function CommunityImageLogoUpload(props) {
           axios
               .patch(APIURL.COMMUNITY_ACCOUNT_CREATE_LOGO_TEMP+`/${ props.tempkid }`, data)
               .then((res) => {
-                //   console.log(res.statusText)
+                //   
                   if (res.statusText === 'OK' && res.data.status) {
                  setstate({
                      error: false,
@@ -139,7 +139,7 @@ function CommunityImageLogoUpload(props) {
                       inProgress: false,
                   })
               }).catch(err => {
-                  console.log(err);
+                  
                   setFormControl({
                       ...formControls,
                       formisvalid: true,

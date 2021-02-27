@@ -107,11 +107,13 @@ function Environment(props) {
             props.class_verified
         ) {
             let blocked = false
-            if (props.classroom.students.length){
-                const alreadyInClass = props.classroom.students.find(user => {
-                    return user.kid === props.userid
-                })
-                if(alreadyInClass){
+            if (props.classroom.participants.length) {
+                const alreadyInClass = props.classroom.participants.find(
+                    (user) => {
+                        return user.kid === props.userid && user.inRoom === true
+                    }
+                )
+                if (alreadyInClass) {
                     return (
                         <AlreadyInClass
                             roomkid={props.kid}

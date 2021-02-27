@@ -2,7 +2,7 @@ import React,{ useEffect} from 'react'
 
 export default function CrossDomainAuth() {
   function messageHandler(event) {
-    console.log(event);
+    
  const domains = [
   'https://www.domain1.com',
   'https://www.domaine2.com',

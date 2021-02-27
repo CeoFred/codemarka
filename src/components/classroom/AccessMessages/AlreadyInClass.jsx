@@ -13,7 +13,7 @@ import * as APIURL from '../../../config/api_url';
 function AlreadyInClassName(props) {
     const host =
         process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test'
-            ? 'https://api.secure.codemarka.dev'
+            ? 'https://api.secure.codemarka.co'
             : 'http://localhost:2001'
 
     const socket = io(host, {

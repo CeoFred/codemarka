@@ -42,7 +42,7 @@ export class classPreviewNewTab extends Component {
        const {
            match: { params },
        } = this.props
-       console.log(this.props)
+       
       socket.emit('join_preview_room', params.classroomKid)
 
       socket.on('preview_changed', (file) => {

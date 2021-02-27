@@ -103,7 +103,7 @@ function AuthFinalSteps({ onResetAll, match }) {
                     verified: false,
                 })
 
-                console.log(error)
+                
             })
     }, [])
 
@@ -150,7 +150,7 @@ const alert = setup.message && (
                         },
                     })
               }).catch(err => {
-                console.log(err);
+                
               })
           }, 1500);
          localStorage.setItem('usernameTO', id)
@@ -196,7 +196,7 @@ const alert = setup.message && (
           window.location.href = '/?setup=1';
         }
       }).catch(err => {
-        console.log(err);
+        
         setSetup({ ...setup, formSubmitted: false, message: true, messageContent: 'Something went wrong,try again', type: 'danger' });
       })
     }

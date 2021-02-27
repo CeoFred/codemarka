@@ -25,18 +25,25 @@ export default function RemoteVideoStream({
         const userVideo_ = document.getElementById(`marka_rtc_${ user.kid }`);
         const videoTrack = userVideo_ && userVideo_.srcObject.getVideoTracks()[0];
         videoTrack.onmute = function () {
-            console.log('onmute');
+            
         };
     }, [stream, user])
 
     return (
-        <div
-            className={ `video-container ${
-                audio ? 'user-unmuted' : 'user-muted'
-            }` }>
-            <span className="user_name_label">
-                {util.trimString(username_,15,'...') || 'loading...'}
+        <div className={ 'video-container' }>
+            <span
+                className={ `user_name_label ${
+                    audio ? 'user-muted' : 'user-unmuted'
+                }` }>
+                {util.trimString(username_, 15, '...') || 'loading...'}{' '}
+                {audio ? (
+                    <i className="ml-1 fas fa-volume-mute"></i>
+                ) : (
+                    <i className="ml-1 fas fa-volume-up"></i>
+                )}{' '}
             </span>
+
+            <span className="user_name_label"></span>
             <video
                 style={ { display: video ? 'flex' : 'none' } }
                 className={ `stream-${ user.kid }` }

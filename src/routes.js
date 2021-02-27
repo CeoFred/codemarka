@@ -60,6 +60,8 @@ const ClassroomQuestion = React.lazy(() => import('./containers/classroom/Enquir
 const PrivacyAndPolicy = React.lazy(() => import('./containers/public/PrivacyAndPolicy'));
 const TermsAndConditions = React.lazy(() => import('./containers/public/TermsAndConditions'));
 const AuthFinalSteps = React.lazy(() => import('./containers/auth/AuthFinalSteps'));
+const ACE = React.lazy(() => import('./containers/classroom/TEST/editor'));
+
 const Routes = (props) => {
 
     useEffect(() => {
@@ -85,6 +87,7 @@ const Routes = (props) => {
             <Route exact component={ PrivacyAndPolicy } path={ url.PRIVACY_POLICY } />
             <Route exact component={ TermsAndConditions } path={ url.TERMS_AND_CONDITIONS } />
             <Route exact component={ AuthFinalSteps } path={ url.OAUTH_FINAL_STEPS } />
+            <Route exact component={ ACE } path="/test/editor" />
             <Route
                 exact
                 component={ ClassNotFound }

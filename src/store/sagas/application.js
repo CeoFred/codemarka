@@ -26,7 +26,7 @@ export function* tryValidatingCookie() {
         localStorage.setItem('ctok', cookie_token)
         yield put(actions.dispatchCookieAlreadyAccepted(cookie_token))
     }else {
-        yield console.log('NO COOKIE SET');
+        yield 
     }
 
 }

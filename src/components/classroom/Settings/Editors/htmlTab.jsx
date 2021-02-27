@@ -61,7 +61,7 @@ export default function HtmlTab(props) {
        }
 
        setState({ ...state, controls: updatedControls })
-       // console.log(updatedControls);
+       // 
    }
    const submitHandler = (event) => {
        event.preventDefault()

@@ -19,7 +19,6 @@ import Spinner from '../../components/Partials/Preloader'
 import Alert from '../../components/Partials/Alert/Alert'
 
 import * as action from '../../store/actions'
-import * as APIURLS from '../../config/api_url';
 import * as APPURLS from '../../config/url';
 import { updateObject } from '../../utility/shared';
 import Logo from '../../media/images/logo/codemark__logo.png'
@@ -66,7 +65,7 @@ function Login(props) {
        setMounted(true)
        if (!mounted) {
            onResetAll()
-           onClassroomSwitch('app')
+           onClassroomSwitch('classroom')
        }
    }, [mounted, onClassroomSwitch, onResetAll])
     
@@ -162,29 +161,28 @@ function Login(props) {
             />
             {redct}
             <section className="container-fluid">
-                <div className="row min-vh-100" style={ { overflow:'auto'} }>
-                    <div className="comm_bg_img col-md-8 col-xl-8 col-lg-8 py-6 py-md-0 h-100vh d-none d-md-flex d-lg-flex d-xl-flex">
+                <div className="row min-vh-100" style={ { overflow: 'auto' } }>
+                    <div
+                        style={ { minHeight: '100%' } }
+                        className="comm_bg_img col-md-8 col-xl-8 col-lg-8 py-6 py-md-0 d-none d-md-flex d-lg-flex d-xl-flex">
                         <div className="details_container">
                             <div className="logo_container">
-                                <img
-                                    src={ Logo }
-                                    height="25"
-                                    alt="codemarka_logo"
-                                />
-                                <span className="badge badge-warning">PRO</span>
+                                <h1 className="h1 text-white">
+                                    Need more flex??
+                                </h1>
                             </div>
                             <div className="mb-2">
-                                <p className="float-left p-text text-white line-height-1">
+                                <p className="float-left text-white line-height-1">
                                     Get the best out of every classrom and enjoy
                                     <br />
-                                    all our exciting features by
-                                    <br /> getting a community account today.
+                                    all our exciting features by getting
+                                    <br /> a community lisence today.
                                 </p>
                             </div>
                             <Link to={ APPURLS.COMMUNITY_ACCOUNT_SIGNUP_PAGE }>
                                 <button
                                     type="button"
-                                    class="btn btn-animated btn-primary btn-animated-x">
+                                    class="btn btn-animated btn-success btn-sm btn-animated-x">
                                     <span class="btn-inner--visible">
                                         SIGN UP
                                     </span>
@@ -195,9 +193,17 @@ function Login(props) {
                             </Link>
                         </div>
                     </div>
-
-                    <div className="col-md-4 col-lg-4 col-xl-4oveflow-auto" style={ {height:'97vh!important',overflow:'auto', display:'flex', flexDorient:'column', alignItems:'center',justifyContent:'center'} }>
-                        <div style={ {width:'91%'} }>
+                    <div
+                        className="col-md-4 col-lg-4 col-xl-4oveflow-auto"
+                        style={ {
+                            height: '97vh!important',
+                            overflow: 'auto',
+                            display: 'flex',
+                            flexDorient: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        } }>
+                        <div style={ { width: '91%' } }>
                             <div className="mb-5 text-center">
                                 <h6 className="h3 mb-1">Welcome back!</h6>
                                 <p className="text-muted mb-0">
