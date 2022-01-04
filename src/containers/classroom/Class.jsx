@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-undef */
 import React, { useState, useRef,useLayoutEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import io from 'socket.io-client'
@@ -110,6 +112,7 @@ const MainClassLayout = ({
         list: [],
         downloadStatus: '',
     })
+    
     const socketRef = useRef(socket)
     const audioVideoRef = useRef()
 
@@ -363,10 +366,10 @@ const MainClassLayout = ({
                 }
             })
 
-            socket.on('has_attendance_recorded', (data) => {
+            socket.on('has_attendance_recorded', (attendance) => {
                 setAttendanceState({
                     ...attendanceState,
-                    userAttendanceData: data,
+                    userAttendanceData: attendance,
                     hasCollectedAttendance: true,
                     isCollectingAttendance: true,
                     isSubmittingAttendance: false,
@@ -493,8 +496,8 @@ const MainClassLayout = ({
             })
 
             // disconnect users previous session
-            socket.on('disconnect_user_before_join', (data) => {
-                if (data.userId === userid) {
+            socket.on('disconnect_user_before_join', (user) => {
+                if (user.userId === userid) {
                     socket.close()
                     toast.warn('Session terminated', {
                         position: toast.POSITION.BOTTOM_RIGHT,
@@ -502,7 +505,12 @@ const MainClassLayout = ({
                 }
             })
             // tell server to add user to class
-            socket.emit('join', requestData)
+            socket.emit('join', {
+            classroom_id: cid,
+            userkid: userid,
+            username,
+            cdata: classroomD,
+        })
 
             setSocket(socket)
 
@@ -591,15 +599,15 @@ const MainClassLayout = ({
             })
 
             //listen for new messages
-            socket.on('nM', (data) => {
+            socket.on('nM', (messageData) => {
                 new Promise((resolve, reject) => {
                     resolve(
                         setcodemarkaState((c) => {
                             const oldmsg = c.messages
-                            oldmsg.push(data)
+                            oldmsg.push(messageData)
                             const newuserTypingList = c.typingState.filter(
                                 (typist) => {
-                                    return typist.id !== data.by
+                                    return typist.id !== messageData.by
                                 }
                             )
                             return {
