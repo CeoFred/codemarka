@@ -41,7 +41,7 @@ import './css/Environment.css'
 
 const host =
     process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test'
-        ? 'https://codemarka-main.herokuapp.com'
+        ? 'https://codemarka.herokuapp.com'
         : 'http://localhost:2001'
 
 const socket = io(host, {
