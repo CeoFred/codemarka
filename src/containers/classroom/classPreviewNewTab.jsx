@@ -26,7 +26,7 @@ export class classPreviewNewTab extends Component {
       const host =
           process.env.NODE_ENV === 'production' ||
           process.env.NODE_ENV === 'test'
-              ? 'https://code-marka.herokuapp.com/'
+              ? 'https://codemarka.herokuapp.com/'
               : 'http://localhost:2001/'
 
       const socket = io(host, {
@@ -78,7 +78,7 @@ export class classPreviewNewTab extends Component {
                const server =
                    process.env.NODE_ENV === 'production' ||
                    process.env.NODE_ENV === 'test'
-                       ? 'https://code-marka.herokuapp.com/api/v1/'
+                       ? 'https://codemarka.herokuapp.com/api/v1/'
                        : 'http://localhost:2001/api/v1/'
                 const url = `${ server }classroom/preview/${ classroomKid }`
 
